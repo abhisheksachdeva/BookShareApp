@@ -1,32 +1,26 @@
 package com.example.abhishek.bookshareapp;
 
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.util.SortedList;
-import android.support.v7.widget.Toolbar;
-import android.view.View;
-import android.view.Menu;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ListView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.Toast;
 
 import java.util.List;
 
-import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
+
+    public static final String TAG = MainActivity.class.getSimpleName();
+
     ListView listview;
-    //List<Book> books;
-    public static final String url="https://www.googleapis.com/books/v1";
+    List<Book> books;
+    public static final String url="https://www.googleapis.com/";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +30,6 @@ public class MainActivity extends AppCompatActivity {
         listview= (ListView)findViewById(R.id.listview);
 
         getBooks();
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(url)
-//                .build();
-//
-//        BooksAPI api = retrofit.create(BooksAPI.class);
 
 
 
@@ -52,23 +41,35 @@ public class MainActivity extends AppCompatActivity {
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
+                .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         BooksAPI api = retrofit.create(BooksAPI.class);
 
-        api.getBooks(new Callback<List<Book>>() {
+        Call<BookResponse> call = api.getBooks("isbn:9780553819229");
+        call.enqueue(new Callback<BookResponse>() {
             @Override
-            public void onResponse(retrofit2.Response<List<Book>> response) {
+            public void onResponse(retrofit2.Response<BookResponse> response) {
+                List<Book> list = response.body().getItems();
 
-
+                Log.i(TAG, list.toString());
+                Log.i("list", String.valueOf(list.size()));
+                Toast.makeText(MainActivity.this,String.valueOf(list.size()), Toast.LENGTH_SHORT).show();
+                Book bk= list.get(0);
+                String id = bk.getId();
+                Toast.makeText(MainActivity.this, id, Toast.LENGTH_SHORT).show();
+                List<VolumeInfo> vi= bk.getInfo();
+               // Log.e("vinfo",vi.toString());
+               // vi.get(0).getTitle();
+               // Toast.makeText(MainActivity.this,vi.get(0).getTitle(),Toast.LENGTH_SHORT).show();
+                Log.i("resp", id);
             }
 
             @Override
             public void onFailure(Throwable t) {
-
+                Log.i("fail", "no resp");
             }
         });
-
     }
 
     @Override
