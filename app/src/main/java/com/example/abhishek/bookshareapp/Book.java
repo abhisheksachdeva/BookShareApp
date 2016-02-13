@@ -10,7 +10,7 @@ public class Book {
     private int ISBN;
     private String title;
     private String id;
-    List<VolumeInfo> info;
+    VolumeInfo volumeInfo;
     public int getISBN(){
         return ISBN;
     }
@@ -35,8 +35,8 @@ public class Book {
         return id;
     }
 
-    public List<VolumeInfo> getInfo(){
-        return info;
+    public VolumeInfo getInfo(){
+        return volumeInfo;
     }
 }
 

@@ -1,10 +1,15 @@
 package com.example.abhishek.bookshareapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
@@ -21,15 +26,31 @@ public class MainActivity extends AppCompatActivity {
     ListView listview;
     List<Book> books;
     public static final String url="https://www.googleapis.com/";
+    String query;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        final EditText search=(EditText)findViewById(R.id.search);
+        Button button= (Button)findViewById(R.id.button);
+        query= "isbn:";
 
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i= new Intent(MainActivity.this,SearchResults.class);
+                query+=search.getText();
+                Log.d("querymain",query);
+                i.putExtra("query",query);
+                startActivity(i);
+            }
+        });
+
+        String isbn= "9780553819229";
         listview= (ListView)findViewById(R.id.listview);
 
-        getBooks();
+        //getBooks("isbn:"+isbn);
 
 
 
@@ -37,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void getBooks(){
+    public void getBooks(String query){
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(url)
@@ -46,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
 
         BooksAPI api = retrofit.create(BooksAPI.class);
 
-        Call<BookResponse> call = api.getBooks("isbn:9780553819229");
+        Call<BookResponse> call = api.getBooks(query);
         call.enqueue(new Callback<BookResponse>() {
             @Override
             public void onResponse(retrofit2.Response<BookResponse> response) {
@@ -54,14 +75,17 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.i(TAG, list.toString());
                 Log.i("list", String.valueOf(list.size()));
-                Toast.makeText(MainActivity.this,String.valueOf(list.size()), Toast.LENGTH_SHORT).show();
-                Book bk= list.get(0);
+                Toast.makeText(MainActivity.this, String.valueOf(list.size()), Toast.LENGTH_SHORT).show();
+                Book bk = list.get(0);
                 String id = bk.getId();
                 Toast.makeText(MainActivity.this, id, Toast.LENGTH_SHORT).show();
-                List<VolumeInfo> vi= bk.getInfo();
-               // Log.e("vinfo",vi.toString());
-               // vi.get(0).getTitle();
-               // Toast.makeText(MainActivity.this,vi.get(0).getTitle(),Toast.LENGTH_SHORT).show();
+                VolumeInfo vinfo1 = bk.getInfo();
+                try {
+                    Log.d("vinfo", vinfo1.getTitle());
+                } catch (Exception e) {
+                    Log.d("abcd", e.toString());
+                }
+                // Toast.makeText(MainActivity.this,vi.get(0).getTitle(),Toast.LENGTH_SHORT).show();
                 Log.i("resp", id);
             }
 
