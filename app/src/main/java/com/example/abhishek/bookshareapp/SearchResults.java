@@ -23,13 +23,13 @@ import retrofit2.Retrofit;
  * Created by abhishek on 13/2/16.
  */
 public class SearchResults extends AppCompatActivity {
-
+    String id;
     String query;
     public static final String url="https://www.googleapis.com/";
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState, PersistableBundle persistentState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results);
         ListView results_list= (ListView)findViewById(R.id.results_list);
@@ -38,7 +38,7 @@ public class SearchResults extends AppCompatActivity {
         Intent i= getIntent();
         query=i.getStringExtra("query");
         Log.d("querysearch", query);
-        //getBooks(query);
+        getBooks(query);
 
     }
 
@@ -59,7 +59,7 @@ public class SearchResults extends AppCompatActivity {
 
                 Log.i("searchlist", String.valueOf(list.size()));
                 Book bk = list.get(0);
-                String id = bk.getId();
+                 id = bk.getId();
                 VolumeInfo vinfo1 = bk.getInfo();
                 try {
                     Log.d("searchvinfo", vinfo1.getTitle());
@@ -74,6 +74,8 @@ public class SearchResults extends AppCompatActivity {
                 Log.i("searchfail", "no resp");
             }
         });
+        Toast.makeText(this ,id,Toast.LENGTH_SHORT).show();
+
     }
 
 }
