@@ -18,6 +18,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
+import static com.example.abhishek.bookshareapp.CommonUtilities.google_api_url;
 
 /**
  * Created by abhishek on 13/2/16.
@@ -25,8 +26,6 @@ import retrofit2.Retrofit;
 public class SearchResults extends AppCompatActivity {
     String id;
     String query;
-    public static final String url="https://www.googleapis.com/";
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +44,7 @@ public class SearchResults extends AppCompatActivity {
     public void getBooks(String query){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(google_api_url)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 

@@ -4,13 +4,13 @@ import okhttp3.OkHttpClient;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 import retrofit2.CallAdapter;
-
+import static com.example.abhishek.bookshareapp.CommonUtilities.google_api_url;
 /**
  * Created by abhishek on 23/1/16.
  */
 public class ServiceGenerator {
 
-    public static final String API_BASE_URL = "https://www.googleapis.com/books/v1/volumes?q=isbn:9780553819229";
+    static String API_BASE_URL = google_api_url+"books/v1/volumes?q=isbn:9780553819229";
 
     private static OkHttpClient httpClient = new OkHttpClient();
     private static Retrofit.Builder builder =

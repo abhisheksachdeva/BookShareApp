@@ -19,13 +19,15 @@ import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 
+import static com.example.abhishek.bookshareapp.CommonUtilities.google_api_url;
+
+
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
     ListView listview;
     List<Book> books;
-    public static final String url="https://www.googleapis.com/";
     String query;
 
     @Override
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     public void getBooks(String query){
 
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(url)
+                .baseUrl(google_api_url)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
