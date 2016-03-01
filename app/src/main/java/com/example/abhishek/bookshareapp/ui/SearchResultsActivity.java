@@ -30,6 +30,8 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results);
         ListView results_list= (ListView)findViewById(R.id.results_list);
@@ -44,30 +46,29 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     public void getBooks(String query){
 
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl(google_api_url)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build();
-
-//        BooksAPI api = retrofit.create(BooksAPI.class);
-
         BooksAPI api = NetworkingFactory.getInstance().getBooksApi();
         Call<BookResponse> call = api.getBooks(query);
         call.enqueue(new Callback<BookResponse>() {
             @Override
             public void onResponse(retrofit2.Response<BookResponse> response) {
-                List<Book> list = response.body().getItems();
+                if(response.body().getTotalItems()>0) {
+                    List<Book> list = response.body().getItems();
 
-                Log.i("searchlist", String.valueOf(list.size()));
-                Book bk = list.get(0);
-                 id = bk.getId();
-                VolumeInfo vinfo1 = bk.getInfo();
-                try {
-                    Log.d("searchvinfo", vinfo1.getTitle());
-                } catch (Exception e) {
-                    Log.d("searchabcd", e.toString());
+                    Log.i("searchlist", list.size()+"");
+                    /*Book bk = list.get(0);
+                     id = bk.getId();
+                    VolumeInfo vinfo1 = bk.getInfo();
+                    try {
+                        Log.d("searchvinfo", vinfo1.getTitle());
+                    } catch (Exception e) {
+                        Log.d("searchabcd", e.toString());
+                    }
+                    Log.i("searchresp", id);*/
                 }
-                Log.i("searchresp", id);
+                else{
+                    Log.i("SearchResultsActivity","No book found");
+                }
+
             }
 
             @Override

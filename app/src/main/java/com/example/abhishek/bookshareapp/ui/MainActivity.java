@@ -51,56 +51,13 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("querymain",query);
                 i.putExtra("query",query);
                 startActivity(i);
+                query= "isbn:";
             }
         });
 
         String isbn= "9780553819229";
         listview= (ListView)findViewById(R.id.listview);
 
-        //getBooks("isbn:"+isbn);
-
-
-
-
-
-    }
-
-    public void getBooks(String query){
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(google_api_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        BooksAPI api = retrofit.create(BooksAPI.class);
-
-        Call<BookResponse> call = api.getBooks(query);
-        call.enqueue(new Callback<BookResponse>() {
-            @Override
-            public void onResponse(retrofit2.Response<BookResponse> response) {
-                List<Book> list = response.body().getItems();
-
-                Log.i(TAG, list.toString());
-                Log.i("list", String.valueOf(list.size()));
-                Toast.makeText(MainActivity.this, String.valueOf(list.size()), Toast.LENGTH_SHORT).show();
-                Book bk = list.get(0);
-                String id = bk.getId();
-                Toast.makeText(MainActivity.this, id, Toast.LENGTH_SHORT).show();
-                VolumeInfo vinfo1 = bk.getInfo();
-                try {
-                    Log.d("vinfo", vinfo1.getTitle());
-                } catch (Exception e) {
-                    Log.d("abcd", e.toString());
-                }
-                // Toast.makeText(MainActivity.this,vi.get(0).getTitle(),Toast.LENGTH_SHORT).show();
-                Log.i("resp", id);
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.i("fail", "no resp");
-            }
-        });
     }
 
     @Override

@@ -22,7 +22,7 @@ public class NetworkingFactory {
 
     private NetworkingFactory(String googleApiUrl) {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(google_api_url)
+                .baseUrl(googleApiUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
