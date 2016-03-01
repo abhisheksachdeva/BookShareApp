@@ -1,4 +1,4 @@
-package com.example.abhishek.bookshareapp;
+package com.example.abhishek.bookshareapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,8 +9,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.example.abhishek.bookshareapp.R;
+import com.example.abhishek.bookshareapp.api.models.VolumeInfo;
+import com.example.abhishek.bookshareapp.api.BooksAPI;
+import com.example.abhishek.bookshareapp.api.models.Book;
+import com.example.abhishek.bookshareapp.api.models.BookResponse;
 
 import java.util.List;
 
@@ -19,7 +24,7 @@ import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 
-import static com.example.abhishek.bookshareapp.CommonUtilities.google_api_url;
+import static com.example.abhishek.bookshareapp.utils.CommonUtilities.google_api_url;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -41,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i= new Intent(MainActivity.this,SearchResults.class);
+                Intent i= new Intent(MainActivity.this,SearchResultsActivity.class);
                 query+=search.getText();
                 Log.d("querymain",query);
                 i.putExtra("query",query);

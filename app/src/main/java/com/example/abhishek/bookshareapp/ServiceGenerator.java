@@ -3,8 +3,8 @@ package com.example.abhishek.bookshareapp;
 import okhttp3.OkHttpClient;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
-import retrofit2.CallAdapter;
-import static com.example.abhishek.bookshareapp.CommonUtilities.google_api_url;
+
+import static com.example.abhishek.bookshareapp.utils.CommonUtilities.google_api_url;
 /**
  * Created by abhishek on 23/1/16.
  */

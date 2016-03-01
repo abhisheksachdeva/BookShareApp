@@ -1,4 +1,6 @@
-package com.example.abhishek.bookshareapp;
+package com.example.abhishek.bookshareapp.api.models;
+
+import com.example.abhishek.bookshareapp.api.models.Book;
 
 import java.util.List;
 

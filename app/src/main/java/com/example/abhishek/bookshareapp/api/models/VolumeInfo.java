@@ -1,4 +1,4 @@
-package com.example.abhishek.bookshareapp;
+package com.example.abhishek.bookshareapp.api.models;
 
 /**
  * Created by abhishek on 10/2/16.

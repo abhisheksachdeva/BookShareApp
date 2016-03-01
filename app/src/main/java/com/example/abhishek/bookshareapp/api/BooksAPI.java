@@ -1,15 +1,13 @@
-package com.example.abhishek.bookshareapp;
+package com.example.abhishek.bookshareapp.api;
 
 /**
  * Created by abhishek on 30/1/16.
  */
 
-import java.util.List;
+import com.example.abhishek.bookshareapp.api.models.BookResponse;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 

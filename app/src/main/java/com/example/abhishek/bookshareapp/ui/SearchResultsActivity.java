@@ -1,31 +1,32 @@
-package com.example.abhishek.bookshareapp;
+package com.example.abhishek.bookshareapp.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import com.example.abhishek.bookshareapp.R;
+import com.example.abhishek.bookshareapp.api.NetworkingFactory;
+import com.example.abhishek.bookshareapp.api.models.VolumeInfo;
+import com.example.abhishek.bookshareapp.api.BooksAPI;
+import com.example.abhishek.bookshareapp.api.models.Book;
+import com.example.abhishek.bookshareapp.api.models.BookResponse;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.GsonConverterFactory;
-import retrofit2.Retrofit;
-import static com.example.abhishek.bookshareapp.CommonUtilities.google_api_url;
 
 /**
  * Created by abhishek on 13/2/16.
  */
-public class SearchResults extends AppCompatActivity {
+public class SearchResultsActivity extends AppCompatActivity {
     String id;
     String query;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,13 +44,14 @@ public class SearchResults extends AppCompatActivity {
 
     public void getBooks(String query){
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(google_api_url)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+//        Retrofit retrofit = new Retrofit.Builder()
+//                .baseUrl(google_api_url)
+//                .addConverterFactory(GsonConverterFactory.create())
+//                .build();
 
-        BooksAPI api = retrofit.create(BooksAPI.class);
+//        BooksAPI api = retrofit.create(BooksAPI.class);
 
+        BooksAPI api = NetworkingFactory.getInstance().getBooksApi();
         Call<BookResponse> call = api.getBooks(query);
         call.enqueue(new Callback<BookResponse>() {
             @Override

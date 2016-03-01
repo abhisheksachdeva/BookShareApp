@@ -1,6 +1,4 @@
-package com.example.abhishek.bookshareapp;
-
-import java.util.List;
+package com.example.abhishek.bookshareapp.api.models;
 
 /**
  * Created by abhishek on 30/1/16.

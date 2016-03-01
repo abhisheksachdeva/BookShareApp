@@ -1,4 +1,4 @@
-package com.example.abhishek.bookshareapp;
+package com.example.abhishek.bookshareapp.ui.adapter;
 
 import android.view.View;
 import android.view.ViewGroup;
