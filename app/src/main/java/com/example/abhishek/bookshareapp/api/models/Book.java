@@ -8,8 +8,7 @@ import java.util.List;
 
 public class Book {
     private int ISBN;
-    private String title;
-    private String allauthors=null;
+
     private String id;
     VolumeInfo volumeInfo;
     List<String> authors;
@@ -24,8 +23,6 @@ public class Book {
     public List<String> getAuthors(){
         return authors;
     }
-
-
 
     public void setID(String id){
         this.id=id;

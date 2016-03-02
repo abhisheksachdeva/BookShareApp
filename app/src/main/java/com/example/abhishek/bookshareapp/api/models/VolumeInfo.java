@@ -13,14 +13,14 @@ public class VolumeInfo {
         return title;
     }
     public String getAllAuthors(){
-        String allauthors="";
+        String allAuthors="";
         for(int i=0;i<authors.size();i++) {
-            allauthors+=authors.get(i);
+            allAuthors+=authors.get(i);
             if(i<authors.size()-1){
-                allauthors+=" & ";
+                allAuthors+=" & ";
             }
         }
-        return allauthors;
+        return allAuthors;
 
     }
 }

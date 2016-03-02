@@ -53,6 +53,7 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         BooksAPI api = NetworkingFactory.getInstance().getBooksApi();
         Call<BookResponse> call = api.getBooks(query);
+
         call.enqueue(new Callback<BookResponse>() {
             @Override
             public void onResponse(retrofit2.Response<BookResponse> response) {
@@ -64,17 +65,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                     Log.d("SearchResultsActivity",adapter.getCount()+"");
                     resultsList.setAdapter(adapter);
 
-
                     Log.i("searchlist", bookList.size() + "");
-                    /*Book bk = bookList.get(0);
-                    id = bk.getId();
-                    VolumeInfo vinfo1 = bk.getInfo();
-                    try {
-                        Log.d("searchvinfo", vinfo1.getTitle());
-                    } catch (Exception e) {
-                        Log.d("searchabcd", e.toString());
-                    }
-                    Log.i("searchresp", id);*/
 
                 } else {
                     Log.i("SearchResultsActivity", "No book found");
