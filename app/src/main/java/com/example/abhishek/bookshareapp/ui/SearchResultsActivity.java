@@ -10,10 +10,10 @@ import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
-import com.example.abhishek.bookshareapp.api.models.VolumeInfo;
 import com.example.abhishek.bookshareapp.api.BooksAPI;
 import com.example.abhishek.bookshareapp.api.models.Book;
 import com.example.abhishek.bookshareapp.api.models.BookResponse;
+import com.example.abhishek.bookshareapp.ui.adapter.BooksAdapter;
 
 import java.util.List;
 
@@ -26,7 +26,9 @@ import retrofit2.Callback;
 public class SearchResultsActivity extends AppCompatActivity {
     String id;
     String query;
-
+    List<Book> bookList;
+    ListView resultsList;
+    BooksAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -34,9 +36,12 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results);
-        ListView results_list= (ListView)findViewById(R.id.results_list);
+
+        resultsList= (ListView)findViewById(R.id.results_list);
         TextView test =(TextView)findViewById(R.id.testing);
+
         test.setText("Check");
+
         Intent i= getIntent();
         query=i.getStringExtra("query");
         Log.d("querysearch", query);
@@ -51,12 +56,18 @@ public class SearchResultsActivity extends AppCompatActivity {
         call.enqueue(new Callback<BookResponse>() {
             @Override
             public void onResponse(retrofit2.Response<BookResponse> response) {
-                if(response.body().getTotalItems()>0) {
-                    List<Book> list = response.body().getItems();
+                if (response.body().getTotalItems() > 0) {
 
-                    Log.i("searchlist", list.size()+"");
-                    /*Book bk = list.get(0);
-                     id = bk.getId();
+                    bookList = response.body().getItems();
+
+                    adapter=new BooksAdapter(SearchResultsActivity.this,bookList);
+                    Log.d("SearchResultsActivity",adapter.getCount()+"");
+                    resultsList.setAdapter(adapter);
+
+
+                    Log.i("searchlist", bookList.size() + "");
+                    /*Book bk = bookList.get(0);
+                    id = bk.getId();
                     VolumeInfo vinfo1 = bk.getInfo();
                     try {
                         Log.d("searchvinfo", vinfo1.getTitle());
@@ -64,9 +75,9 @@ public class SearchResultsActivity extends AppCompatActivity {
                         Log.d("searchabcd", e.toString());
                     }
                     Log.i("searchresp", id);*/
-                }
-                else{
-                    Log.i("SearchResultsActivity","No book found");
+
+                } else {
+                    Log.i("SearchResultsActivity", "No book found");
                 }
 
             }
@@ -80,4 +91,9 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     }
 
+
+    public void onItemClick(int mPosition) {
+        Book tempValues = bookList.get(mPosition);
+        Toast.makeText(SearchResultsActivity.this, tempValues.getVolumeInfo().getTitle()+tempValues.getAuthor(), Toast.LENGTH_SHORT).show();
+    }
 }

@@ -7,6 +7,7 @@ package com.example.abhishek.bookshareapp.api.models;
 public class Book {
     private int ISBN;
     private String title;
+    private String author;
     private String id;
     VolumeInfo volumeInfo;
     public int getISBN(){
@@ -17,12 +18,12 @@ public class Book {
         this.ISBN=ISBN;
     }
 
-    public String getTitle(){
-        return title;
+    public String getAuthor(){
+        return author;
     }
 
-    public void setTitle(String title){
-        this.title=title;
+    public void setAuthor(String author){
+        this.author=author;
     }
 
     public void setID(String id){
@@ -33,7 +34,11 @@ public class Book {
         return id;
     }
 
-    public VolumeInfo getInfo(){
+    public void setVolumeInfo(VolumeInfo volumeInfo){
+        this.volumeInfo=volumeInfo;
+    }
+
+    public VolumeInfo getVolumeInfo(){
         return volumeInfo;
     }
 }

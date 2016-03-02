@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         final EditText search=(EditText)findViewById(R.id.search);
         Button button= (Button)findViewById(R.id.button);
-        query= "isbn:";
+        query= "";
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("querymain",query);
                 i.putExtra("query",query);
                 startActivity(i);
-                query= "isbn:";
+                query= "";
             }
         });
 
