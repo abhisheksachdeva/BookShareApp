@@ -94,6 +94,6 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     public void onItemClick(int mPosition) {
         Book tempValues = bookList.get(mPosition);
-        Toast.makeText(SearchResultsActivity.this, tempValues.getVolumeInfo().getTitle()+tempValues.getAuthor(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(SearchResultsActivity.this, tempValues.getVolumeInfo().getTitle()+tempValues.getVolumeInfo().getAllAuthors(), Toast.LENGTH_SHORT).show();
     }
 }

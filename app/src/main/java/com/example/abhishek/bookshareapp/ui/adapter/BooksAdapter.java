@@ -80,7 +80,7 @@ public class BooksAdapter extends BaseAdapter implements View.OnClickListener {
             tempValues=bookList.get(position);
 
             holder.title_book.setText(tempValues.getVolumeInfo().getTitle());
-            holder.author_book.setText(tempValues.getAuthor());
+            holder.author_book.setText(tempValues.getVolumeInfo().getAllAuthors());
 
             vi.setOnClickListener(new OnItemClickListener(position));
         }

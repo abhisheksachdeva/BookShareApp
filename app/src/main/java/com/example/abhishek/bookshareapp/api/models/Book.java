@@ -1,5 +1,7 @@
 package com.example.abhishek.bookshareapp.api.models;
 
+import java.util.List;
+
 /**
  * Created by abhishek on 30/1/16.
  */
@@ -7,9 +9,10 @@ package com.example.abhishek.bookshareapp.api.models;
 public class Book {
     private int ISBN;
     private String title;
-    private String author;
+    private String allauthors=null;
     private String id;
     VolumeInfo volumeInfo;
+    List<String> authors;
     public int getISBN(){
         return ISBN;
     }
@@ -18,13 +21,11 @@ public class Book {
         this.ISBN=ISBN;
     }
 
-    public String getAuthor(){
-        return author;
+    public List<String> getAuthors(){
+        return authors;
     }
 
-    public void setAuthor(String author){
-        this.author=author;
-    }
+
 
     public void setID(String id){
         this.id=id;
@@ -41,6 +42,7 @@ public class Book {
     public VolumeInfo getVolumeInfo(){
         return volumeInfo;
     }
+
 }
 
 
