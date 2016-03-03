@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.models.Book;
 import com.example.abhishek.bookshareapp.ui.SearchResultsActivity;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -81,6 +82,7 @@ public class BooksAdapter extends BaseAdapter implements View.OnClickListener {
 
             holder.title_book.setText(tempValues.getVolumeInfo().getTitle());
             holder.author_book.setText(tempValues.getVolumeInfo().getAllAuthors());
+            Picasso.with(this.context).load(tempValues.getVolumeInfo().getImageLinks().getSmallThumbnail()).into(holder.image_book);
 
             vi.setOnClickListener(new OnItemClickListener(position));
         }

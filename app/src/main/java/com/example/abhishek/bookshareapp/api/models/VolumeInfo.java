@@ -8,10 +8,24 @@ import java.util.List;
 public class VolumeInfo {
     private String title;
     private List<String > authors;
+    private ImageLinks imageLinks;
+
+    public void setAuthors(List<String> authors) {
+        this.authors = authors;
+    }
+
+    public void setImageLinks(ImageLinks imageLinks) {
+        this.imageLinks = imageLinks;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     public String getTitle(){
         return title;
     }
+
     public String getAllAuthors(){
         String allAuthors="";
         for(int i=0;i<authors.size();i++) {
@@ -22,6 +36,10 @@ public class VolumeInfo {
         }
         return allAuthors;
 
+    }
+
+    public ImageLinks getImageLinks() {
+        return imageLinks;
     }
 }
 
