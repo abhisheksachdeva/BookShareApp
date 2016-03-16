@@ -1,45 +1,38 @@
 package com.example.abhishek.bookshareapp.api.models;
 
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
+
 import java.util.List;
 
 /**
  * Created by abhishek on 30/1/16.
  */
-
+@Root(name="work",strict = false)
 public class Book {
-    private int ISBN;
 
-    private String id;
-    VolumeInfo volumeInfo;
-    List<String> authors;
-    public int getISBN(){
-        return ISBN;
-    }
+	@Element(name="best_book")
+	BookDetails bookDetails;
 
-    public void setISBN(int ISBN){
-        this.ISBN=ISBN;
-    }
+	@Element(name="books_count")
+	public String page_count;
 
-    public List<String> getAuthors(){
-        return authors;
-    }
+	@Element(name="average_rating")	
+	public String rating;
 
-    public void setID(String id){
-        this.id=id;
-    }
+	public BookDetails getBookDetails(){
+		return bookDetails;
+	}
 
-    public String getId() {
-        return id;
-    }
-
-    public void setVolumeInfo(VolumeInfo volumeInfo){
-        this.volumeInfo=volumeInfo;
-    }
-
-    public VolumeInfo getVolumeInfo(){
-        return volumeInfo;
-    }
+	public String  getPage_count(){
+		return page_count;
+	}
+	public String getRating(){
+		return rating;
+	}
 
 }
+
+
 
 
