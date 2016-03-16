@@ -12,13 +12,15 @@ import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.BooksAPI;
 import com.example.abhishek.bookshareapp.api.models.Book;
-import com.example.abhishek.bookshareapp.api.models.BookResponse;
-import com.example.abhishek.bookshareapp.ui.adapter.BooksAdapter;
+import com.example.abhishek.bookshareapp.api.models.GoodreadsResponse;
+import com.example.abhishek.bookshareapp.api.models.Search;
+import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 
 import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by abhishek on 13/2/16.
@@ -28,8 +30,8 @@ public class SearchResultsActivity extends AppCompatActivity {
     String query;
     List<Book> bookList;
     ListView resultsList;
-    BooksAdapter adapter;
-
+    String API_KEY= CommonUtilities.API_KEY;
+    Search sr;
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
@@ -38,53 +40,35 @@ public class SearchResultsActivity extends AppCompatActivity {
         setContentView(R.layout.search_results);
 
         resultsList= (ListView)findViewById(R.id.results_list);
-        TextView test =(TextView)findViewById(R.id.testing);
-
-        test.setText("Check");
-
         Intent i= getIntent();
         query=i.getStringExtra("query");
         Log.d("querysearch", query);
-        getBooks(query);
+        getBooks(query,API_KEY);
 
     }
 
-    public void getBooks(String query){
+    public void getBooks(String query,String key) {
+
+        Toast.makeText(SearchResultsActivity.this,"getbooks",Toast.LENGTH_SHORT).show();
 
         BooksAPI api = NetworkingFactory.getInstance().getBooksApi();
-        Call<BookResponse> call = api.getBooks(query);
-
-        call.enqueue(new Callback<BookResponse>() {
+        Call<GoodreadsResponse> call = api.getBooks(query, key);
+        call.enqueue(new Callback<GoodreadsResponse>() {
             @Override
-            public void onResponse(retrofit2.Response<BookResponse> response) {
-                if (response.body().getTotalItems() > 0) {
-
-                    bookList = response.body().getItems();
-
-                    adapter=new BooksAdapter(SearchResultsActivity.this,bookList);
-                    Log.d("SearchResultsActivity",adapter.getCount()+"");
-                    resultsList.setAdapter(adapter);
-
-                    Log.i("searchlist", bookList.size() + "");
-
-                } else {
-                    Log.i("SearchResultsActivity", "No book found");
-                }
-
+            public void onResponse(Call<GoodreadsResponse> call, Response<GoodreadsResponse> response) {
+                Log.d("searchresp","searchOnresp");
+                sr= response.body().getSearch();
+                Toast.makeText(SearchResultsActivity.this,sr.getBooks().get(0).getBookDetails().getAuthor().getAuthor_name(),Toast.LENGTH_SHORT).show();
             }
 
             @Override
-            public void onFailure(Throwable t) {
-                Log.i("searchfail", "no resp");
+            public void onFailure(Call<GoodreadsResponse> call, Throwable t) {
+                Log.wtf("searchresp","searchOnFail "+t.toString());
+
             }
         });
-        Toast.makeText(this ,id,Toast.LENGTH_SHORT).show();
 
     }
 
-
-    public void onItemClick(int mPosition) {
-        Book tempValues = bookList.get(mPosition);
-        Toast.makeText(SearchResultsActivity.this, tempValues.getVolumeInfo().getTitle()+tempValues.getVolumeInfo().getAllAuthors(), Toast.LENGTH_SHORT).show();
-    }
 }
+
