@@ -59,11 +59,12 @@ public class SearchResultsActivity extends AppCompatActivity {
                 Log.d("searchresp","searchOnresp");
                 sr= response.body().getSearch();
                 Toast.makeText(SearchResultsActivity.this,sr.getBooks().get(0).getBookDetails().getAuthor().getAuthor_name(),Toast.LENGTH_SHORT).show();
+
             }
 
             @Override
             public void onFailure(Call<GoodreadsResponse> call, Throwable t) {
-                Log.wtf("searchresp","searchOnFail "+t.toString());
+                Log.d("searchresp","searchOnFail "+ t.toString());
 
             }
         });

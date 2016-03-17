@@ -12,10 +12,8 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
-import com.example.abhishek.bookshareapp.api.models.VolumeInfo;
 import com.example.abhishek.bookshareapp.api.BooksAPI;
 import com.example.abhishek.bookshareapp.api.models.Book;
-import com.example.abhishek.bookshareapp.api.models.BookResponse;
 
 import java.util.List;
 
@@ -24,7 +22,7 @@ import retrofit2.Callback;
 import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
 
-import static com.example.abhishek.bookshareapp.utils.CommonUtilities.google_api_url;
+import static com.example.abhishek.bookshareapp.utils.CommonUtilities.goodreads_api_url;
 
 
 public class MainActivity extends AppCompatActivity {
