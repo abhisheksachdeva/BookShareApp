@@ -1,33 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<android.support.v7.widget.CardView
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/card_view"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardBackgroundColor="@color/cardview_light_background"
+    card_view:cardElevation="4dp"
+    android:padding="4dp"
+    android:layout_margin="4dp"
+    android:foregroundGravity="center">
 
-    <ImageView
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:id="@+id/row_books_imageView"
-        android:src="@android:drawable/ic_media_ff"/>
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="54sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        >
-        <TextView
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/row_books_imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
-            android:text="Title"
-            android:id="@+id/row_books_title" />
+            android:src="@android:drawable/ic_media_ff" />
 
         <TextView
+            android:id="@+id/row_books_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:text="Author"
+            android:text="Title"
+            android:textSize="16sp" />
+
+        <TextView
             android:id="@+id/row_books_author"
-            />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Author"
+            android:textSize="14sp" />
     </LinearLayout>
 
-
-</LinearLayout>
+</android.support.v7.widget.CardView>

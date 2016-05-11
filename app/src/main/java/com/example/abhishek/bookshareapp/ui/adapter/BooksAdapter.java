@@ -1,44 +1,86 @@
 package com.example.abhishek.bookshareapp.ui.adapter;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.models.Book;
-import com.example.abhishek.bookshareapp.ui.SearchResultsActivity;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-/**
- * Created by abhishek on 30/1/16.
- */
-public class BooksAdapter extends BaseAdapter implements View.OnClickListener {
+public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
 
     private Context context;
     private List<Book> bookList;
     private static LayoutInflater inflater=null;
     Book tempValues=null;
 
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        public TextView titleBook;
+        public TextView authorBook;
+        public ImageView imageBook;
+        Context context;
+
+        public ViewHolder(View v, Context context){
+            super(v);
+            titleBook = (TextView)v.findViewById(R.id.row_books_title);
+            authorBook = (TextView)v.findViewById(R.id.row_books_author);
+            imageBook = (ImageView) v.findViewById(R.id.row_books_imageView);
+            titleBook.setOnClickListener(this);
+            authorBook.setOnClickListener(this);
+            imageBook.setOnClickListener(this);
+            this.context = context;
+        }
+
+        @Override
+        public void onClick(View v) {
+            Toast.makeText(context,"Clicked",Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public BooksAdapter(Context context,List<Book> bookList){
         this.bookList =bookList;
         this.context=context;
-        inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         Log.d("BookAdapter","Constructor");
     }
 
+    @Override
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.row_books, parent, false);
 
+        ViewHolder vh = new ViewHolder(v, context);
+
+        return vh;
+
+    }
 
     @Override
-    public Object getItem(int position) {
-        return bookList.get(position);
+    public void onBindViewHolder(ViewHolder holder, int position) {
+
+        tempValues = bookList.get(position);
+
+        holder.titleBook.setText(tempValues.getBookDetails().getTitle());
+        holder.authorBook.setText(tempValues.getBookDetails().getAuthor().getAuthor_name());
+        Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.imageBook);
+
+
+    }
+
+    @Override
+    public int getItemCount() {
+        if(bookList != null)
+            return bookList.size();
+
+        return 0;
     }
 
     @Override
@@ -46,74 +88,4 @@ public class BooksAdapter extends BaseAdapter implements View.OnClickListener {
         return 0;
     }
 
-    public static class ViewHolder{
-        public TextView title_book;
-        public TextView author_book;
-        public ImageView image_book;
-    }
-
-    @Override
-    public int getCount() {
-        return bookList.size();
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Log.d("BookAdapter","getView");
-        View vi = convertView;
-        ViewHolder holder;
-        if(convertView == null){
-            vi = inflater.inflate(R.layout.row_books,null);
-
-            holder = new ViewHolder();
-            holder.author_book = (TextView)vi.findViewById(R.id.row_books_author);
-            holder.title_book = (TextView)vi.findViewById(R.id.row_books_title);
-            holder.image_book = (ImageView)vi.findViewById(R.id.row_books_imageView);
-
-            vi.setTag(holder);
-        }
-        else{
-            holder=(ViewHolder)vi.getTag();
-        }
-        if(bookList.size()<=0) {
-            holder.title_book.setText("No Data");
-        }
-        else{
-            tempValues=null;
-            tempValues=bookList.get(position);
-
-            holder.title_book.setText(tempValues.getBookDetails().getTitle());
-            holder.author_book.setText(tempValues.getBookDetails().getAuthor().getAuthor_name());
-            Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.image_book);
-
-            vi.setOnClickListener(new OnItemClickListener(position));
-        }
-
-        return vi;
-    }
-
-    @Override
-    public void onClick(View v) {
-        Log.v("CustomAdapter", "=====Row button clicked=====");
-    }
-
-    private class OnItemClickListener  implements View.OnClickListener {
-        private int mPosition;
-
-        OnItemClickListener(int position){
-            mPosition = position;
-        }
-
-        @Override
-        public void onClick(View arg0) {
-
-
-            SearchResultsActivity sct = (SearchResultsActivity)context;
-
-            /****  Call  onItemClick Method inside CustomListViewAndroidExample Class ( See Below )****/
-
-           // sct.onItemClick(mPosition);
-            Toast.makeText(context,"Clicked",Toast.LENGTH_SHORT).show();
-        }
-    }
 }

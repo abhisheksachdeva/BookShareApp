@@ -3,11 +3,12 @@ package com.example.abhishek.bookshareapp.ui.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
@@ -26,16 +27,25 @@ import retrofit2.Response;
 
 public class BookListFragment extends Fragment {
 
-    ListView resultsList;
+    private RecyclerView resultsList;
     List<Book> bookList;
     BooksAdapter adapter;
+    private RecyclerView.LayoutManager mLayoutManager;
     Search sr;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.book_list_fragment, container, false);
-        resultsList = (ListView)view.findViewById(R.id.results_list);
+        resultsList = (RecyclerView)view.findViewById(R.id.results_list);
+
+        adapter = new BooksAdapter(getActivity(), bookList);
+        resultsList.setAdapter(adapter);
+
+        mLayoutManager = new GridLayoutManager(getActivity(),2);
+
+        resultsList.setLayoutManager(mLayoutManager);
+
         return view;
     }
 
@@ -52,10 +62,9 @@ public class BookListFragment extends Fragment {
                     Log.d("searchresp", response.toString());
                     sr = response.body().getSearch();
                     bookList = sr.getBooks();
-                    Log.d("searchresp", bookList.toString());
                     adapter = new BooksAdapter(getActivity(), bookList);
                     resultsList.setAdapter(adapter);
-
+                    Log.d("searchresp", bookList.toString());
                     Toast.makeText(getActivity(), sr.getBooks().get(0).getBookDetails().getAuthor().getAuthor_name(), Toast.LENGTH_SHORT).show();
                 }
 
