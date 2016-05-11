@@ -7,5 +7,4 @@ public class CommonUtilities {
 
     //public static final String google_api_url="https://www.googleapis.com/";
     public static final String goodreads_api_url="https://www.goodreads.com/";
-    public static final  String API_KEY= "Q4TqWuuk0j2E2LKvowRRpg";
 }
