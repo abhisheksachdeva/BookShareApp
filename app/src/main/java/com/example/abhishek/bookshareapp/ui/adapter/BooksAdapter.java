@@ -24,19 +24,19 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
     Book tempValues=null;
 
     public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        public TextView title_book;
-        public TextView author_book;
-        public ImageView image_book;
+        public TextView titleBook;
+        public TextView authorBook;
+        public ImageView imageBook;
         Context context;
 
         public ViewHolder(View v, Context context){
             super(v);
-            title_book = (TextView)v.findViewById(R.id.row_books_title);
-            author_book = (TextView)v.findViewById(R.id.row_books_author);
-            image_book = (ImageView) v.findViewById(R.id.row_books_imageView);
-            title_book.setOnClickListener(this);
-            author_book.setOnClickListener(this);
-            image_book.setOnClickListener(this);
+            titleBook = (TextView)v.findViewById(R.id.row_books_title);
+            authorBook = (TextView)v.findViewById(R.id.row_books_author);
+            imageBook = (ImageView) v.findViewById(R.id.row_books_imageView);
+            titleBook.setOnClickListener(this);
+            authorBook.setOnClickListener(this);
+            imageBook.setOnClickListener(this);
             this.context = context;
         }
 
@@ -68,9 +68,9 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
 
         tempValues = bookList.get(position);
 
-        holder.title_book.setText(tempValues.getBookDetails().getTitle());
-        holder.author_book.setText(tempValues.getBookDetails().getAuthor().getAuthor_name());
-        Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.image_book);
+        holder.titleBook.setText(tempValues.getBookDetails().getTitle());
+        holder.authorBook.setText(tempValues.getBookDetails().getAuthor().getAuthor_name());
+        Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.imageBook);
 
 
     }
