@@ -39,12 +39,12 @@ public class BookListFragment extends Fragment {
         return view;
     }
 
-    public void getBooks(String query,String key) {
+    public void getBooks(String query,String field,String key) {
 
         Toast.makeText(getActivity(),"getbooks",Toast.LENGTH_SHORT).show();
 
         BooksAPI api = NetworkingFactory.getInstance().getBooksApi();
-        Call<GoodreadsResponse> call = api.getBooks(query, key);
+        Call<GoodreadsResponse> call = api.getBooks(query,field, key);
         call.enqueue(new Callback<GoodreadsResponse>() {
             @Override
             public void onResponse(Call<GoodreadsResponse> call, Response<GoodreadsResponse> response) {

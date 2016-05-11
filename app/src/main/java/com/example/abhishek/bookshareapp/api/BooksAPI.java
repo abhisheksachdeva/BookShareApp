@@ -16,6 +16,7 @@ public interface BooksAPI {
     @GET("search.xml")
     Call<GoodreadsResponse> getBooks(
         @Query("q") String keyword,
+        @Query("search[field]") String field,
         @Query("key") String key
     );
 
