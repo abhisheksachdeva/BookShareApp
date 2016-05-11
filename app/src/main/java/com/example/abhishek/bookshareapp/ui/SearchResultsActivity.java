@@ -9,8 +9,8 @@ import android.widget.ListView;
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.models.Book;
 import com.example.abhishek.bookshareapp.api.models.Search;
-import com.example.abhishek.bookshareapp.ui.adapter.BookListFragment;
 import com.example.abhishek.bookshareapp.ui.adapter.BooksAdapter;
+import com.example.abhishek.bookshareapp.ui.fragments.BookListFragment;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 
 import java.util.List;

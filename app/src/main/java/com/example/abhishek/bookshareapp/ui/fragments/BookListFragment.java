@@ -1,4 +1,4 @@
-package com.example.abhishek.bookshareapp.ui.adapter;
+package com.example.abhishek.bookshareapp.ui.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -16,6 +16,7 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.models.Book;
 import com.example.abhishek.bookshareapp.api.models.GoodreadsResponse;
 import com.example.abhishek.bookshareapp.api.models.Search;
+import com.example.abhishek.bookshareapp.ui.adapter.BooksAdapter;
 
 import java.util.List;
 
