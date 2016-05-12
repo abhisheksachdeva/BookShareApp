@@ -3,8 +3,6 @@ package com.example.abhishek.bookshareapp.api.models;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-import java.util.List;
-
 /**
  * Created by abhishek on 30/1/16.
  */
@@ -18,7 +16,7 @@ public class Book {
 	public String page_count;
 
 	@Element(name="average_rating")	
-	public String rating;
+	public float rating;
 
 	public BookDetails getBookDetails(){
 		return bookDetails;
@@ -27,7 +25,7 @@ public class Book {
 	public String  getPage_count(){
 		return page_count;
 	}
-	public String getRating(){
+	public float getRating(){
 		return rating;
 	}
 
