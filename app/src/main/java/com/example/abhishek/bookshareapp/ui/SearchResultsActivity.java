@@ -25,11 +25,11 @@ public class SearchResultsActivity extends AppCompatActivity {
     List<Book> bookList;
     BooksAdapter adapter;
     ListView resultsList;
-    String API_KEY= CommonUtilities.API_KEY;
+    String API_KEY = CommonUtilities.API_KEY;
     Search sr;
     EditText searchEditText;
-    String mode ="all";
-    RadioButton r1,r2,r3;
+    String mode = "all";
+    RadioButton r1, r2, r3;
     BookListFragment bookListFragment;
 
     @Override
@@ -51,19 +51,19 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     }
 
-    public void search(View view){
+    public void search(View view) {
 
-        if(r2.isChecked())
-        {
-            mode="title";
+        if (r1.isChecked()) {
+            mode = "all";
         }
-        else if(r3.isChecked())
-        {
-            mode="author";
+        if (r2.isChecked()) {
+            mode = "title";
+        } else if (r3.isChecked()) {
+            mode = "author";
         }
 
         query = searchEditText.getText().toString();
-         bookListFragment.getBooks(query,mode, API_KEY);
+        bookListFragment.getBooks(query, mode, API_KEY);
     }
 
 }
