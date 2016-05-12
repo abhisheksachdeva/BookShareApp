@@ -44,6 +44,15 @@ public class SearchResultsActivity extends AppCompatActivity {
         r3 = (RadioButton) findViewById(R.id.author);
 
         bookListFragment = new BookListFragment();
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, bookListFragment)
+                .commit();
+
+    }
+
+    public void search(View view){
+
         if(r2.isChecked())
         {
             mode="title";
@@ -53,13 +62,6 @@ public class SearchResultsActivity extends AppCompatActivity {
             mode="author";
         }
 
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, bookListFragment)
-                .commit();
-
-    }
-
-    public void search(View view){
         query = searchEditText.getText().toString();
          bookListFragment.getBooks(query,mode, API_KEY);
     }
