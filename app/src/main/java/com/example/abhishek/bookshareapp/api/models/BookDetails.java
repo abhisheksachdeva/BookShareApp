@@ -4,7 +4,7 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 @Root(name="best_book",strict = false)
-	public class BookDetails{
+	public class BookDetails {
 
 	@Element(name = "title")
 	public String title;
@@ -36,4 +36,4 @@ import org.simpleframework.xml.Root;
 	}
 
 
-		}
+}

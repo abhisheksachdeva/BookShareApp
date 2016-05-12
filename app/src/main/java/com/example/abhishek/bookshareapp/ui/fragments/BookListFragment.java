@@ -3,7 +3,7 @@ package com.example.abhishek.bookshareapp.ui.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -42,7 +42,7 @@ public class BookListFragment extends Fragment {
         adapter = new BooksAdapter(getActivity(), bookList);
         resultsList.setAdapter(adapter);
 
-        mLayoutManager = new GridLayoutManager(getActivity(),2);
+        mLayoutManager = new LinearLayoutManager(getActivity());
 
         resultsList.setLayoutManager(mLayoutManager);
 
