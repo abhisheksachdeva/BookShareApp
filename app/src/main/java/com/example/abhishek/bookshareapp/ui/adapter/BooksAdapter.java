@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
         public TextView titleBook;
         public TextView authorBook;
         public ImageView imageBook;
+        public RatingBar ratingBook;
         Context context;
 
         public ViewHolder(View v, Context context){
@@ -34,9 +36,11 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
             titleBook = (TextView)v.findViewById(R.id.row_books_title);
             authorBook = (TextView)v.findViewById(R.id.row_books_author);
             imageBook = (ImageView) v.findViewById(R.id.row_books_imageView);
+            ratingBook = (RatingBar) v.findViewById(R.id.row_books_rating);
             titleBook.setOnClickListener(this);
             authorBook.setOnClickListener(this);
             imageBook.setOnClickListener(this);
+            ratingBook.setOnClickListener(this);
             this.context = context;
         }
 
@@ -71,7 +75,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
         holder.titleBook.setText(tempValues.getBookDetails().getTitle());
         holder.authorBook.setText(tempValues.getBookDetails().getAuthor().getAuthor_name());
         Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.imageBook);
-
+        holder.ratingBook.setRating(tempValues.getRating());
 
     }
 
