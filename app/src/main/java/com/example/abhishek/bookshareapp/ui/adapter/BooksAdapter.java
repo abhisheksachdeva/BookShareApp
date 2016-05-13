@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.models.Book;
@@ -21,10 +20,14 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
 
     private Context context;
     private List<Book> bookList;
-    private static LayoutInflater inflater=null;
     Book tempValues=null;
+    private final OnItemClickListener listener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public interface OnItemClickListener {
+        public void onItemClick(Book book);
+    }
+
+    public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView titleBook;
         public TextView authorBook;
         public ImageView imageBook;
@@ -37,23 +40,16 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
             authorBook = (TextView)v.findViewById(R.id.row_books_author);
             imageBook = (ImageView) v.findViewById(R.id.row_books_imageView);
             ratingBook = (RatingBar) v.findViewById(R.id.row_books_rating);
-            titleBook.setOnClickListener(this);
-            authorBook.setOnClickListener(this);
-            imageBook.setOnClickListener(this);
-            ratingBook.setOnClickListener(this);
             this.context = context;
         }
 
-        @Override
-        public void onClick(View v) {
-            Toast.makeText(context,"Clicked",Toast.LENGTH_SHORT).show();
-        }
     }
 
-    public BooksAdapter(Context context,List<Book> bookList){
+    public BooksAdapter(Context context, List<Book> bookList, OnItemClickListener listener){
         this.bookList =bookList;
         this.context=context;
         Log.d("BookAdapter","Constructor");
+        this.listener = listener;
     }
 
     @Override
@@ -68,7 +64,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
         tempValues = bookList.get(position);
 
@@ -76,6 +72,13 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
         holder.authorBook.setText(tempValues.getBookDetails().getAuthor().getAuthor_name());
         Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.imageBook);
         holder.ratingBook.setRating(tempValues.getRating());
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClick(bookList.get(position));
+            }
+        });
 
     }
 

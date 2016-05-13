@@ -1,62 +1,64 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <EditText
+            android:id="@+id/searchEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Search By"
             android:layout_weight="2"
-            android:id="@+id/searchEditText" />
+            android:hint="Search By" />
 
         <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Search"
             android:id="@+id/searchButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
             android:onClick="search"
-            android:layout_gravity="center_horizontal" />
+            android:text="Search" />
+
     </LinearLayout>
 
 
     <RadioGroup
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_gravity="center">
+        android:layout_gravity="center"
+        android:orientation="horizontal">
 
         <RadioButton
+            android:id="@+id/all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="All"
-            android:id="@+id/all"/>
+            android:text="All" />
 
         <RadioButton
+            android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Title"
-            android:id="@+id/title"/>
+            android:text="Title" />
 
         <RadioButton
+            android:id="@+id/author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Author"
-            android:id="@+id/author" />
+            android:text="Author" />
 
     </RadioGroup>
 
 
     <FrameLayout
+        android:id="@+id/container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/container"/>
-
+        android:layout_height="wrap_content" />
 
 
 </LinearLayout>

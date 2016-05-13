@@ -3,9 +3,6 @@ package com.example.abhishek.bookshareapp.api.models;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-/**
- * Created by abhishek on 30/1/16.
- */
 @Root(name="work",strict = false)
 public class Book {
 
