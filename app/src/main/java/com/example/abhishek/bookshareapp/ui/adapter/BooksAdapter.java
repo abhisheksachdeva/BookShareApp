@@ -32,6 +32,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
         public TextView authorBook;
         public ImageView imageBook;
         public RatingBar ratingBook;
+        public TextView ratingCount;
         Context context;
 
         public ViewHolder(View v, Context context){
@@ -40,6 +41,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
             authorBook = (TextView)v.findViewById(R.id.row_books_author);
             imageBook = (ImageView) v.findViewById(R.id.row_books_imageView);
             ratingBook = (RatingBar) v.findViewById(R.id.row_books_rating);
+
             this.context = context;
         }
 
@@ -72,6 +74,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
         holder.authorBook.setText(tempValues.getBookDetails().getAuthor().getAuthor_name());
         Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.imageBook);
         holder.ratingBook.setRating(tempValues.getRating());
+        holder.ratingCount.setText(tempValues.getRatingCount());
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

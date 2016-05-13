@@ -6,9 +6,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="4dp"
+<<<<<<< HEAD
     card_view:cardElevation="4dp"
     cardUseCompatPadding="true"
     android:layout_margin="4dp">
+=======
+    card_view:cardBackgroundColor="@color/cardview_light_background"
+    card_view:cardElevation="3dp"
+    android:foregroundGravity="center"
+    android:layout_margin="2dp"
+    android:layout_marginBottom="2dp"
+    android:paddingBottom="2dp">
+>>>>>>> 712e06f370a49ee4a87749e1b5f1292c9c7b83f6
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +44,8 @@
                 android:layout_height="wrap_content"
                 android:text="Title"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:maxLines="2"/>
 
             <TextView
                 android:id="@+id/row_books_author"
@@ -51,6 +61,16 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/row_books_rating"/>
 
+<<<<<<< HEAD
+=======
+            <TextView
+                android:id="@+id/ratings_count"
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                />
+
+
+>>>>>>> 712e06f370a49ee4a87749e1b5f1292c9c7b83f6
         </LinearLayout>
 
     </LinearLayout>

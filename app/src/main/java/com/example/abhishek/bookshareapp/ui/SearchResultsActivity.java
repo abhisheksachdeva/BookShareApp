@@ -1,8 +1,11 @@
 package com.example.abhishek.bookshareapp.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
 
@@ -38,7 +41,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     }
 
     public void search(View view) {
-
+        Log.d("sabh","dfgf");
         if (r1.isChecked()) {
             mode = "all";
         }
@@ -49,9 +52,17 @@ public class SearchResultsActivity extends AppCompatActivity {
             mode = "author";
         }
 
+        hideKeyboard();
         query = searchEditText.getText().toString();
         bookListFragment.getBooks(query, mode, API_KEY);
     }
 
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 }
 
