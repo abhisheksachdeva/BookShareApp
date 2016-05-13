@@ -45,14 +45,6 @@ public class BookListFragment extends Fragment {
         resultsList.setLayoutManager(mLayoutManager);
         context = getActivity();
 
-        adapter = new BooksAdapter(getActivity(), bookList, new BooksAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(Book book) {
-                Toast.makeText(context, book.getBookDetails().getTitle(), Toast.LENGTH_SHORT).show();
-            }
-        });
-        resultsList.setAdapter(adapter);
-
         return view;
     }
 
@@ -83,7 +75,6 @@ public class BookListFragment extends Fragment {
                         resultsList.setAdapter(adapter);
                     }
                     adapter.notifyDataSetChanged();
-                    Toast.makeText(getActivity(), sr.getBooks().get(0).getBookDetails().getAuthor().getAuthor_name(), Toast.LENGTH_SHORT).show();
                 }
 
             }

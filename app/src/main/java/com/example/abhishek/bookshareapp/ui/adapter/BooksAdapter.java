@@ -41,6 +41,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
             authorBook = (TextView)v.findViewById(R.id.row_books_author);
             imageBook = (ImageView) v.findViewById(R.id.row_books_imageView);
             ratingBook = (RatingBar) v.findViewById(R.id.row_books_rating);
+            ratingCount = (TextView) v.findViewById(R.id.row_books_ratings_count);
 
             this.context = context;
         }
@@ -74,7 +75,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
         holder.authorBook.setText(tempValues.getBookDetails().getAuthor().getAuthor_name());
         Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.imageBook);
         holder.ratingBook.setRating(tempValues.getRating());
-        holder.ratingCount.setText(tempValues.getRatingCount());
+        holder.ratingCount.setText(tempValues.getRatingCount() + " votes");
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
