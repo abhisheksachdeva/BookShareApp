@@ -7,9 +7,11 @@
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="4dp"
     card_view:cardBackgroundColor="@color/cardview_light_background"
-    card_view:cardElevation="4dp"
+    card_view:cardElevation="3dp"
     android:foregroundGravity="center"
-    android:layout_margin="10dp">
+    android:layout_margin="2dp"
+    android:layout_marginBottom="2dp"
+    android:paddingBottom="2dp">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -35,7 +37,8 @@
                 android:layout_height="wrap_content"
                 android:text="Title"
                 android:textStyle="bold"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:maxLines="2"/>
 
             <TextView
                 android:id="@+id/row_books_author"
@@ -50,6 +53,12 @@
                 style="?android:attr/ratingBarStyleSmall"
                 android:layout_height="wrap_content"
                 android:id="@+id/row_books_rating"/>
+
+            <TextView
+                android:id="@+id/ratings_count"
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                />
 
 
         </LinearLayout>
