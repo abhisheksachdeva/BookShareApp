@@ -1,6 +1,7 @@
 package com.example.abhishek.bookshareapp.ui.fragments;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -32,19 +33,17 @@ public class BookListFragment extends Fragment {
     BooksAdapter adapter;
     private RecyclerView.LayoutManager mLayoutManager;
     Search sr;
+    Context context;
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.book_list_fragment, container, false);
+
         resultsList = (RecyclerView)view.findViewById(R.id.results_list);
-
-        adapter = new BooksAdapter(getActivity(), bookList);
-        resultsList.setAdapter(adapter);
-
         mLayoutManager = new LinearLayoutManager(getActivity());
-
         resultsList.setLayoutManager(mLayoutManager);
+        context = getActivity();
 
         return view;
     }
@@ -61,17 +60,28 @@ public class BookListFragment extends Fragment {
                 if(response.body()!=null) {
                     Log.d("searchresp", response.toString());
                     sr = response.body().getSearch();
-                    bookList = sr.getBooks();
-                    adapter = new BooksAdapter(getActivity(), bookList);
-                    resultsList.setAdapter(adapter);
-                    Log.d("searchresp", bookList.toString());
-                    Toast.makeText(getActivity(), sr.getBooks().get(0).getBookDetails().getAuthor().getAuthor_name(), Toast.LENGTH_SHORT).show();
+                    if(bookList!=null) {
+                        bookList.clear();
+                        bookList.addAll(sr.getBooks());
+                    }
+                    else {
+                        bookList = sr.getBooks();
+                        adapter = new BooksAdapter(getActivity(), bookList, new BooksAdapter.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(Book book) {
+                                Toast.makeText(context, book.getBookDetails().getTitle(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        resultsList.setAdapter(adapter);
+                    }
+                    adapter.notifyDataSetChanged();
                 }
 
             }
 
             @Override
             public void onFailure(Call<GoodreadsResponse> call, Throwable t) {
+
                 Log.d("searchresp","searchOnFail "+ t.toString());
 
             }

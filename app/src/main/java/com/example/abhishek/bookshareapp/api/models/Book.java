@@ -4,9 +4,6 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 import org.simpleframework.xml.strategy.Strategy;
 
-/**
- * Created by abhishek on 30/1/16.
- */
 @Root(name="work",strict = false)
 public class Book {
 

@@ -7,29 +7,15 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.RadioButton;
 
 import com.example.abhishek.bookshareapp.R;
-import com.example.abhishek.bookshareapp.api.models.Book;
-import com.example.abhishek.bookshareapp.api.models.Search;
-import com.example.abhishek.bookshareapp.ui.adapter.BooksAdapter;
 import com.example.abhishek.bookshareapp.ui.fragments.BookListFragment;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 
-import java.util.List;
-
-/**
- * Created by abhishek on 13/2/16.
- */
 public class SearchResultsActivity extends AppCompatActivity {
-    String id;
     String query;
-    List<Book> bookList;
-    BooksAdapter adapter;
-    ListView resultsList;
     String API_KEY = CommonUtilities.API_KEY;
-    Search sr;
     EditText searchEditText;
     String mode = "all";
     RadioButton r1, r2, r3;
@@ -61,7 +47,8 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
         if (r2.isChecked()) {
             mode = "title";
-        } else if (r3.isChecked()) {
+        }
+        else if (r3.isChecked()) {
             mode = "author";
         }
 

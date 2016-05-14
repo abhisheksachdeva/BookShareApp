@@ -1,33 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/card_view"
+    cardUseCompatPadding="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="4dp"
     card_view:cardCornerRadius="4dp"
-    card_view:cardBackgroundColor="@color/cardview_light_background"
-    card_view:cardElevation="3dp"
-    android:foregroundGravity="center"
-    android:layout_margin="2dp"
-    android:layout_marginBottom="2dp"
-    android:paddingBottom="2dp">
+    card_view:cardElevation="4dp">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center">
 
         <ImageView
             android:id="@+id/row_books_imageView"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_media_ff"
-            android:layout_margin="16dp"/>
+            android:layout_margin="16dp"
+            android:src="@android:drawable/ic_media_ff"/>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -55,14 +52,12 @@
                 android:id="@+id/row_books_rating"/>
 
             <TextView
-                android:id="@+id/ratings_count"
+                android:id="@+id/row_books_ratings_count"
                 android:layout_width="match_parent"
-                android:layout_height="16dp"
+                android:layout_height="wrap_content"
                 />
 
-
         </LinearLayout>
-
 
     </LinearLayout>
 
