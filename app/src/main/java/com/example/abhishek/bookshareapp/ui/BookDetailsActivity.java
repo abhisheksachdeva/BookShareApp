@@ -12,6 +12,7 @@ import com.example.abhishek.bookshareapp.api.BookDetailsAPI;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.models.Book2;
 import com.example.abhishek.bookshareapp.api.models.GoodreadsResponse;
+import com.example.abhishek.bookshareapp.api.models.GoodreadsResponse2;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 
 import retrofit2.Call;
@@ -36,23 +37,23 @@ public class BookDetailsActivity extends AppCompatActivity {
         img = (ImageView) findViewById(R.id.book_detail_image);
         stars = (RatingBar) findViewById(R.id.book_detail_rating);
         i=Integer.parseInt(id);
-//        getBookDetails(i,CommonUtilities.API_KEY);
+        getBookDetails(i,CommonUtilities.API_KEY);
 
 
 
-//    }
+    }
 
-//    public void getBookDetails(Integer search_id,String key) {
+    public void getBookDetails(Integer search_id,String key) {
 
         BookDetailsAPI api = NetworkingFactory.getInstance().getBookDetailsApi();
-        Call<GoodreadsResponse> call = api.getBooksDetails(i, CommonUtilities.API_KEY);
+        Call<GoodreadsResponse2> call = api.getBooksDetails(search_id, key);
 
-        call.enqueue(new Callback<GoodreadsResponse>() {
+        call.enqueue(new Callback<GoodreadsResponse2>() {
             @Override
-            public void onResponse(Call<GoodreadsResponse> call, Response<GoodreadsResponse> response) {
+            public void onResponse(Call<GoodreadsResponse2> call, Response<GoodreadsResponse2> response) {
                 if(response.body()!=null) {
                     tempbook = response.body().getBook();
-                    title.setText(tempbook.getBk().getBookDetails().getTitle());
+                    title.setText(tempbook.getTitle());
                     description.setText(tempbook.getDesc());
 
 
@@ -66,7 +67,7 @@ public class BookDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<GoodreadsResponse> call, Throwable t) {
+            public void onFailure(Call<GoodreadsResponse2> call, Throwable t) {
 
                 Log.d("searchresp", "searchOnFail " + t.toString());
 

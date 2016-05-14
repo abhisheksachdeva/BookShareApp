@@ -9,12 +9,18 @@ import org.simpleframework.xml.Root;
         @Element(name="work")
         Book bk;
 
+        @Element(name="title")
+        String title;
+
         @Element(name="description")
         String desc;
 
 
         public Book getBk(){
             return bk;
+        }
+        public String getTitle(){
+            return title;
         }
 
         public String getDesc(){
