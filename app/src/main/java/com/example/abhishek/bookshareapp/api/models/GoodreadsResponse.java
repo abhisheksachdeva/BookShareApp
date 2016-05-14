@@ -9,7 +9,8 @@ public class GoodreadsResponse {
 
     @Element(name="search")
     public Search search;
-
+    public Book2 bk2;
+    public  Book2 getBook(){return bk2;}
     public Search getSearch(){
     	return search;
     }

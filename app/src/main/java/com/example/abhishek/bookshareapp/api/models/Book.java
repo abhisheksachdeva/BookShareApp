@@ -1,4 +1,4 @@
-package com.example.abhishek.bookshareapp.api.models;
+	package com.example.abhishek.bookshareapp.api.models;
 
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
@@ -9,6 +9,9 @@ public class Book {
 
 	@Element(name="best_book")
 	BookDetails bookDetails;
+
+	@Element(name="id")
+	public Integer search_id;
 
 	@Element(name="books_count")
 	public String page_count;
@@ -21,6 +24,10 @@ public class Book {
 
 	public BookDetails getBookDetails(){
 		return bookDetails;
+	}
+
+	public Integer getId(){
+		return search_id;
 	}
 
 	public String  getPage_count(){
