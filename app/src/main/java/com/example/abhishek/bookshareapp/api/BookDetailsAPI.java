@@ -11,7 +11,7 @@ import retrofit2.http.Query;
 
 public interface BookDetailsAPI {
 
-    @GET("show.xml")
+    @GET("book/show.xml")
     Call<GoodreadsResponse2> getBooksDetails(
             @Query("id") Integer search_id,
             @Query("key") String key

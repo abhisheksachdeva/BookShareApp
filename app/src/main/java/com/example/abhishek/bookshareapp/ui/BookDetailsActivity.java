@@ -14,6 +14,7 @@ import com.example.abhishek.bookshareapp.api.models.Book2;
 import com.example.abhishek.bookshareapp.api.models.GoodreadsResponse;
 import com.example.abhishek.bookshareapp.api.models.GoodreadsResponse2;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
+import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,24 +38,32 @@ public class BookDetailsActivity extends AppCompatActivity {
         img = (ImageView) findViewById(R.id.book_detail_image);
         stars = (RatingBar) findViewById(R.id.book_detail_rating);
         i=Integer.parseInt(id);
-        getBookDetails(i,CommonUtilities.API_KEY);
+        getBookDetails(i);
+
 
 
 
     }
 
-    public void getBookDetails(Integer search_id,String key) {
+    public void getBookDetails(Integer search_id) {
 
         BookDetailsAPI api = NetworkingFactory.getInstance().getBookDetailsApi();
-        Call<GoodreadsResponse2> call = api.getBooksDetails(search_id, key);
+        Call<GoodreadsResponse2> call = api.getBooksDetails(search_id, CommonUtilities.API_KEY);
+        Log.d("resp", "fhgfghghghgf");
+
 
         call.enqueue(new Callback<GoodreadsResponse2>() {
             @Override
             public void onResponse(Call<GoodreadsResponse2> call, Response<GoodreadsResponse2> response) {
                 if(response.body()!=null) {
+                    Log.d("bookresp", response.toString());
                     tempbook = response.body().getBook();
                     title.setText(tempbook.getTitle());
                     description.setText(tempbook.getDesc());
+                    Picasso.with(getBaseContext()).load(tempbook.getImage_url()).into(img);
+                    stars.setRating(tempbook.getRating());
+
+
 
 
                 }
