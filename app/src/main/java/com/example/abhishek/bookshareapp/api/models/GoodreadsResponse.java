@@ -9,10 +9,13 @@ public class GoodreadsResponse {
 
     @Element(name="search")
     public Search search;
-
     public Search getSearch(){
     	return search;
     }
+
+//    @Element(name="book")
+//    public Book2 bk2;
+//    public  Book2 getBook(){return bk2;}
 
 
     public GoodreadsResponse(){

@@ -9,6 +9,9 @@ import org.simpleframework.xml.Root;
 	@Element(name = "title")
 	public String title;
 
+	@Element(name="id")
+	public Integer search_id;
+
 	@Element(name = "image_url")
 	public String image_url;
 
@@ -18,6 +21,9 @@ import org.simpleframework.xml.Root;
 	@Element(name = "author")
 	Author author;
 
+	public Integer getId(){
+		return search_id;
+	}
 
 	public String getTitle(){
 		return title;
