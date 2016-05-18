@@ -19,8 +19,6 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.models.Book;
 import com.example.abhishek.bookshareapp.api.models.GoodreadsResponse;
 import com.example.abhishek.bookshareapp.api.models.Search;
-import com.example.abhishek.bookshareapp.ui.BookDetailsActivity;
-import com.example.abhishek.bookshareapp.ui.SearchResultsActivity;
 import com.example.abhishek.bookshareapp.ui.adapter.BooksAdapter;
 
 import java.util.List;
@@ -36,7 +34,6 @@ public class BookListFragment extends Fragment {
     BooksAdapter adapter;
     private RecyclerView.LayoutManager mLayoutManager;
     Search sr;
-    Integer id;
     Context context;
 
     @Nullable
@@ -51,7 +48,7 @@ public class BookListFragment extends Fragment {
 
         return view;
     }
-
+    
     public void getBooks(String query,String field,String key) {
 
         Toast.makeText(getActivity(),"getbooks",Toast.LENGTH_SHORT).show();
@@ -73,11 +70,7 @@ public class BookListFragment extends Fragment {
                         adapter = new BooksAdapter(getActivity(), bookList, new BooksAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Book book) {
-                                id = book.getBookDetails().getId();
-                                String idd = id.toString();
-                                Intent i =new Intent(getContext(),BookDetailsActivity.class);
-                                i.putExtra("search_id",idd);
-                                startActivity(i);
+
                                 Toast.makeText(context, book.getBookDetails().getTitle(), Toast.LENGTH_SHORT).show();
                             }
                         });

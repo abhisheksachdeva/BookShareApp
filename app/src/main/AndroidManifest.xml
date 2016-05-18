@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.LoginActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -30,7 +30,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.BookDetailsActivity"></activity>
+        <activity android:name=".ui.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".ui.SignupActivity" />
     </application>
 
 </manifest>

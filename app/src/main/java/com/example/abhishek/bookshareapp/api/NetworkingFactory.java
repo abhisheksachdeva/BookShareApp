@@ -15,7 +15,6 @@ import static com.example.abhishek.bookshareapp.utils.CommonUtilities.goodreads_
 public class NetworkingFactory {
 
     BooksAPI api;
-    BookDetailsAPI api2;
 
     private static NetworkingFactory ourInstance = new NetworkingFactory(CommonUtilities.goodreads_api_url);
 
@@ -30,14 +29,10 @@ public class NetworkingFactory {
                 .build();
 
         api = retrofit.create(BooksAPI.class);
-        api2 = retrofit.create(BookDetailsAPI.class);
     }
 
     public BooksAPI getBooksApi(){
         return api;
-    }
-    public BookDetailsAPI getBookDetailsApi(){
-        return api2;
     }
 
 }
