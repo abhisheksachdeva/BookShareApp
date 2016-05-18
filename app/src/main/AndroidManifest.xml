@@ -30,7 +30,9 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.BookDetailsActivity"></activity>
+        <activity android:name=".ui.BookDetailsActivity" />
+        <activity android:name=".ui.LoginActivity" />
+        <activity android:name=".ui.SignupActivity" />
     </application>
 
 </manifest>

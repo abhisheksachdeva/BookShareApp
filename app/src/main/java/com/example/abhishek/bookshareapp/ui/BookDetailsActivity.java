@@ -40,17 +40,12 @@ public class BookDetailsActivity extends AppCompatActivity {
         i=Integer.parseInt(id);
         getBookDetails(i);
 
-
-
-
     }
 
     public void getBookDetails(Integer search_id) {
 
         BookDetailsAPI api = NetworkingFactory.getInstance().getBookDetailsApi();
         Call<GoodreadsResponse2> call = api.getBooksDetails(search_id, CommonUtilities.API_KEY);
-        Log.d("resp", "fhgfghghghgf");
-
 
         call.enqueue(new Callback<GoodreadsResponse2>() {
             @Override
@@ -62,27 +57,20 @@ public class BookDetailsActivity extends AppCompatActivity {
                     description.setText(tempbook.getDesc());
                     Picasso.with(getBaseContext()).load(tempbook.getImage_url()).into(img);
                     stars.setRating(tempbook.getRating());
-
-
-
-
                 }
                 else{
                     title.setText("You're Doomed!!");
                     description.setText(response.toString());
-
                 }
 
             }
 
             @Override
             public void onFailure(Call<GoodreadsResponse2> call, Throwable t) {
-
                 Log.d("searchresp", "searchOnFail " + t.toString());
 
             }
         });
-
 
     }
 
