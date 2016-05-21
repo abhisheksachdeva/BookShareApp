@@ -2,6 +2,7 @@ package com.example.abhishek.bookshareapp.ui.fragments;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,7 +48,7 @@ public class BookListFragment extends Fragment {
 
         return view;
     }
-
+    
     public void getBooks(String query,String field,String key) {
 
         Toast.makeText(getActivity(),"getbooks",Toast.LENGTH_SHORT).show();
@@ -69,6 +70,7 @@ public class BookListFragment extends Fragment {
                         adapter = new BooksAdapter(getActivity(), bookList, new BooksAdapter.OnItemClickListener() {
                             @Override
                             public void onItemClick(Book book) {
+
                                 Toast.makeText(context, book.getBookDetails().getTitle(), Toast.LENGTH_SHORT).show();
                             }
                         });
