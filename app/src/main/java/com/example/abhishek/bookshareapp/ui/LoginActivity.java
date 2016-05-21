@@ -91,9 +91,9 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
 
-                // TODO: Implement successful signup logic here
                 // By default we just finish the Activity and log them in automatically
-                this.finish();
+                Toast.makeText(this, "Signup Successful!", Toast.LENGTH_SHORT).show();
+
             }
         }
     }
