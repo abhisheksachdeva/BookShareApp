@@ -1,5 +1,6 @@
 package com.example.abhishek.bookshareapp.api;
 
+import com.example.abhishek.bookshareapp.api.models.Login;
 import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
 
 import retrofit2.Call;
@@ -20,6 +21,14 @@ public interface UsersAPI {
             @Field("first_name") String firstName,
             @Field("last_name") String lastName,
             @Field("contact_no") String contactNo,
-            @Field("password") String password);
+            @Field("password") String password
+    );
+
+    @FormUrlEncoded
+    @POST("login/")
+    Call<Login> getToken(
+            @Field("email") String email,
+            @Field("password") String password
+    );
 
 }

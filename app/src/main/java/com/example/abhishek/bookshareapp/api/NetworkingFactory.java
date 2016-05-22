@@ -5,9 +5,6 @@ import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 import retrofit2.Retrofit;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
-/**
- * Created by manchanda on 1/3/16.
- */
 public class NetworkingFactory {
 
     BooksAPI api;
