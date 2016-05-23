@@ -2,6 +2,7 @@ package com.example.abhishek.bookshareapp.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,6 +28,7 @@ import retrofit2.Retrofit;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
+    SharedPreferences pref;
 
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
@@ -38,6 +40,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
+
+        pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
+        String token = pref.getString("token", "");
+        if(!token.equals("")){
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -98,6 +108,9 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else {
                         Log.i(TAG, response.body().getToken());
+
+                        saveinSP(response.body().getToken());//SP:SharedPreferences
+
                         onLoginSuccess();
                     }
                 }
@@ -167,4 +180,15 @@ public class LoginActivity extends AppCompatActivity {
 
         return valid;
     }
+
+    private void saveinSP(String token) {
+
+        pref = getSharedPreferences("Token", MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("token", token);
+        editor.commit();
+
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.abhishek.bookshareapp.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -29,8 +30,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ListView listview;
     List<Book> books;
     String query;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,12 +71,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void logout(View view) {
 
+        SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.clear();
+        editor.commit();
 
+        Intent i = new Intent(this, LoginActivity.class);
+        startActivity(i);
+        finish();
 
-
-
-
+    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
