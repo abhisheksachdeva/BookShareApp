@@ -16,11 +16,12 @@
     <android.support.design.widget.FloatingActionButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:src="@drawable/plus"
+        android:layout_marginBottom="48dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_margin="16dp"
-        android:id="@+id/button"
-        android:src="@drawable/plus" />
+        android:layout_alignParentEnd="true" />
 
 
 </RelativeLayout>

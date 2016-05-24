@@ -1,11 +1,11 @@
 package com.example.abhishek.bookshareapp.ui;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
-import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,13 +13,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
+import com.example.abhishek.bookshareapp.api.UsersAPI;
+import com.example.abhishek.bookshareapp.api.models.Login;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
+    SharedPreferences pref;
 
     @InjectView(R.id.input_email) EditText _emailText;
     @InjectView(R.id.input_password) EditText _passwordText;
@@ -31,6 +40,14 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.inject(this);
+
+        pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
+        String token = pref.getString("token", "");
+        if(!token.equals("")){
+            Intent i = new Intent(this, MainActivity.class);
+            startActivity(i);
+            finish();
+        }
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -69,20 +86,45 @@ public class LoginActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        // TODO: Implement your own authentication logic here
-        Intent i = new Intent(LoginActivity.this,MainActivity.class);
-        startActivity(i);
+        OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
 
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.43.80:8000/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpclient.build())
+                .build();
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-                        onLoginSuccess();
-                        // onLoginFailed();
-                        progressDialog.dismiss();
+        UsersAPI usersAPI = retrofit.create(UsersAPI.class);
+
+        Call<Login> call = usersAPI.getToken(email, password);
+
+        call.enqueue(new Callback<Login>() {
+            @Override
+            public void onResponse(Call<Login> call, Response<Login> response) {
+                if(response.body()!=null){
+                    if(response.body().getToken().equals("Email or Password was incorrect")) {
+                        _loginButton.setError("Email or Password was incorrect");
+                        onLoginFailed();
                     }
-                }, 3000);
+                    else {
+                        Log.i(TAG, response.body().getToken());
+
+                        saveinSP(response.body().getToken());//SP:SharedPreferences
+
+                        onLoginSuccess();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Login> call, Throwable t) {
+                Log.i(TAG, "onFailure: called");
+                onLoginFailed();
+            }
+        });
+
+        progressDialog.dismiss();
+
     }
 
 
@@ -91,9 +133,9 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
 
-                // TODO: Implement successful signup logic here
                 // By default we just finish the Activity and log them in automatically
-                this.finish();
+                Toast.makeText(this, "Signup Successful!", Toast.LENGTH_SHORT).show();
+
             }
         }
     }
@@ -106,6 +148,8 @@ public class LoginActivity extends AppCompatActivity {
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
         finish();
     }
 
@@ -136,4 +180,15 @@ public class LoginActivity extends AppCompatActivity {
 
         return valid;
     }
+
+    private void saveinSP(String token) {
+
+        pref = getSharedPreferences("Token", MODE_PRIVATE);
+
+        SharedPreferences.Editor editor = pref.edit();
+        editor.putString("token", token);
+        editor.commit();
+
+    }
+
 }

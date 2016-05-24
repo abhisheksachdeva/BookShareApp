@@ -12,9 +12,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
+import com.example.abhishek.bookshareapp.api.UsersAPI;
+import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import okhttp3.OkHttpClient;
+import retrofit2.Call;
+import retrofit2.GsonConverterFactory;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
@@ -58,7 +65,7 @@ public class SignupActivity extends AppCompatActivity {
         Log.d(TAG, "Signup");
 
         if (!validate()) {
-            onSignupFailed();
+            onSignupFailed("Fill details properly");
             return;
         }
 
@@ -81,18 +88,40 @@ public class SignupActivity extends AppCompatActivity {
         String college = _collegeText.getText().toString();
         String contact = _contactText.getText().toString();
 
-        // TODO: Implement your own signup logic here.
+        OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
 
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onSignupSuccess or onSignupFailed
-                        // depending on success
-                        onSignupSuccess();
-                        // onSignupFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 3000);
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.43.80:8000/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpclient.build())
+                .build();
+
+        UsersAPI usersAPI = retrofit.create(UsersAPI.class);
+
+        Call<UserInfo> userInfoCall = usersAPI.get(email, college, hostel, room_no, roll_no, fname, lname, contact, password);
+
+        userInfoCall.enqueue(new retrofit2.Callback<UserInfo>() {
+
+            @Override
+            public void onFailure(Call<UserInfo> call, Throwable t) {
+                onSignupFailed("Check your network connection properly");
+            }
+
+            @Override
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                UserInfo userInfo = response.body();
+
+                if(userInfo.getEmail()!=null) {
+                    Log.i("harshit", userInfo.getEmail());
+                    onSignupSuccess();
+                }
+                else {
+                    onSignupFailed("Fill details completely");
+                }
+            }
+        });
+
+        progressDialog.dismiss();
     }
 
 
@@ -102,8 +131,8 @@ public class SignupActivity extends AppCompatActivity {
         finish();
     }
 
-    public void onSignupFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+    public void onSignupFailed(String toast) {
+        Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
 
         _signupButton.setEnabled(true);
     }
@@ -171,8 +200,12 @@ public class SignupActivity extends AppCompatActivity {
         } else {
             _passwordText.setError(null);
         }
-        if (cnf_password.isEmpty() || (cnf_password!=password)) {
-            _cnf_passwordText.setError("Please enter correct password");
+        if (cnf_password.isEmpty() || !(cnf_password.equals(password))) {
+            if(cnf_password.isEmpty())
+                _cnf_passwordText.setError("Please enter password");
+            else {
+                _cnf_passwordText.setError("Please enter same password");
+            }
             valid = false;
         } else {
             _cnf_passwordText.setError(null);
