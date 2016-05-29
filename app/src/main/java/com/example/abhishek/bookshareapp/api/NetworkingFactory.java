@@ -11,6 +11,7 @@ public class NetworkingFactory {
 
     BooksAPI booksAPI;
     UsersAPI usersAPI;
+    Retrofit retrofit;
 
     private static NetworkingFactory grInstance = new NetworkingFactory(CommonUtilities.goodreads_api_url, false);
     private static NetworkingFactory localInstance = new NetworkingFactory(CommonUtilities.local_books_api_url, true);
@@ -25,9 +26,8 @@ public class NetworkingFactory {
 
     private NetworkingFactory(String url, boolean json) {
         OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
-        Retrofit retrofit;
-        if (json) {
 
+        if (json) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
@@ -40,16 +40,15 @@ public class NetworkingFactory {
                     .client(httpclient.build())
                     .build();
         }
-
-        booksAPI = retrofit.create(BooksAPI.class);
-        usersAPI = retrofit.create(UsersAPI.class);
     }
 
     public BooksAPI getBooksApi() {
+        booksAPI = retrofit.create(BooksAPI.class);
         return booksAPI;
     }
 
     public UsersAPI getUsersAPI() {
+        usersAPI = retrofit.create(UsersAPI.class);
         return usersAPI;
     }
 }
