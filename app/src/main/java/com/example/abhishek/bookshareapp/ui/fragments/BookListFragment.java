@@ -52,7 +52,7 @@ public class BookListFragment extends Fragment {
 
         Toast.makeText(getActivity(),"getbooks",Toast.LENGTH_SHORT).show();
 
-        BooksAPI api = NetworkingFactory.getInstance().getBooksApi();
+        BooksAPI api = NetworkingFactory.getGRInstance().getBooksApi();
         Call<GoodreadsResponse> call = api.getBooks(query,field, key);
         call.enqueue(new Callback<GoodreadsResponse>() {
             @Override

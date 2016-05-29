@@ -11,16 +11,27 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.abhishek.bookshareapp.R;
-import com.example.abhishek.bookshareapp.api.models.Book;
+import com.example.abhishek.bookshareapp.api.NetworkingFactory;
+import com.example.abhishek.bookshareapp.api.UsersAPI;
+import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
+import com.example.abhishek.bookshareapp.ui.adapter.LocalBooksAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
@@ -28,8 +39,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String TAG = MainActivity.class.getSimpleName();
 
     ListView listview;
-    List<Book> books;
+    List<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> booksList;
     String query;
+    LocalBooksAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +49,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         FloatingActionButton button= (FloatingActionButton) findViewById(R.id.button);
 
+        RecyclerView localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
+        localBooksList.setLayoutManager(layoutManager);
+        booksList = new ArrayList<>();
+        adapter = new LocalBooksAdapter(this, booksList, new LocalBooksAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(Book book) {
+                Log.i(TAG, "onItemClick");
+            }
+        });
+        localBooksList.setAdapter(adapter);
+
+        getLocalBooks();
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,7 +87,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             _email.setText("Default Email");
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -86,11 +110,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        // Handle navigation view item clicks here.
         int id = item.getItemId();
 
         if (id == R.id.nav_add_fund) {
-            // Handle the camera action
 
         } else if (id == R.id.nav_change_password) {
 
@@ -100,15 +122,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         } else if (id == R.id.nav_share) {
-            // TODO Auto-generated method stub
-            //Intent next= new Intent(getApplicationContext(),Menu.class);
-            //startActivity(next);
+
             PackageManager pm=getPackageManager();
             try {
 
                 Intent waIntent = new Intent(Intent.ACTION_SEND);
                 waIntent.setType("text/plain");
-                //String text = "YOUR TEXT HERE"
                 String text= "BookShare App !! .You can download the app from here...!";
                 ;
 
@@ -133,5 +152,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    public void getLocalBooks() {
+
+        UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
+        Call<List<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book>> call = api.getBooksList();
+        call.enqueue(new Callback<List<Book>>() {
+            @Override
+            public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
+                if(response.body()!=null) {
+                    Log.d("Search Response:", response.toString());
+                    List<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> localBooksList = response.body();
+                    booksList.clear();
+                    booksList.addAll(localBooksList);
+
+                    adapter.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Book>> call, Throwable t) {
+                Log.d("searchresp","searchOnFail "+ t.toString());
+            }
+        });
+
+    }
 
 }

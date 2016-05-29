@@ -6,9 +6,6 @@ import org.simpleframework.xml.Root;
 
 import java.util.List;
 
-/**
- * Created by abhishek on 16/3/16.
- */
 @Root(name = "search",strict = false)
 public class Search {
     @Element(name="source")
@@ -25,7 +22,6 @@ public class Search {
     public List<Book> getBooks(){
     	return books;
     }
-
 
 
 }
