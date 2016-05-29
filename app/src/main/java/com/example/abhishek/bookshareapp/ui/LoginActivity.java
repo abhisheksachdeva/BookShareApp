@@ -13,17 +13,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
+import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.Login;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -86,18 +84,8 @@ public class LoginActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.43.80:8000/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpclient.build())
-                .build();
-
-        UsersAPI usersAPI = retrofit.create(UsersAPI.class);
-
+        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<Login> call = usersAPI.getToken(email, password);
-
         call.enqueue(new Callback<Login>() {
             @Override
             public void onResponse(Call<Login> call, Response<Login> response) {

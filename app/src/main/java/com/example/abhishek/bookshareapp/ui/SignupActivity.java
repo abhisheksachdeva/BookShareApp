@@ -12,32 +12,42 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
+import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
 
-    @InjectView(R.id.input_Fname) EditText _FnameText;
-    @InjectView(R.id.input_Lname) EditText _LnameText;
-    @InjectView(R.id.input_email) EditText _emailText;
-    @InjectView(R.id.input_password) EditText _passwordText;
-    @InjectView(R.id.input_cnf_password) EditText _cnf_passwordText;
-    @InjectView(R.id.input_room_no) EditText _roomText;
-    @InjectView(R.id.input_roll_no) EditText _rollText;
-    @InjectView(R.id.input_hostel) EditText _hostelText;
-    @InjectView(R.id.input_college) EditText _collegeText;
-    @InjectView(R.id.input_contact) EditText _contactText;
-    @InjectView(R.id.btn_signup) Button _signupButton;
-    @InjectView(R.id.link_login) TextView _loginLink;
+    @InjectView(R.id.input_Fname)
+    EditText _FnameText;
+    @InjectView(R.id.input_Lname)
+    EditText _LnameText;
+    @InjectView(R.id.input_email)
+    EditText _emailText;
+    @InjectView(R.id.input_password)
+    EditText _passwordText;
+    @InjectView(R.id.input_cnf_password)
+    EditText _cnf_passwordText;
+    @InjectView(R.id.input_room_no)
+    EditText _roomText;
+    @InjectView(R.id.input_roll_no)
+    EditText _rollText;
+    @InjectView(R.id.input_hostel)
+    EditText _hostelText;
+    @InjectView(R.id.input_college)
+    EditText _collegeText;
+    @InjectView(R.id.input_contact)
+    EditText _contactText;
+    @InjectView(R.id.btn_signup)
+    Button _signupButton;
+    @InjectView(R.id.link_login)
+    TextView _loginLink;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -88,18 +98,8 @@ public class SignupActivity extends AppCompatActivity {
         String college = _collegeText.getText().toString();
         String contact = _contactText.getText().toString();
 
-        OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.43.80:8000/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpclient.build())
-                .build();
-
-        UsersAPI usersAPI = retrofit.create(UsersAPI.class);
-
-        Call<UserInfo> userInfoCall = usersAPI.get(email, college, hostel, room_no, roll_no, fname, lname, contact, password);
-
+        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+        Call<UserInfo> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact, password);
         userInfoCall.enqueue(new retrofit2.Callback<UserInfo>() {
 
             @Override
@@ -111,11 +111,10 @@ public class SignupActivity extends AppCompatActivity {
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
                 UserInfo userInfo = response.body();
 
-                if(userInfo.getEmail()!=null) {
+                if (userInfo.getEmail() != null) {
                     Log.i("harshit", userInfo.getEmail());
                     onSignupSuccess();
-                }
-                else {
+                } else {
                     onSignupFailed("Fill details completely");
                 }
             }
@@ -151,37 +150,37 @@ public class SignupActivity extends AppCompatActivity {
         String college = _collegeText.getText().toString();
         String contact = _contactText.getText().toString();
 
-        if (fname.isEmpty() ) {
+        if (fname.isEmpty()) {
             valid = false;
         } else {
             _FnameText.setError(null);
         }
-        if (lname.isEmpty() ) {
+        if (lname.isEmpty()) {
             valid = false;
         } else {
             _LnameText.setError(null);
         }
-        if (room_no.isEmpty() ) {
+        if (room_no.isEmpty()) {
             valid = false;
         } else {
             _roomText.setError(null);
         }
-        if (roll_no.isEmpty() ) {
+        if (roll_no.isEmpty()) {
             valid = false;
         } else {
             _rollText.setError(null);
         }
-        if (hostel.isEmpty() ) {
+        if (hostel.isEmpty()) {
             valid = false;
         } else {
             _hostelText.setError(null);
         }
-        if (college.isEmpty() ) {
+        if (college.isEmpty()) {
             valid = false;
         } else {
             _collegeText.setError(null);
         }
-        if (contact.isEmpty() ) {
+        if (contact.isEmpty()) {
             valid = false;
         } else {
             _contactText.setError(null);
@@ -201,7 +200,7 @@ public class SignupActivity extends AppCompatActivity {
             _passwordText.setError(null);
         }
         if (cnf_password.isEmpty() || !(cnf_password.equals(password))) {
-            if(cnf_password.isEmpty())
+            if (cnf_password.isEmpty())
                 _cnf_passwordText.setError("Please enter password");
             else {
                 _cnf_passwordText.setError("Please enter same password");
