@@ -1,6 +1,8 @@
 package com.example.abhishek.bookshareapp.ui.adapter;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -80,7 +82,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
         final String email,title,author,gr_id,gr_img_url;
         final Long ratingsCount;
         final Float rating;
@@ -111,28 +113,44 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
             @Override
             public void onClick(View v) {
 
-                UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                Call<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> addBook = usersAPI.addBook(email,title, author,gr_id,ratingsCount,rating,gr_img_url);
-                addBook.enqueue(new Callback<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book>() {
+                final CharSequence[] items = { "Yes", "No"};
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle("Do you want to add this Book?");
+                builder.setItems(items, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onResponse(Call<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> call, Response<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> response) {
-                        Log.i("Email iD ",Helper.getUserEmail());
-                        if(response.body()!=null)
-                        {
-                            Log.i("AddBook","Success");
-                            Toast.makeText(context,"Book addded",Toast.LENGTH_SHORT).show();
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (items[which].equals("Yes")){
+                            UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                            Call<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> addBook = usersAPI.addBook(email,title, author,gr_id,ratingsCount,rating,gr_img_url);
+                            addBook.enqueue(new Callback<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book>() {
+                                @Override
+                                public void onResponse(Call<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> call, Response<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> response) {
+                                    Log.i("Email iD ",Helper.getUserEmail());
+                                    if(response.body()!=null)
+                                    {
+                                        Log.i("AddBook","Success");
+                                        Toast.makeText(context,"Book added",Toast.LENGTH_SHORT).show();
+                                        holder.add.setEnabled(false);
 
+                                    }
+                                    else
+                                        Log.i("AddBook","Response Null");
+                                    Toast.makeText(context,"Not added",Toast.LENGTH_SHORT).show();
+                                }
+
+                                @Override
+                                public void onFailure(Call<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> call, Throwable t) {
+                                    Log.i("AddBook","Failed!!");
+                                }
+                            });
                         }
-                        else
-                            Log.i("AddBook","Response Null");
-                            Toast.makeText(context,"Not addded",Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onFailure(Call<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> call, Throwable t) {
-                        Log.i("AddBook","Failed!!");
+                        else{
+                            dialog.dismiss();
+                        }
                     }
                 });
+                builder.show();
+
 
 
 
