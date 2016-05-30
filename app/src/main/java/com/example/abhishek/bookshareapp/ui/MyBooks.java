@@ -16,7 +16,6 @@ public class MyBooks extends AppCompatActivity {
         setContentView(R.layout.activity_my_books);
 
 
-
         FloatingActionButton button= (FloatingActionButton) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override

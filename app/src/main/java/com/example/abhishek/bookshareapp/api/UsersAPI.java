@@ -48,9 +48,6 @@ public interface UsersAPI {
             @Field("ratings_count") Long ratingsCount,
             @Field("rating") Float rating,
             @Field("gr_img_url") String gr_img_url
-
-
-
             );
 
 }

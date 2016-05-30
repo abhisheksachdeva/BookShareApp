@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
@@ -119,9 +120,12 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
                         if(response.body()!=null)
                         {
                             Log.i("AddBook","Success");
+                            Toast.makeText(context,"Book addded",Toast.LENGTH_SHORT).show();
+
                         }
                         else
                             Log.i("AddBook","Response Null");
+                            Toast.makeText(context,"Not addded",Toast.LENGTH_SHORT).show();
                     }
 
                     @Override

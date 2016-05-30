@@ -10,7 +10,6 @@ public class Book {
     float rating;
     @SerializedName("ratings_count")
     Long ratingsCount;
-    String url;
     @SerializedName("gr_id")
     String grId;
     @SerializedName("gr_img_url")
@@ -50,7 +49,4 @@ public class Book {
         return title;
     }
 
-    public String getUrl() {
-        return url;
-    }
 }
