@@ -25,6 +25,7 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.ui.adapter.LocalBooksAdapter;
+import com.example.abhishek.bookshareapp.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             _name.setText("Default UserName");
         }
         if (_email != null) {
-            _email.setText("Default Email");
+            _email.setText(Helper.getUserEmail());
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -95,31 +96,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    public void logout(View view) {
 
-        SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
-        SharedPreferences.Editor editor = prefs.edit();
-        editor.clear();
-        editor.commit();
-
-        Intent i = new Intent(this, LoginActivity.class);
-        startActivity(i);
-        finish();
-
-    }
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_add_fund) {
+        if (id == R.id.nav_mybooks) {
+            Intent i = new Intent(this, MyBooks.class);
+            startActivity(i);
+            finish();
+
+        } else if (id == R.id.nav_myprofile) {
 
         } else if (id == R.id.nav_change_password) {
 
-        } else if (id == R.id.nav_change_picture) {
-
         } else if (id == R.id.nav_logout) {
+            SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.clear();
+            editor.commit();
 
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+            finish();
 
         } else if (id == R.id.nav_share) {
 

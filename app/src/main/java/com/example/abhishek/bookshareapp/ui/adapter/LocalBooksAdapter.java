@@ -5,12 +5,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
+import com.example.abhishek.bookshareapp.utils.Helper;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -41,7 +43,6 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
             imageBook = (ImageView) v.findViewById(R.id.row_books_imageView);
             ratingBook = (RatingBar) v.findViewById(R.id.row_books_rating);
             ratingCount = (TextView) v.findViewById(R.id.row_books_ratings_count);
-
             this.context = context;
         }
 
@@ -71,9 +72,12 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
 
         holder.titleBook.setText(tempValues.getTitle());
         holder.authorBook.setText(tempValues.getAuthor());
-        Picasso.with(this.context).load(tempValues.getGrImgUrl()).into(holder.imageBook);
+        if(!tempValues.getGrImgUrl().isEmpty()) {
+            Picasso.with(this.context).load(tempValues.getGrImgUrl()).into(holder.imageBook);
+        }
         holder.ratingBook.setRating(tempValues.getRating());
         holder.ratingCount.setText(tempValues.getRatingsCount() + " votes");
+
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +85,8 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
                 listener.onItemClick(bookList.get(position));
             }
         });
+
+
 
     }
 

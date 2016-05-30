@@ -9,12 +9,12 @@ public class Book {
     String author;
     float rating;
     @SerializedName("ratings_count")
-    long ratingsCount;
-    String url;
+    Long ratingsCount;
     @SerializedName("gr_id")
     String grId;
     @SerializedName("gr_img_url")
     String grImgUrl;
+    @SerializedName("email")
     String email;
 
     public String getAuthor() {
@@ -41,7 +41,7 @@ public class Book {
         return rating;
     }
 
-    public long getRatingsCount() {
+    public Long getRatingsCount() {
         return ratingsCount;
     }
 
@@ -49,7 +49,4 @@ public class Book {
         return title;
     }
 
-    public String getUrl() {
-        return url;
-    }
 }

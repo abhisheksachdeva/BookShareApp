@@ -38,4 +38,16 @@ public interface UsersAPI {
     @GET("books/?format=json")
     Call<List<Book>> getBooksList();
 
+    @FormUrlEncoded
+    @POST("books/?format=json")
+    Call<Book> addBook(
+            @Field("email") String email,
+            @Field("title") String title,
+            @Field("author") String author,
+            @Field("gr_id") String gr_id,
+            @Field("ratings_count") Long ratingsCount,
+            @Field("rating") Float rating,
+            @Field("gr_img_url") String gr_img_url
+            );
+
 }
