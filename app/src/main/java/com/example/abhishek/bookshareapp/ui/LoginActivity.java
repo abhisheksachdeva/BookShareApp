@@ -16,6 +16,7 @@ import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.Login;
+import com.example.abhishek.bookshareapp.utils.Helper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -83,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
+        Helper.setUserEmail(email);
 
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<Login> call = usersAPI.getToken(email, password);
@@ -96,7 +98,6 @@ public class LoginActivity extends AppCompatActivity {
                     }
                     else {
                         Log.i(TAG, response.body().getToken());
-
                         saveinSP(response.body().getToken());//SP:SharedPreferences
 
                         onLoginSuccess();

@@ -15,6 +15,7 @@ import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
+import com.example.abhishek.bookshareapp.utils.Helper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -98,6 +99,7 @@ public class SignupActivity extends AppCompatActivity {
         String college = _collegeText.getText().toString();
         String contact = _contactText.getText().toString();
 
+        Helper.setUserEmail(email);
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<UserInfo> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact, password);
         userInfoCall.enqueue(new retrofit2.Callback<UserInfo>() {

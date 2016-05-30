@@ -58,6 +58,11 @@
                 />
 
         </LinearLayout>
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:background="#FF2333"
+            android:id="@+id/add"/>
 
     </LinearLayout>
 

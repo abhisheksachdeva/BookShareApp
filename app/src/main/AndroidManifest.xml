@@ -30,9 +30,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ui.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.SignupActivity" />
+        <activity android:name=".ui.MyBooks"></activity>
     </application>
 
 </manifest>
