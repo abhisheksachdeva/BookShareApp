@@ -111,6 +111,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();
 
         } else if (id == R.id.nav_myprofile) {
+            Intent i = new Intent(this, UserProfile.class);
+            startActivity(i);
+            finish();
 
         } else if (id == R.id.nav_change_password) {
 

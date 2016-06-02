@@ -7,6 +7,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:layout_marginTop="40dp"
         android:gravity="center">
 
         <ImageView
@@ -29,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:text="Title"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 android:maxLines="2"/>
 
             <TextView
@@ -38,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:text="Author"
                 android:textStyle="italic"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
 
             <RatingBar
                 android:layout_width="wrap_content"
@@ -55,10 +56,23 @@
         </LinearLayout>
 
     </LinearLayout>
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:text="Users Having This Book"
+        />
+
 
     <android.support.v7.widget.RecyclerView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:textAlignment="center"
+        android:layout_marginTop="10dp"
         android:id="@+id/owner_list">
 
     </android.support.v7.widget.RecyclerView>

@@ -33,4 +33,13 @@ public class UserInfo {
     public String getName() {
         return firstName +" "+ lastName;
     }
+
+    public String getRoomNo() {
+        return roomNo;
+    }
+
+    public String getHostel() {
+
+        return hostel;
+    }
 }

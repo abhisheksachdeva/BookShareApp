@@ -1,5 +1,6 @@
 package com.example.abhishek.bookshareapp.ui;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
 import com.example.abhishek.bookshareapp.ui.adapter.LocalBooksAdapter;
 import com.example.abhishek.bookshareapp.ui.adapter.UsersAdapter;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +70,8 @@ public class BookDetailsActivity extends AppCompatActivity{
         String id = getIntent().getExtras().getString("id");
         getBookDetails(id);
 
+
+
     }
 
     public void getBookDetails(String id){
@@ -82,6 +86,8 @@ public class BookDetailsActivity extends AppCompatActivity{
                     titleBook.setText(book.getTitle());
                     authorBook.setText(book.getAuthor());
                     ratingCount.setText(book.getRatingsCount().toString());
+                    ratingBook.setRating(book.getRating());
+                    Picasso.with(BookDetailsActivity.this).load(book.getGrImgUrl()).into(imageBook);
 
                     List<UserInfo> userTempInfoList = book.getUserInfoList();
                     userInfoList.clear();

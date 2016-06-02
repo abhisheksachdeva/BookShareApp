@@ -1,7 +1,9 @@
 package com.example.abhishek.bookshareapp.ui.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +21,7 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.Book;
 import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
+import com.example.abhishek.bookshareapp.ui.UserProfile;
 import com.example.abhishek.bookshareapp.utils.Helper;
 import com.squareup.picasso.Picasso;
 
@@ -36,12 +39,15 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        public void onItemClick(UserInfo userInfo);
+         void onItemClick(UserInfo userInfo);
+
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView nameUser;
         public TextView emailUser;
+        public TextView hostelUser;
+
 
         Context context;
 
@@ -49,6 +55,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
             super(v);
             nameUser = (TextView)v.findViewById(R.id.row_user_name);
             emailUser = (TextView)v.findViewById(R.id.row_user_email);
+            hostelUser = (TextView)v.findViewById(R.id.row_user_hostel);
 
             this.context = context;
         }
@@ -81,10 +88,18 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
 
         holder.nameUser.setText(tempValues.getName());
         holder.emailUser.setText(tempValues.getEmail());
+        holder.hostelUser.setText(tempValues.getHostel());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onItemClick(userList.get(position));
+                Intent i = new Intent(context,UserProfile   .class);
+                i.putExtra("user",tempValues.getName());
+                i.putExtra("email",tempValues.getEmail());
+                i.putExtra("hostel",tempValues.getHostel());
+                i.putExtra("room",tempValues.getRoomNo());
+
+                context.startActivity(i);
             }
         });
 
