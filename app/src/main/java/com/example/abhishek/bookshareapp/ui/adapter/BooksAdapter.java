@@ -151,9 +151,6 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
                 });
                 builder.show();
 
-
-
-
             }
         });
 

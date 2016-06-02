@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String TAG = MainActivity.class.getSimpleName();
 
     ListView listview;
-    List<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> booksList;
+    List<Book> booksList;
     String query;
     LocalBooksAdapter adapter;
 
@@ -57,7 +57,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new LocalBooksAdapter(this, booksList, new LocalBooksAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
+                Intent intent = new Intent(getApplicationContext(), BookDetailsActivity.class);
+                intent.putExtra("id",book.getId());
                 Log.i(TAG, "onItemClick");
+                startActivity(intent);
             }
         });
         localBooksList.setAdapter(adapter);
@@ -155,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void getLocalBooks() {
 
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<List<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book>> call = api.getBooksList();
+        Call<List<Book>> call = api.getBooksList();
         call.enqueue(new Callback<List<Book>>() {
             @Override
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {

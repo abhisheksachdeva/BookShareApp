@@ -1,6 +1,9 @@
 package com.example.abhishek.bookshareapp.api.models.LocalBooks;
 
+import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
 import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
 
 public class Book {
 
@@ -16,6 +19,8 @@ public class Book {
     String grImgUrl;
     @SerializedName("email")
     String email;
+    @SerializedName("owner")
+    List<UserInfo> userInfoList;
 
     public String getAuthor() {
         return author;
@@ -49,4 +54,7 @@ public class Book {
         return title;
     }
 
+    public List<UserInfo> getUserInfoList() {
+        return userInfoList;
+    }
 }

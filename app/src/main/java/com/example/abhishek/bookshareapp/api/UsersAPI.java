@@ -11,6 +11,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 public interface UsersAPI {
 
@@ -49,5 +50,10 @@ public interface UsersAPI {
             @Field("rating") Float rating,
             @Field("gr_img_url") String gr_img_url
             );
+
+    @GET("book/{id}/?format=json")
+    Call<Book> getBookDetails(
+            @Path("id") String id
+    );
 
 }

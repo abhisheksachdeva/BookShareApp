@@ -35,6 +35,8 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.SignupActivity" />
         <activity android:name=".ui.MyBooks"></activity>
+        <activity android:name=".ui.BookDetailsActivity"></activity>
+
     </application>
 
 </manifest>
