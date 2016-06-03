@@ -58,11 +58,8 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_books, parent, false);
-
         ViewHolder vh = new ViewHolder(v, context);
-
         return vh;
-
     }
 
     @Override
@@ -77,17 +74,12 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
         }
         holder.ratingBook.setRating(tempValues.getRating());
         holder.ratingCount.setText(tempValues.getRatingsCount() + " votes");
-
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onItemClick(bookList.get(position));
             }
         });
-
-
-
     }
 
     @Override
@@ -102,6 +94,5 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
     public long getItemId(int position) {
         return 0;
     }
-
 
 }

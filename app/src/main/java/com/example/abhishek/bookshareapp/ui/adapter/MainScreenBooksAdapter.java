@@ -43,7 +43,6 @@ public class MainScreenBooksAdapter extends RecyclerView.Adapter<MainScreenBooks
             ratingCount = (TextView) v.findViewById(R.id.row_books_ratings_count);
             this.context = context;
         }
-
     }
 
     public MainScreenBooksAdapter(Context context, List<Book> bookList, OnItemClickListener listener) {
@@ -56,11 +55,8 @@ public class MainScreenBooksAdapter extends RecyclerView.Adapter<MainScreenBooks
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_books_mainscreen, parent, false);
-
         ViewHolder vh = new ViewHolder(v, context);
-
         return vh;
-
     }
 
     @Override
@@ -75,16 +71,12 @@ public class MainScreenBooksAdapter extends RecyclerView.Adapter<MainScreenBooks
         }
         holder.ratingBook.setRating(tempValues.getRating());
         holder.ratingCount.setText(tempValues.getRatingsCount() + " votes");
-
-
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onItemClick(bookList.get(position));
             }
         });
-
-
 
     }
 
@@ -100,6 +92,5 @@ public class MainScreenBooksAdapter extends RecyclerView.Adapter<MainScreenBooks
     public long getItemId(int position) {
         return 0;
     }
-
 
 }

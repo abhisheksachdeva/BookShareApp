@@ -31,7 +31,6 @@ public class UserProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-
         userName = (TextView)findViewById(R.id.username);
         userEmail = (TextView)findViewById(R.id.useremail);
         address = (TextView)findViewById(R.id.address);
@@ -39,7 +38,6 @@ public class UserProfile extends AppCompatActivity {
         String id = getIntent().getExtras().getString("id");
 
         RecyclerView userBooksList = (RecyclerView) findViewById(R.id.userBooksLists);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         userBooksList.setLayoutManager(layoutManager);
         booksList = new ArrayList<>();
@@ -51,12 +49,7 @@ public class UserProfile extends AppCompatActivity {
         });
 
         userBooksList.setAdapter(adapter);
-
         getUserInfoDetails(id);
-
-
-
-
     }
 
 

@@ -40,15 +40,12 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
 
     public interface OnItemClickListener {
          void onItemClick(UserInfo userInfo);
-
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView nameUser;
         public TextView emailUser;
         public TextView hostelUser;
-
-
         Context context;
 
         public ViewHolder(View v, Context context){
@@ -56,10 +53,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
             nameUser = (TextView)v.findViewById(R.id.row_user_name);
             emailUser = (TextView)v.findViewById(R.id.row_user_email);
             hostelUser = (TextView)v.findViewById(R.id.row_user_hostel);
-
             this.context = context;
         }
-
     }
 
     public UsersAdapter(Context context, List<UserInfo> userList, OnItemClickListener listener){
@@ -73,9 +68,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_users, parent, false);
-
         ViewHolder vh = new ViewHolder(v, context);
-
         return vh;
 
     }
