@@ -5,19 +5,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
-import com.example.abhishek.bookshareapp.utils.Helper;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.ViewHolder> {
+public class MainScreenBooksAdapter extends RecyclerView.Adapter<MainScreenBooksAdapter.ViewHolder> {
 
     private Context context;
     private List<Book> bookList;
@@ -45,10 +43,9 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
             ratingCount = (TextView) v.findViewById(R.id.row_books_ratings_count);
             this.context = context;
         }
-
     }
 
-    public LocalBooksAdapter(Context context, List<Book> bookList, OnItemClickListener listener) {
+    public MainScreenBooksAdapter(Context context, List<Book> bookList, OnItemClickListener listener) {
         this.bookList = bookList;
         this.context = context;
         this.listener = listener;
@@ -57,7 +54,7 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_books, parent, false);
+                .inflate(R.layout.row_books_mainscreen, parent, false);
         ViewHolder vh = new ViewHolder(v, context);
         return vh;
     }
@@ -80,6 +77,7 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
                 listener.onItemClick(bookList.get(position));
             }
         });
+
     }
 
     @Override

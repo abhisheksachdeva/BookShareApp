@@ -1,8 +1,15 @@
 package com.example.abhishek.bookshareapp.api.models.SignUp;
 
+import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class UserInfo {
+
+    String id;
+
+
 
     String email;
     String college;
@@ -18,6 +25,9 @@ public class UserInfo {
     @SerializedName("contact_no")
     String contactNo;
 
+    @SerializedName("books")
+    List<Book> userBookList;
+
     public String getEmail() {
         return email;
     }
@@ -32,5 +42,22 @@ public class UserInfo {
 
     public String getName() {
         return firstName +" "+ lastName;
+    }
+
+    public String getRoomNo() {
+        return roomNo;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public String getHostel() {
+
+        return hostel;
+    }
+
+    public List<Book> getUserBookList() {
+        return userBookList;
     }
 }

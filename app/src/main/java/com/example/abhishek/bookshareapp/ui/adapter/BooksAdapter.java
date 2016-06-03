@@ -130,6 +130,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
                                     {
                                         Log.i("AddBook","Success");
                                         Toast.makeText(context,"Book added",Toast.LENGTH_SHORT).show();
+                                        Log.i("response",response.toString());
                                         holder.add.setEnabled(false);
 
                                     }

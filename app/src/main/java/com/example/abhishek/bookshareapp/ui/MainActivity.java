@@ -25,6 +25,7 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.ui.adapter.LocalBooksAdapter;
+import com.example.abhishek.bookshareapp.ui.adapter.MainScreenBooksAdapter;
 import com.example.abhishek.bookshareapp.utils.Helper;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ListView listview;
     List<Book> booksList;
     String query;
-    LocalBooksAdapter adapter;
+    MainScreenBooksAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +55,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         localBooksList.setLayoutManager(layoutManager);
         booksList = new ArrayList<>();
-        adapter = new LocalBooksAdapter(this, booksList, new LocalBooksAdapter.OnItemClickListener() {
+        adapter = new MainScreenBooksAdapter(this, booksList, new MainScreenBooksAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
                 Intent intent = new Intent(getApplicationContext(), BookDetailsActivity.class);
@@ -111,6 +112,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();
 
         } else if (id == R.id.nav_myprofile) {
+            Intent i = new Intent(this, UserProfile.class);
+            startActivity(i);
+            finish();
 
         } else if (id == R.id.nav_change_password) {
 

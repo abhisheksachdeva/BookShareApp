@@ -31,7 +31,6 @@ public class MyBooks extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
-
         RecyclerView localBooksList = (RecyclerView) findViewById(R.id.localBooksLists);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         localBooksList.setLayoutManager(layoutManager);
@@ -43,9 +42,7 @@ public class MyBooks extends AppCompatActivity {
             }
         });
         localBooksList.setAdapter(adapter);
-
         getLocalBooks();
-
 
         FloatingActionButton button= (FloatingActionButton) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -53,9 +50,9 @@ public class MyBooks extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i= new Intent(MyBooks.this,SearchResultsActivity.class);
                 startActivity(i);
+                finish();
             }
         });
-
     }
 
     @Override
@@ -64,7 +61,6 @@ public class MyBooks extends AppCompatActivity {
         Intent i= new Intent(MyBooks.this,MainActivity.class);
         startActivity(i);
         finish();
-
     }
 
     public void getLocalBooks() {
@@ -79,10 +75,8 @@ public class MyBooks extends AppCompatActivity {
                     List<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> localBooksList = response.body();
                     booksList.clear();
                     booksList.addAll(localBooksList);
-
                     adapter.notifyDataSetChanged();
                 }
-
             }
 
             @Override
@@ -90,6 +84,5 @@ public class MyBooks extends AppCompatActivity {
                 Log.d("searchresp","searchOnFail "+ t.toString());
             }
         });
-
     }
 }

@@ -24,21 +24,40 @@
                 android:id="@+id/row_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Title"
+                android:text="Name"
+                android:textAlignment="center"
+                android:layout_gravity="center"
                 android:textStyle="bold"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 android:maxLines="2"/>
 
             <TextView
                 android:id="@+id/row_user_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Author"
+                android:text="Email"
+                android:layout_gravity="center"
+                android:textAlignment="center"
                 android:textStyle="italic"
-                android:textSize="14sp" />
+                android:textSize="14dp" />
+
+            <TextView
+                android:id="@+id/row_user_hostel"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:text="Hostel"
+                android:textAlignment="center"
+                android:textStyle="italic"
+                android:textSize="14dp" />
 
 
             </LinearLayout>
+        <Button
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:background="#0B0B61"
+            android:id="@+id/request"/>
         </LinearLayout>
 
 </android.support.v7.widget.CardView>
