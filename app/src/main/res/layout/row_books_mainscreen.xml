@@ -14,6 +14,14 @@
         android:orientation="horizontal"
         android:gravity="center">
 
+        <ImageView
+            android:id="@+id/row_books_imageView"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:src="@android:drawable/ic_media_ff"/>
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_weight="3"
@@ -21,43 +29,37 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/row_user_name"
+                android:id="@+id/row_books_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"
-                android:textAlignment="center"
-                android:layout_gravity="center"
+                android:text="Title"
                 android:textStyle="bold"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:maxLines="2"/>
 
             <TextView
-                android:id="@+id/row_user_email"
+                android:id="@+id/row_books_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email"
-                android:layout_gravity="center"
-                android:textAlignment="center"
+                android:text="Author"
                 android:textStyle="italic"
-                android:textSize="14dp" />
+                android:textSize="14sp" />
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_height="wrap_content"
+                android:id="@+id/row_books_rating"/>
 
             <TextView
-                android:id="@+id/row_user_hostel"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center"
+                android:id="@+id/row_books_ratings_count"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Hostel"
-                android:textAlignment="center"
-                android:textStyle="italic"
-                android:textSize="14dp" />
+                />
 
-
-            </LinearLayout>
-        <Button
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:background="#0B0B61"
-            android:id="@+id/request"/>
         </LinearLayout>
+
+
+    </LinearLayout>
 
 </android.support.v7.widget.CardView>

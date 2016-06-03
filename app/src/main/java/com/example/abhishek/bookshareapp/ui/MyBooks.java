@@ -53,6 +53,7 @@ public class MyBooks extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i= new Intent(MyBooks.this,SearchResultsActivity.class);
                 startActivity(i);
+                finish();
             }
         });
 

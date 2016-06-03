@@ -56,4 +56,11 @@ public interface UsersAPI {
             @Path("id") String id
     );
 
+
+    @GET("user/{id}/?format=json")
+    Call<UserInfo> getUserDetails(
+            @Path("id") String id
+    );
+
+
 }

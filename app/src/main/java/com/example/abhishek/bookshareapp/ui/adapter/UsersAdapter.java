@@ -82,10 +82,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final String name,email;
+        final String id;
 
         tempValues = userList.get(position);
-
+        id = tempValues.getId();
         holder.nameUser.setText(tempValues.getName());
         holder.emailUser.setText(tempValues.getEmail());
         holder.hostelUser.setText(tempValues.getHostel());
@@ -94,11 +94,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
             public void onClick(View v) {
                 listener.onItemClick(userList.get(position));
                 Intent i = new Intent(context,UserProfile   .class);
-                i.putExtra("user",tempValues.getName());
-                i.putExtra("email",tempValues.getEmail());
-                i.putExtra("hostel",tempValues.getHostel());
-                i.putExtra("room",tempValues.getRoomNo());
-
+                i.putExtra("id",id);
                 context.startActivity(i);
             }
         });

@@ -19,14 +19,14 @@
             android:layout_marginBottom="24dp"
             android:text="User Name: "
             android:gravity="center"
-            android:textSize="16dip"/>
+            android:textSize="18dip"/>
         <TextView android:id="@+id/useremail"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="Email: "
             android:gravity="center"
-            android:textSize="16dip"/>
+            android:textSize="18dip"/>
         <TextView android:id="@+id/address"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -34,12 +34,22 @@
             android:text="Address: "
             android:gravity="center"
             android:textSize="16dip"/>
-        <Button
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textAlignment="center"
-            android:text="Send Request"
+            android:textSize="20dp"
+            android:text="Books Owned :"
             />
 
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/userBooksLists">
+
+        </android.support.v7.widget.RecyclerView>
+
     </LinearLayout>
+
+
 </ScrollView>

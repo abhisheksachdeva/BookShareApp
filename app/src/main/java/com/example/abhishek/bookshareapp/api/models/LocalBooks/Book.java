@@ -22,6 +22,7 @@ public class Book {
     @SerializedName("owner")
     List<UserInfo> userInfoList;
 
+
     public String getAuthor() {
         return author;
     }
