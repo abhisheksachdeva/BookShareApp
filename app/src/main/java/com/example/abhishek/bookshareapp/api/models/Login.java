@@ -1,13 +1,23 @@
 package com.example.abhishek.bookshareapp.api.models;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Login {
 
-    @SerializedName("detail")
     String token;
+
+    UserInfo userInfo;
+
+    String detail;
 
     public String getToken() {
         return token;
     }
+
+    public UserInfo getUserInfo() {
+        return userInfo;
+    }
+
+    public String getDetail() {
+        return detail;
+    }
+
 }

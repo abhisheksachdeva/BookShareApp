@@ -1,6 +1,7 @@
 package com.example.abhishek.bookshareapp.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
+import com.example.abhishek.bookshareapp.api.models.UserInfo;
 import com.example.abhishek.bookshareapp.ui.adapter.LocalBooksAdapter;
 
 import java.util.ArrayList;
@@ -41,8 +43,12 @@ public class MyBooks extends AppCompatActivity {
                 Log.i("Item", "onItemClick");
             }
         });
+
+        SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
+        String id = preferences.getString("id", "");
+
         localBooksList.setAdapter(adapter);
-        getLocalBooks();
+        getUserBookList(id);
 
         FloatingActionButton button= (FloatingActionButton) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -63,25 +69,25 @@ public class MyBooks extends AppCompatActivity {
         finish();
     }
 
-    public void getLocalBooks() {
-
+    public void getUserBookList(String id){
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<List<Book>> call = api.getBooksList();
-        call.enqueue(new Callback<List<Book>>() {
+        Call<UserInfo> call = api.getUserDetails(id);
+        call.enqueue(new Callback<UserInfo>() {
             @Override
-            public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
                 if(response.body()!=null) {
-                    Log.d("Search Response:", response.toString());
-                    List<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> localBooksList = response.body();
+                    Log.d("UserProfile Response:", response.toString());
+
+                    List<Book> booksTempInfoList = response.body().getUserBookList();
                     booksList.clear();
-                    booksList.addAll(localBooksList);
+                    booksList.addAll(booksTempInfoList);
                     adapter.notifyDataSetChanged();
                 }
             }
 
             @Override
-            public void onFailure(Call<List<Book>> call, Throwable t) {
-                Log.d("searchresp","searchOnFail "+ t.toString());
+            public void onFailure(Call<UserInfo> call, Throwable t) {
+                Log.d("BookDetails fail", t.toString());
             }
         });
     }

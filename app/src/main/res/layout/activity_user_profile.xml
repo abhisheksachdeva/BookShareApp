@@ -19,21 +19,21 @@
             android:layout_marginBottom="24dp"
             android:text="User Name: "
             android:gravity="center"
-            android:textSize="18dip"/>
+            android:textSize="18dp"/>
         <TextView android:id="@+id/useremail"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="Email: "
             android:gravity="center"
-            android:textSize="18dip"/>
+            android:textSize="18dp"/>
         <TextView android:id="@+id/address"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="Address: "
             android:gravity="center"
-            android:textSize="16dip"/>
+            android:textSize="16dp"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

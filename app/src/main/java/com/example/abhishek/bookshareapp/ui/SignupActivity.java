@@ -14,7 +14,7 @@ import android.widget.Toast;
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
-import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
+import com.example.abhishek.bookshareapp.api.models.Signup;
 import com.example.abhishek.bookshareapp.utils.Helper;
 
 import butterknife.ButterKnife;
@@ -101,23 +101,22 @@ public class SignupActivity extends AppCompatActivity {
 
         Helper.setUserEmail(email);
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<UserInfo> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact, password);
-        userInfoCall.enqueue(new retrofit2.Callback<UserInfo>() {
+        Call<Signup> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact, password);
+        userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
 
             @Override
-            public void onFailure(Call<UserInfo> call, Throwable t) {
+            public void onFailure(Call<Signup> call, Throwable t) {
                 onSignupFailed("Check your network connection properly");
             }
 
             @Override
-            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                UserInfo userInfo = response.body();
+            public void onResponse(Call<Signup> call, Response<Signup> response) {
+                String detail = response.body().getDetail();
 
-                if (userInfo.getEmail() != null) {
-                    Log.i("harshit", userInfo.getEmail());
-                    onSignupSuccess();
+                if (detail.equals("Fill required details or Email id already registered.")) {
+                    onSignupFailed("Email already registered");
                 } else {
-                    onSignupFailed("Fill details completely");
+                    onSignupSuccess();
                 }
             }
         });
