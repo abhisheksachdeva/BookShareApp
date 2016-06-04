@@ -1,4 +1,4 @@
-package com.example.abhishek.bookshareapp.api.models.SignUp;
+package com.example.abhishek.bookshareapp.api.models;
 
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.google.gson.annotations.SerializedName;
@@ -8,9 +8,6 @@ import java.util.List;
 public class UserInfo {
 
     String id;
-
-
-
     String email;
     String college;
     String hostel;
@@ -53,7 +50,6 @@ public class UserInfo {
     }
 
     public String getHostel() {
-
         return hostel;
     }
 

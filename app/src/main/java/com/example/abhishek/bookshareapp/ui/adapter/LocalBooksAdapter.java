@@ -5,14 +5,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
-import com.example.abhishek.bookshareapp.utils.Helper;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -57,7 +55,7 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_books, parent, false);
+                .inflate(R.layout.row_books_mainscreen, parent, false);
         ViewHolder vh = new ViewHolder(v, context);
         return vh;
     }

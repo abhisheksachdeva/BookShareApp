@@ -1,35 +1,19 @@
 package com.example.abhishek.bookshareapp.ui.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
-import com.example.abhishek.bookshareapp.api.NetworkingFactory;
-import com.example.abhishek.bookshareapp.api.UsersAPI;
-import com.example.abhishek.bookshareapp.api.models.Book;
-import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
+import com.example.abhishek.bookshareapp.api.models.UserInfo;
 import com.example.abhishek.bookshareapp.ui.UserProfile;
-import com.example.abhishek.bookshareapp.utils.Helper;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
 
@@ -39,7 +23,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
-         void onItemClick(UserInfo userInfo);
+        void onItemClick(UserInfo userInfo);
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder{

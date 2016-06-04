@@ -1,11 +1,8 @@
 package com.example.abhishek.bookshareapp.utils;
 
-/**
- * Created by ajayrahul on 30/5/16.
- */
 public class Helper {
 
-    public static String userEmail ="ajayrahul77@ymail.com";
+    public static String userEmail = "";
 
     public static String getUserEmail() {
         return userEmail;

@@ -2,7 +2,9 @@ package com.example.abhishek.bookshareapp.api;
 
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.Login;
-import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
+import com.example.abhishek.bookshareapp.api.models.Signup;
+import com.example.abhishek.bookshareapp.api.models.UserInfo;
+import com.example.abhishek.bookshareapp.api.models.VerifyToken.UserEmail;
 
 import java.util.List;
 
@@ -17,7 +19,7 @@ public interface UsersAPI {
 
     @FormUrlEncoded
     @POST("users/reg/?format=json")
-    Call<UserInfo> getUserInfo(
+    Call<Signup> getUserInfo(
             @Field("email") String email,
             @Field("college") String college,
             @Field("hostel") String hostel,
@@ -49,7 +51,7 @@ public interface UsersAPI {
             @Field("ratings_count") Long ratingsCount,
             @Field("rating") Float rating,
             @Field("gr_img_url") String gr_img_url
-            );
+    );
 
     @GET("book/{id}/?format=json")
     Call<Book> getBookDetails(
@@ -62,5 +64,7 @@ public interface UsersAPI {
             @Path("id") String id
     );
 
+    @POST("token/")
+    Call<UserEmail> getUserEmail();
 
 }

@@ -1,6 +1,6 @@
 package com.example.abhishek.bookshareapp.api.models.LocalBooks;
 
-import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
+import com.example.abhishek.bookshareapp.api.models.UserInfo;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;

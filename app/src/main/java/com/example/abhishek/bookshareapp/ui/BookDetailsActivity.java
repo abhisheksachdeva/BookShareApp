@@ -1,6 +1,5 @@
 package com.example.abhishek.bookshareapp.ui;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -8,17 +7,14 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
-import com.example.abhishek.bookshareapp.api.models.SignUp.UserInfo;
-import com.example.abhishek.bookshareapp.ui.adapter.LocalBooksAdapter;
+import com.example.abhishek.bookshareapp.api.models.UserInfo;
 import com.example.abhishek.bookshareapp.ui.adapter.UsersAdapter;
 import com.squareup.picasso.Picasso;
 

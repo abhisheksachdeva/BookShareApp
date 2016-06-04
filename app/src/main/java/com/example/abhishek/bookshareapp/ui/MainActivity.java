@@ -24,7 +24,6 @@ import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
-import com.example.abhishek.bookshareapp.ui.adapter.LocalBooksAdapter;
 import com.example.abhishek.bookshareapp.ui.adapter.MainScreenBooksAdapter;
 import com.example.abhishek.bookshareapp.utils.Helper;
 
@@ -36,7 +35,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -44,12 +43,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     List<Book> booksList;
     String query;
     MainScreenBooksAdapter adapter;
+    SharedPreferences prefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FloatingActionButton button= (FloatingActionButton) findViewById(R.id.button);
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.button);
 
         RecyclerView localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onItemClick(Book book) {
                 Intent intent = new Intent(getApplicationContext(), BookDetailsActivity.class);
-                intent.putExtra("id",book.getId());
+                intent.putExtra("id", book.getId());
                 Log.i(TAG, "onItemClick");
                 startActivity(intent);
             }
@@ -71,22 +71,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i= new Intent(MainActivity.this,SearchResultsActivity.class);
+                Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
                 startActivity(i);
             }
         });
 
+        prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
 
-        View header=navigationView.getHeaderView(0);
+        View header = navigationView.getHeaderView(0);
         TextView _name = (TextView) header.findViewById(R.id.nav_name);
         TextView _email = (TextView) header.findViewById(R.id.nav_email);
 
+        SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
+
         if (_name != null) {
-            _name.setText("Default UserName");
+            _name.setText(preferences.getString("first_name", "") + " " + preferences.getString("last_name", ""));
         }
         if (_email != null) {
             _email.setText(Helper.getUserEmail());
@@ -101,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
 
-
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -109,12 +111,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_mybooks) {
             Intent i = new Intent(this, MyBooks.class);
             startActivity(i);
-            finish();
 
         } else if (id == R.id.nav_myprofile) {
             Intent i = new Intent(this, UserProfile.class);
+            i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
             startActivity(i);
-            finish();
 
         } else if (id == R.id.nav_change_password) {
 
@@ -122,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.clear();
-            editor.commit();
+            editor.apply();
 
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
@@ -130,15 +131,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_share) {
 
-            PackageManager pm=getPackageManager();
+            PackageManager pm = getPackageManager();
             try {
 
                 Intent waIntent = new Intent(Intent.ACTION_SEND);
                 waIntent.setType("text/plain");
-                String text= "BookShare App !! .You can download the app from here...!";
-                ;
+                String text = "BookShare App !! .You can download the app from here...!";
 
-                PackageInfo info=pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
+                PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
                 //Check if package exists or not. If not then code
                 //in catch block will be called
                 waIntent.setPackage("com.whatsapp");
@@ -166,9 +166,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         call.enqueue(new Callback<List<Book>>() {
             @Override
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
-                if(response.body()!=null) {
+                if (response.body() != null) {
                     Log.d("Search Response:", response.toString());
-                    List<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> localBooksList = response.body();
+                    List<Book> localBooksList = response.body();
                     booksList.clear();
                     booksList.addAll(localBooksList);
 
@@ -179,10 +179,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(Call<List<Book>> call, Throwable t) {
-                Log.d("searchresp","searchOnFail "+ t.toString());
+                Log.d("searchresp", "searchOnFail " + t.toString());
             }
         });
 
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
 }

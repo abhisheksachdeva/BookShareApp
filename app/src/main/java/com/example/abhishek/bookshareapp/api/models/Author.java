@@ -4,7 +4,7 @@ import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
 @Root(name = "author",strict = false)
-	public class Author{
+public class Author{
 	@Element(name = "name")
 	public String author_name;
 
