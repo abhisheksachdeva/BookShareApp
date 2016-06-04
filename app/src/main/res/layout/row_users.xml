@@ -11,49 +11,54 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="wrap_content"
+            android:layout_weight="3"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/row_user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:maxLines="2"
                 android:text="Name"
                 android:textAlignment="center"
-                android:layout_gravity="center"
-                android:textStyle="bold"
                 android:textSize="16dp"
-                android:maxLines="2"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/row_user_email"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Email"
                 android:layout_gravity="center"
+                android:text="Email"
                 android:textAlignment="center"
-                android:textStyle="italic"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:textStyle="italic" />
 
             <TextView
                 android:id="@+id/row_user_hostel"
                 android:layout_width="wrap_content"
-                android:layout_gravity="center"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="Hostel"
                 android:textAlignment="center"
-                android:textStyle="italic"
-                android:textSize="14dp" />
+                android:textSize="14dp"
+                android:textStyle="italic" />
 
 
         </LinearLayout>
 
+        <Button
+            android:id="@+id/request"
+            android:layout_width="40dp"
+            android:layout_height="match_parent"
+            android:background="#0B0B61" />
     </LinearLayout>
 
 </android.support.v7.widget.CardView>

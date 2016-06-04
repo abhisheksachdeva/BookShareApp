@@ -6,20 +6,19 @@ import org.simpleframework.xml.Root;
 
 import java.util.List;
 
-@Root(name = "search",strict = false)
+@Root(name = "search", strict = false)
 public class Search {
-    @Element(name="source")
+    @Element(name = "source")
     String source;
 
-    @ElementList(name="results")
+    @ElementList(name = "results")
     List<Book> books;
 
-
-    public String getSource(){
+    public String getSource() {
         return source;
     }
 
-    public List<Book> getBooks(){
+    public List<Book> getBooks() {
         return books;
     }
 
