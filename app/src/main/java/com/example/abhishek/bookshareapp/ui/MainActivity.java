@@ -9,6 +9,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String query;
     MainScreenBooksAdapter adapter;
     SharedPreferences prefs;
+    SwipeRefreshLayout refreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +104,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+        refreshLayout =(SwipeRefreshLayout)findViewById(R.id.refresh_layout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+                getLocalBooks();
+                Toast.makeText(MainActivity.this,"Refresh!",Toast.LENGTH_SHORT).show();
+
+            }
+        });
     }
 
 
@@ -111,11 +124,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_mybooks) {
             Intent i = new Intent(this, MyBooks.class);
             startActivity(i);
+            finish();
 
         } else if (id == R.id.nav_myprofile) {
             Intent i = new Intent(this, UserProfile.class);
             i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
             startActivity(i);
+
+
 
         } else if (id == R.id.nav_change_password) {
 
@@ -171,8 +187,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     List<Book> localBooksList = response.body();
                     booksList.clear();
                     booksList.addAll(localBooksList);
-
                     adapter.notifyDataSetChanged();
+                    refreshLayout.setRefreshing(false);
                 }
 
             }
@@ -180,6 +196,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onFailure(Call<List<Book>> call, Throwable t) {
                 Log.d("searchresp", "searchOnFail " + t.toString());
+                refreshLayout.setRefreshing(false);
+
             }
         });
 

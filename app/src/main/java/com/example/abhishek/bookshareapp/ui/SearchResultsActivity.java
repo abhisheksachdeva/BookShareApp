@@ -1,6 +1,7 @@
 package com.example.abhishek.bookshareapp.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,6 +21,14 @@ public class SearchResultsActivity extends AppCompatActivity {
     String mode = "all";
     RadioButton r1, r2, r3;
     BookListFragment bookListFragment;
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this,MyBooks.class);
+        startActivity(i);
+        finish();
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
