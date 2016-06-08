@@ -2,6 +2,7 @@ package com.example.abhishek.bookshareapp.ui.adapter;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -85,7 +86,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
         final String email,title,author,gr_id,gr_img_url;
         final Long ratingsCount;
         final Float rating;
-
+        holder.add.setEnabled(true);
         tempValues = bookList.get(position);
 
         holder.titleBook.setText(tempValues.getBookDetails().getTitle());
@@ -124,20 +125,18 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
                             addBook.enqueue(new Callback<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book>() {
                                 @Override
                                 public void onResponse(Call<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> call, Response<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> response) {
-                                    Log.i("Email iD ",Helper.getUserEmail());
-                                    if(response.body()!=null)
-                                    {
-                                        Log.i("AddBook","Success");
-                                        Toast.makeText(context,"Book added",Toast.LENGTH_SHORT).show();
-                                        Log.i("response",response.toString());
+                                    Log.i("Email iD ", Helper.getUserEmail());
+                                    if (response.body() != null) {
+                                        Log.i("AddBook", "Success");
+                                        Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                        Log.i("response", response.body().getDetail());
                                         holder.add.setEnabled(false);
 
+                                    } else {
+                                        Log.i("AddBook", "Response Null");
+                                        Toast.makeText(context, response.body().getDetail() , Toast.LENGTH_SHORT).show();
                                     }
-                                    else
-                                        Log.i("AddBook","Response Null");
-                                    Toast.makeText(context,"Not added",Toast.LENGTH_SHORT).show();
                                 }
-
                                 @Override
                                 public void onFailure(Call<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> call, Throwable t) {
                                     Log.i("AddBook","Failed!!");

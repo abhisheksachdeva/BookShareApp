@@ -153,36 +153,51 @@ public class SignupActivity extends AppCompatActivity {
 
         if (fname.isEmpty()) {
             valid = false;
+            _FnameText.setError("Please fill First Name");
+
         } else {
             _FnameText.setError(null);
         }
         if (lname.isEmpty()) {
             valid = false;
+            _FnameText.setError("Please fill last Name");
+
         } else {
             _LnameText.setError(null);
         }
         if (room_no.isEmpty()) {
             valid = false;
+            _FnameText.setError("Please fill Room no");
+
         } else {
             _roomText.setError(null);
+
         }
         if (roll_no.isEmpty()) {
             valid = false;
+            _FnameText.setError("Please fill Roll no");
+
         } else {
             _rollText.setError(null);
         }
         if (hostel.isEmpty()) {
             valid = false;
+            _FnameText.setError("Please fill hostel Name");
+
         } else {
             _hostelText.setError(null);
         }
         if (college.isEmpty()) {
             valid = false;
+            _FnameText.setError("Please fill college Name");
+
         } else {
             _collegeText.setError(null);
         }
         if (contact.isEmpty()) {
             valid = false;
+            _FnameText.setError("Please fill contact Name");
+
         } else {
             _contactText.setError(null);
         }
