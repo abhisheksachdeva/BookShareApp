@@ -1,41 +1,45 @@
 package com.example.abhishek.bookshareapp.api.models;
 
-/**
- * Created by abhishek on 30/1/16.
- */
+import org.simpleframework.xml.Element;
+import org.simpleframework.xml.Root;
 
+@Root(name="work",strict = false)
 public class Book {
-    private int ISBN;
-    private String title;
-    private String id;
-    VolumeInfo volumeInfo;
-    public int getISBN(){
-        return ISBN;
-    }
 
-    public void setISBN(int ISBN){
-        this.ISBN=ISBN;
-    }
+	@Element(name="best_book")
+	BookDetails bookDetails;
 
-    public String getTitle(){
-        return title;
-    }
+	@Element(name="id")
+	public Integer search_id;
 
-    public void setTitle(String title){
-        this.title=title;
-    }
+	@Element(name="books_count")
+	public String page_count;
 
-    public void setID(String id){
-        this.id=id;
-    }
+	@Element(name="average_rating")
+	public float rating;
 
-    public String getId() {
-        return id;
-    }
+	@Element(name = "ratings_count")
+	public String ratingCount;
 
-    public VolumeInfo getInfo(){
-        return volumeInfo;
-    }
+	public BookDetails getBookDetails(){
+		return bookDetails;
+	}
+
+	public Integer getId(){
+		return search_id;
+	}
+
+	public String  getPage_count(){
+		return page_count;
+	}
+	public float getRating(){
+		return rating;
+	}
+	public String getRatingCount(){
+		return ratingCount;
+	}
 }
+
+
 
 

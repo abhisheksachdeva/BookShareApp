@@ -1,83 +1,68 @@
 package com.example.abhishek.bookshareapp.ui;
 
-import android.content.Intent;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.RadioButton;
 
 import com.example.abhishek.bookshareapp.R;
-import com.example.abhishek.bookshareapp.api.NetworkingFactory;
-import com.example.abhishek.bookshareapp.api.models.VolumeInfo;
-import com.example.abhishek.bookshareapp.api.BooksAPI;
-import com.example.abhishek.bookshareapp.api.models.Book;
-import com.example.abhishek.bookshareapp.api.models.BookResponse;
+import com.example.abhishek.bookshareapp.ui.fragments.BookListFragment;
+import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-
-/**
- * Created by abhishek on 13/2/16.
- */
 public class SearchResultsActivity extends AppCompatActivity {
-    String id;
     String query;
-
+    String API_KEY = CommonUtilities.API_KEY;
+    EditText searchEditText;
+    String mode = "all";
+    RadioButton r1, r2, r3;
+    BookListFragment bookListFragment;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results);
-        ListView results_list= (ListView)findViewById(R.id.results_list);
-        TextView test =(TextView)findViewById(R.id.testing);
-        test.setText("Check");
-        Intent i= getIntent();
-        query=i.getStringExtra("query");
-        Log.d("querysearch", query);
-        getBooks(query);
+
+        searchEditText = (EditText) findViewById(R.id.searchEditText);
+        r1 = (RadioButton) findViewById(R.id.all);
+        r2 = (RadioButton) findViewById(R.id.title);
+        r3 = (RadioButton) findViewById(R.id.author);
+
+        bookListFragment = new BookListFragment();
+
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, bookListFragment)
+                .commit();
 
     }
 
-    public void getBooks(String query){
+    public void search(View view) {
+        Log.d("sabh","dfgf");
+        if (r1.isChecked()) {
+            mode = "all";
+        }
+        if (r2.isChecked()) {
+            mode = "title";
+        }
+        else if (r3.isChecked()) {
+            mode = "author";
+        }
 
-        BooksAPI api = NetworkingFactory.getInstance().getBooksApi();
-        Call<BookResponse> call = api.getBooks(query);
-        call.enqueue(new Callback<BookResponse>() {
-            @Override
-            public void onResponse(retrofit2.Response<BookResponse> response) {
-                if(response.body().getTotalItems()>0) {
-                    List<Book> list = response.body().getItems();
-
-                    Log.i("searchlist", list.size()+"");
-                    /*Book bk = list.get(0);
-                     id = bk.getId();
-                    VolumeInfo vinfo1 = bk.getInfo();
-                    try {
-                        Log.d("searchvinfo", vinfo1.getTitle());
-                    } catch (Exception e) {
-                        Log.d("searchabcd", e.toString());
-                    }
-                    Log.i("searchresp", id);*/
-                }
-                else{
-                    Log.i("SearchResultsActivity","No book found");
-                }
-
-            }
-
-            @Override
-            public void onFailure(Throwable t) {
-                Log.i("searchfail", "no resp");
-            }
-        });
-        Toast.makeText(this ,id,Toast.LENGTH_SHORT).show();
-
+        hideKeyboard();
+        query = searchEditText.getText().toString();
+        bookListFragment.getBooks(query, mode, API_KEY);
     }
 
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
 }
+
