@@ -8,6 +8,7 @@ import java.util.List;
 public class Book {
 
     String id;
+    String detail;
     String title;
     String author;
     float rating;
@@ -42,7 +43,9 @@ public class Book {
     public String getId() {
         return id;
     }
-
+    public String getDetail() {
+        return detail;
+    }
     public float getRating() {
         return rating;
     }
