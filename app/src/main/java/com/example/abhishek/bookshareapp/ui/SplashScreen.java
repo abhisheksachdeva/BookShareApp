@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,18 +29,18 @@ import retrofit2.Retrofit;
 
 public class SplashScreen extends Activity {
 
-    String token;
-    Context context;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
+
         Thread timer= new Thread(){
+
             public void run(){
+
                 try{
-                    sleep(1000);
+                    sleep(5000);
                 }
                 catch(InterruptedException e){
                     e.printStackTrace();
@@ -47,13 +48,17 @@ public class SplashScreen extends Activity {
                 finally{
                     Intent opensp = new Intent(SplashScreen.this,LoginActivity.class);
                     startActivity(opensp);
+
                 }
+
             }
+
+
+
         };
 
         timer.start();
     }
-
 
     @Override
     protected void onPause() {
@@ -61,5 +66,4 @@ public class SplashScreen extends Activity {
         super.onPause();
         finish();
     }
-
 }

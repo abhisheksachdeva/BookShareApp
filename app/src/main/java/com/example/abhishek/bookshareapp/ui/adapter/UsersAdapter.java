@@ -70,7 +70,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
             @Override
             public void onClick(View v) {
                 listener.onItemClick(userList.get(position));
-                Intent i = new Intent(context,UserProfile   .class);
+                Intent i = new Intent(context,UserProfile.class);
                 i.putExtra("id",id);
                 context.startActivity(i);
             }
