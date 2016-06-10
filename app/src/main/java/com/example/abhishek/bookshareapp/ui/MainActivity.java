@@ -69,8 +69,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         localBooksList.setAdapter(adapter);
+        prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
         getLocalBooks();
+        Helper.setUserId(prefs.getString("id", prefs.getString("id", "")));
+        Helper.setUserName(prefs.getString("first_name",prefs.getString("first_name", "")));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,7 +83,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -130,11 +132,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id = item.getItemId();
         if (id == R.id.menu_notifs) {
-            Intent i = new Intent(this,Notifications.class);
-            startActivity(i);
-            finish();
-            return true;
-        }else if(id==R.id.menu_refresh){
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -192,6 +189,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void storedata(){
+
     }
 
     public void getLocalBooks() {

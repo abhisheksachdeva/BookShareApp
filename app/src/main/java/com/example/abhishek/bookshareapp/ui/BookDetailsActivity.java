@@ -16,6 +16,7 @@ import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
 import com.example.abhishek.bookshareapp.ui.adapter.UsersAdapter;
+import com.example.abhishek.bookshareapp.utils.Helper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -51,6 +52,9 @@ public class BookDetailsActivity extends AppCompatActivity{
         ratingBook = (RatingBar) findViewById(R.id.row_books_rating);
         ratingCount = (TextView) findViewById(R.id.row_books_ratings_count);
 
+        String id = getIntent().getExtras().getString("id");
+        getBookDetails(id);
+
         RecyclerView usersList = (RecyclerView) findViewById(R.id.owner_list);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -63,11 +67,6 @@ public class BookDetailsActivity extends AppCompatActivity{
             }
         });
         usersList.setAdapter(usersAdapter);
-        String id = getIntent().getExtras().getString("id");
-        getBookDetails(id);
-
-
-
     }
 
     public void getBookDetails(String id){
@@ -79,12 +78,13 @@ public class BookDetailsActivity extends AppCompatActivity{
                 if(response.body()!=null) {
                     Log.d("bda Response:", response.toString());
                     book = response.body();
+                    Helper.setBookId(book.getId());
+                    Helper.setBookTitle(book.getTitle());
                     titleBook.setText(book.getTitle());
                     authorBook.setText(book.getAuthor());
                     ratingCount.setText(book.getRatingsCount().toString());
                     ratingBook.setRating(book.getRating());
                     Picasso.with(BookDetailsActivity.this).load(book.getGrImgUrl()).into(imageBook);
-
                     List<UserInfo> userTempInfoList = book.getUserInfoList();
                     userInfoList.clear();
                     userInfoList.addAll(userTempInfoList);
