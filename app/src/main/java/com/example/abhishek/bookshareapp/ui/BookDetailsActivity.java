@@ -40,6 +40,7 @@ public class BookDetailsActivity extends AppCompatActivity{
     public TextView ratingCount;
     List<UserInfo> userInfoList;
     UsersAdapter usersAdapter;
+    String bookId,bookTitle;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,11 +57,10 @@ public class BookDetailsActivity extends AppCompatActivity{
         getBookDetails(id);
 
         RecyclerView usersList = (RecyclerView) findViewById(R.id.owner_list);
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         usersList.setLayoutManager(layoutManager);
         userInfoList = new ArrayList<>();
-        usersAdapter = new UsersAdapter(this, userInfoList, new UsersAdapter.OnItemClickListener() {
+        usersAdapter = new UsersAdapter(this, userInfoList,bookTitle,bookId, new UsersAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(UserInfo userInfo) {
                 Log.i(TAG, "onItemClick");
@@ -80,14 +80,18 @@ public class BookDetailsActivity extends AppCompatActivity{
                     book = response.body();
                     Helper.setBookId(book.getId());
                     Helper.setBookTitle(book.getTitle());
+                    bookId=book.getId();
+                    bookTitle=book.getTitle();
                     titleBook.setText(book.getTitle());
                     authorBook.setText(book.getAuthor());
-                    ratingCount.setText(book.getRatingsCount().toString());
+                    ratingCount.setText(book.getRatingsCount().toString()+" votes");
                     ratingBook.setRating(book.getRating());
                     Picasso.with(BookDetailsActivity.this).load(book.getGrImgUrl()).into(imageBook);
                     List<UserInfo> userTempInfoList = book.getUserInfoList();
                     userInfoList.clear();
                     userInfoList.addAll(userTempInfoList);
+                    usersAdapter.setBookId(book.getId());
+                    usersAdapter.setBookTitle(book.getTitle());
                     usersAdapter.notifyDataSetChanged();
                 }
             }

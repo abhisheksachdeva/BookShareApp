@@ -92,7 +92,6 @@ public class SignupActivity extends AppCompatActivity {
         String lname = _LnameText.getText().toString();
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
-        String cnf_password = _cnf_passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();
         String hostel = _hostelText.getText().toString();

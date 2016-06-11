@@ -26,6 +26,9 @@ public class Notifications {
     @SerializedName("is_confirmed")
     String isConfirmed;
 
+    @SerializedName("is_owner")
+    String isOwner;
+
     @SerializedName("is_cancelled")
     String isCancelled;
 
