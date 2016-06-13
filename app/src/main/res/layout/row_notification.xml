@@ -1,32 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    cardUseCompatPadding="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    card_view:cardCornerRadius="4dp"
+    card_view:cardElevation="4dp">
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@color/Peach"
     android:layout_gravity="center">
 
     <TextView
         android:id="@+id/content"
+        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Default Text"
+        android:textStyle="bold"
+        android:layout_marginTop="8dp"
+        android:textSize="18sp"
         android:textAlignment="center"/>
 
     <LinearLayout
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/accept"
+            android:layout_marginRight="10dp"
+            android:background="@color/Green"
+            android:textColor="@color/Black"
+            android:text="Accept"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="30dp" />
 
         <Button
             android:id="@+id/reject"
+            android:textColor="@color/White"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:background="@color/Red"
+            android:text="Reject"
+            android:layout_height="30dp" />
 
     </LinearLayout>
 
 </LinearLayout>
+
+</android.support.v7.widget.CardView>

@@ -24,7 +24,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,9 +47,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static final String TAG = MainActivity.class.getSimpleName();
 
-    ListView listview;
     List<Book> booksList;
-    String query;
     MainScreenBooksAdapter adapter;
     SharedPreferences prefs;
     SwipeRefreshLayout refreshLayout;
@@ -59,8 +56,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.button);
 
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.button);
         RecyclerView localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         localBooksList.setLayoutManager(layoutManager);
@@ -118,13 +115,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG, "onRefresh called from SwipeRefreshLayout");
+                Log.i(TAG, "onRefresh called from SwipeRefreshLayout ");
                 getLocalBooks();
+                refresh();
+
                 Toast.makeText(MainActivity.this,"Refresh!",Toast.LENGTH_SHORT).show();
 
             }
         });
-        refresh();
+
     }
 
 
@@ -139,6 +138,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id = item.getItemId();
         if (id == R.id.menu_notifs) {
+            Intent i = new Intent(this, Notifications.class);
+            startActivity(i);
+            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -242,7 +244,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     for (int i = 0; i < notifList.size(); i++) {
 
-                        Log.i("harshit", "" + notifList.size());
+                        Log.i("Notif Loader", "" + notifList.size());
                         String content = "";
                         Notifications notifications = notifList.get(i);
                         if (notifications.getMessage().equals("requested for")) {
@@ -257,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         NotificationCompat.Builder mBuilder =
                                 new NotificationCompat.Builder(getApplicationContext())
-                                        .setSmallIcon(R.drawable.plus)
+                                        .setSmallIcon(R.drawable.default_profile_pic)
                                         .setContentTitle("BookShareApp")
                                         .setContentText(content)
                                         .setAutoCancel(true);

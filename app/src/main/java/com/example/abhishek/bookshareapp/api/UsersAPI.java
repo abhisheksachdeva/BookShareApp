@@ -88,4 +88,27 @@ public interface UsersAPI {
 
     );
 
+    @FormUrlEncoded
+    @POST("notifications/")
+    Call<Notifications> acceptNotif(
+            @Field("notif_id") String  notifId,
+            @Field("sender_id") String senderId,
+            @Field("sender_name") String senderName,
+            @Field("book_id") String bookId,
+            @Field("book_title") String bookTitle,
+            @Field("process") String process,
+            @Field("target_id") String targetId,
+            @Field("message") String message
+
+    );
+
+    @FormUrlEncoded
+    @POST("notifications/")
+    Call<Notifications> rejectNotif(
+            @Field("notif_id") String  notifId,
+            @Field("process") String process,
+            @Field("message") String message
+
+    );
+
 }

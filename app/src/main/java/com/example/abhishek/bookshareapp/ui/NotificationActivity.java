@@ -2,6 +2,7 @@ package com.example.abhishek.bookshareapp.ui;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +26,9 @@ import retrofit2.Response;
 public class NotificationActivity extends AppCompatActivity{
 
     RecyclerView notificationsListView;
-    NotificationAdapter adapter;
+    LinearLayoutManager nLinearLayoutManager;
+    NotificationAdapter adapter,d;
+    SwipeRefreshLayout refreshLayout;
     List<Notifications> notificationsList = new ArrayList<>();
 
     @Override
@@ -33,13 +36,30 @@ public class NotificationActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
 
+        nLinearLayoutManager = new LinearLayoutManager(this);
+        nLinearLayoutManager.setReverseLayout(true);
+        nLinearLayoutManager.setStackFromEnd(true);
         notificationsListView = (RecyclerView) findViewById(R.id.notifications_list);
-        notificationsListView.setLayoutManager(new LinearLayoutManager(this));
+        notificationsListView.setLayoutManager(nLinearLayoutManager);
 
         adapter = new NotificationAdapter(this, notificationsList);
         notificationsListView.setAdapter(adapter);
-        Log.i("NTA","till here");
         getNotifications();
+
+        refreshLayout =(SwipeRefreshLayout)findViewById(R.id.notif_refresh_layout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                Log.i("NTA", "onRefresh called from SwipeRefreshLayout ");
+
+                d = new NotificationAdapter(NotificationActivity.this, notificationsList);
+                notificationsListView.setAdapter(d);
+                getNotifications();
+
+                Toast.makeText(NotificationActivity.this,"Refresh!",Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     public void getNotifications() {
@@ -54,6 +74,8 @@ public class NotificationActivity extends AppCompatActivity{
                     notificationsList.addAll(notifList);
                     Log.i("NTA","adapter attached");
                     adapter.notifyDataSetChanged();
+                    refreshLayout.setRefreshing(false);
+
                 }
             }
 
