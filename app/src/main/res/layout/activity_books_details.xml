@@ -56,6 +56,16 @@
         </LinearLayout>
 
     </LinearLayout>
+    <Button
+        android:id="@+id/addBook"
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:text="Add this book"
+        />
     <TextView
         android:id="@+id/text"
         android:layout_width="match_parent"
@@ -65,6 +75,7 @@
         android:textStyle="bold"
         android:text="Users Having This Book"
         />
+
 
 
     <android.support.v7.widget.RecyclerView

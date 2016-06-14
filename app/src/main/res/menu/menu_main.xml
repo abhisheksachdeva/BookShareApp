@@ -9,7 +9,7 @@
     <item
         android:id="@+id/menu_notifs"
         android:title="refresh"
-        android:icon="@drawable/ic_menu_send"
+        android:icon="@drawable/ic_menu_send2"
         app:showAsAction="always" />
 
 

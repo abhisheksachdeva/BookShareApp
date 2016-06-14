@@ -46,7 +46,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
-
+    public static  Integer count =0;
     List<Book> booksList;
     MainScreenBooksAdapter adapter;
     SharedPreferences prefs;
@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
         getLocalBooks();
+        getNotifications();
         Helper.setUserId(prefs.getString("id", prefs.getString("id", "")));
         Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
 
@@ -118,18 +119,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.i(TAG, "onRefresh called from SwipeRefreshLayout ");
                 getLocalBooks();
                 refresh();
-
                 Toast.makeText(MainActivity.this,"Refresh!",Toast.LENGTH_SHORT).show();
-
             }
         });
-
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
+        MenuItem item = menu.findItem(R.id.menu_notifs);
+        if(Helper.getNew_total()>Helper.getOld_total()) {
+            item.setIcon(R.drawable.ic_menu_send2);
+        }else{
+            item.setIcon(R.drawable.ic_menu_send);
+        }
+
         return true;
     }
 
@@ -138,7 +143,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         int id = item.getItemId();
         if (id == R.id.menu_notifs) {
-            Intent i = new Intent(this, Notifications.class);
+            item.setIcon(R.drawable.ic_menu_send);
+            Helper.setOld_total(Helper.getNew_total());
+            Intent i = new Intent(this, NotificationActivity.class);
             startActivity(i);
             finish();
             return true;
@@ -232,6 +239,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    public void getNotifications() {
+        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+        Call<List<Notifications>> call = usersAPI.getNotifs(Helper.getUserId());
+        call.enqueue(new Callback<List<Notifications>>() {
+            @Override
+            public void onResponse(Call<List<Notifications>> call, Response<List<Notifications>> response) {
+                if (response.body() != null) {
+                    List<Notifications> notifList = response.body();
+                    Helper.setNew_total(notifList.size());
+                    Log.i("NTA","adapter attached");
+                    Log.i("Old Total",Helper.getOld_total().toString());
+                    Log.i("New Total",Helper.getNew_total().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Notifications>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void refresh() {
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<List<Notifications>> call = usersAPI.getNotifs(prefs.getString("id", null));
@@ -240,7 +269,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onResponse(Call<List<Notifications>> call, Response<List<Notifications>> response) {
                 if (response.body() != null) {
                     List<Notifications> notifList = response.body();
-
 
                     for (int i = 0; i < notifList.size(); i++) {
 

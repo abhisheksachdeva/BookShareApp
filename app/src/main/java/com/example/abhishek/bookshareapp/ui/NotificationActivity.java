@@ -1,5 +1,6 @@
 package com.example.abhishek.bookshareapp.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -44,6 +45,8 @@ public class NotificationActivity extends AppCompatActivity{
 
         adapter = new NotificationAdapter(this, notificationsList);
         notificationsListView.setAdapter(adapter);
+
+
         getNotifications();
 
         refreshLayout =(SwipeRefreshLayout)findViewById(R.id.notif_refresh_layout);
@@ -63,6 +66,8 @@ public class NotificationActivity extends AppCompatActivity{
     }
 
     public void getNotifications() {
+        Helper.setOld_total(Helper.getNew_total());
+
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<List<Notifications>> call = usersAPI.getNotifs(Helper.getUserId());
         call.enqueue(new Callback<List<Notifications>>() {
@@ -71,11 +76,13 @@ public class NotificationActivity extends AppCompatActivity{
                 if (response.body() != null) {
                     List<Notifications> notifList = response.body();
                     notificationsList.clear();
+                    Helper.setNew_total(notifList.size());
                     notificationsList.addAll(notifList);
                     Log.i("NTA","adapter attached");
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
-
+                    Log.i("Old Total",Helper.getOld_total().toString());
+                    Log.i("New Total",Helper.getNew_total().toString());
                 }
             }
 
@@ -84,5 +91,13 @@ public class NotificationActivity extends AppCompatActivity{
                 Toast.makeText(getApplicationContext(), "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i = new Intent(this,MainActivity.class);
+        startActivity(i);
+        finish();
     }
 }

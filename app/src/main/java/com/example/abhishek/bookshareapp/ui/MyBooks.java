@@ -28,14 +28,18 @@ public class MyBooks extends AppCompatActivity {
 
     List<Book> booksList;
     LocalBooksAdapter adapter;
+    LinearLayoutManager nLinearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
         RecyclerView localBooksList = (RecyclerView) findViewById(R.id.localBooksLists);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        localBooksList.setLayoutManager(layoutManager);
+        nLinearLayoutManager = new LinearLayoutManager(this);
+        nLinearLayoutManager.setReverseLayout(true);
+        nLinearLayoutManager.setStackFromEnd(true);
+
+        localBooksList.setLayoutManager(nLinearLayoutManager);
         booksList = new ArrayList<>();
         adapter = new LocalBooksAdapter(this, booksList, new LocalBooksAdapter.OnItemClickListener() {
             @Override
