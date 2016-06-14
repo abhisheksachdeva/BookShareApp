@@ -6,6 +6,24 @@ public class Helper {
     public static String userName = "";
     public static String userId = "";
     public static String bookId = "";
+    public static Integer new_total=0;
+    public static Integer old_total=1;
+
+    public static Integer getNew_total() {
+        return new_total;
+    }
+
+    public static void setNew_total(Integer new_total) {
+        Helper.new_total = new_total;
+    }
+
+    public static Integer getOld_total() {
+        return old_total;
+    }
+
+    public static void setOld_total(Integer old_total) {
+        Helper.old_total = old_total;
+    }
 
     public static String getBookTitle() {
         return bookTitle;

@@ -34,6 +34,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
     private List<UserInfo> userList;
     UserInfo tempValues=null;
     private final OnItemClickListener listener;
+    String bookId, bookTitle;
 
     public interface OnItemClickListener {
         void onItemClick(UserInfo userInfo);
@@ -51,16 +52,18 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
             nameUser = (TextView)v.findViewById(R.id.row_user_name);
             emailUser = (TextView)v.findViewById(R.id.row_user_email);
             hostelUser = (TextView)v.findViewById(R.id.row_user_hostel);
-            request =(Button)v.findViewById(R.id.request);
+            request =(Button)v.findViewById(R.id.requestButton);
             this.context = context;
         }
     }
 
-    public UsersAdapter(Context context, List<UserInfo> userList, OnItemClickListener listener){
+    public UsersAdapter(Context context, List<UserInfo> userList, String bookTitle,String bookId,OnItemClickListener listener){
         this.userList =userList;
         this.context=context;
         Log.d("UsersAdapter","Constructor");
         this.listener = listener;
+        this.bookTitle=bookTitle;
+        this.bookId=bookId;
     }
 
     @Override
@@ -102,7 +105,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
                         if (items[which].equals("Yes")){
                             String process = "request";
                             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                            Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(),Helper.getUserName(),Helper.getBookId(),Helper.getBookTitle() ,process,id);
+                            Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(),Helper.getUserName(), bookId,bookTitle,process,id,"request for");
                             sendNotif.enqueue(new Callback<Notifications>() {
                                 @Override
                                 public void onResponse(Call<Notifications> call, Response<Notifications> response) {
@@ -122,6 +125,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
                                 @Override
                                 public void onFailure(Call<Notifications> call, Throwable t) {
                                     Log.i("SendNotif","Failed!!");
+                                    Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
@@ -135,6 +139,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
             }
         });
 
+    }
+
+    public void setBookId(String bookId) {
+        this.bookId = bookId;
+    }
+
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
     }
 
     @Override

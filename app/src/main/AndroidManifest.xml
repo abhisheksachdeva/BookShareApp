@@ -14,7 +14,7 @@
         <activity
             android:name=".ui.LoginActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.SearchResultsActivity"
             android:label="search">
@@ -38,6 +38,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ui.NotificationActivity"></activity>
     </application>
 
 </manifest>

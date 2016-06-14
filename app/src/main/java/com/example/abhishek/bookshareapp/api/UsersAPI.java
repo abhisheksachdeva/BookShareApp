@@ -15,6 +15,8 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
+
 
 public interface UsersAPI {
 
@@ -68,6 +70,11 @@ public interface UsersAPI {
     @POST("token/")
     Call<UserEmail> getUserEmail();
 
+    @GET("notifications/")
+    Call<List<Notifications>> getNotifs(
+            @Query("user_id") String userId
+    );
+
     @FormUrlEncoded
     @POST("notifications/")
     Call<Notifications> sendNotif(
@@ -76,8 +83,32 @@ public interface UsersAPI {
             @Field("book_id") String bookId,
             @Field("book_title") String bookTitle,
             @Field("process") String process,
-            @Field("target_id") String targetId
+            @Field("target_id") String targetId,
+            @Field("message") String message
 
-            );
+    );
+
+    @FormUrlEncoded
+    @POST("notifications/")
+    Call<Notifications> acceptNotif(
+            @Field("notif_id") String  notifId,
+            @Field("sender_id") String senderId,
+            @Field("sender_name") String senderName,
+            @Field("book_id") String bookId,
+            @Field("book_title") String bookTitle,
+            @Field("process") String process,
+            @Field("target_id") String targetId,
+            @Field("message") String message
+
+    );
+
+    @FormUrlEncoded
+    @POST("notifications/")
+    Call<Notifications> rejectNotif(
+            @Field("notif_id") String  notifId,
+            @Field("process") String process,
+            @Field("message") String message
+
+    );
 
 }
