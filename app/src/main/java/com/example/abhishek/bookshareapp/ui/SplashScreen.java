@@ -35,32 +35,16 @@ public class SplashScreen extends Activity {
         setContentView(R.layout.activity_splash_screen);
 
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
-        token = pref.getString("token", "");
-        Log.i("SS", token + "  added");
+        token = pref.getString("token", null);
 
-        Thread timer= new Thread(){
+        verifyToken();
 
-            public void run(){
-
-                try{
-                    sleep(5000);
-                }
-                catch(InterruptedException e){
-                    e.printStackTrace();
-                }
-                finally{
-                    verifyToken();
-                    Intent opensp = new Intent(SplashScreen.this,LoginActivity.class);
-                    startActivity(opensp);
-                }
-            }
-        };
-        timer.start();
     }
 
     public void verifyToken() {
 
-        if (token != null && !token.equals("")) {
+        if (token != null) {
+
             OkHttpClient httpClient = new OkHttpClient.Builder()
                     .addInterceptor(new Interceptor() {
                         @Override
@@ -83,7 +67,7 @@ public class SplashScreen extends Activity {
                 @Override
                 public void onResponse(Call<UserEmail> call, Response<UserEmail> response) {
 
-                    if(response.body() != null) {
+                    if (response.body() != null) {
                         if (response.body().getEmail() != null) {
                             if (!response.body().getEmail().equals("")) {
 
@@ -95,26 +79,28 @@ public class SplashScreen extends Activity {
                             } else {
 
                                 Toast.makeText(SplashScreen.this, "Failed to log in due to internal error!", Toast.LENGTH_SHORT).show();
+                                finish();
 
                             }
                         }
                     } else {
                         Log.i("harshit", "response.body() is null");
+                        Toast.makeText(SplashScreen.this, "Failed to log in due to internal error!", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 }
+
                 @Override
                 public void onFailure(Call<UserEmail> call, Throwable t) {
                     Toast.makeText(SplashScreen.this, "Check network connectivity and try again", Toast.LENGTH_SHORT).show();
                 }
             });
         }
+        else {
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
+        }
 
     }
 
-    @Override
-    protected void onPause() {
-        // TODO Auto-generated method stub
-        super.onPause();
-        finish();
-    }
 }
