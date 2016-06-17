@@ -10,10 +10,12 @@ import com.example.abhishek.bookshareapp.api.models.VerifyToken.UserEmail;
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -61,7 +63,6 @@ public interface UsersAPI {
             @Path("id") String id
     );
 
-
     @GET("user/{id}/?format=json")
     Call<UserInfo> getUserDetails(
             @Path("id") String id
@@ -85,7 +86,6 @@ public interface UsersAPI {
             @Field("process") String process,
             @Field("target_id") String targetId,
             @Field("message") String message
-
     );
 
     @FormUrlEncoded
@@ -99,7 +99,6 @@ public interface UsersAPI {
             @Field("process") String process,
             @Field("target_id") String targetId,
             @Field("message") String message
-
     );
 
     @FormUrlEncoded
@@ -108,7 +107,12 @@ public interface UsersAPI {
             @Field("notif_id") String  notifId,
             @Field("process") String process,
             @Field("message") String message
+    );
 
+    @PUT("user/{id}/")
+    Call<UserInfo> editUserDetails(
+            @Path("id") String id,
+            @Body UserInfo userInfo
     );
 
 }

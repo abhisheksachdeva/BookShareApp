@@ -20,16 +20,20 @@
             android:label="search">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCHRESULTS" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="Campus Books"/>
         <activity android:name=".ui.SignupActivity" />
         <activity android:name=".ui.MyBooks" />
         <activity android:name=".ui.BookDetailsActivity" />
         <activity android:name=".ui.UserProfile" />
+        <activity android:name=".ui.MyProfile"
+            android:label="My Profile"/>
         <activity android:name=".ui.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -37,7 +41,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.NotificationActivity"></activity>
+        <activity android:name=".ui.NotificationActivity"
+            android:label="Notifications"/>
+        <activity android:name=".ui.EditProfileActivity" />
+        <activity android:name=".ui.ChangePasswordActivity"></activity>
     </application>
 
 </manifest>

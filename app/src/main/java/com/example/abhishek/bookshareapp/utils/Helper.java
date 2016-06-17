@@ -43,7 +43,6 @@ public class Helper {
 
     public static String bookTitle = "";
 
-
     public static String getUserId() {
         return userId;
     }

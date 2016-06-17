@@ -119,7 +119,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.i(TAG, "onRefresh called from SwipeRefreshLayout ");
                 getLocalBooks();
                 refresh();
-                Toast.makeText(MainActivity.this,"Refresh!",Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -163,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             finish();
 
         } else if (id == R.id.nav_myprofile) {
-            Intent i = new Intent(this, UserProfile.class);
+            Intent i = new Intent(this, MyProfile.class);
             i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
             startActivity(i);
 
@@ -176,10 +175,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent i = new Intent(this, LoginActivity.class);
             startActivity(i);
             finish();
-
-        } else if (id == R.id.nav_notifications){
-            Intent i = new Intent(this, NotificationActivity.class);
-            startActivity(i);
 
         } else if (id == R.id.nav_share) {
 

@@ -20,9 +20,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SplashScreen extends Activity {
     String token;
@@ -79,6 +79,8 @@ public class SplashScreen extends Activity {
                             } else {
 
                                 Toast.makeText(SplashScreen.this, "Failed to log in due to internal error!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
+                                startActivity(intent);
                                 finish();
 
                             }
@@ -86,6 +88,8 @@ public class SplashScreen extends Activity {
                     } else {
                         Log.i("harshit", "response.body() is null");
                         Toast.makeText(SplashScreen.this, "Failed to log in due to internal error!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
+                        startActivity(intent);
                         finish();
                     }
                 }
@@ -93,6 +97,7 @@ public class SplashScreen extends Activity {
                 @Override
                 public void onFailure(Call<UserEmail> call, Throwable t) {
                     Toast.makeText(SplashScreen.this, "Check network connectivity and try again", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             });
         }
