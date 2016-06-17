@@ -1,6 +1,7 @@
 package com.example.abhishek.bookshareapp.api;
 
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
+import com.example.abhishek.bookshareapp.api.models.LocalBooks.RemoveBook;
 import com.example.abhishek.bookshareapp.api.models.Login;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
 import com.example.abhishek.bookshareapp.api.models.Signup;
@@ -121,6 +122,11 @@ public interface UsersAPI {
             @Field("user_id") String id,
             @Field("token") String token,
             @Field("password") String password
+    );
+
+    @PUT("books/")
+    Call<Detail> removeBook(
+            @Body RemoveBook removeBook
     );
 
 }

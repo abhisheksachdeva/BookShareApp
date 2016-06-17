@@ -32,7 +32,7 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
-import com.example.abhishek.bookshareapp.ui.adapter.MainScreenBooksAdapter;
+import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
 import com.example.abhishek.bookshareapp.utils.Helper;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static final String TAG = MainActivity.class.getSimpleName();
     public static  Integer count =0;
     List<Book> booksList;
-    MainScreenBooksAdapter adapter;
+    BooksAdapterSimple adapter;
     SharedPreferences prefs;
     SwipeRefreshLayout refreshLayout;
 
@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         localBooksList.setLayoutManager(layoutManager);
         booksList = new ArrayList<>();
-        adapter = new MainScreenBooksAdapter(this, booksList, new MainScreenBooksAdapter.OnItemClickListener() {
+        adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
                 Intent intent = new Intent(getApplicationContext(), BookDetailsActivity.class);

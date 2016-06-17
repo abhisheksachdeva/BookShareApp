@@ -14,7 +14,7 @@ import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
-import com.example.abhishek.bookshareapp.ui.adapter.NotificationAdapter;
+import com.example.abhishek.bookshareapp.ui.adapter.Local.NotificationAdapter;
 import com.example.abhishek.bookshareapp.utils.Helper;
 
 import java.util.ArrayList;

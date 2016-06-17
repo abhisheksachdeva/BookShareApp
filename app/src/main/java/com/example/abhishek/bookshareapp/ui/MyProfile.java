@@ -12,7 +12,7 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
-import com.example.abhishek.bookshareapp.ui.adapter.LocalBooksAdapter;
+import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class MyProfile extends AppCompatActivity {
     TextView userName, userEmail, address;
     UserInfo user;
     List<Book> booksList;
-    LocalBooksAdapter adapter;
+    BooksAdapterSimple adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -20,7 +20,7 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
-import com.example.abhishek.bookshareapp.ui.adapter.UsersAdapter;
+import com.example.abhishek.bookshareapp.ui.adapter.Local.UsersAdapter;
 import com.example.abhishek.bookshareapp.utils.Helper;
 import com.squareup.picasso.Picasso;
 
