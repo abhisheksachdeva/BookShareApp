@@ -5,7 +5,7 @@ import com.example.abhishek.bookshareapp.api.models.Login;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
 import com.example.abhishek.bookshareapp.api.models.Signup;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
-import com.example.abhishek.bookshareapp.api.models.VerifyToken.UserEmail;
+import com.example.abhishek.bookshareapp.api.models.VerifyToken.Detail;
 
 import java.util.List;
 
@@ -69,7 +69,7 @@ public interface UsersAPI {
     );
 
     @POST("token/")
-    Call<UserEmail> getUserEmail();
+    Call<Detail> getUserEmail();
 
     @GET("notifications/")
     Call<List<Notifications>> getNotifs(
@@ -113,6 +113,14 @@ public interface UsersAPI {
     Call<UserInfo> editUserDetails(
             @Path("id") String id,
             @Body UserInfo userInfo
+    );
+
+    @FormUrlEncoded
+    @POST("password/change/")
+    Call<Detail> changePassword(
+            @Field("user_id") String id,
+            @Field("token") String token,
+            @Field("password") String password
     );
 
 }

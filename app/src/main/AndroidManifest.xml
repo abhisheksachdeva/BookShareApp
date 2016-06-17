@@ -33,7 +33,8 @@
         <activity android:name=".ui.BookDetailsActivity" />
         <activity android:name=".ui.UserProfile" />
         <activity android:name=".ui.MyProfile"
-            android:label="My Profile"/>
+            android:label="My Profile"
+            android:parentActivityName=".ui.MainActivity"/>
         <activity android:name=".ui.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -42,9 +43,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.NotificationActivity"
-            android:label="Notifications"/>
+            android:label="Notifications"
+            android:parentActivityName=".ui.MainActivity"/>
         <activity android:name=".ui.EditProfileActivity" />
-        <activity android:name=".ui.ChangePasswordActivity"></activity>
+        <activity android:name=".ui.ChangePasswordActivity"
+            android:label="Change Password"
+            android:parentActivityName=".ui.MyProfile"/>
     </application>
 
 </manifest>
