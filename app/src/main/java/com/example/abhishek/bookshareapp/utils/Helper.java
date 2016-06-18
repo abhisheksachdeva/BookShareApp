@@ -6,8 +6,8 @@ public class Helper {
     public static String userName = "";
     public static String userId = "";
     public static String bookId = "";
-    public static Integer new_total=0;
-    public static Integer old_total=1;
+    public static Integer new_total = 0;
+    public static Integer old_total = 1;
 
     public static Integer getNew_total() {
         return new_total;
@@ -58,9 +58,11 @@ public class Helper {
     public static void setUserName(String userName) {
         Helper.userName = userName;
     }
+
     public static String getUserEmail() {
         return userEmail;
     }
+
     public static void setUserEmail(String userEmail) {
         Helper.userEmail = userEmail;
     }
