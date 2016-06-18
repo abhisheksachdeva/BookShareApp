@@ -70,14 +70,6 @@ public class MyBooks extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent i = new Intent(MyBooks.this, MainActivity.class);
-        startActivity(i);
-        finish();
-    }
-
     public void getUserBookList(String id) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<UserInfo> call = api.getUserDetails(id);
