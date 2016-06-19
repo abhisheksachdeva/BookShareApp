@@ -62,9 +62,9 @@ public class UserProfile extends AppCompatActivity {
                 if(response.body()!=null) {
                     Log.d("UserProfile Response:", response.toString());
                     user = response.body();
-                    userName.setText(user.getFirstName() + " "+user.getLastName());
-                    userEmail.setText(user.getEmail());
-                    address.setText(user.getRoomNo()+", "+user.getHostel());
+                    userName.setText("Name : " + user.getFirstName() + " "+user.getLastName());
+                    userEmail.setText("Email : " + user.getEmail());
+                    address.setText("Address : " + user.getRoomNo()+", "+user.getHostel());
 
                     List<Book> booksTempInfoList = user.getUserBookList();
                     booksList.clear();

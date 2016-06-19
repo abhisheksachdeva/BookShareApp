@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -30,9 +31,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by abhishek on 6/1/2016.
- */
 public class BookDetailsActivity extends AppCompatActivity{
 
     public static final String TAG = BookDetailsActivity.class.getSimpleName();
@@ -45,7 +43,7 @@ public class BookDetailsActivity extends AppCompatActivity{
     public ImageView imageBook;
     public RatingBar ratingBook;
     public TextView ratingCount;
-    public TextView addBooks;
+    public Button addBooks;
     List<UserInfo> userInfoList;
     UsersAdapter usersAdapter;
     String bookId,bookTitle;
@@ -60,7 +58,7 @@ public class BookDetailsActivity extends AppCompatActivity{
         imageBook = (ImageView) findViewById(R.id.row_books_imageView);
         ratingBook = (RatingBar) findViewById(R.id.row_books_rating);
         ratingCount = (TextView) findViewById(R.id.row_books_ratings_count);
-        addBooks = (TextView) findViewById(R.id.addBook);
+        addBooks = (Button) findViewById(R.id.addBook);
         String id = getIntent().getExtras().getString("id");
 
 

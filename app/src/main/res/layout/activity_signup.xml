@@ -44,18 +44,34 @@
                 android:hint="Last Name" />
         </android.support.design.widget.TextInputLayout>
 
-        <!-- Email Label -->
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_email"
-                android:layout_width="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <!-- Email Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:inputType="textEmailAddress"
-                android:hint="Email" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp">
+                <EditText android:id="@+id/input_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:hint="Email" />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginTop="5dp"
+                android:layout_height="wrap_content"
+                android:text="\@iitr.ac.in"
+                android:textSize="18dp"/>
+        </LinearLayout>
 
         <!-- Password Label -->
         <android.support.design.widget.TextInputLayout
@@ -124,11 +140,16 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp">
-            <EditText android:id="@+id/input_college"
+            <EditText
+                android:clickable="false"
+                android:cursorVisible="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:id="@+id/input_college"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapWords"
-                android:hint="College" />
+                android:hint="College"
+                android:text="IIT Roorkee" />
         </android.support.design.widget.TextInputLayout>
 
         <android.support.design.widget.TextInputLayout

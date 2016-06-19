@@ -23,12 +23,6 @@
         android:hint="Last Name" />
 
     <EditText
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Email" />
-
-    <EditText
         android:id="@+id/contact_no"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -45,12 +39,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Hostel" />
-
-    <EditText
-        android:id="@+id/college"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="College" />
 
     <Button
         android:layout_width="match_parent"
