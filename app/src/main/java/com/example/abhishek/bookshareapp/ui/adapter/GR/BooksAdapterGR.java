@@ -1,8 +1,7 @@
-package com.example.abhishek.bookshareapp.ui.adapter;
+package com.example.abhishek.bookshareapp.ui.adapter.GR;
 
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -28,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
+public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHolder>{
 
     private Context context;
     private List<Book> bookList;
@@ -63,7 +62,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
 
     }
 
-    public BooksAdapter(Context context, List<Book> bookList, OnItemClickListener listener){
+    public BooksAdapterGR(Context context, List<Book> bookList, OnItemClickListener listener){
         this.bookList =bookList;
         this.context=context;
         Log.d("BookAdapter","Constructor");
@@ -73,7 +72,7 @@ public class BooksAdapter extends RecyclerView.Adapter<BooksAdapter.ViewHolder>{
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_books, parent, false);
+                .inflate(R.layout.row_books_add, parent, false);
 
         ViewHolder vh = new ViewHolder(v, context);
 

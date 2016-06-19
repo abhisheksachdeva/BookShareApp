@@ -1,19 +1,22 @@
 package com.example.abhishek.bookshareapp.api;
 
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
+import com.example.abhishek.bookshareapp.api.models.LocalBooks.RemoveBook;
 import com.example.abhishek.bookshareapp.api.models.Login;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
 import com.example.abhishek.bookshareapp.api.models.Signup;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
-import com.example.abhishek.bookshareapp.api.models.VerifyToken.UserEmail;
+import com.example.abhishek.bookshareapp.api.models.VerifyToken.Detail;
 
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -61,14 +64,13 @@ public interface UsersAPI {
             @Path("id") String id
     );
 
-
     @GET("user/{id}/?format=json")
     Call<UserInfo> getUserDetails(
             @Path("id") String id
     );
 
     @POST("token/")
-    Call<UserEmail> getUserEmail();
+    Call<Detail> getUserEmail();
 
     @GET("notifications/")
     Call<List<Notifications>> getNotifs(
@@ -85,7 +87,6 @@ public interface UsersAPI {
             @Field("process") String process,
             @Field("target_id") String targetId,
             @Field("message") String message
-
     );
 
     @FormUrlEncoded
@@ -99,7 +100,6 @@ public interface UsersAPI {
             @Field("process") String process,
             @Field("target_id") String targetId,
             @Field("message") String message
-
     );
 
     @FormUrlEncoded
@@ -108,7 +108,25 @@ public interface UsersAPI {
             @Field("notif_id") String  notifId,
             @Field("process") String process,
             @Field("message") String message
+    );
 
+    @PUT("user/{id}/")
+    Call<UserInfo> editUserDetails(
+            @Path("id") String id,
+            @Body UserInfo userInfo
+    );
+
+    @FormUrlEncoded
+    @POST("password/change/")
+    Call<Detail> changePassword(
+            @Field("user_id") String id,
+            @Field("token") String token,
+            @Field("password") String password
+    );
+
+    @PUT("books/")
+    Call<Detail> removeBook(
+            @Body RemoveBook removeBook
     );
 
 }

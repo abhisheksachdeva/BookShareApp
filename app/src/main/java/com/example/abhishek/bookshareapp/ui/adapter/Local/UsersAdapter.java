@@ -1,9 +1,8 @@
-package com.example.abhishek.bookshareapp.ui.adapter;
+package com.example.abhishek.bookshareapp.ui.adapter.Local;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,7 +16,6 @@ import android.widget.Toast;
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
-import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
 import com.example.abhishek.bookshareapp.ui.UserProfile;

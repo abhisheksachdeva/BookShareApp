@@ -15,7 +15,7 @@
         android:gravity="center">
 
         <ImageView
-            android:id="@+id/row_books_imageView"
+            android:id="@+id/book_cover"
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
@@ -29,7 +29,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/row_books_title"
+                android:id="@+id/book_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Title"
@@ -38,7 +38,7 @@
                 android:maxLines="2"/>
 
             <TextView
-                android:id="@+id/row_books_author"
+                android:id="@+id/author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Author"
@@ -49,10 +49,10 @@
                 android:layout_width="wrap_content"
                 style="?android:attr/ratingBarStyleSmall"
                 android:layout_height="wrap_content"
-                android:id="@+id/row_books_rating"/>
+                android:id="@+id/book_rating"/>
 
             <TextView
-                android:id="@+id/row_books_ratings_count"
+                android:id="@+id/ratings_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 />
@@ -62,7 +62,7 @@
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:background="#FF2333"
-            android:id="@+id/add"/>
+            android:id="@+id/remove_button"/>
 
     </LinearLayout>
 

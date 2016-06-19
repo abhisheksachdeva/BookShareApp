@@ -20,7 +20,7 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
-import com.example.abhishek.bookshareapp.ui.adapter.UsersAdapter;
+import com.example.abhishek.bookshareapp.ui.adapter.Local.UsersAdapter;
 import com.example.abhishek.bookshareapp.utils.Helper;
 import com.squareup.picasso.Picasso;
 
@@ -31,9 +31,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by abhishek on 6/1/2016.
- */
 public class BookDetailsActivity extends AppCompatActivity{
 
     public static final String TAG = BookDetailsActivity.class.getSimpleName();
@@ -61,7 +58,7 @@ public class BookDetailsActivity extends AppCompatActivity{
         imageBook = (ImageView) findViewById(R.id.row_books_imageView);
         ratingBook = (RatingBar) findViewById(R.id.row_books_rating);
         ratingCount = (TextView) findViewById(R.id.row_books_ratings_count);
-        addBooks = (Button)findViewById(R.id.addBook);
+        addBooks = (Button) findViewById(R.id.addBook);
         String id = getIntent().getExtras().getString("id");
 
 

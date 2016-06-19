@@ -12,7 +12,7 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
-import com.example.abhishek.bookshareapp.ui.adapter.LocalBooksAdapter;
+import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ public class UserProfile extends AppCompatActivity {
     TextView userName,userEmail,address;
     UserInfo user;
     List<Book> booksList;
-    LocalBooksAdapter adapter;
+    BooksAdapterSimple adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class UserProfile extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         userBooksList.setLayoutManager(layoutManager);
         booksList = new ArrayList<>();
-        adapter = new LocalBooksAdapter(this, booksList, new LocalBooksAdapter.OnItemClickListener() {
+        adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
                 Log.i("Click", "onItemClick");
@@ -62,9 +62,9 @@ public class UserProfile extends AppCompatActivity {
                 if(response.body()!=null) {
                     Log.d("UserProfile Response:", response.toString());
                     user = response.body();
-                    userName.setText("Name : "+user.getFirstName() + " "+user.getLastName());
-                    userEmail.setText("Email Id : "+user.getEmail());
-                    address.setText("Address : "+user.getRoomNo()+" ,"+user.getHostel());
+                    userName.setText("Name : " + user.getFirstName() + " "+user.getLastName());
+                    userEmail.setText("Email : " + user.getEmail());
+                    address.setText("Address : " + user.getRoomNo()+", "+user.getHostel());
 
                     List<Book> booksTempInfoList = user.getUserBookList();
                     booksList.clear();

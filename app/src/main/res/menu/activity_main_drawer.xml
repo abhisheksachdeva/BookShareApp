@@ -11,15 +11,6 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="My Profile" />
         <item
-            android:id="@+id/nav_change_password"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Change Password" />
-        <item
-                 android:id="@+id/nav_notifications"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Notifications" />
-
-        <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_menu_manage"
             android:title="Logout" />
@@ -31,10 +22,6 @@
                 android:id="@+id/nav_share"
                 android:icon="@drawable/ic_menu_share"
                 android:title="Share" />
-            <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
         </menu>
     </item>
 

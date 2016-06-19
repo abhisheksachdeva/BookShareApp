@@ -90,7 +90,7 @@ public class SignupActivity extends AppCompatActivity {
 
         String fname = _FnameText.getText().toString();
         String lname = _LnameText.getText().toString();
-        String email = _emailText.getText().toString();
+        String email = _emailText.getText().toString() + "@iitr.ac.in";
         String password = _passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();

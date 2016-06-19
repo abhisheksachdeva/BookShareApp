@@ -2,12 +2,12 @@ package com.example.abhishek.bookshareapp.api.models.VerifyToken;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UserEmail {
+public class Detail {
 
     @SerializedName("detail")
-    String email;
+    String detail;
 
-    public String getEmail() {
-        return email;
+    public String getDetail() {
+        return detail;
     }
 }

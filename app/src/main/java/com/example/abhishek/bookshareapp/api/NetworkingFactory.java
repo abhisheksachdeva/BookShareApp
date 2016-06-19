@@ -3,8 +3,8 @@ package com.example.abhishek.bookshareapp.api;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 
 import okhttp3.OkHttpClient;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 public class NetworkingFactory {
