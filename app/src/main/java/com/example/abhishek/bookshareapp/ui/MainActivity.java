@@ -13,12 +13,14 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -43,10 +45,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener{
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public static  Integer count =0;
+    public static Integer count = 0;
     List<Book> booksList;
     BooksAdapterSimple adapter;
     SharedPreferences prefs;
@@ -87,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -112,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        refreshLayout =(SwipeRefreshLayout)findViewById(R.id.refresh_layout);
+        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -123,14 +124,62 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
+        Call<List<Book>> call = api.search(query);
+        call.enqueue(new Callback<List<Book>>() {
+            @Override
+            public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
+                if (response.body() != null) {
+                    Log.d("Search Response:", response.toString());
+                    List<Book> localBooksList = response.body();
+                    booksList.clear();
+                    booksList.addAll(localBooksList);
+                    adapter.notifyDataSetChanged();
+                    refreshLayout.setRefreshing(false);
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<Book>> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Check your internet connectivity and try again!", Toast.LENGTH_SHORT).show();
+                refreshLayout.setRefreshing(false);
+
+            }
+        });
+        return true;
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         MenuItem item = menu.findItem(R.id.menu_notifs);
-        if(Helper.getNew_total()>Helper.getOld_total()) {
+        MenuItem searchItem = menu.findItem(R.id.search);
+        MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                getLocalBooks();
+                return true;
+            }
+        });
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView.setOnQueryTextListener(this);
+
+        if (Helper.getNew_total() > Helper.getOld_total()) {
             item.setIcon(R.drawable.ic_menu_send2);
-        }else{
+        } else {
             item.setIcon(R.drawable.ic_menu_send);
         }
 
@@ -165,7 +214,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
             startActivity(i);
 
-        }  else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_logout) {
             SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.clear();
@@ -240,9 +289,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.body() != null) {
                     List<Notifications> notifList = response.body();
                     Helper.setNew_total(notifList.size());
-                    Log.i("NTA","adapter attached");
-                    Log.i("Old Total",Helper.getOld_total().toString());
-                    Log.i("New Total",Helper.getNew_total().toString());
+                    Log.i("NTA", "adapter attached");
+                    Log.i("Old Total", Helper.getOld_total().toString());
+                    Log.i("New Total", Helper.getNew_total().toString());
                 }
             }
 
@@ -305,7 +354,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
                         mNotificationManager.notify(1, mBuilder.build());
                     }
-
 
                 } else
                     Log.i("harshit", "List.size() == 0");

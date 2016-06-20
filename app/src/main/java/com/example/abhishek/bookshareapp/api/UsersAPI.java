@@ -129,4 +129,9 @@ public interface UsersAPI {
             @Body RemoveBook removeBook
     );
 
+    @GET("search/")
+    Call<List<Book>> search(
+            @Query("search") String searchQuery
+    );
+
 }
