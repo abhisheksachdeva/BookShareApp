@@ -9,4 +9,10 @@
         android:icon="@drawable/ic_menu_send2"
         app:showAsAction="always" />
 
+    <item android:id="@+id/search"
+        android:title="Enter query for book"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="collapseActionView|ifRoom"
+        app:actionViewClass="android.support.v7.widget.SearchView" />
+
 </menu>
