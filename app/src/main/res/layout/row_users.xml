@@ -55,7 +55,7 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/request"
+            android:id="@+id/requestButton"
             android:layout_width="40dp"
             android:layout_height="match_parent"
             android:background="#0B0B61" />

@@ -7,7 +7,10 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
     <item
-        android:id="@+id/menu_refresh"
+        android:id="@+id/menu_notifs"
         android:title="refresh"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_menu_send2"
+        app:showAsAction="always" />
+
+
 </menu>

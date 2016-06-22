@@ -64,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         token = pref.getString("token", "");
         Log.i("harshit", token + "  adf");
 
-        verifyToken();
+
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -200,61 +200,9 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("room_no", userInfo.getRoomNo());
         editor.apply();
 
-    }
-
-    public void verifyToken() {
-
-        if (token != null && !token.equals("")) {
-            OkHttpClient httpClient = new OkHttpClient.Builder()
-                    .addInterceptor(new Interceptor() {
-                        @Override
-                        public okhttp3.Response intercept(Chain chain) throws IOException {
-                            Request request = chain.request().newBuilder().
-                                    addHeader("Authorization", "Token " + token).build();
-                            return chain.proceed(request);
-                        }
-                    }).build();
-
-            Retrofit retrofit = new Retrofit.Builder().
-                    addConverterFactory(GsonConverterFactory.create()).
-                    baseUrl(CommonUtilities.local_books_api_url).
-                    client(httpClient).
-                    build();
-
-            UsersAPI usersAPI = retrofit.create(UsersAPI.class);
-            Call<UserEmail> call = usersAPI.getUserEmail();
-            call.enqueue(new Callback<UserEmail>() {
-                @Override
-                public void onResponse(Call<UserEmail> call, Response<UserEmail> response) {
-
-                    if(response.body() != null) {
-                        if (response.body().getEmail() != null) {
-                            if (!response.body().getEmail().equals("")) {
-
-                                Helper.setUserEmail(response.body().getEmail());
-                                Intent intent = new Intent(context, MainActivity.class);
-                                startActivity(intent);
-                                finish();
-
-                            } else {
-
-                                Toast.makeText(context, "Failed to log in due to internal error!", Toast.LENGTH_SHORT).show();
-
-                            }
-                        }
-                    } else {
-                        Log.i("harshit", "response.body() is null");
-                    }
-
-                }
-
-                @Override
-                public void onFailure(Call<UserEmail> call, Throwable t) {
-                    Toast.makeText(context, "Check network connectivity and try again", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
 
     }
+
+
 
 }
