@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     BooksAdapterSimple adapter;
     SharedPreferences prefs;
     SwipeRefreshLayout refreshLayout;
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             }
         });
+        searchView.clearFocus();
         return true;
     }
 
@@ -174,7 +176,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             }
         });
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
 
         if (Helper.getNew_total() > Helper.getOld_total()) {
