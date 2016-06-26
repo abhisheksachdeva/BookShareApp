@@ -48,7 +48,6 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener{
 
     public static final String TAG = MainActivity.class.getSimpleName();
-    public static Integer count = 0;
     List<Book> booksList;
     BooksAdapterSimple adapter;
     SharedPreferences prefs;
@@ -68,7 +67,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                Intent intent = new Intent(getApplicationContext(), BookDetailsActivity.class);
+                Intent intent = new Intent(getApplicationContext(),BookDetailsActivity2.class);
                 intent.putExtra("id", book.getId());
                 Log.i(TAG, "onItemClick");
                 startActivity(intent);
@@ -208,7 +207,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_mybooks) {
-            Intent i = new Intent(this, MyBooks.class);
+            Intent i = new Intent(this, MyBooks2.class);
             startActivity(i);
 
         } else if (id == R.id.nav_myprofile) {

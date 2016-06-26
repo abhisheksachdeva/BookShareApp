@@ -26,21 +26,35 @@
         </activity>
         <activity
             android:name=".ui.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:label="Campus Books"/>
+            android:label="Campus Books"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".ui.SignupActivity" />
-        <activity android:name=".ui.MyBooks"
+        <activity
+            android:name=".ui.MyBooks"
             android:label="My Books"
-            android:parentActivityName=".ui.MainActivity"/>
-        <activity android:name=".ui.BookDetailsActivity"
+            android:parentActivityName=".ui.MainActivity" />
+        <activity
+            android:name=".ui.MyBooks2"
+            android:label="My Books2"
+            android:theme="@style/AppTheme.NoActionBar" />
+            android:parentActivityName=".ui.MainActivity" />
+        <activity
+            android:name=".ui.BookDetailsActivity"
             android:label="Book Details"
-            android:parentActivityName=".ui.MainActivity"/>
-        <activity android:name=".ui.UserProfile"
+            android:parentActivityName=".ui.MainActivity" />
+        <activity
+            android:name=".ui.BookDetailsActivity2"
+            android:label="Book Details"
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.UserProfile"
             android:label="User Details"
-            android:parentActivityName=".ui.MainActivity"/>
-        <activity android:name=".ui.MyProfile"
+            android:parentActivityName=".ui.MainActivity" />
+        <activity
+            android:name=".ui.MyProfile"
             android:label="My Profile"
-            android:parentActivityName=".ui.MainActivity"/>
+            android:parentActivityName=".ui.MainActivity" />
         <activity android:name=".ui.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,15 +62,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.NotificationActivity"
+        <activity
+            android:name=".ui.NotificationActivity"
             android:label="Notifications"
-            android:parentActivityName=".ui.MainActivity"/>
-        <activity android:name=".ui.EditProfileActivity"
+            android:parentActivityName=".ui.MainActivity" />
+        <activity
+            android:name=".ui.EditProfileActivity"
             android:label="Edit your details"
-            android:parentActivityName=".ui.MyProfile"/>
-        <activity android:name=".ui.ChangePasswordActivity"
+            android:parentActivityName=".ui.MyProfile" />
+        <activity
+            android:name=".ui.ChangePasswordActivity"
             android:label="Change Password"
-            android:parentActivityName=".ui.MyProfile"/>
+            android:parentActivityName=".ui.MyProfile" />
+        <activity android:name=".ui.Blah"></activity>
     </application>
 
 </manifest>
