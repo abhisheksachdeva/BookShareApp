@@ -9,7 +9,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
-    android:background="#1976D2">
+    android:background="@color/colorPrimary">
 
     <ImageView
         android:id="@+id/imageView"
@@ -26,16 +26,18 @@
             android:id="@+id/nav_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="harshit kumar"
+            android:text="Shakespeare"
+            android:textSize="17dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="#ffffff" />
 
         <TextView
             android:id="@+id/nav_email"
             android:layout_width="wrap_content"
+            android:textSize="13dp"
             android:layout_height="wrap_content"
             android:textColor="#ffffff"
-            android:text="harshit211997@gmail.com"/>
+            android:text="bookworm@gmail.com"/>
 
     </LinearLayout>
 

@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:fitsSystemWindows="true">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="56dp"
-        android:paddingLeft="24dp"
-        android:paddingRight="24dp">
+<LinearLayout android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="56dp"
+    android:background="@color/BGyellow"
+    android:paddingLeft="24dp"
+    android:paddingRight="24dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <ImageView android:src="@drawable/plus"
+        <ImageView android:src="@drawable/b_image"
             android:layout_width="wrap_content"
             android:layout_height="72dp"
             android:layout_marginBottom="24dp"
@@ -49,6 +46,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
+            android:background="@drawable/rounded_corner"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
             android:text="Login"/>
@@ -62,4 +60,3 @@
             android:textSize="16dip"/>
 
     </LinearLayout>
-</ScrollView>

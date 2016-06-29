@@ -28,11 +28,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.example.abhishek.bookshareapp.Listeners.EndlessScrollListener;
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
+import com.example.abhishek.bookshareapp.api.models.LocalBooks.BookList;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
 import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
 import com.example.abhishek.bookshareapp.utils.Helper;
@@ -67,16 +68,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                Intent intent = new Intent(getApplicationContext(),BookDetailsActivity2.class);
+                Intent intent = new Intent(getApplicationContext(),BookDetailsActivity3.class);
                 intent.putExtra("id", book.getId());
                 Log.i(TAG, "onItemClick");
                 startActivity(intent);
+//                overridePendingTransition(R.anim.d,R.anim.a);
+
             }
         });
         localBooksList.setAdapter(adapter);
+
+        final EndlessScrollListener endlessScrollListener = new EndlessScrollListener((LinearLayoutManager) layoutManager) {
+            @Override
+            public void onLoadMore(int page, int totalItemsCount) {
+                getLocalBooks(String.valueOf(page + 1));
+                Toast.makeText(getApplicationContext(), "Loading Page" + (page + 1), Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        localBooksList.addOnScrollListener(endlessScrollListener);
         prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
-        getLocalBooks();
+        getLocalBooks("1");
         getNotifications();
         Helper.setUserId(prefs.getString("id", prefs.getString("id", "")));
         Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
@@ -107,6 +120,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.White));
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -118,7 +132,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onRefresh() {
                 Log.i(TAG, "onRefresh called from SwipeRefreshLayout ");
-                getLocalBooks();
+                endlessScrollListener.reset();
+                getLocalBooks("1");
                 refresh();
             }
         });
@@ -171,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                getLocalBooks();
+                getLocalBooks("1");
                 return true;
             }
         });
@@ -196,7 +211,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Helper.setOld_total(Helper.getNew_total());
             Intent i = new Intent(this, NotificationActivity.class);
             startActivity(i);
-            finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -253,17 +267,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void getLocalBooks() {
-
+    public void getLocalBooks(final String page) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<List<Book>> call = api.getBooksList();
-        call.enqueue(new Callback<List<Book>>() {
+        Call<BookList> call = api.getBList(page);
+        call.enqueue(new Callback<BookList>() {
             @Override
-            public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
+            public void onResponse(Call<BookList> call, Response<BookList> response) {
                 if (response.body() != null) {
                     Log.d("Search Response:", response.toString());
-                    List<Book> localBooksList = response.body();
-                    booksList.clear();
+                    List<Book> localBooksList = response.body().getResults();
+                    if(page.equals("1")) {
+                        booksList.clear();
+                        adapter.notifyDataSetChanged();
+                    }
                     booksList.addAll(localBooksList);
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
@@ -272,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             @Override
-            public void onFailure(Call<List<Book>> call, Throwable t) {
+            public void onFailure(Call<BookList> call, Throwable t) {
                 Log.d("searchresp", "searchOnFail " + t.toString());
                 refreshLayout.setRefreshing(false);
 

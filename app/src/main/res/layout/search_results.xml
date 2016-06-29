@@ -2,28 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/BGyellow"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         android:orientation="horizontal">
 
         <EditText
             android:id="@+id/searchEditText"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
             android:hint="Search By" />
-
-        <Button
-            android:id="@+id/searchButton"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="1"
-            android:onClick="search"
-            android:text="Search" />
 
     </LinearLayout>
 
@@ -54,11 +46,21 @@
 
     </RadioGroup>
 
+    <Button
+        android:id="@+id/searchButton"
+        android:layout_width="wrap_content"
+        android:background="@drawable/rounded_corner"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:onClick="search"
+        android:text="Search" />
 
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
+
+
 
 
 </LinearLayout>

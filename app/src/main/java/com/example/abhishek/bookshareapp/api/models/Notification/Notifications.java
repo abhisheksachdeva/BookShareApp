@@ -24,13 +24,13 @@ public class Notifications {
     String message;
 
     @SerializedName("is_confirmed")
-    String isConfirmed;
+    boolean isConfirmed;
 
     @SerializedName("is_owner")
     String isOwner;
 
     @SerializedName("is_cancelled")
-    String isCancelled;
+    boolean isCancelled;
 
     public String getDetail() {
         return detail;
@@ -59,11 +59,11 @@ public class Notifications {
         return message;
     }
 
-    public String getIsConfirmed() {
+    public boolean getIsConfirmed() {
         return isConfirmed;
     }
 
-    public String getIsCancelled() {
+    public boolean getIsCancelled() {
         return isCancelled;
     }
 }

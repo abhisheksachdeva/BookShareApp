@@ -23,8 +23,7 @@ import retrofit2.Response;
 public class MyProfile extends AppCompatActivity {
     TextView userName, userEmail, address;
     UserInfo user;
-    List<Book> booksList;
-    BooksAdapterSimple adapter;
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +33,7 @@ public class MyProfile extends AppCompatActivity {
         userEmail = (TextView) findViewById(R.id.useremail);
         address = (TextView) findViewById(R.id.address);
 
-        String id = getIntent().getExtras().getString("id");
-
+        id = getIntent().getExtras().getString("id");
         getUserInfoDetails(id);
     }
 
@@ -66,16 +64,19 @@ public class MyProfile extends AppCompatActivity {
     public void editProfile(View view) {
         Intent i = new Intent(this, EditProfileActivity.class);
         startActivity(i);
+        finish();
     }
 
     public void myBooks(View view) {
         Intent i = new Intent(this, MyBooks.class);
         startActivity(i);
+
     }
 
     public void changePassword(View view) {
         Intent i = new Intent(this, ChangePasswordActivity.class);
         startActivity(i);
+        finish();
     }
 
     @Override

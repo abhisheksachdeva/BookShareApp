@@ -13,11 +13,11 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.LoginActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="Login"
+             />
         <activity
             android:name=".ui.SearchResultsActivity"
-            android:label="search">
+            android:label="Search">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCHRESULTS" />
 
@@ -35,18 +35,19 @@
             android:parentActivityName=".ui.MainActivity" />
         <activity
             android:name=".ui.MyBooks2"
-            android:label="My Books2"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:label="My Books"
             android:parentActivityName=".ui.MainActivity" />
         <activity
             android:name=".ui.BookDetailsActivity"
             android:label="Book Details"
             android:parentActivityName=".ui.MainActivity" />
         <activity
-            android:name=".ui.BookDetailsActivity2"
+            android:name=".ui.BookDetailsActivity3"
             android:label="Book Details"
-            android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@style/Theme.Sliding.Light"
+           />
         <activity
             android:name=".ui.UserProfile"
             android:label="User Details"

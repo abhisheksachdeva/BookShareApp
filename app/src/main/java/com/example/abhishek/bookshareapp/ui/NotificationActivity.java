@@ -11,18 +11,22 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
-import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
 import com.example.abhishek.bookshareapp.ui.adapter.Local.NotificationAdapter;
+import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 import com.example.abhishek.bookshareapp.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class NotificationActivity extends AppCompatActivity{
 
@@ -40,12 +44,12 @@ public class NotificationActivity extends AppCompatActivity{
         nLinearLayoutManager = new LinearLayoutManager(this);
         nLinearLayoutManager.setReverseLayout(true);
         nLinearLayoutManager.setStackFromEnd(true);
+
         notificationsListView = (RecyclerView) findViewById(R.id.notifications_list);
         notificationsListView.setLayoutManager(nLinearLayoutManager);
 
         adapter = new NotificationAdapter(this, notificationsList);
         notificationsListView.setAdapter(adapter);
-
 
         getNotifications();
 
@@ -53,13 +57,7 @@ public class NotificationActivity extends AppCompatActivity{
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i("NTA", "onRefresh called from SwipeRefreshLayout ");
-
-                d = new NotificationAdapter(NotificationActivity.this, notificationsList);
-                notificationsListView.setAdapter(d);
                 getNotifications();
-
-                Toast.makeText(NotificationActivity.this,"Refresh!",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -68,7 +66,21 @@ public class NotificationActivity extends AppCompatActivity{
     public void getNotifications() {
         Helper.setOld_total(Helper.getNew_total());
 
-        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
+
+        httpclient.addInterceptor(logging);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(CommonUtilities.local_books_api_url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpclient.build())
+                .build();
+
+        UsersAPI usersAPI = retrofit.create(UsersAPI.class);
+        Log.i("NotifActivity", Helper.getUserId());
         Call<List<Notifications>> call = usersAPI.getNotifs(Helper.getUserId());
         call.enqueue(new Callback<List<Notifications>>() {
             @Override
@@ -78,7 +90,6 @@ public class NotificationActivity extends AppCompatActivity{
                     notificationsList.clear();
                     Helper.setNew_total(notifList.size());
                     notificationsList.addAll(notifList);
-                    Log.i("NTA","adapter attached");
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
                     Log.i("Old Total",Helper.getOld_total().toString());

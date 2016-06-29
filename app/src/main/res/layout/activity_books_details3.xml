@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/BGyellow"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="30dp">
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/row_books_imageView"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="16dp"
+                android:layout_weight="1"
+                android:src="@android:drawable/ic_media_ff" />
+
+
+            <TextView
+                android:id="@+id/row_books_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Author"
+                android:layout_gravity="center"
+                android:textSize="20dp"
+                android:textStyle="italic" />
+
+            <RatingBar
+                android:id="@+id/row_books_rating"
+                android:layout_gravity="center"
+                style="?android:attr/ratingBarStyleSmall"
+                android:textSize="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <TextView
+                android:id="@+id/row_books_ratings_count"
+                android:layout_width="match_parent"
+                android:textAlignment="center"
+                android:textSize="20dp"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content" />
+
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:layout_gravity="center"
+            android:textStyle="italic"
+            android:fontFamily="serif"
+            android:textAlignment="center"
+            android:text="Users having this book :"
+            android:textSize="20sp" />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/owner_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scrollbars="vertical"
+            android:layout_gravity="center"
+            android:layout_margin="16dp"
+            android:textAlignment="center" />
+
+    </LinearLayout>
+
+</LinearLayout>

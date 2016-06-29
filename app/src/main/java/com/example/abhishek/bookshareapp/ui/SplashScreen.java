@@ -79,6 +79,11 @@ public class SplashScreen extends Activity {
                             } else {
 
                                 Toast.makeText(SplashScreen.this, "Failed to log in due to internal error!", Toast.LENGTH_SHORT).show();
+                                try {
+                                    Thread.sleep(1000);
+                                } catch(InterruptedException e) {
+                                    e.printStackTrace();
+                                }
                                 Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -97,6 +102,13 @@ public class SplashScreen extends Activity {
                 @Override
                 public void onFailure(Call<Detail> call, Throwable t) {
                     Toast.makeText(SplashScreen.this, "Check network connectivity and try again", Toast.LENGTH_SHORT).show();
+                    try {
+                        Thread.sleep(1000);
+                    } catch(InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                    startActivity(i);
                     finish();
                 }
             });

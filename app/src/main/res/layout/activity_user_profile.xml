@@ -3,6 +3,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@color/BGyellow"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -10,40 +11,97 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_margin="20dp"
-                android:id="@+id/username"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="Name:"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/useremail"
-                android:layout_margin="20dp"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:text="Email:"/>
-
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:textSize="20dp"
-                android:layout_margin="20dp"
-                android:text="Address:"/>
-
-        </LinearLayout>
+            android:layout_margin="10dp"
+            android:layout_marginBottom="10dp">
 
             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/username"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+                    android:textSize="16dp"
+                    />
+
+                <TextView
+                    android:id="@+id/name"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:alpha="0.7"
+                    android:paddingBottom="16dp"
+                    android:textSize="16dp"
+                    android:text="Name "
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/useremail"
+                    android:layout_width="fill_parent"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+                    android:textColor="#2020ff"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/email"
+                    android:layout_width="fill_parent"
+                    android:paddingLeft="16dp"
+                    android:paddingBottom="16dp"
+                    android:text="Email "
+                    android:alpha="0.7"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp" />
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray" />
+
+                <TextView
+                    android:id="@+id/address"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+                    android:textStyle="italic"
+                    android:textSize="16dp" />
+
+                <TextView
+                    android:id="@+id/adress"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="16dp"
+                    android:paddingBottom="16dp"
+                    android:alpha="0.7"
+                    android:text="Address "
+                    android:textSize="16dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+
+        <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
@@ -54,7 +112,10 @@
                     android:layout_margin="16dp"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:text="Books with this user" />
+                    android:fontFamily="casual"
+                    android:textAlignment="center"
+                    android:layout_gravity="center"
+                    android:text="List of Books this guy has!" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/userBooksLists"

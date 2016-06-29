@@ -99,7 +99,7 @@ public class BookDetailsActivity extends AppCompatActivity{
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         usersList.setLayoutManager(layoutManager);
         userInfoList = new ArrayList<>();
-        usersAdapter = new UsersAdapter(this, userInfoList,bookTitle,bookId, new UsersAdapter.OnItemClickListener() {
+        usersAdapter = new UsersAdapter(id,this, userInfoList,bookTitle,bookId, new UsersAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(UserInfo userInfo) {
                 Log.i(TAG, "onItemClick");

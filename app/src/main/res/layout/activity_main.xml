@@ -6,7 +6,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
+    android:background="@color/BGyellow"
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
@@ -20,6 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
+            android:titleTextColor="@color/White"
+            android:subtitleTextColor="@color/BGyellow"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
         <android.support.v4.widget.SwipeRefreshLayout
@@ -30,6 +32,10 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/localBooksList"
                 android:layout_width="match_parent"
+                android:scrollbars="vertical"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbarSize="2dp"
+                android:scrollIndicators="start"
                 android:layout_height="match_parent">
 
             </android.support.v7.widget.RecyclerView>
@@ -54,6 +60,7 @@
         android:id="@+id/nav_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:background="#FFF9C4"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"

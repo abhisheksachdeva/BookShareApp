@@ -15,7 +15,7 @@
 
     <ImageView
         android:id="@+id/book_cover"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_weight="1"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
@@ -29,12 +29,12 @@
         android:orientation="vertical">
         <TextView
             android:id="@+id/book_title"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:text="Title"
             android:textStyle="bold"
             android:textSize="16sp"
-            android:maxLines="2"/>
+            android:maxLines="3"/>
 
         <TextView
             android:id="@+id/author"

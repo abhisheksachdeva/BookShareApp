@@ -56,8 +56,8 @@ public class MyBooks2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mybooks2);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
