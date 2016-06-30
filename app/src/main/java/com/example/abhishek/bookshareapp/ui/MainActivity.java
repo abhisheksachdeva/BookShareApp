@@ -2,11 +2,13 @@ package com.example.abhishek.bookshareapp.ui;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
@@ -54,11 +56,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences prefs;
     SwipeRefreshLayout refreshLayout;
     SearchView searchView;
+    ProgressDialog progress,progress2;
+    Integer count =1;
+    String b_id;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         FloatingActionButton button = (FloatingActionButton) findViewById(R.id.button);
         RecyclerView localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
@@ -68,11 +75,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                Intent intent = new Intent(getApplicationContext(),BookDetailsActivity3.class);
-                intent.putExtra("id", book.getId());
+                b_id=book.getId();
+
+                progress=new ProgressDialog(MainActivity.this);
+                progress.setMessage("Hang in there....");
+                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                progress.setIndeterminate(true);
+                progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.loading));
+                progress.setMax(5);
+                progress.setProgress(0);
+                progress.show();
+                new MyTask().execute(5);
                 Log.i(TAG, "onItemClick");
-                startActivity(intent);
-//                overridePendingTransition(R.anim.d,R.anim.a);
 
             }
         });
@@ -137,6 +151,38 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 refresh();
             }
         });
+    }
+
+    class MyTask extends AsyncTask<Integer, Integer, String> {
+        @Override
+        protected String doInBackground(Integer... params) {
+            for (; count <= params[0]; count++) {
+                try {
+                    Thread.sleep(1000);
+                    publishProgress(count);
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return "Task Completed.";
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            Intent intent = new Intent(getApplicationContext(),BookDetailsActivity3.class);
+            intent.putExtra("id", b_id);
+            startActivity(intent);
+            progress.dismiss();
+
+        }
+        @Override
+        protected void onPreExecute() {
+
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            progress.setProgress(values[0]);
+        }
     }
 
     @Override

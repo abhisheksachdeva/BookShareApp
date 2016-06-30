@@ -116,9 +116,6 @@ public class BookDetailsActivity3 extends SlidingActivity{
         });
 
 
-//        titleBook = (TextView) findViewById(R.id.row_books_title);
-
-
         SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
         String id = getIntent().getExtras().getString("id");

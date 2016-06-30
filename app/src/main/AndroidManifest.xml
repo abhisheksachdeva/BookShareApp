@@ -75,7 +75,6 @@
             android:name=".ui.ChangePasswordActivity"
             android:label="Change Password"
             android:parentActivityName=".ui.MyProfile" />
-        <activity android:name=".ui.Blah"></activity>
     </application>
 
 </manifest>
