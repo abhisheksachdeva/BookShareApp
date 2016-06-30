@@ -1,6 +1,7 @@
 
 package com.example.abhishek.bookshareapp.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -8,6 +9,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -50,14 +52,21 @@ public class MyBooks2 extends AppCompatActivity {
     List<Book> booksList;
     BookAdapter adapter;
     RecyclerView mRecyclerView;
+    Integer count =1;
+    ProgressDialog progress;
+    String Resp;
+
+    public String getResp() {
+        return Resp;
+    }
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mybooks2);
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//        setSupportActionBar(toolbar);
+        new ProgressLoader().execute(5);
+
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
@@ -77,6 +86,48 @@ public class MyBooks2 extends AppCompatActivity {
             }
         });
 
+    }
+
+    class ProgressLoader extends AsyncTask<Integer, Integer, String> {
+        @Override
+        protected String doInBackground(Integer... params) {
+            for (; count <= params[0]; count++) {
+                try {
+                    Thread.sleep(1000);
+                    if (getResp()!=null){
+                        break;
+                    }
+                    publishProgress(count);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+
+            return "Task Completed.";
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            progress.dismiss();
+
+        }
+        @Override
+        protected void onPreExecute() {
+            progress=new ProgressDialog(MyBooks2.this);
+            progress.setMessage("Wont Take Long Bruh!...");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.loading));
+            progress.setMax(5);
+            progress.setProgress(0);
+            progress.show();
+
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            progress.setProgress(values[0]);
+        }
     }
 
     @Override
@@ -99,7 +150,7 @@ public class MyBooks2 extends AppCompatActivity {
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
                 if (response.body() != null) {
                     Log.d("UserProfile Response:", response.toString());
-
+                    Resp = response.toString();
                     List<Book> booksTempInfoList = response.body().getUserBookList();
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);

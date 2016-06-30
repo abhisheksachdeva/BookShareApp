@@ -56,16 +56,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences prefs;
     SwipeRefreshLayout refreshLayout;
     SearchView searchView;
-    ProgressDialog progress,progress2;
     Integer count =1;
-    String b_id;
+    ProgressDialog progress;
+    String Resp;
 
+    public String getResp() {
+        return Resp;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        new ProgressLoader().execute(5);
 
         FloatingActionButton button = (FloatingActionButton) findViewById(R.id.button);
         RecyclerView localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
@@ -75,17 +78,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                b_id=book.getId();
+                Intent intent = new Intent(getApplicationContext(),BookDetailsActivity3.class);
+                intent.putExtra("id", book.getId());
+                startActivity(intent);
 
-                progress=new ProgressDialog(MainActivity.this);
-                progress.setMessage("Hang in there....");
-                progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                progress.setIndeterminate(true);
-                progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.loading));
-                progress.setMax(5);
-                progress.setProgress(0);
-                progress.show();
-                new MyTask().execute(5);
                 Log.i(TAG, "onItemClick");
 
             }
@@ -103,8 +99,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         localBooksList.addOnScrollListener(endlessScrollListener);
         prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
-        getLocalBooks("1");
-        getNotifications();
+
         Helper.setUserId(prefs.getString("id", prefs.getString("id", "")));
         Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
 
@@ -153,30 +148,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
-    class MyTask extends AsyncTask<Integer, Integer, String> {
+    class ProgressLoader extends AsyncTask<Integer, Integer, String> {
         @Override
         protected String doInBackground(Integer... params) {
+            getLocalBooks("1");
+            getNotifications();
             for (; count <= params[0]; count++) {
                 try {
                     Thread.sleep(1000);
+                    if (getResp()!=null){
+                        break;
+                    }
                     publishProgress(count);
-
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
+
+
+
             return "Task Completed.";
         }
         @Override
         protected void onPostExecute(String result) {
-            Intent intent = new Intent(getApplicationContext(),BookDetailsActivity3.class);
-            intent.putExtra("id", b_id);
-            startActivity(intent);
             progress.dismiss();
 
         }
         @Override
         protected void onPreExecute() {
+            progress=new ProgressDialog(MainActivity.this);
+            progress.setMessage("Turning To Page 394...");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.loading));
+            progress.setMax(5);
+            progress.setProgress(0);
+            progress.show();
 
         }
         @Override
@@ -200,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.body() != null) {
                     Log.d("Search Response:", response.toString());
                     List<Book> localBooksList = response.body();
+                    Resp = response.toString();
                     booksList.clear();
                     booksList.addAll(localBooksList);
                     adapter.notifyDataSetChanged();

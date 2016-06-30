@@ -1,10 +1,12 @@
 package com.example.abhishek.bookshareapp.ui;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -54,7 +56,13 @@ public class BookDetailsActivity3 extends SlidingActivity{
     UsersAdapter usersAdapter;
     String bookId,bookTitle;
     ImageView image;
+    Integer count =1;
+    ProgressDialog progress;
+    public static  String Response;
 
+    public static String getResponse() {
+        return Response;
+    }
 
     @Override
     public void init(Bundle savedInstanceState) {
@@ -66,6 +74,7 @@ public class BookDetailsActivity3 extends SlidingActivity{
         );
 
         setContent(R.layout.activity_books_details3);
+        new ProgressLoader().execute(5);
         authorBook = (TextView) findViewById(R.id.row_books_author);
         ratingBook = (RatingBar) findViewById(R.id.row_books_rating);
         ratingCount = (TextView) findViewById(R.id.row_books_ratings_count);
@@ -91,11 +100,13 @@ public class BookDetailsActivity3 extends SlidingActivity{
                                     Log.i("Email iD ", Helper.getUserEmail());
                                     if (response.body() != null) {
                                         Log.i("AddBook", "Success");
+                                        Response= response.toString();
                                         Toast.makeText(BookDetailsActivity3.this, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                         Log.i("response", response.body().getDetail());
 
                                     } else {
                                         Log.i("AddBook", "Response Null");
+                                        Response= response.toString()+"null";
                                         Toast.makeText(BookDetailsActivity3.this, response.body().getDetail()+"ssss" , Toast.LENGTH_SHORT).show();
 
                                     }
@@ -170,6 +181,48 @@ public class BookDetailsActivity3 extends SlidingActivity{
     }
 
 
+    class ProgressLoader extends AsyncTask<Integer, Integer, String> {
+        @Override
+        protected String doInBackground(Integer... params) {
+
+            for (; count <= params[0]; count++) {
+                try {
+                    Thread.sleep(1000);
+                    if (BookDetailsActivity3.getResponse()!=null){
+                        break;
+                    }
+                    publishProgress(count);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+
+            return "Task Completed.";
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            progress.dismiss();
+
+        }
+        @Override
+        protected void onPreExecute() {
+            progress=new ProgressDialog(BookDetailsActivity3.this);
+            progress.setMessage("Hang in there....");
+            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progress.setIndeterminate(true);
+            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.loading));
+            progress.setMax(5);
+            progress.setProgress(0);
+            progress.show();
+
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            progress.setProgress(values[0]);
+        }
+    }
 
 
     }
