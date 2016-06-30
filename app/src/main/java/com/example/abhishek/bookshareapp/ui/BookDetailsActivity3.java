@@ -47,7 +47,6 @@ public class BookDetailsActivity3 extends SlidingActivity{
     String title,author,gr_id,gr_img_url;
     Long ratingsCount;
     Float rating;
-    public TextView titleBook;
     public TextView authorBook;
     public RatingBar ratingBook;
     public TextView ratingCount;
@@ -67,6 +66,10 @@ public class BookDetailsActivity3 extends SlidingActivity{
         );
 
         setContent(R.layout.activity_books_details3);
+        authorBook = (TextView) findViewById(R.id.row_books_author);
+        ratingBook = (RatingBar) findViewById(R.id.row_books_rating);
+        ratingCount = (TextView) findViewById(R.id.row_books_ratings_count);
+        image = (ImageView) findViewById(R.id.row_books_imageView);
         setImage(R.drawable.b_image);
         setTitle("Book Details");
         setFab(R.color.BGyellow, R.drawable.plus, new View.OnClickListener() {
@@ -81,6 +84,7 @@ public class BookDetailsActivity3 extends SlidingActivity{
                         if (items[which].equals("Yes")){
                             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
                             final Call<Book> addBook = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url);
+                            Log.d("sss",Helper.getUserEmail()+" "+title+author+gr_id+gr_img_url+rating+ratingsCount+gr_img_url);
                             addBook.enqueue(new Callback<Book>() {
                                 @Override
                                 public void onResponse(Call<Book> call, Response<Book> response) {
@@ -92,7 +96,8 @@ public class BookDetailsActivity3 extends SlidingActivity{
 
                                     } else {
                                         Log.i("AddBook", "Response Null");
-                                        Toast.makeText(BookDetailsActivity3.this, response.body().getDetail() , Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(BookDetailsActivity3.this, response.body().getDetail()+"ssss" , Toast.LENGTH_SHORT).show();
+
                                     }
                                 }
                                 @Override
@@ -112,15 +117,11 @@ public class BookDetailsActivity3 extends SlidingActivity{
 
 
 //        titleBook = (TextView) findViewById(R.id.row_books_title);
-        authorBook = (TextView) findViewById(R.id.row_books_author);
-        ratingBook = (RatingBar) findViewById(R.id.row_books_rating);
-        ratingCount = (TextView) findViewById(R.id.row_books_ratings_count);
-        image = (ImageView) findViewById(R.id.row_books_imageView);
+
 
         SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
         String id = getIntent().getExtras().getString("id");
-
         String idd = prefs.getString("id", "");
 
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
@@ -135,7 +136,7 @@ public class BookDetailsActivity3 extends SlidingActivity{
                     Helper.setBookTitle(book.getTitle());
                     bookId=book.getId(); gr_id = book.getId();
                     bookTitle=book.getTitle();
-//                    titleBook.setText(book.getTitle()); title = book.getTitle();
+                    title = book.getTitle();
                     authorBook.setText("By : "+book.getAuthor()); author = book.getAuthor();
                     ratingCount.setText("Having "+book.getRatingsCount().toString()+" votes"); ratingsCount=book.getRatingsCount();
                     ratingBook.setRating(book.getRating());rating = book.getRating();
