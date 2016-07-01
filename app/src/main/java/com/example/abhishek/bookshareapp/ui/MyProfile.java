@@ -13,6 +13,7 @@ import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
 import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
+import com.klinker.android.sliding.SlidingActivity;
 
 import java.util.List;
 
@@ -20,15 +21,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyProfile extends AppCompatActivity {
+public class MyProfile extends SlidingActivity {
     TextView userName, userEmail, address;
     UserInfo user;
     String id;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_profile);
+    public void init(Bundle savedInstanceState) {
+        setTitle("My Profile");
+        setPrimaryColors(
+                getResources().getColor(R.color.colorPrimary),
+                getResources().getColor(R.color.colorPrimaryDark)
+        );
+        setContent(R.layout.activity_my_profile);
+        setImage(R.drawable.default_profile_pic);
         userName = (TextView) findViewById(R.id.username);
         userEmail = (TextView) findViewById(R.id.useremail);
         address = (TextView) findViewById(R.id.address);
