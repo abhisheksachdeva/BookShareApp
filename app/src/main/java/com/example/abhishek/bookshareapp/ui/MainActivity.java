@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        new ProgressLoader().execute(5);
+        new ProgressLoader().execute(15);
 
         FloatingActionButton button = (FloatingActionButton) findViewById(R.id.button);
         RecyclerView localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
@@ -88,11 +88,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         localBooksList.setAdapter(adapter);
 
+        getLocalBooks("1");
+        getNotifications();
+
         final EndlessScrollListener endlessScrollListener = new EndlessScrollListener((LinearLayoutManager) layoutManager) {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 getLocalBooks(String.valueOf(page + 1));
-                Toast.makeText(getApplicationContext(), "Loading Page" + (page + 1), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Loading Page " + (page + 1), Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -151,11 +154,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     class ProgressLoader extends AsyncTask<Integer, Integer, String> {
         @Override
         protected String doInBackground(Integer... params) {
-            getLocalBooks("1");
-            getNotifications();
+
             for (; count <= params[0]; count++) {
                 try {
                     Thread.sleep(1000);
+                    Log.d("MAAs",getResp()+"+"+count.toString());
                     if (getResp()!=null){
                         break;
                     }
@@ -163,8 +166,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+                if (getResp()!=null){
+                    break;
+                }
             }
-
 
 
             return "Task Completed.";
@@ -207,7 +212,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.body() != null) {
                     Log.d("Search Response:", response.toString());
                     List<Book> localBooksList = response.body();
-                    Resp = response.toString();
                     booksList.clear();
                     booksList.addAll(localBooksList);
                     adapter.notifyDataSetChanged();
@@ -329,6 +333,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onResponse(Call<BookList> call, Response<BookList> response) {
                 if (response.body() != null) {
                     Log.d("Search Response:", response.toString());
+                    Resp = response.toString();
                     List<Book> localBooksList = response.body().getResults();
                     if(page.equals("1")) {
                         booksList.clear();

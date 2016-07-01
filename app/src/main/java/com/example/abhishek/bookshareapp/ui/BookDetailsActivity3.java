@@ -66,21 +66,19 @@ public class BookDetailsActivity3 extends SlidingActivity{
 
     @Override
     public void init(Bundle savedInstanceState) {
-        setTitle("Activity Title");
-
+        setTitle("Book Details");
         setPrimaryColors(
                 getResources().getColor(R.color.colorPrimary),
                 getResources().getColor(R.color.colorPrimaryDark)
         );
 
         setContent(R.layout.activity_books_details3);
-        new ProgressLoader().execute(5);
+        new ProgressLoader().execute(15);
         authorBook = (TextView) findViewById(R.id.row_books_author);
         ratingBook = (RatingBar) findViewById(R.id.row_books_rating);
         ratingCount = (TextView) findViewById(R.id.row_books_ratings_count);
         image = (ImageView) findViewById(R.id.row_books_imageView);
         setImage(R.drawable.b_image);
-        setTitle("Book Details");
         setFab(R.color.BGyellow, R.drawable.plus, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,13 +98,11 @@ public class BookDetailsActivity3 extends SlidingActivity{
                                     Log.i("Email iD ", Helper.getUserEmail());
                                     if (response.body() != null) {
                                         Log.i("AddBook", "Success");
-                                        Response= response.toString();
                                         Toast.makeText(BookDetailsActivity3.this, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                         Log.i("response", response.body().getDetail());
 
                                     } else {
                                         Log.i("AddBook", "Response Null");
-                                        Response= response.toString()+"null";
                                         Toast.makeText(BookDetailsActivity3.this, response.body().getDetail()+"ssss" , Toast.LENGTH_SHORT).show();
 
                                     }
@@ -140,6 +136,7 @@ public class BookDetailsActivity3 extends SlidingActivity{
                 if(response.body()!=null) {
                     Log.d("bda Response:", response.toString());
                     book = response.body();
+                    Response= response.toString();
                     Helper.setBookId(book.getId());
                     Helper.setBookTitle(book.getTitle());
                     bookId=book.getId(); gr_id = book.getId();
@@ -188,12 +185,16 @@ public class BookDetailsActivity3 extends SlidingActivity{
             for (; count <= params[0]; count++) {
                 try {
                     Thread.sleep(1000);
-                    if (BookDetailsActivity3.getResponse()!=null){
+                    Log.d("BDAs",getResponse()+"+"+count.toString());
+                    if (getResponse()!=null){
                         break;
                     }
                     publishProgress(count);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+                if (getResponse()!=null){
+                    break;
                 }
             }
 

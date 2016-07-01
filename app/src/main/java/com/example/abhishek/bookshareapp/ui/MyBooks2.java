@@ -65,7 +65,7 @@ public class MyBooks2 extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mybooks2);
-        new ProgressLoader().execute(5);
+        new ProgressLoader().execute(15);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
 
@@ -94,12 +94,17 @@ public class MyBooks2 extends AppCompatActivity {
             for (; count <= params[0]; count++) {
                 try {
                     Thread.sleep(1000);
+                    Log.d("MBAs",getResp()+"+"+count.toString());
                     if (getResp()!=null){
                         break;
                     }
                     publishProgress(count);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
+                }
+
+                if (getResp()!=null){
+                    break;
                 }
             }
 
