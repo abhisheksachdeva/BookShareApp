@@ -4,7 +4,4 @@
     android:oneshot="false">
     <item android:drawable="@drawable/o" android:duration="300" />
     <item android:drawable="@drawable/c" android:duration="300" />
-
-
-
 </animation-list>

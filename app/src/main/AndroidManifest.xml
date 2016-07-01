@@ -34,15 +34,7 @@
             android:label="My Books"
             android:parentActivityName=".ui.MainActivity" />
         <activity
-            android:name=".ui.MyBooks2"
-            android:label="My Books"
-            android:parentActivityName=".ui.MainActivity" />
-        <activity
             android:name=".ui.BookDetailsActivity"
-            android:label="Book Details"
-            android:parentActivityName=".ui.MainActivity" />
-        <activity
-            android:name=".ui.BookDetailsActivity3"
             android:label="Book Details"
             android:excludeFromRecents="true"
             android:taskAffinity=""

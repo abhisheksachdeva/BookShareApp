@@ -2,7 +2,6 @@ package com.example.abhishek.bookshareapp.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -10,12 +9,8 @@ import android.widget.TextView;
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
-import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
-import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
 import com.klinker.android.sliding.SlidingActivity;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;

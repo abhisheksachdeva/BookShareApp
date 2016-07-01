@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                Intent intent = new Intent(getApplicationContext(),BookDetailsActivity3.class);
+                Intent intent = new Intent(getApplicationContext(),BookDetailsActivity.class);
                 intent.putExtra("id", book.getId());
                 startActivity(intent);
                 Log.i(TAG, "onItemClick");
@@ -204,6 +204,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.loading));
             progress.setMax(5);
             progress.setProgress(0);
+            progress.setCancelable(false);
             progress.show();
 
         }
@@ -250,16 +251,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        MenuItem item = menu.findItem(R.id.menu_notifs);
+        final MenuItem notif_item = menu.findItem(R.id.menu_notifs);
         MenuItem searchItem = menu.findItem(R.id.search);
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                notif_item.setVisible(false);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
+                notif_item.setVisible(true);
                 getLocalBooks("1");
                 return true;
             }
@@ -268,9 +271,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setOnQueryTextListener(this);
 
         if (Helper.getNew_total() > Helper.getOld_total()) {
-            item.setIcon(R.drawable.ic_menu_send2);
+            notif_item.setIcon(R.drawable.ic_menu_send2);
         } else {
-            item.setIcon(R.drawable.ic_menu_send);
+            notif_item.setIcon(R.drawable.ic_menu_send);
         }
 
         return true;
@@ -278,7 +281,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
         if (id == R.id.menu_notifs) {
             item.setIcon(R.drawable.ic_menu_send);
@@ -295,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_mybooks) {
-            Intent i = new Intent(this, MyBooks2.class);
+            Intent i = new Intent(this, MyBooks.class);
             startActivity(i);
 
         } else if (id == R.id.nav_myprofile) {

@@ -25,7 +25,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(this,MyBooks2.class);
+        Intent i = new Intent(this,MyBooks.class);
         startActivity(i);
         finish();
     }
