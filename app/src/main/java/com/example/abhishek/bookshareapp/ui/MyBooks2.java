@@ -114,8 +114,12 @@ public class MyBooks2 extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(String result) {
-            progress.dismiss();
-
+            if(getResp()==null){
+                Toast.makeText(MyBooks2.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+                progress.dismiss();
+            }else{
+                progress.dismiss();
+            }
         }
         @Override
         protected void onPreExecute() {

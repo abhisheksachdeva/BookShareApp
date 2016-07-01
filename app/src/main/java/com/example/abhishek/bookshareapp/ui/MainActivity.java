@@ -39,10 +39,8 @@ import com.example.abhishek.bookshareapp.api.models.LocalBooks.BookList;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
 import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
 import com.example.abhishek.bookshareapp.utils.Helper;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -59,9 +57,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Integer count =1;
     ProgressDialog progress;
     String Resp;
+    int backCounter=0;
 
     public String getResp() {
         return Resp;
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        if(backCounter >= 1) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Toast.makeText(this, "Ciao Buddy !", Toast.LENGTH_SHORT).show();
+            startActivity(intent);
+
+        } else {
+            Toast.makeText(this, "Press  again to exit.", Toast.LENGTH_SHORT).show();
+            backCounter++;
+        }
     }
 
     @Override
@@ -81,7 +96,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(getApplicationContext(),BookDetailsActivity3.class);
                 intent.putExtra("id", book.getId());
                 startActivity(intent);
-
                 Log.i(TAG, "onItemClick");
 
             }
@@ -102,7 +116,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         localBooksList.addOnScrollListener(endlessScrollListener);
         prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
-
         Helper.setUserId(prefs.getString("id", prefs.getString("id", "")));
         Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
 
@@ -116,7 +129,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-
 
         View header = navigationView.getHeaderView(0);
         TextView _name = (TextView) header.findViewById(R.id.nav_name);
@@ -176,8 +188,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         @Override
         protected void onPostExecute(String result) {
-            progress.dismiss();
-
+            if(getResp()==null){
+                Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+                progress.dismiss();
+            }else{
+                progress.dismiss();
+            }
         }
         @Override
         protected void onPreExecute() {

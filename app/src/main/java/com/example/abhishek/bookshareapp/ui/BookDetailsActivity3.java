@@ -174,7 +174,6 @@ public class BookDetailsActivity3 extends SlidingActivity{
             }
         });
         usersList.setAdapter(usersAdapter);
-
     }
 
 
@@ -185,27 +184,28 @@ public class BookDetailsActivity3 extends SlidingActivity{
             for (; count <= params[0]; count++) {
                 try {
                     Thread.sleep(1000);
-                    Log.d("BDAs",getResponse()+"+"+count.toString());
-                    if (getResponse()!=null){
+                    Log.d("BDAs", getResponse() + "+" + count.toString());
+                    if (getResponse() != null) {
                         break;
                     }
                     publishProgress(count);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (getResponse()!=null){
+                if (getResponse() != null) {
                     break;
                 }
             }
-
-
-
-            return "Task Completed.";
+                        return "Task Completed.";
         }
         @Override
         protected void onPostExecute(String result) {
-            progress.dismiss();
-
+            if(getResponse()==null){
+                Toast.makeText(BookDetailsActivity3.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+                progress.dismiss();
+            }else{
+                progress.dismiss();
+            }
         }
         @Override
         protected void onPreExecute() {
@@ -217,13 +217,11 @@ public class BookDetailsActivity3 extends SlidingActivity{
             progress.setMax(5);
             progress.setProgress(0);
             progress.show();
-
         }
         @Override
         protected void onProgressUpdate(Integer... values) {
             progress.setProgress(values[0]);
         }
     }
+}
 
-
-    }
