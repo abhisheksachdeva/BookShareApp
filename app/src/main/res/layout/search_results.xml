@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/BGyellow"
+    android:orientation="vertical">
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/BGyellow"
+    android:id="@+id/scrollView"
+    android:orientation="vertical"
+    >
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -30,6 +44,7 @@
             android:id="@+id/all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:checked="true"
             android:text="All" />
 
         <RadioButton
@@ -55,12 +70,30 @@
         android:onClick="search"
         android:text="Search" />
 
+
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+        android:layout_height="wrap_content"
+        />
 
 
 
 </LinearLayout>
+</ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/scroll"
+        android:visibility="invisible"
+        android:src="@drawable/up"
+        android:background="@color/Red"
+        android:layout_marginBottom="48dp"
+        android:layout_alignParentBottom="true"
+        android:foregroundGravity="center_vertical"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="right" />
+</RelativeLayout>
+

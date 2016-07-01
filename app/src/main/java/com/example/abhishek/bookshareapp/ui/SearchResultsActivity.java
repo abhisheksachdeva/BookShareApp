@@ -2,13 +2,19 @@ package com.example.abhishek.bookshareapp.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.view.ScrollingView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.ui.fragments.BookListFragment;
@@ -21,11 +27,12 @@ public class SearchResultsActivity extends AppCompatActivity {
     String mode = "all";
     RadioButton r1, r2, r3;
     BookListFragment bookListFragment;
+    ScrollView scrollingView;
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i = new Intent(this,MyBooks2.class);
+        Intent i = new Intent(this,MyBooks.class);
         startActivity(i);
         finish();
     }
@@ -35,6 +42,8 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results);
+        scrollingView =(ScrollView)findViewById(R.id.scrollView);
+        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.scroll);
 
         searchEditText = (EditText) findViewById(R.id.searchEditText);
         r1 = (RadioButton) findViewById(R.id.all);
@@ -46,6 +55,16 @@ public class SearchResultsActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction()
                 .replace(R.id.container, bookListFragment)
                 .commit();
+
+
+            button.setVisibility(View.VISIBLE);
+
+         button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                scrollingView.fullScroll(View.FOCUS_UP);
+            }
+        });
 
     }
 
