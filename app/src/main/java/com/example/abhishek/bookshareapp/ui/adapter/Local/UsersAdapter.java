@@ -3,6 +3,7 @@ package com.example.abhishek.bookshareapp.ui.adapter.Local;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -33,6 +34,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
     UserInfo tempValues=null;
     private final OnItemClickListener listener;
     String bookId, bookTitle;
+    String userId;
 
     public interface OnItemClickListener {
         void onItemClick(UserInfo userInfo);
@@ -55,13 +57,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
         }
     }
 
-    public UsersAdapter(Context context, List<UserInfo> userList, String bookTitle,String bookId,OnItemClickListener listener){
+    public UsersAdapter(String userId,Context context, List<UserInfo> userList, String bookTitle,String bookId,OnItemClickListener listener){
         this.userList =userList;
         this.context=context;
         Log.d("UsersAdapter","Constructor");
         this.listener = listener;
         this.bookTitle=bookTitle;
         this.bookId=bookId;
+        this.userId=userId;
     }
 
     @Override
@@ -77,18 +80,29 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
         final String id;
         tempValues = userList.get(position);
         id = tempValues.getId();
-        holder.nameUser.setText(tempValues.getName());
-        holder.emailUser.setText(tempValues.getEmail());
-        holder.hostelUser.setText(tempValues.getHostel());
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onItemClick(userList.get(position));
-                Intent i = new Intent(context,UserProfile.class);
-                i.putExtra("id",id);
-                context.startActivity(i);
-            }
-        });
+
+        if(id.equals(userId)){
+            holder.nameUser.setText("You Own This Book");
+            holder.nameUser.setHeight(150);
+            holder.nameUser.setPadding(10,10,10,10);
+            holder.emailUser.setVisibility(View.GONE);
+            holder.hostelUser.setVisibility(View.GONE);
+            holder.request.setVisibility(View.GONE);
+        } else {
+            holder.nameUser.setText(tempValues.getName());
+            holder.emailUser.setText(tempValues.getEmail());
+            holder.hostelUser.setText(tempValues.getHostel());
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(userList.get(position));
+                    Intent i = new Intent(context, UserProfile.class);
+                    i.putExtra("id", id);
+                    context.startActivity(i);
+                }
+            });
+
+        }
 
         holder.request.setOnClickListener(new View.OnClickListener() {
             @Override

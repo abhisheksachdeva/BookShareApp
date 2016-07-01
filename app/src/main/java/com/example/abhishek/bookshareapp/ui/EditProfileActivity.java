@@ -1,5 +1,6 @@
 package com.example.abhishek.bookshareapp.ui;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +22,7 @@ import retrofit2.Response;
 public class EditProfileActivity extends AppCompatActivity {
 
     EditText firstName, lastName, contactNo, roomNo, hostel;
-    Button saveButton;
+    String id ;
     SharedPreferences preferences;
 
     @Override
@@ -36,6 +37,7 @@ public class EditProfileActivity extends AppCompatActivity {
         hostel = (EditText) findViewById(R.id.hostel);
 
         preferences = getSharedPreferences("Token", MODE_PRIVATE);
+        id = preferences.getString("id",null);
         firstName.setText(preferences.getString("first_name", null));
         lastName.setText(preferences.getString("last_name", null));
         contactNo.setText(preferences.getString("contact_no", null));
@@ -87,4 +89,12 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i= new Intent(this,MyProfile.class);
+        i.putExtra("id", preferences.getString("id", preferences.getString("id", "")));
+        startActivity(i);
+
+    }
 }

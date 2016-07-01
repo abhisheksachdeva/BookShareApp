@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/menu_notifs"
-        android:title="refresh"
+        android:title="Notifications"
         android:icon="@drawable/ic_menu_send2"
         app:showAsAction="always" />
 

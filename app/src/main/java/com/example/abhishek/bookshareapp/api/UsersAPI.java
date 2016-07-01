@@ -1,6 +1,7 @@
 package com.example.abhishek.bookshareapp.api;
 
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
+import com.example.abhishek.bookshareapp.api.models.LocalBooks.BookList;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.RemoveBook;
 import com.example.abhishek.bookshareapp.api.models.Login;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
@@ -46,6 +47,11 @@ public interface UsersAPI {
 
     @GET("books/?format=json")
     Call<List<Book>> getBooksList();
+
+    @GET("books/?format=json")
+    Call<BookList> getBList(
+            @Query("page") String page
+    );
 
     @FormUrlEncoded
     @POST("books/?format=json")

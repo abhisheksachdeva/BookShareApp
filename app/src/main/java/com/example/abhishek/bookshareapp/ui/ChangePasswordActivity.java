@@ -1,5 +1,6 @@
 package com.example.abhishek.bookshareapp.ui;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -57,7 +58,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Request not valid", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Log.i("harshit", "request body is null");
+                        Log.i("CPA", "request body is null");
                     }
                 }
 
@@ -67,5 +68,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent i= new Intent(this,MyProfile.class);
+        i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
+        startActivity(i);
     }
 }
