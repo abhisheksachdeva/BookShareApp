@@ -108,7 +108,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
             });
 
         }
-        String url = CommonUtilities.local_books_api_url+"image/"+id+"/";
+        String url = "http://192.168.1.2:8000/"+"image/"+id+"/";
         Picasso.with(this.context).load(url).into(holder.imageUser);
 
         holder.request.setOnClickListener(new View.OnClickListener() {

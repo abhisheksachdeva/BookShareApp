@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -31,6 +32,7 @@ import java.io.FileNotFoundException;
 import java.net.URI;
 import java.net.URL;
 
+import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -54,7 +56,7 @@ public class MyProfile extends SlidingActivity {
                 getResources().getColor(R.color.colorPrimaryDark)
         );
         setContent(R.layout.activity_my_profile);
-        String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
+        String url = "http://192.168.1.2:8000/"+"image/"+Helper.getUserId()+"/";
         Picasso.with(getApplicationContext())
                 .load(url)
                 .into(new Target() {
@@ -106,13 +108,13 @@ public class MyProfile extends SlidingActivity {
 
     public void sendToServer(Uri uri){
         OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
-//        Retrofit retrofit = new Retrofit.Builder()
-//                .baseUrl("http://192.168.1.2:8000/")
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .client(httpclient.build())
-//                .build();
-//        UsersAPI api = retrofit.create(UsersAPI.class);
-        UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.2:8000/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpclient.build())
+                .build();
+        UsersAPI api = retrofit.create(UsersAPI.class);
+//        UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         try {
             String[] proj = {MediaStore.Audio.Media.DATA};
             Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
@@ -120,8 +122,18 @@ public class MyProfile extends SlidingActivity {
             cursor.moveToFirst();
             String path = cursor.getString(column_index);
             File file = new File(path);
-            Toast.makeText(this, uri.getPath(), Toast.LENGTH_LONG).show();
-            RequestBody fbody = RequestBody.create(MediaType.parse("image/jpeg"),file);
+//            File compressedFile = Compressor.getDefault(this).compressToFile(file);
+            File compressedFile = new Compressor.Builder(this)
+                    .setMaxWidth(640)
+                    .setMaxHeight(480)
+                    .setQuality(75)
+                    .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                    .build()
+                    .compressToFile(file);
+
+            Toast.makeText(this, String.valueOf(file.length()/1024), Toast.LENGTH_LONG).show();
+            Toast.makeText(this, String.valueOf(compressedFile.length()/1024), Toast.LENGTH_LONG).show();
+            RequestBody fbody = RequestBody.create(MediaType.parse("image/jpeg"),compressedFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), fbody);
             Call<Signup> call = api.uploadImage(body, Helper.getUserId());
             call.enqueue(new Callback<Signup>() {
