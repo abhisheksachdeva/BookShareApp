@@ -63,7 +63,7 @@ public class BookDetailsActivity extends SlidingActivity{
                 getResources().getColor(R.color.colorPrimaryDark)
         );
 
-        setContent(R.layout.activity_books_details3);
+        setContent(R.layout.activity_books_details);
         new ProgressLoader().execute(15);
         authorBook = (TextView) findViewById(R.id.row_books_author);
         ratingBook = (RatingBar) findViewById(R.id.row_books_rating);
