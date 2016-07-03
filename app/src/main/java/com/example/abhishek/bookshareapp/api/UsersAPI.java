@@ -18,6 +18,7 @@ import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -80,7 +81,7 @@ public interface UsersAPI {
     );
 
     @POST("token/")
-    Call<Detail> getUserEmail();
+    Call<Detail> getUserEmail(@Header("Authorization") String token);
 
     @GET("notifications/")
     Call<List<Notifications>> getNotifs(

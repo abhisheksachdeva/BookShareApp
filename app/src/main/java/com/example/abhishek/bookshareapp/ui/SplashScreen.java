@@ -8,6 +8,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
+import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.VerifyToken.Detail;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
@@ -45,24 +46,8 @@ public class SplashScreen extends Activity {
 
         if (token != null) {
 
-            OkHttpClient httpClient = new OkHttpClient.Builder()
-                    .addInterceptor(new Interceptor() {
-                        @Override
-                        public okhttp3.Response intercept(Chain chain) throws IOException {
-                            Request request = chain.request().newBuilder().
-                                    addHeader("Authorization", "Token " + token).build();
-                            return chain.proceed(request);
-                        }
-                    }).build();
-
-            Retrofit retrofit = new Retrofit.Builder().
-                    addConverterFactory(GsonConverterFactory.create()).
-                    baseUrl(CommonUtilities.local_books_api_url).
-                    client(httpClient).
-                    build();
-
-            UsersAPI usersAPI = retrofit.create(UsersAPI.class);
-            Call<Detail> call = usersAPI.getUserEmail();
+            UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+            Call<Detail> call = usersAPI.getUserEmail("Token "+token);
             call.enqueue(new Callback<Detail>() {
                 @Override
                 public void onResponse(Call<Detail> call, Response<Detail> response) {
