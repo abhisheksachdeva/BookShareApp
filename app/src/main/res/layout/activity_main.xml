@@ -7,8 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/BGyellow"
-    android:fitsSystemWindows="true"
-    tools:openDrawer="start">
+    android:fitsSystemWindows="true">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -20,50 +19,65 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
-            android:titleTextColor="@color/White"
             android:subtitleTextColor="@color/BGyellow"
+            android:titleTextColor="@color/White"
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/localBooksList"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/refresh_layout"
                 android:layout_width="match_parent"
-                android:scrollbars="vertical"
-                android:scrollbarStyle="outsideOverlay"
-                android:scrollbarSize="2dp"
-                android:scrollIndicators="start"
                 android:layout_height="match_parent">
 
-            </android.support.v7.widget.RecyclerView>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/localBooksList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollIndicators="start"
+                    android:scrollbarSize="2dp"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:scrollbars="vertical">
 
-            <android.support.design.widget.FloatingActionButton
-                android:id="@+id/button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_gravity="bottom|end"
-                android:layout_marginBottom="16dp"
-                android:layout_marginRight="16dp"
-                android:src="@drawable/plus" />
+                </android.support.v7.widget.RecyclerView>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginRight="16dp"
+                    android:src="@drawable/plus" />
+
+            </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/nav_view"
+        android:id="@+id/left_drawer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="#FFF9C4"
         android:layout_gravity="start"
+        android:background="#FFF9C4"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingTop="?attr/actionBarSize"
+        android:layout_gravity="end">
+
+        <fragment
+            android:id="@+id/right_drawer"
+            android:name="com.example.abhishek.bookshareapp.ui.fragments.NotificationFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:layout="@layout/fragment_notification" />
+
+    </FrameLayout>
 
 </android.support.v4.widget.DrawerLayout>
