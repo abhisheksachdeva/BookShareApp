@@ -9,12 +9,6 @@
     android:paddingRight="24dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <ImageView android:src="@drawable/b_image"
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
-            android:layout_marginBottom="12dp"
-            android:layout_gravity="center_horizontal" />
-
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
