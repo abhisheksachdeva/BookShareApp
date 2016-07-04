@@ -2,19 +2,15 @@ package com.example.abhishek.bookshareapp.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.ScrollingView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.ui.fragments.BookListFragment;
@@ -55,7 +51,6 @@ public class SearchResultsActivity extends AppCompatActivity {
         getFragmentManager().beginTransaction()
                 .replace(R.id.container, bookListFragment)
                 .commit();
-
 
             button.setVisibility(View.VISIBLE);
 
