@@ -42,6 +42,7 @@ public class BookListFragment extends Fragment {
         View view = inflater.inflate(R.layout.book_list_fragment, container, false);
 
         resultsList = (RecyclerView) view.findViewById(R.id.results_list);
+        resultsList.setNestedScrollingEnabled(false);
         mLayoutManager = new LinearLayoutManager(getActivity());
         resultsList.setLayoutManager(mLayoutManager);
         context = getActivity();
