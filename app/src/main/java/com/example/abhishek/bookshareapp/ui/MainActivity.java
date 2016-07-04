@@ -70,6 +70,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        prefs = getSharedPreferences("Token", MODE_PRIVATE);
+
+        Helper.setUserId(prefs.getString("id", prefs.getString("id", "")));
+        Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
+
         setContentView(R.layout.activity_main);
         new ProgressLoader().execute(15);
 
@@ -101,10 +107,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
 
         localBooksList.addOnScrollListener(endlessScrollListener);
-        prefs = getSharedPreferences("Token", MODE_PRIVATE);
-
-        Helper.setUserId(prefs.getString("id", prefs.getString("id", "")));
-        Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -115,58 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
 
         navigationView = (NavigationView) findViewById(R.id.left_drawer);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem item) {
-                int id = item.getItemId();
-
-                if (id == R.id.nav_mybooks) {
-                    Intent i = new Intent(getApplicationContext(), MyBooks.class);
-                    startActivity(i);
-
-                } else if (id == R.id.nav_myprofile) {
-                    Intent i = new Intent(getApplicationContext(), MyProfile.class);
-                    i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
-                    startActivity(i);
-
-                } else if (id == R.id.nav_logout) {
-                    SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.clear();
-                    editor.apply();
-
-                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(i);
-                    finish();
-
-                } else if (id == R.id.nav_share) {
-
-                    PackageManager pm = getPackageManager();
-                    try {
-
-                        Intent waIntent = new Intent(Intent.ACTION_SEND);
-                        waIntent.setType("text/plain");
-                        String text = "BookShare App !! .You can download the app from here...!";
-
-                        PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
-                        //Check if package exists or not. If not then code
-                        //in catch block will be called
-                        waIntent.setPackage("com.whatsapp");
-
-                        waIntent.putExtra(Intent.EXTRA_TEXT, text);
-                        startActivity(Intent.createChooser(waIntent, "Share with"));
-
-                    } catch (PackageManager.NameNotFoundException e) {
-                        //who cares
-                    }
-
-                }
-
-                drawerLayout.closeDrawer(GravityCompat.START);
-
-                return true;
-            }
-        });
+        navigationView.setNavigationItemSelectedListener(this);
 
         View header = navigationView.getHeaderView(0);
         TextView _name = (TextView) header.findViewById(R.id.nav_name);
@@ -318,11 +269,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
 
-        if (Helper.getNew_total() > Helper.getOld_total()) {
-            notif_item.setIcon(R.drawable.ic_menu_send2);
-        } else {
-            notif_item.setIcon(R.drawable.ic_menu_send);
-        }
+        notif_item.setIcon(R.drawable.notification);
 
         return true;
     }
@@ -331,7 +278,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_notifs) {
-            item.setIcon(R.drawable.ic_menu_send);
+            item.setIcon(R.drawable.notification);
             Helper.setOld_total(Helper.getNew_total());
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END);
