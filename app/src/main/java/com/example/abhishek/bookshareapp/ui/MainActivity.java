@@ -43,6 +43,7 @@ import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
 import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 import com.example.abhishek.bookshareapp.utils.Helper;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -64,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ProgressDialog progress;
     String Resp;
     int backCounter=0;
+    ImageView _profilePicture;
+    String url;
 
     public String getResp() {
         return Resp;
@@ -145,14 +148,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView _name = (TextView) header.findViewById(R.id.nav_name);
         TextView _email = (TextView) header.findViewById(R.id.nav_email);
         ImageView _profilePicture = (ImageView) header.findViewById(R.id.nav_profile_picture);
+        this._profilePicture = _profilePicture;
         String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
-        Picasso.with(this).load(url).into(_profilePicture);
+        this.url = url;
+        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).into(_profilePicture);
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
 
         if (_name != null) {
             _name.setText(preferences.getString("first_name", "") + " " + preferences.getString("last_name", ""));
         }
+
         if (_email != null) {
             _email.setText(Helper.getUserEmail());
         }
@@ -174,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 getLocalBooks("1");
                 refresh();
             }
+
         });
     }
 

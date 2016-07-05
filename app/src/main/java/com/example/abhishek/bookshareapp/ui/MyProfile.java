@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -24,29 +25,26 @@ import com.example.abhishek.bookshareapp.api.models.UserInfo;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 import com.example.abhishek.bookshareapp.utils.Helper;
 import com.klinker.android.sliding.SlidingActivity;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URI;
-import java.net.URL;
 
 import id.zelory.compressor.Compressor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MyProfile extends SlidingActivity {
     TextView userName, userEmail, address;
     UserInfo user;
     String id;
+    String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
 
     @Override
     public void init(Bundle savedInstanceState) {
@@ -56,6 +54,7 @@ public class MyProfile extends SlidingActivity {
                 getResources().getColor(R.color.colorPrimaryDark)
         );
         setContent(R.layout.activity_my_profile);
+
         String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
         Picasso.with(getApplicationContext())
                 .load(url)
@@ -74,6 +73,7 @@ public class MyProfile extends SlidingActivity {
                     public void onPrepareLoad(Drawable placeHolderDrawable) {
                     }
                 });
+
         setFab(R.color.BGyellow, R.drawable.plus, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -106,7 +106,7 @@ public class MyProfile extends SlidingActivity {
         }
     }
 
-    public void sendToServer(Uri uri){
+    public void sendToServer(final Uri uri){
 
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         try {
@@ -125,7 +125,6 @@ public class MyProfile extends SlidingActivity {
                     .build()
                     .compressToFile(file);
 
-            Toast.makeText(this, String.valueOf(file.length()/1024), Toast.LENGTH_LONG).show();
             Toast.makeText(this, String.valueOf(compressedFile.length()/1024), Toast.LENGTH_LONG).show();
             RequestBody fbody = RequestBody.create(MediaType.parse("image/jpeg"),compressedFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), fbody);
@@ -137,6 +136,27 @@ public class MyProfile extends SlidingActivity {
                         String detail = response.body().getDetail();
                         Log.d("Userprofile  Response:", detail);
                         Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
+                        Picasso.with(getApplicationContext())
+                                .load(url)
+                                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                                .into(new Target() {
+                                    @Override
+                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                        setImage(bitmap);
+                                    }
+
+                                    @Override
+                                    public void onBitmapFailed(Drawable errorDrawable) {
+                                        Toast.makeText(getApplicationContext(),"failed to load image", Toast.LENGTH_SHORT).show();
+                                    }
+
+                                    @Override
+                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                    }
+                                });
+                        Intent i = new Intent(MyProfile.this, MainActivity.class);
+                        startActivity(i);
+                        finish();
                     }
                 }
                 @Override
@@ -198,4 +218,21 @@ public class MyProfile extends SlidingActivity {
         super.onBackPressed();
         finish();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+
 }
