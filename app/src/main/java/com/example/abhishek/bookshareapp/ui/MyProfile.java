@@ -56,7 +56,7 @@ public class MyProfile extends SlidingActivity {
                 getResources().getColor(R.color.colorPrimaryDark)
         );
         setContent(R.layout.activity_my_profile);
-        String url = "http://192.168.1.2:8000/"+"image/"+Helper.getUserId()+"/";
+        String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
         Picasso.with(getApplicationContext())
                 .load(url)
                 .into(new Target() {
@@ -107,22 +107,16 @@ public class MyProfile extends SlidingActivity {
     }
 
     public void sendToServer(Uri uri){
-        OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.2:8000/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(httpclient.build())
-                .build();
-        UsersAPI api = retrofit.create(UsersAPI.class);
-//        UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
+
+        UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         try {
             String[] proj = {MediaStore.Audio.Media.DATA};
             Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
             cursor.moveToFirst();
             String path = cursor.getString(column_index);
+            cursor.close();
             File file = new File(path);
-//            File compressedFile = Compressor.getDefault(this).compressToFile(file);
             File compressedFile = new Compressor.Builder(this)
                     .setMaxWidth(640)
                     .setMaxHeight(480)
@@ -152,7 +146,7 @@ public class MyProfile extends SlidingActivity {
             });
         }
         catch (NullPointerException e){
-            Toast.makeText(this,"Can't upload image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show();
         }
 
     }

@@ -13,12 +13,14 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="horizontal">
-        
-        <ImageView
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/row_user_image"
             android:layout_width="70dp"
             android:layout_height="70dp"
-            android:id="@+id/row_user_image"
-            />
+            app:civ_border_width="2dp"
+            app:civ_border_color="#FFFFFF"/>
 
         <LinearLayout
             android:layout_width="0dp"
