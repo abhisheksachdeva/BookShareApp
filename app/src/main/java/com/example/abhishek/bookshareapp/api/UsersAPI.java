@@ -11,13 +11,18 @@ import com.example.abhishek.bookshareapp.api.models.VerifyToken.Detail;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -76,7 +81,7 @@ public interface UsersAPI {
     );
 
     @POST("token/")
-    Call<Detail> getUserEmail();
+    Call<Detail> getUserEmail(@Header("Authorization") String token);
 
     @GET("notifications/")
     Call<List<Notifications>> getNotifs(
@@ -139,5 +144,11 @@ public interface UsersAPI {
     Call<List<Book>> search(
             @Query("search") String searchQuery
     );
+
+
+    @Multipart
+    @POST("/image/{id}/")
+    Call<Signup> uploadImage(@Part MultipartBody.Part file ,
+                             @Path("id") String id);
 
 }
