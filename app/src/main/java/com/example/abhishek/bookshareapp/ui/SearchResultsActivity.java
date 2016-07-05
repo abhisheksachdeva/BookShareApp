@@ -17,6 +17,9 @@ import com.example.abhishek.bookshareapp.ui.fragments.BookListFragment;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 
 public class SearchResultsActivity extends AppCompatActivity {
+
+    final String TAG = SearchResultsActivity.class.getSimpleName();
+
     String query;
     String API_KEY = CommonUtilities.API_KEY;
     EditText searchEditText;
@@ -24,6 +27,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     RadioButton r1, r2, r3;
     BookListFragment bookListFragment;
     NestedScrollView scrollingView;
+    FloatingActionButton button;
 
     @Override
     public void onBackPressed() {
@@ -39,7 +43,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results);
         scrollingView = (NestedScrollView) findViewById(R.id.scrollView);
-        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.scroll);
+        button = (FloatingActionButton) findViewById(R.id.scroll);
 
         searchEditText = (EditText) findViewById(R.id.searchEditText);
         r1 = (RadioButton) findViewById(R.id.all);

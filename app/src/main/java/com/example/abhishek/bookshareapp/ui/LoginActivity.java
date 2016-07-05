@@ -95,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        String email = _emailText.getText().toString();
+        String email = _emailText.getText().toString() + "@iitr.ac.in";
         String password = _passwordText.getText().toString();
         Helper.setUserEmail(email);
 
@@ -164,7 +164,7 @@ public class LoginActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (email.isEmpty()) {
             _emailText.setError("enter a valid email address");
             valid = false;
         } else {
