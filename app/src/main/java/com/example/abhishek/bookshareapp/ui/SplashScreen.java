@@ -1,9 +1,13 @@
 package com.example.abhishek.bookshareapp.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -38,8 +42,27 @@ public class SplashScreen extends Activity {
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
         token = pref.getString("token", null);
 
-        verifyToken();
+        if(isOnline()) {
+            verifyToken();
+        } else {
+            Toast.makeText(SplashScreen.this, "Check network connectivity and try again", Toast.LENGTH_SHORT).show();
+            Handler h = new Handler();
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            };
+            h.postDelayed(r, 1500);
+        }
 
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public void verifyToken() {
@@ -86,7 +109,7 @@ public class SplashScreen extends Activity {
 
                 @Override
                 public void onFailure(Call<Detail> call, Throwable t) {
-                    Toast.makeText(SplashScreen.this, "Check network connectivity and try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SplashScreen.this, "Login failed", Toast.LENGTH_SHORT).show();
                     try {
                         Thread.sleep(1000);
                     } catch(InterruptedException e) {

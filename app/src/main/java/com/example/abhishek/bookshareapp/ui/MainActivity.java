@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -28,6 +30,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.example.abhishek.bookshareapp.Listeners.EndlessScrollListener;
@@ -38,7 +41,10 @@ import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.BookList;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
 import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
+import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 import com.example.abhishek.bookshareapp.utils.Helper;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 import retrofit2.Call;
@@ -93,10 +99,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                Intent intent = new Intent(getApplicationContext(),BookDetailsActivity.class);
+
+                if(isOnline()){
+                Intent intent = new Intent(MainActivity.this,BookDetailsActivity.class);
                 intent.putExtra("id", book.getId());
                 startActivity(intent);
-                Log.i(TAG, "onItemClick");
+                Log.i(TAG, "onItemClick");}
+                else {
+                    Toast.makeText(getApplicationContext(),"Not connected to Internet", Toast.LENGTH_SHORT).show();
+                }
 
             }
         });
@@ -133,6 +144,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View header = navigationView.getHeaderView(0);
         TextView _name = (TextView) header.findViewById(R.id.nav_name);
         TextView _email = (TextView) header.findViewById(R.id.nav_email);
+        ImageView _profilePicture = (ImageView) header.findViewById(R.id.nav_profile_picture);
+        String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
+        Picasso.with(this).load(url).into(_profilePicture);
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
 
@@ -459,6 +473,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Toast.makeText(getApplicationContext(), "Check your network connectivity and try again!", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     @Override
