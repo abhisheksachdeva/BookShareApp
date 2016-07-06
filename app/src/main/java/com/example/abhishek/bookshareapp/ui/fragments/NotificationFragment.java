@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
@@ -31,14 +32,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link NotificationFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link NotificationFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class NotificationFragment extends Fragment {
 
     RecyclerView notificationsListView;
@@ -46,7 +39,7 @@ public class NotificationFragment extends Fragment {
     NotificationAdapter adapter;
     SwipeRefreshLayout refreshLayout;
     List<Notifications> notificationsList = new ArrayList<>();
-
+    TextView noNotificationTextView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -62,6 +55,36 @@ public class NotificationFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_notification, container, false);
+
+        noNotificationTextView = (TextView)v.findViewById(R.id.no_notification_text);
+
+        nLinearLayoutManager = new LinearLayoutManager(getActivity());
+        nLinearLayoutManager.setReverseLayout(true);
+        nLinearLayoutManager.setStackFromEnd(true);
+
+        notificationsListView = (RecyclerView) v.findViewById(R.id.notifications_list);
+        notificationsListView.setLayoutManager(nLinearLayoutManager);
+
+        adapter = new NotificationAdapter(getActivity(), notificationsList);
+        notificationsListView.setAdapter(adapter);
+
+        getNotifications();
+
+        refreshLayout =(SwipeRefreshLayout)v.findViewById(R.id.notif_refresh_layout);
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getNotifications();
+            }
+        });
+        return v;
     }
 
     public void getNotifications() {
@@ -88,6 +111,9 @@ public class NotificationFragment extends Fragment {
             public void onResponse(Call<List<Notifications>> call, Response<List<Notifications>> response) {
                 if (response.body() != null) {
                     List<Notifications> notifList = response.body();
+                    if(notifList.size() == 0) {
+                        noNotificationTextView.setVisibility(View.VISIBLE);
+                    }
                     notificationsList.clear();
                     Helper.setNew_total(notifList.size());
                     notificationsList.addAll(notifList);
@@ -103,33 +129,6 @@ public class NotificationFragment extends Fragment {
                 Toast.makeText(getActivity(), "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_notification, container, false);
-        nLinearLayoutManager = new LinearLayoutManager(getActivity());
-        nLinearLayoutManager.setReverseLayout(true);
-        nLinearLayoutManager.setStackFromEnd(true);
-
-        notificationsListView = (RecyclerView) v.findViewById(R.id.notifications_list);
-        notificationsListView.setLayoutManager(nLinearLayoutManager);
-
-        adapter = new NotificationAdapter(getActivity(), notificationsList);
-        notificationsListView.setAdapter(adapter);
-
-        getNotifications();
-
-        refreshLayout =(SwipeRefreshLayout)v.findViewById(R.id.notif_refresh_layout);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                getNotifications();
-            }
-        });
-        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

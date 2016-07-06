@@ -57,6 +57,7 @@ public class MyBooks extends AppCompatActivity {
     ProgressDialog progress; // this is not used ,in this activity as of now...Just for testing purposes.
     ProgressBar prog;
     String Resp;
+    TextView noItemsTextView;
 
     public String getResp() {
         return Resp;
@@ -67,6 +68,9 @@ public class MyBooks extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
+
+        noItemsTextView = (TextView) findViewById(R.id.no_items_text);
+
         prog = (ProgressBar) findViewById(R.id.progress);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         new ProgressLoader().execute(15);
@@ -168,6 +172,9 @@ public class MyBooks extends AppCompatActivity {
                     Log.d("UserProfile Response:", response.toString());
                     Resp = response.toString();
                     List<Book> booksTempInfoList = response.body().getUserBookList();
+                    if(booksTempInfoList.size() == 0) {
+                        noItemsTextView.setVisibility(View.VISIBLE);
+                    }
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);
                     adapter.notifyDataSetChanged();
