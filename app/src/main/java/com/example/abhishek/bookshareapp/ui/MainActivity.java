@@ -151,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this._profilePicture = _profilePicture;
         String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
         this.url = url;
-        Toast.makeText(MainActivity.this, "create", Toast.LENGTH_SHORT).show();
         Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).into(_profilePicture);
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);

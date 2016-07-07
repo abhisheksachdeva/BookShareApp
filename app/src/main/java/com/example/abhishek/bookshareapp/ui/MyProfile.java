@@ -1,12 +1,16 @@
 package com.example.abhishek.bookshareapp.ui;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -45,6 +49,9 @@ public class MyProfile extends SlidingActivity {
     UserInfo user;
     String id;
     String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
+    String path;
+    Uri uri;
+    int REQUEST_CAMERA = 0, SELECT_FILE = 1;
 
     @Override
     public void init(Bundle savedInstanceState) {
@@ -77,9 +84,10 @@ public class MyProfile extends SlidingActivity {
         setFab(R.color.BGyellow, R.drawable.plus, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                intent.setType("image/*");
-                startActivityForResult(intent, 0);
+//                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+//                intent.setType("image/*");
+//                startActivityForResult(intent, 0);
+                selectImage(v);
             }
             });
 
@@ -91,24 +99,100 @@ public class MyProfile extends SlidingActivity {
         getUserInfoDetails(id);
     }
 
+    public void  selectImage(View view){
+        final CharSequence[] items = { "Take Photo", "Choose from Library",
+                "Cancel" };
+        AlertDialog.Builder builder = new AlertDialog.Builder(MyProfile.this);
+        builder.setTitle("Add Photo!");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+//                boolean result = Utility.checkPermission(MyProfile.this);
+                if (items[item].equals("Take Photo")) {
+//                    userChoosenTask="Take Photo";
+//                    if(result)
+                        cameraIntent();
+                } else if (items[item].equals("Choose from Library")) {
+////                    userChoosenTask="Choose from Library";
+//                    if(result)
+                        galleryIntent();
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void cameraIntent()
+    {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
+    }
+    private void galleryIntent()
+    {
+        Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+//        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
+    }
+
     @Override
     protected void onActivityResult(int reqCode, int resCode, Intent data) {
         if (resCode == Activity.RESULT_OK && data != null) {
-            Uri uri = data.getData();
-            Bitmap bitmap = null;
-            try {
-                bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
+            if (reqCode == SELECT_FILE) {
+            onGalleryImageResult(data);
+        }
+            else if(reqCode == REQUEST_CAMERA){
+                onCaptureImageResult(data);
             }
-            setImage(bitmap);
-            File file = getFile(uri, bitmap);
-            if(file !=null){
-                sendToServer(file);
-            } else {
-                Toast.makeText(this, "Can't update image",Toast.LENGTH_SHORT).show();
-            }
+    }
+    }
 
+    private void onCaptureImageResult(Intent data) {
+
+        try {
+        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+        File file = new File(Environment.getExternalStorageDirectory(),
+                System.currentTimeMillis() + ".jpg");
+        FileOutputStream fo;
+            file.createNewFile();
+            fo = new FileOutputStream(file);
+            fo.write(bytes.toByteArray());
+            fo.close();
+            setImage(thumbnail);
+            sendToServer(file);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show();
+
+        } catch (IOException e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+
+            e.printStackTrace();
+        } catch (NullPointerException e){
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+
+            e.printStackTrace();
+        }
+    }
+
+    private void onGalleryImageResult(Intent data){
+        Uri uri = data.getData();
+        Bitmap bitmap = null;
+        try {
+            bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        setImage(bitmap);
+        File file = getFile(uri, bitmap);
+        if (file != null) {
+            sendToServer(file);
+        } else {
+            Toast.makeText(this, "Can't upload image", Toast.LENGTH_SHORT).show();
         }
     }
 
