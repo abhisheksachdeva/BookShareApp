@@ -23,6 +23,7 @@ import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.Signup;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
+import com.example.abhishek.bookshareapp.utils.FileUtils;
 import com.example.abhishek.bookshareapp.utils.Helper;
 import com.klinker.android.sliding.SlidingActivity;
 import com.squareup.picasso.MemoryPolicy;
@@ -110,64 +111,74 @@ public class MyProfile extends SlidingActivity {
 
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         try {
-            String[] proj = {MediaStore.Audio.Media.DATA};
-            Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
-            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            String path = cursor.getString(column_index);
-            cursor.close();
-            File file = new File(path);
-            File compressedFile = new Compressor.Builder(this)
-                    .setMaxWidth(640)
-                    .setMaxHeight(480)
-                    .setQuality(75)
-                    .setCompressFormat(Bitmap.CompressFormat.JPEG)
-                    .build()
-                    .compressToFile(file);
+//            String[] proj = {MediaStore.Audio.Media.DATA};
+//            Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
+//            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+//            cursor.moveToFirst();
+//            String path = cursor.getString(column_index);
+//            cursor.close();
+            String path = FileUtils.getPath(this, uri);
+            if (path != null) {
 
-            Toast.makeText(this, String.valueOf(compressedFile.length()/1024), Toast.LENGTH_LONG).show();
-            RequestBody fbody = RequestBody.create(MediaType.parse("image/jpeg"),compressedFile);
-            MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), fbody);
-            Call<Signup> call = api.uploadImage(body, Helper.getUserId());
-            call.enqueue(new Callback<Signup>() {
-                @Override
-                public void onResponse(Call<Signup> call, Response<Signup> response) {
-                    if (response.body() != null) {
-                        String detail = response.body().getDetail();
-                        Log.d("Userprofile  Response:", detail);
-                        Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
-                        Picasso.with(getApplicationContext())
-                                .load(url)
-                                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                .into(new Target() {
-                                    @Override
-                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                        setImage(bitmap);
-                                    }
 
-                                    @Override
-                                    public void onBitmapFailed(Drawable errorDrawable) {
-                                        Toast.makeText(getApplicationContext(),"failed to load image", Toast.LENGTH_SHORT).show();
-                                    }
+                File file = new File(path);
+                File compressedFile = new Compressor.Builder(this)
+                        .setMaxWidth(640)
+                        .setMaxHeight(480)
+                        .setQuality(75)
+                        .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                        .build()
+                        .compressToFile(file);
 
-                                    @Override
-                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-                                    }
-                                });
-                        Intent i = new Intent(MyProfile.this, MainActivity.class);
-                        startActivity(i);
-                        finish();
+                Toast.makeText(this, String.valueOf(compressedFile.length() / 1024), Toast.LENGTH_LONG).show();
+                RequestBody fbody = RequestBody.create(MediaType.parse("image/jpeg"), compressedFile);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), fbody);
+                Call<Signup> call = api.uploadImage(body, Helper.getUserId());
+                call.enqueue(new Callback<Signup>() {
+                    @Override
+                    public void onResponse(Call<Signup> call, Response<Signup> response) {
+                        if (response.body() != null) {
+                            String detail = response.body().getDetail();
+                            Log.d("Userprofile  Response:", detail);
+                            Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
+                            Picasso.with(getApplicationContext())
+                                    .load(url)
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                                    .into(new Target() {
+                                        @Override
+                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                            setImage(bitmap);
+                                        }
+
+                                        @Override
+                                        public void onBitmapFailed(Drawable errorDrawable) {
+                                            Toast.makeText(getApplicationContext(), "failed to load image", Toast.LENGTH_SHORT).show();
+                                        }
+
+                                        @Override
+                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                        }
+                                    });
+                            Intent i = new Intent(MyProfile.this, MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }
                     }
-                }
-                @Override
-                public void onFailure(Call<Signup> call, Throwable t) {
-                    Log.d("BookDetails fail", t.toString());
-                }
-            });
+
+                    @Override
+                    public void onFailure(Call<Signup> call, Throwable t) {
+                        Log.d("BookDetails fail", t.toString());
+                    }
+                });
+            }
+            else {
+                Toast.makeText(this,"nullfs",Toast.LENGTH_SHORT).show();
+            }
         }
         catch (NullPointerException e){
             Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show();
         }
+
 
     }
 
