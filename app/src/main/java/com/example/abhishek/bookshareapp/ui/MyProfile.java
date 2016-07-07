@@ -2,16 +2,11 @@ package com.example.abhishek.bookshareapp.ui;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -30,10 +25,14 @@ import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 import id.zelory.compressor.Compressor;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -103,25 +102,59 @@ public class MyProfile extends SlidingActivity {
                 e.printStackTrace();
             }
             setImage(bitmap);
-            sendToServer(uri);
+            File file = getFile(uri, bitmap);
+            if(file !=null){
+                sendToServer(file);
+            } else {
+                Toast.makeText(this, "Can't update image",Toast.LENGTH_SHORT).show();
+            }
+
         }
     }
 
-    public void sendToServer(final Uri uri){
+    public File getFile(Uri uri, Bitmap bitmap){
+        File file = null;
+        String path = FileUtils.getPath(this,uri);
+        if(path==null){
+            try {
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+                file = new File(this.getCacheDir(),
+                        System.currentTimeMillis() + ".jpg");
+                FileOutputStream fo;
+                file.createNewFile();
+                fo = new FileOutputStream(file);
+                fo.write(bytes.toByteArray());
+                fo.close();
+            }
+            catch (FileNotFoundException e) {
+                e.printStackTrace();
+                file = null;
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+                file = null;
+            }
+            catch (java.lang.NullPointerException e){
+                e.printStackTrace();
+                file = null;
+            }
+        }
+        else {
+            try {
+                file = new File(path);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+        return file;
+    }
+
+    public void sendToServer(File file){
 
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         try {
-//            String[] proj = {MediaStore.Audio.Media.DATA};
-//            Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
-//            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-//            cursor.moveToFirst();
-//            String path = cursor.getString(column_index);
-//            cursor.close();
-            String path = FileUtils.getPath(this, uri);
-            if (path != null) {
-
-
-                File file = new File(path);
                 File compressedFile = new Compressor.Builder(this)
                         .setMaxWidth(640)
                         .setMaxHeight(480)
@@ -130,17 +163,16 @@ public class MyProfile extends SlidingActivity {
                         .build()
                         .compressToFile(file);
 
-                Toast.makeText(this, String.valueOf(compressedFile.length() / 1024), Toast.LENGTH_LONG).show();
-                RequestBody fbody = RequestBody.create(MediaType.parse("image/jpeg"), compressedFile);
-                MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), fbody);
+                RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), compressedFile);
+                MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestBody);
                 Call<Signup> call = api.uploadImage(body, Helper.getUserId());
                 call.enqueue(new Callback<Signup>() {
                     @Override
                     public void onResponse(Call<Signup> call, Response<Signup> response) {
                         if (response.body() != null) {
                             String detail = response.body().getDetail();
-                            Log.d("Userprofile  Response:", detail);
                             Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
+                            Helper.imageChanged = true;
                             Picasso.with(getApplicationContext())
                                     .load(url)
                                     .memoryPolicy(MemoryPolicy.NO_CACHE)
@@ -159,9 +191,6 @@ public class MyProfile extends SlidingActivity {
                                         public void onPrepareLoad(Drawable placeHolderDrawable) {
                                         }
                                     });
-                            Intent i = new Intent(MyProfile.this, MainActivity.class);
-                            startActivity(i);
-                            finish();
                         }
                     }
 
@@ -170,19 +199,11 @@ public class MyProfile extends SlidingActivity {
                         Log.d("BookDetails fail", t.toString());
                     }
                 });
-            }
-            else {
-                Toast.makeText(this,"nullfs",Toast.LENGTH_SHORT).show();
-            }
         }
         catch (NullPointerException e){
             Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show();
         }
-
-
     }
-
-
     public void getUserInfoDetails(String id) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<UserInfo> call = api.getUserDetails(id);

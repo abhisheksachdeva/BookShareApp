@@ -151,6 +151,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this._profilePicture = _profilePicture;
         String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
         this.url = url;
+        Toast.makeText(MainActivity.this, "create", Toast.LENGTH_SHORT).show();
         Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).into(_profilePicture);
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
@@ -477,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(Call<List<Notifications>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Check your network connectivity and try again!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "Check your network connectivity and try again!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -497,5 +498,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onStop() {
         super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(Helper.imageChanged){
+            Picasso.with(this).load(url).into(_profilePicture);
+            Helper.imageChanged = false;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 }
