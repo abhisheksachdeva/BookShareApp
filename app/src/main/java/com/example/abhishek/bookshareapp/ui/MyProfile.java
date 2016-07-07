@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -24,6 +25,7 @@ import com.example.abhishek.bookshareapp.api.models.UserInfo;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 import com.example.abhishek.bookshareapp.utils.FileUtils;
 import com.example.abhishek.bookshareapp.utils.Helper;
+import com.example.abhishek.bookshareapp.utils.PermissionUtils;
 import com.klinker.android.sliding.SlidingActivity;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
@@ -49,9 +51,8 @@ public class MyProfile extends SlidingActivity {
     UserInfo user;
     String id;
     String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
-    String path;
-    Uri uri;
     int REQUEST_CAMERA = 0, SELECT_FILE = 1;
+    String userChoosenTask;
 
     @Override
     public void init(Bundle savedInstanceState) {
@@ -84,9 +85,6 @@ public class MyProfile extends SlidingActivity {
         setFab(R.color.BGyellow, R.drawable.plus, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-//                intent.setType("image/*");
-//                startActivityForResult(intent, 0);
                 selectImage(v);
             }
             });
@@ -107,14 +105,14 @@ public class MyProfile extends SlidingActivity {
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-//                boolean result = Utility.checkPermission(MyProfile.this);
+                boolean result = PermissionUtils.checkPermission(MyProfile.this);
                 if (items[item].equals("Take Photo")) {
-//                    userChoosenTask="Take Photo";
-//                    if(result)
+                    userChoosenTask="Take Photo";
+                    if(result)
                         cameraIntent();
                 } else if (items[item].equals("Choose from Library")) {
-////                    userChoosenTask="Choose from Library";
-//                    if(result)
+                    userChoosenTask="Choose from Library";
+                    if(result)
                         galleryIntent();
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
@@ -124,17 +122,30 @@ public class MyProfile extends SlidingActivity {
         builder.show();
     }
 
-    private void cameraIntent()
-    {
+    private void cameraIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
     }
-    private void galleryIntent()
-    {
+    private void galleryIntent() {
         Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
-//        intent.setAction(Intent.ACTION_GET_CONTENT);//
         startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case PermissionUtils.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    if(userChoosenTask.equals("Take Photo"))
+                        cameraIntent();
+                    else if(userChoosenTask.equals("Choose from Library"))
+                        galleryIntent();
+                } else {
+                    //code for deny
+                }
+                break;
+        }
     }
 
     @Override
@@ -174,7 +185,9 @@ public class MyProfile extends SlidingActivity {
             e.printStackTrace();
         } catch (NullPointerException e){
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
-
+            e.printStackTrace();
+        } catch (Exception e){
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -250,7 +263,8 @@ public class MyProfile extends SlidingActivity {
                 RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), compressedFile);
                 MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestBody);
                 Call<Signup> call = api.uploadImage(body, Helper.getUserId());
-                call.enqueue(new Callback<Signup>() {
+            Toast.makeText(getApplicationContext(), "Updating picture. Please wait.", Toast.LENGTH_SHORT).show();
+            call.enqueue(new Callback<Signup>() {
                     @Override
                     public void onResponse(Call<Signup> call, Response<Signup> response) {
                         if (response.body() != null) {
