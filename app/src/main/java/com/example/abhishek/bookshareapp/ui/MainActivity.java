@@ -422,4 +422,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             backCounter++;
         }
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(Helper.imageChanged){
+            Picasso.with(this).load(url).into(_profilePicture);
+            Helper.imageChanged = false;
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
 }

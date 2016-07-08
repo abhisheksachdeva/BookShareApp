@@ -8,6 +8,7 @@ public class Helper {
     public static String bookId = "";
     public static Integer new_total = 0;
     public static Integer old_total = 1;
+    public static boolean imageChanged = false;
 
     public static Integer getNew_total() {
         return new_total;
