@@ -49,7 +49,8 @@
         <activity
             android:name=".ui.UserProfile"
             android:label="User Details"
-            android:parentActivityName=".ui.MainActivity" />
+            android:parentActivityName=".ui.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"     />
         <activity
             android:name=".ui.MyProfile"
             android:label="My Profile"
