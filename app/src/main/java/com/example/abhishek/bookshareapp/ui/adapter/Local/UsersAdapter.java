@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +21,9 @@ import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
 import com.example.abhishek.bookshareapp.ui.UserProfile;
+import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 import com.example.abhishek.bookshareapp.utils.Helper;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -45,6 +48,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
         public TextView emailUser;
         public Button request;
         public TextView hostelUser;
+        public ImageView imageUser;
         Context context;
 
         public ViewHolder(View v, Context context){
@@ -53,6 +57,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
             emailUser = (TextView)v.findViewById(R.id.row_user_email);
             hostelUser = (TextView)v.findViewById(R.id.row_user_hostel);
             request =(Button)v.findViewById(R.id.requestButton);
+            imageUser = (ImageView)v.findViewById(R.id.row_user_image);
             this.context = context;
         }
     }
@@ -104,6 +109,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
 
         }
 
+        try {
+            String url = CommonUtilities.local_books_api_url + "image/"+id+"/";
+            Picasso.with(this.context).load(url).into(holder.imageUser);
+        }
+        catch (Exception e){
+            Toast.makeText(this.context,e.toString(), Toast.LENGTH_SHORT).show();
+
+        }
         holder.request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

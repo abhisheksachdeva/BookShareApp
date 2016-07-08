@@ -1,13 +1,18 @@
 package com.example.abhishek.bookshareapp.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
+import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.VerifyToken.Detail;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
@@ -37,32 +42,35 @@ public class SplashScreen extends Activity {
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
         token = pref.getString("token", null);
 
-        verifyToken();
+        if(isOnline()) {
+            verifyToken();
+        } else {
+            Toast.makeText(SplashScreen.this, "Check network connectivity and try again", Toast.LENGTH_SHORT).show();
+            Handler h = new Handler();
+            Runnable r = new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            };
+            h.postDelayed(r, 1500);
+        }
 
+    }
+
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 
     public void verifyToken() {
 
         if (token != null) {
 
-            OkHttpClient httpClient = new OkHttpClient.Builder()
-                    .addInterceptor(new Interceptor() {
-                        @Override
-                        public okhttp3.Response intercept(Chain chain) throws IOException {
-                            Request request = chain.request().newBuilder().
-                                    addHeader("Authorization", "Token " + token).build();
-                            return chain.proceed(request);
-                        }
-                    }).build();
-
-            Retrofit retrofit = new Retrofit.Builder().
-                    addConverterFactory(GsonConverterFactory.create()).
-                    baseUrl(CommonUtilities.local_books_api_url).
-                    client(httpClient).
-                    build();
-
-            UsersAPI usersAPI = retrofit.create(UsersAPI.class);
-            Call<Detail> call = usersAPI.getUserEmail();
+            UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+            Call<Detail> call = usersAPI.getUserEmail("Token "+token);
             call.enqueue(new Callback<Detail>() {
                 @Override
                 public void onResponse(Call<Detail> call, Response<Detail> response) {
@@ -101,7 +109,7 @@ public class SplashScreen extends Activity {
 
                 @Override
                 public void onFailure(Call<Detail> call, Throwable t) {
-                    Toast.makeText(SplashScreen.this, "Check network connectivity and try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SplashScreen.this, "Login failed", Toast.LENGTH_SHORT).show();
                     try {
                         Thread.sleep(1000);
                     } catch(InterruptedException e) {
