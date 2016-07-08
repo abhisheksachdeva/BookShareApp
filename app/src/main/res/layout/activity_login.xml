@@ -9,24 +9,34 @@
     android:paddingRight="24dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-        <ImageView android:src="@drawable/b_image"
-            android:layout_width="wrap_content"
-            android:layout_height="72dp"
-            android:layout_marginBottom="12dp"
-            android:layout_gravity="center_horizontal" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
 
         <!-- Email Label -->
         <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="2"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp">
             <EditText android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:hint="Email" />
         </android.support.design.widget.TextInputLayout>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="5dp"
+            android:layout_height="wrap_content"
+            android:text="\@iitr.ac.in"
+            android:textSize="18dp"/>
+    </LinearLayout>
 
         <!-- Password Label -->
         <android.support.design.widget.TextInputLayout

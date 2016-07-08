@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,6 +52,9 @@ public class LoginActivity extends AppCompatActivity {
 
         context = this;
 
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(_emailText.getWindowToken(), 0);
+
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
         token = pref.getString("token", "");
         Log.i("harshit", token + "  adf");
@@ -59,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 login();
             }
         });
@@ -89,7 +95,7 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.setMessage("Authenticating...");
         progressDialog.show();
 
-        String email = _emailText.getText().toString();
+        String email = _emailText.getText().toString() + "@iitr.ac.in";
         String password = _passwordText.getText().toString();
         Helper.setUserEmail(email);
 
@@ -107,16 +113,16 @@ public class LoginActivity extends AppCompatActivity {
                         saveinSP(response.body().getToken(), response.body().getUserInfo());
                     }
                 }
+                progressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
                 Log.i(TAG, "onFailure: called");
                 onLoginFailed("Check your network connectivity and try again!");
+                progressDialog.dismiss();
             }
         });
-
-        progressDialog.dismiss();
 
     }
 
@@ -158,7 +164,7 @@ public class LoginActivity extends AppCompatActivity {
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        if (email.isEmpty()) {
             _emailText.setError("enter a valid email address");
             valid = false;
         } else {

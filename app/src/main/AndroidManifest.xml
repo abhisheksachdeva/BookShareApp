@@ -59,10 +59,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.NotificationActivity"
-            android:label="Notifications"
-            android:parentActivityName=".ui.MainActivity" />
-        <activity
             android:name=".ui.EditProfileActivity"
             android:label="Edit your details"
             android:parentActivityName=".ui.MyProfile" />

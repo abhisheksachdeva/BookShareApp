@@ -1,19 +1,15 @@
 package com.example.abhishek.bookshareapp.ui;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.TaskStackBuilder;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -30,23 +26,26 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.abhishek.bookshareapp.Listeners.EndlessScrollListener;
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.BookList;
-import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
 import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
+import com.example.abhishek.bookshareapp.ui.fragments.NotificationFragment;
 import com.example.abhishek.bookshareapp.utils.Helper;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener{
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, NotificationFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     List<Book> booksList;
@@ -54,46 +53,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SharedPreferences prefs;
     SwipeRefreshLayout refreshLayout;
     SearchView searchView;
-    Integer count =1;
+    Integer count = 1;
     ProgressDialog progress;
     String Resp;
-    int backCounter=0;
+    int backCounter = 0;
+    DrawerLayout drawerLayout;
+    NavigationView navigationView;
+    FloatingActionButton button;
+    RecyclerView localBooksList;
+    Toolbar toolbar;
 
     public String getResp() {
         return Resp;
     }
 
     @Override
-    public void onBackPressed() {
-
-        if(backCounter >= 1) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Toast.makeText(this, "Ciao Buddy !", Toast.LENGTH_SHORT).show();
-            startActivity(intent);
-
-        } else {
-            Toast.makeText(this, "Press  again to exit.", Toast.LENGTH_SHORT).show();
-            backCounter++;
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        prefs = getSharedPreferences("Token", MODE_PRIVATE);
+
+        Helper.setUserId(prefs.getString("id", prefs.getString("id", "")));
+        Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
+
         setContentView(R.layout.activity_main);
         new ProgressLoader().execute(15);
 
-        FloatingActionButton button = (FloatingActionButton) findViewById(R.id.button);
-        RecyclerView localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
+        button = (FloatingActionButton) findViewById(R.id.button);
+        localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         localBooksList.setLayoutManager(layoutManager);
         booksList = new ArrayList<>();
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                Intent intent = new Intent(getApplicationContext(),BookDetailsActivity.class);
+                Intent intent = new Intent(getApplicationContext(), BookDetailsActivity.class);
                 intent.putExtra("id", book.getId());
                 startActivity(intent);
                 Log.i(TAG, "onItemClick");
@@ -103,7 +97,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         localBooksList.setAdapter(adapter);
 
         getLocalBooks("1");
-        getNotifications();
 
         final EndlessScrollListener endlessScrollListener = new EndlessScrollListener((LinearLayoutManager) layoutManager) {
             @Override
@@ -114,10 +107,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
 
         localBooksList.addOnScrollListener(endlessScrollListener);
-        prefs = getSharedPreferences("Token", MODE_PRIVATE);
-
-        Helper.setUserId(prefs.getString("id", prefs.getString("id", "")));
-        Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
 
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -127,7 +116,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = (NavigationView) findViewById(R.id.left_drawer);
         navigationView.setNavigationItemSelectedListener(this);
 
         View header = navigationView.getHeaderView(0);
@@ -142,13 +131,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (_email != null) {
             _email.setText(Helper.getUserEmail());
         }
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.White));
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.setDrawerListener(toggle);
+
         toggle.syncState();
 
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.refresh_layout);
@@ -158,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Log.i(TAG, "onRefresh called from SwipeRefreshLayout ");
                 endlessScrollListener.reset();
                 getLocalBooks("1");
-                refresh();
             }
         });
     }
@@ -170,15 +162,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             for (; count <= params[0]; count++) {
                 try {
                     Thread.sleep(1000);
-                    Log.d("MAAs",getResp()+"+"+count.toString());
-                    if (getResp()!=null){
+                    Log.d("MAAs", getResp() + "+" + count.toString());
+                    if (getResp() != null) {
                         break;
                     }
                     publishProgress(count);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (getResp()!=null){
+                if (getResp() != null) {
                     break;
                 }
             }
@@ -186,18 +178,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             return "Task Completed.";
         }
+
         @Override
         protected void onPostExecute(String result) {
-            if(getResp()==null){
+            if (getResp() == null) {
                 Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
                 progress.dismiss();
-            }else{
+            } else {
                 progress.dismiss();
             }
         }
+
         @Override
         protected void onPreExecute() {
-            progress=new ProgressDialog(MainActivity.this);
+            progress = new ProgressDialog(MainActivity.this);
             progress.setMessage("Turning To Page 394...");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progress.setIndeterminate(true);
@@ -208,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             progress.show();
 
         }
+
         @Override
         protected void onProgressUpdate(Integer... values) {
             progress.setProgress(values[0]);
@@ -248,10 +243,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /* When an item in the toolbar is clicked, the following
+     * method is called.
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         final MenuItem notif_item = menu.findItem(R.id.menu_notifs);
+
         MenuItem searchItem = menu.findItem(R.id.search);
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
@@ -270,11 +269,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
 
-        if (Helper.getNew_total() > Helper.getOld_total()) {
-            notif_item.setIcon(R.drawable.ic_menu_send2);
-        } else {
-            notif_item.setIcon(R.drawable.ic_menu_send);
-        }
+        notif_item.setIcon(R.drawable.notification);
 
         return true;
     }
@@ -283,12 +278,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_notifs) {
-            item.setIcon(R.drawable.ic_menu_send);
+            item.setIcon(R.drawable.notification);
             Helper.setOld_total(Helper.getNew_total());
-            Intent i = new Intent(this, NotificationActivity.class);
-            startActivity(i);
+            if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                drawerLayout.closeDrawer(GravityCompat.END);
+            } else {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                drawerLayout.openDrawer(GravityCompat.END);
+            }
             return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
 
@@ -333,13 +333,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(Intent.createChooser(waIntent, "Share with"));
 
             } catch (PackageManager.NameNotFoundException e) {
-
+                //who cares
             }
 
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
+        drawerLayout.closeDrawer(GravityCompat.START);
+
         return true;
     }
 
@@ -353,7 +353,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Log.d("Search Response:", response.toString());
                     Resp = response.toString();
                     List<Book> localBooksList = response.body().getResults();
-                    if(page.equals("1")) {
+                    if (page.equals("1")) {
                         booksList.clear();
                         adapter.notifyDataSetChanged();
                     }
@@ -374,100 +374,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
-    public void getNotifications() {
-        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<List<Notifications>> call = usersAPI.getNotifs(Helper.getUserId());
-        call.enqueue(new Callback<List<Notifications>>() {
-            @Override
-            public void onResponse(Call<List<Notifications>> call, Response<List<Notifications>> response) {
-                if (response.body() != null) {
-                    List<Notifications> notifList = response.body();
-                    Helper.setNew_total(notifList.size());
-                    Log.i("NTA", "adapter attached");
-                    Log.i("Old Total", Helper.getOld_total().toString());
-                    Log.i("New Total", Helper.getNew_total().toString());
-                }
-            }
+    @Override
+    public void onFragmentInteraction(Uri uri) {
 
-            @Override
-            public void onFailure(Call<List<Notifications>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void refresh() {
-        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<List<Notifications>> call = usersAPI.getNotifs(prefs.getString("id", null));
-        call.enqueue(new Callback<List<Notifications>>() {
-            @Override
-            public void onResponse(Call<List<Notifications>> call, Response<List<Notifications>> response) {
-                if (response.body() != null) {
-                    List<Notifications> notifList = response.body();
-
-                    for (int i = 0; i < notifList.size(); i++) {
-
-                        Log.i("Notif Loader", "" + notifList.size());
-                        String content = "";
-                        Notifications notifications = notifList.get(i);
-                        if (notifications.getMessage().equals("requested for")) {
-                            content = notifications.getSenderName() + " requested for " + notifications.getBookTitle() + "\n";
-                        } else if (notifications.getMessage().equals("You rejected request for")) {
-                            if (!notifications.getSenderId().equals(prefs.getString("id", null))) {
-                                content = notifications.getSenderName() + " rejected your request for " + notifications.getBookTitle();
-                            }
-                        } else if (notifications.getMessage().equals("has accepted your request for")) {
-                            content = notifications.getSenderName() + " " + notifications.getMessage() + " " + notifications.getBookTitle() + "\n";
-                        }
-
-                        NotificationCompat.Builder mBuilder =
-                                new NotificationCompat.Builder(getApplicationContext())
-                                        .setSmallIcon(R.drawable.default_profile_pic)
-                                        .setContentTitle("BookShareApp")
-                                        .setContentText(content)
-                                        .setAutoCancel(true);
-
-                        NotificationCompat.BigTextStyle bigTextStyle = new NotificationCompat.BigTextStyle()
-                                .setBigContentTitle("BookShareApp")
-                                .bigText(content);
-
-                        mBuilder.setStyle(bigTextStyle);
-
-                        Intent resultIntent = new Intent(getApplicationContext(), MainActivity.class);
-
-                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(getApplicationContext());
-                        stackBuilder.addParentStack(MainActivity.class);
-                        stackBuilder.addNextIntent(resultIntent);
-                        PendingIntent resultPendingIntent =
-                                stackBuilder.getPendingIntent(
-                                        0,
-                                        PendingIntent.FLAG_UPDATE_CURRENT
-                                );
-                        mBuilder.setContentIntent(resultPendingIntent);
-                        NotificationManager mNotificationManager =
-                                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                        mNotificationManager.notify(1, mBuilder.build());
-                    }
-
-                } else
-                    Log.i("harshit", "List.size() == 0");
-
-            }
-
-            @Override
-            public void onFailure(Call<List<Notifications>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Check your network connectivity and try again!", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-    }
+    public void onBackPressed() {
 
-    @Override
-    public void onStop() {
-        super.onStop();
+        if (backCounter >= 1) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            Toast.makeText(this, "Ciao Buddy !", Toast.LENGTH_SHORT).show();
+            startActivity(intent);
+
+        } else {
+            Toast.makeText(this, "Press  again to exit.", Toast.LENGTH_SHORT).show();
+            backCounter++;
+        }
     }
 }

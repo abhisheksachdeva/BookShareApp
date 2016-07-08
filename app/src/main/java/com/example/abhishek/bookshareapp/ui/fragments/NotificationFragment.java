@@ -1,13 +1,17 @@
-package com.example.abhishek.bookshareapp.ui;
+package com.example.abhishek.bookshareapp.ui.fragments;
 
-import android.content.Intent;
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
@@ -28,39 +32,59 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NotificationActivity extends AppCompatActivity{
+public class NotificationFragment extends Fragment {
 
     RecyclerView notificationsListView;
     LinearLayoutManager nLinearLayoutManager;
-    NotificationAdapter adapter,d;
+    NotificationAdapter adapter;
     SwipeRefreshLayout refreshLayout;
     List<Notifications> notificationsList = new ArrayList<>();
+    TextView noNotificationTextView;
+
+    private OnFragmentInteractionListener mListener;
+
+    public NotificationFragment() {
+        // Required empty public constructor
+    }
+
+    public static NotificationFragment newInstance(String param1, String param2) {
+        NotificationFragment fragment = new NotificationFragment();
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notification);
+    }
 
-        nLinearLayoutManager = new LinearLayoutManager(this);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_notification, container, false);
+
+        noNotificationTextView = (TextView)v.findViewById(R.id.no_notification_text);
+
+        nLinearLayoutManager = new LinearLayoutManager(getActivity());
         nLinearLayoutManager.setReverseLayout(true);
         nLinearLayoutManager.setStackFromEnd(true);
 
-        notificationsListView = (RecyclerView) findViewById(R.id.notifications_list);
+        notificationsListView = (RecyclerView) v.findViewById(R.id.notifications_list);
         notificationsListView.setLayoutManager(nLinearLayoutManager);
 
-        adapter = new NotificationAdapter(this, notificationsList);
+        adapter = new NotificationAdapter(getActivity(), notificationsList);
         notificationsListView.setAdapter(adapter);
 
         getNotifications();
 
-        refreshLayout =(SwipeRefreshLayout)findViewById(R.id.notif_refresh_layout);
+        refreshLayout =(SwipeRefreshLayout)v.findViewById(R.id.notif_refresh_layout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 getNotifications();
             }
         });
-
+        return v;
     }
 
     public void getNotifications() {
@@ -87,6 +111,9 @@ public class NotificationActivity extends AppCompatActivity{
             public void onResponse(Call<List<Notifications>> call, Response<List<Notifications>> response) {
                 if (response.body() != null) {
                     List<Notifications> notifList = response.body();
+                    if(notifList.size() == 0) {
+                        noNotificationTextView.setVisibility(View.VISIBLE);
+                    }
                     notificationsList.clear();
                     Helper.setNew_total(notifList.size());
                     notificationsList.addAll(notifList);
@@ -99,16 +126,47 @@ public class NotificationActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<List<Notifications>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(uri);
+        }
+    }
+
     @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent i = new Intent(this,MainActivity.class);
-        startActivity(i);
-        finish();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and name
+        void onFragmentInteraction(Uri uri);
     }
 }

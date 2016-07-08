@@ -1,97 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:elevation="4dp"
-    >
+    android:elevation="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
+        <ImageView
+            android:id="@+id/book_cover"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_margin="16dp"
+            android:layout_weight="1"
+            android:src="@drawable/default_book_image" />
 
-    <ImageView
-        android:id="@+id/book_cover"
-        android:layout_width="wrap_content"
-        android:layout_weight="1"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:src="@android:drawable/ic_media_ff"/>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/book_title"
-            android:layout_width="250dp"
-            android:layout_height="wrap_content"
-            android:text="Title"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:maxLines="3"/>
-
-        <TextView
-            android:id="@+id/author"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Author"
-            android:gravity="center_vertical"
-            android:textStyle="italic"
-            android:textSize="14sp" />
+            android:layout_weight="3"
+            android:orientation="vertical">
 
-        <RatingBar
-            android:layout_width="wrap_content"
-            style="?android:attr/ratingBarStyleSmall"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
+            <TextView
+                android:id="@+id/book_title"
+                android:layout_width="250dp"
+                android:layout_height="wrap_content"
+                android:maxLines="3"
+                android:text="Title"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-            android:id="@+id/book_rating"/>
+            <TextView
+                android:id="@+id/author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="Author"
+                android:textSize="14sp"
+                android:textStyle="italic" />
 
-        <TextView
-            android:id="@+id/ratings_count"
-            android:layout_width="match_parent"
-            android:gravity="center_vertical"
+            <RatingBar
+                android:id="@+id/book_rating"
+                style="?android:attr/ratingBarStyleSmall"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical" />
 
-            android:layout_height="wrap_content"
-            />
+            <TextView
+                android:id="@+id/ratings_count"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical" />
 
-
+        </LinearLayout>
     </LinearLayout>
-    </LinearLayout>
-    <!-- quick and dirty divider -->
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@android:color/darker_gray"
         android:layout_gravity="bottom"
-        />
+        android:background="@android:color/darker_gray" />
 
     <Button
         android:id="@+id/undo_button"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="right|center"
         android:text="Undo"
         android:textAllCaps="true"
-        android:textColor="@android:color/white"
-        android:layout_gravity="right|center"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"
-        />
+        android:textColor="@android:color/white" />
+
     <Button
         android:id="@+id/utton"
+        style="@style/Base.Widget.AppCompat.Button.Borderless"
         android:layout_width="5dp"
         android:layout_height="match_parent"
         android:layout_gravity="right|center"
-        android:background="@color/Red"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"
-        />
-
-
-
+        android:background="@color/Red" />
 
 </FrameLayout>

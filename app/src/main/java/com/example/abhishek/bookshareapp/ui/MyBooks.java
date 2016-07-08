@@ -30,6 +30,7 @@ import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
@@ -52,10 +53,12 @@ public class MyBooks extends AppCompatActivity {
     List<Book> booksList;
     BookAdapter adapter;
     RecyclerView mRecyclerView;
-    Integer count =1;
+    Integer count = 1;
     ProgressDialog progress; // this is not used ,in this activity as of now...Just for testing purposes.
     ProgressBar prog;
     String Resp;
+    TextView noItemsTextView;
+
     public String getResp() {
         return Resp;
     }
@@ -65,11 +68,12 @@ public class MyBooks extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
-        prog = (ProgressBar)findViewById(R.id.progress);
+
+        noItemsTextView = (TextView) findViewById(R.id.no_items_text);
+
+        prog = (ProgressBar) findViewById(R.id.progress);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         new ProgressLoader().execute(15);
-
-
 
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
@@ -97,8 +101,8 @@ public class MyBooks extends AppCompatActivity {
             for (; count <= params[0]; count++) {
                 try {
                     Thread.sleep(1000);
-                    Log.d("MBAs",getResp()+"+"+count.toString());
-                    if (getResp()!=null){
+                    Log.d("MBAs", getResp() + "+" + count.toString());
+                    if (getResp() != null) {
                         break;
                     }
                     publishProgress(count);
@@ -106,24 +110,25 @@ public class MyBooks extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                if (getResp()!=null){
+                if (getResp() != null) {
                     break;
                 }
             }
 
 
-
             return "Task Completed.";
         }
+
         @Override
         protected void onPostExecute(String result) {
-            if(getResp()==null){
+            if (getResp() == null) {
                 Toast.makeText(MyBooks.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
                 prog.setVisibility(View.INVISIBLE);
-            }else{
+            } else {
                 prog.setVisibility(View.INVISIBLE);
             }
         }
+
         @Override
         protected void onPreExecute() {
 //            progress=new ProgressDialog(MyBooks.this);
@@ -138,6 +143,7 @@ public class MyBooks extends AppCompatActivity {
             prog.setVisibility(View.VISIBLE);
 
         }
+
         @Override
         protected void onProgressUpdate(Integer... values) {
 //            progress.setProgress(values[0]);
@@ -166,6 +172,9 @@ public class MyBooks extends AppCompatActivity {
                     Log.d("UserProfile Response:", response.toString());
                     Resp = response.toString();
                     List<Book> booksTempInfoList = response.body().getUserBookList();
+                    if(booksTempInfoList.size() == 0) {
+                        noItemsTextView.setVisibility(View.VISIBLE);
+                    }
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);
                     adapter.notifyDataSetChanged();
@@ -182,7 +191,7 @@ public class MyBooks extends AppCompatActivity {
     private void setUpRecyclerView(String id) {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MyBooks.this));
         booksList = new ArrayList<>();
-        adapter = new BookAdapter(id,booksList);
+        adapter = new BookAdapter(id, booksList);
         mRecyclerView.setAdapter(adapter);
         setUpItemTouchHelper();
         setUpAnimationDecoratorHelper();
@@ -215,7 +224,7 @@ public class MyBooks extends AppCompatActivity {
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 int position = viewHolder.getAdapterPosition();
-                BookAdapter bookAdapter = (BookAdapter)recyclerView.getAdapter();
+                BookAdapter bookAdapter = (BookAdapter) recyclerView.getAdapter();
                 if (bookAdapter.isUndoOn() && bookAdapter.isPendingRemoval(position)) {
                     return 0;
                 }
@@ -225,7 +234,7 @@ public class MyBooks extends AppCompatActivity {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int swipedPosition = viewHolder.getAdapterPosition();
-                BookAdapter adapter = (BookAdapter)mRecyclerView.getAdapter();
+                BookAdapter adapter = (BookAdapter) mRecyclerView.getAdapter();
                 boolean undoOn = adapter.isUndoOn();
                 if (undoOn) {
                     adapter.pendingRemoval(swipedPosition);
@@ -258,7 +267,7 @@ public class MyBooks extends AppCompatActivity {
 
                 int xMarkLeft = itemView.getRight() - xMarkMargin - intrinsicWidth;
                 int xMarkRight = itemView.getRight() - xMarkMargin;
-                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
+                int xMarkTop = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
                 int xMarkBottom = xMarkTop + intrinsicHeight;
                 xMark.setBounds(xMarkLeft, xMarkTop, xMarkRight, xMarkBottom);
 
@@ -369,7 +378,7 @@ public class MyBooks extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            BookViewHolder viewHolder = (BookViewHolder)holder;
+            BookViewHolder viewHolder = (BookViewHolder) holder;
             final Book rbook = bookList.get(position);
 
             if (itemsPendingRemoval.contains(rbook)) {
@@ -387,7 +396,8 @@ public class MyBooks extends AppCompatActivity {
                         // user wants to undo the removal, let's cancel the pending task
                         Runnable pendingRemovalRunnable = pendingRunnables.get(rbook);
                         pendingRunnables.remove(rbook);
-                        if (pendingRemovalRunnable != null) handler.removeCallbacks(pendingRemovalRunnable);
+                        if (pendingRemovalRunnable != null)
+                            handler.removeCallbacks(pendingRemovalRunnable);
                         itemsPendingRemoval.remove(rbook);
                         // this will rebind the row in "normal" state
                         notifyItemChanged(bookList.indexOf(rbook));
@@ -398,8 +408,8 @@ public class MyBooks extends AppCompatActivity {
                 tempValues = bookList.get(position);
                 viewHolder.titleBook.setText(tempValues.getTitle());
                 viewHolder.authorBook.setText(tempValues.getAuthor());
-                if(!tempValues.getGrImgUrl().isEmpty()) {
-                    Picasso.with(MyBooks.this).load(tempValues.getGrImgUrl()).into( viewHolder.imageBook);
+                if (!tempValues.getGrImgUrl().isEmpty()) {
+                    Picasso.with(MyBooks.this).load(tempValues.getGrImgUrl()).placeholder(R.drawable.default_book_image).into(viewHolder.imageBook);
                 }
                 viewHolder.ratingBook.setRating(tempValues.getRating());
                 viewHolder.ratingCount.setText(tempValues.getRatingsCount() + " votes");
@@ -468,7 +478,7 @@ public class MyBooks extends AppCompatActivity {
             call.enqueue(new Callback<Detail>() {
                 @Override
                 public void onResponse(Call<Detail> call, Response<Detail> response) {
-                    if(response.body() != null) {
+                    if (response.body() != null) {
                         notifyDataSetChanged();
                         Toast.makeText(MyBooks.this, "Successfully removed", Toast.LENGTH_SHORT).show();
                     }
@@ -480,6 +490,7 @@ public class MyBooks extends AppCompatActivity {
                 }
             });
         }
+
         public boolean isPendingRemoval(int position) {
             Book rbook = bookList.get(position);
             return itemsPendingRemoval.contains(rbook);
@@ -507,7 +518,6 @@ public class MyBooks extends AppCompatActivity {
             ratingCount = (TextView) itemView.findViewById(R.id.ratings_count);
             undoButton = (Button) itemView.findViewById(R.id.undo_button);
         }
-
 
 
     }
