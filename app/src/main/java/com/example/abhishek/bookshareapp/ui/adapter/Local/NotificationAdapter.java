@@ -2,15 +2,17 @@ package com.example.abhishek.bookshareapp.ui.adapter.Local;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
-import android.text.Html;
+import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +20,7 @@ import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.Notification.Notifications;
+import com.example.abhishek.bookshareapp.ui.UserProfile;
 import com.example.abhishek.bookshareapp.utils.Helper;
 
 import java.util.ArrayList;
@@ -28,6 +31,8 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.ViewHolder> {
+
+    final String TAG = NotificationAdapter.class.getSimpleName();
 
     Context context;
     List<Notifications> notificationList = new ArrayList<>();
@@ -87,14 +92,15 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
-        Spanned content = null;
-        final String bookId, notifId, targetId, bookTitle;
-
         notifications = notificationList.get(position);
         Log.i("NotifAdap", notificationList.get(position).getMessage());
 
+        SpannableString content = null;
+        final String bookId, notifId, targetId, bookTitle;
+
         if (notifications.getMessage().equals("requested for")) {
-            content = Html.fromHtml("<b>" + notifications.getSenderName() + "</b>" + " requested for " + "<i><font color=#616161>" + notifications.getBookTitle() + "</font></i>") ;
+            content = new SpannableString(notifications.getSenderName() + " requested for " + notifications.getBookTitle()) ;
+            content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 0, notifications.getSenderName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             bookId = notifications.getBookId();
             bookTitle = notifications.getBookTitle();
             targetId = notifications.getSenderId();
@@ -116,21 +122,37 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         } else if (notifications.getMessage().equals("You rejected request for")) {
             if (!notifications.getSenderId().equals(Helper.getUserId())) {
-                content = Html.fromHtml("You rejected your request by " + "<b>" + notifications.getSenderName() + "</b>" + " for " + "<i><font color=#616161>" + notifications.getBookTitle() + "</font></i>");
+                content = new SpannableString("You rejected your request by " + notifications.getSenderName() + " for " + notifications.getBookTitle());
+                content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 29, 29 + notifications.getSenderName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         } else if (notifications.getMessage().equals("has accepted your request for")) {
-            content = Html.fromHtml("<b>" + notifications.getSenderName() + "</b>" + " " + notifications.getMessage() + " " + "<i><font color=#616161>" + notifications.getBookTitle() + "</font></i>");
+            content = new SpannableString(notifications.getSenderName() + " " + notifications.getMessage() + " " + notifications.getBookTitle());
+            content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 0, notifications.getSenderName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         } else if (notifications.getMessage().equals("You accepted request for")) {
             if (!notifications.getSenderId().equals(Helper.getUserId())) {
-                content = Html.fromHtml("You accepted the request by " + "<b>" + notifications.getSenderName() + "</b>" + " for " + "<i><font color=#616161>" + notifications.getBookTitle() + "</font></i>");
+                content = new SpannableString("You accepted the request by " + notifications.getSenderName() + " for " + notifications.getBookTitle());
+                content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 28, 28 + notifications.getSenderName().length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
 
         if (content != null) {
             holder.content.setText(content);
+            holder.content.setMovementMethod(LinkMovementMethod.getInstance());
         } else {
             Log.i("Notif_Adapter", "content == null");
         }
+
+    }
+
+    public ClickableSpan getClickableSpanNameInstance(final String id) {
+        return new ClickableSpan() {
+            @Override
+            public void onClick(View widget) {
+                Intent i = new Intent(context, UserProfile.class);
+                i.putExtra("id", id);
+                context.startActivity(i);
+            }
+        };
 
     }
 

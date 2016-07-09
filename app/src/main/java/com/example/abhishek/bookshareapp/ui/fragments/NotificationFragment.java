@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,7 +103,6 @@ public class NotificationFragment extends Fragment {
                 .build();
 
         UsersAPI usersAPI = retrofit.create(UsersAPI.class);
-        Log.i("NotifActivity", Helper.getUserId());
         Call<List<Notifications>> call = usersAPI.getNotifs(Helper.getUserId());
         call.enqueue(new Callback<List<Notifications>>() {
             @Override
@@ -119,8 +117,6 @@ public class NotificationFragment extends Fragment {
                     notificationsList.addAll(notifList);
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
-                    Log.i("Old Total",Helper.getOld_total().toString());
-                    Log.i("New Total",Helper.getNew_total().toString());
                 }
             }
 
