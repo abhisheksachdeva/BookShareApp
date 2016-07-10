@@ -23,7 +23,8 @@
              />
         <activity
             android:name=".ui.SearchResultsActivity"
-            android:label="Search">
+            android:label="Search"
+            android:parentActivityName=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCHRESULTS" />
 

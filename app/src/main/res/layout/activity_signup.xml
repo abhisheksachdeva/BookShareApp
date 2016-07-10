@@ -179,7 +179,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:background="@drawable/rounded_corner"
+            android:background="@drawable/button_search"
             android:layout_marginBottom="24dp"
             android:padding="12dp"
             android:text="Create Account"/>

@@ -53,7 +53,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         scrollingView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if(scrollY>1500){
+                if(scrollY>1000){
                     button.setVisibility(View.VISIBLE);
                 }else{
                     button.setVisibility(View.INVISIBLE);
@@ -86,7 +86,6 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     public void search(View view) {
 
-        Log.d("sabh","dfgf");
         if (r1.isChecked()) {
             mode = "all";
         }

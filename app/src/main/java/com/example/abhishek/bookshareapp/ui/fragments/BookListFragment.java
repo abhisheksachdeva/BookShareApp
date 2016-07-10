@@ -60,7 +60,7 @@ public class BookListFragment extends Fragment {
 
     public void getBooks(String query, String field, String key) {
 
-        Toast.makeText(getActivity(), "getbooks", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getActivity(), "Searching...", Toast.LENGTH_SHORT).show();
 
         BooksAPI api = NetworkingFactory.getGRInstance().getBooksApi();
         Call<GoodreadsResponse> call = api.getBooks(query, field, key);
@@ -68,7 +68,6 @@ public class BookListFragment extends Fragment {
             @Override
             public void onResponse(Call<GoodreadsResponse> call, Response<GoodreadsResponse> response) {
                 if (response.body() != null) {
-                    Log.d("searchresp", response.toString());
                     sr = response.body().getSearch();
                     bookList.clear();
                     bookList.addAll(sr.getBooks());
