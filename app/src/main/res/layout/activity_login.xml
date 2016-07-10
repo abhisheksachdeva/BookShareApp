@@ -39,17 +39,35 @@
     </LinearLayout>
 
         <!-- Password Label -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
         <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="3"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:layout_marginBottom="4dp">
+            android:layout_marginBottom="4dp"
+
+            >
             <EditText android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
                 android:hint="Password"/>
+
         </android.support.design.widget.TextInputLayout>
+
+        <ImageButton
+            android:src="@drawable/ic_visibility"
+            android:id="@+id/_btn_show_password"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:layout_gravity="bottom"
+            android:background="@color/BGyellow" />
+        </LinearLayout>
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/btn_login"

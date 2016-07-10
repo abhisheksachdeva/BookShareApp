@@ -6,11 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +38,8 @@ public class LoginActivity extends AppCompatActivity {
     EditText _emailText;
     @InjectView(R.id.input_password)
     EditText _passwordText;
+    @InjectView(R.id._btn_show_password)
+    ImageButton _showPassword;
     @InjectView(R.id.btn_login)
     Button _loginButton;
     @InjectView(R.id.link_signup)
@@ -43,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
 
     String token;
     Context context;
+    boolean showPassword = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +63,22 @@ public class LoginActivity extends AppCompatActivity {
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
         token = pref.getString("token", "");
         Log.i("harshit", token + "  adf");
+
+        _showPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!showPassword){
+                _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    showPassword=true;
+                    _showPassword.setImageResource(R.drawable.ic_visibility_off);
+                } else {
+                    _passwordText.setInputType(129); //input type = password
+                    showPassword=false;
+                    _showPassword.setImageResource(R.drawable.ic_visibility);
+                }
+                }
+
+        });
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
