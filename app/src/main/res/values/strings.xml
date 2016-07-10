@@ -4,5 +4,18 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="action_logout">LOGOUT</string>
-
+    <string-array name="hostel_list">
+        <item>Azad</item>
+        <item>Cautley</item>
+        <item>Ganga</item>
+        <item>Govind</item>
+        <item>Jawahar</item>
+        <item>Kasturba</item>
+        <item>Malviya</item>
+        <item>Radhakrishnan</item>
+        <item>Rajendra</item>
+        <item>Rajiv</item>
+        <item>Ravindra</item>
+        <item>Sarojini</item>
+    </string-array>
 </resources>

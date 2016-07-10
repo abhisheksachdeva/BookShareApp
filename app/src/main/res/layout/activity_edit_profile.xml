@@ -11,35 +11,69 @@
     android:orientation="vertical"
     tools:context="com.example.abhishek.bookshareapp.ui.EditProfileActivity">
 
-    <EditText
-        android:id="@+id/first_name"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="First Name" />
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText android:id="@+id/first_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:hint="First Name" />
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/last_name"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Last Name" />
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText android:id="@+id/last_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:hint="Last Name" />
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/contact_no"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Contact number" />
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText android:id="@+id/contact_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:hint="Contact No." />
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/room_no"
+    <android.support.design.widget.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Room number"/>
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+        <EditText android:id="@+id/room_no"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapWords"
+            android:hint="Room No." />
+    </android.support.design.widget.TextInputLayout>
 
-    <EditText
-        android:id="@+id/hostel"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Hostel" />
+        android:text="Hostel"
+        android:textSize="12dp"
+        android:paddingLeft="4dp"
+        android:layout_marginTop="8dp"
+        />
+    <Spinner
+        android:id="@+id/hostel_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp">
+    </Spinner>
 
     <Button
         android:layout_width="match_parent"

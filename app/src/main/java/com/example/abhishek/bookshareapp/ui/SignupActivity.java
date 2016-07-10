@@ -69,26 +69,10 @@ public class SignupActivity extends AppCompatActivity {
         ButterKnife.inject(this);
 
         //////////////// Setting spinner for hostels \\\\\\\\\\\\\\\\\
-        List<String> hostelList = new ArrayList<String >();
+        ArrayAdapter<CharSequence> hostelAdapter = ArrayAdapter.createFromResource(this, R.array.hostel_list, android.R.layout.simple_spinner_item);
 
-        hostelList.add("Azad");
-        hostelList.add("Cautley");
-        hostelList.add("Ganga");
-        hostelList.add("Govind");
-        hostelList.add("Jawahar");
-        hostelList.add("Kasturba");
-        hostelList.add("Malviya");
-        hostelList.add("Radhakrishnan");
-        hostelList.add("Rajendra");
-        hostelList.add("Rajiv");
-        hostelList.add("Ravindra");
-        hostelList.add("Sarojini");
-
-        ArrayAdapter<String> hostelAdapter =
-                new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, hostelList);
         hostelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _hostelSpinner.setAdapter(hostelAdapter);
-
 
         _hostelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

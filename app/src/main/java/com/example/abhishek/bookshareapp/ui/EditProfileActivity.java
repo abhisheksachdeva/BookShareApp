@@ -6,8 +6,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
@@ -21,9 +24,12 @@ import retrofit2.Response;
 
 public class EditProfileActivity extends AppCompatActivity {
 
-    EditText firstName, lastName, contactNo, roomNo, hostel;
+    EditText firstName, lastName, contactNo, roomNo;
+    Spinner hostelSpinner;
     String id ;
     SharedPreferences preferences;
+    String hostel;
+    UserInfo userInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +40,7 @@ public class EditProfileActivity extends AppCompatActivity {
         lastName = (EditText) findViewById(R.id.last_name);
         contactNo = (EditText) findViewById(R.id.contact_no);
         roomNo = (EditText) findViewById(R.id.room_no);
-        hostel = (EditText) findViewById(R.id.hostel);
+        hostelSpinner = (Spinner) findViewById(R.id.hostel_spinner);
 
         preferences = getSharedPreferences("Token", MODE_PRIVATE);
         id = preferences.getString("id",null);
@@ -42,18 +48,34 @@ public class EditProfileActivity extends AppCompatActivity {
         lastName.setText(preferences.getString("last_name", null));
         contactNo.setText(preferences.getString("contact_no", null));
         roomNo.setText(preferences.getString("room_no", null));
-        hostel.setText(preferences.getString("hostel", null));
+        hostel = preferences.getString("hostel", null);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.hostel_list, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        hostelSpinner.setAdapter(adapter);
+        if (!hostel.equals(null)) {
+            int spinnerPosition = adapter.getPosition(hostel);
+            hostelSpinner.setSelection(spinnerPosition);
+        }
+
+        hostelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                hostel = parent.getItemAtPosition(position).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
     }
 
     public void saveClicked(View view) {
 
-        UserInfo userInfo = new UserInfo();
-        userInfo.setFirstName(firstName.getText().toString());
-        userInfo.setLastName(lastName.getText().toString());
-        userInfo.setRoomNo(roomNo.getText().toString());
-        userInfo.setContactNo(contactNo.getText().toString());
-        userInfo.setHostel(hostel.getText().toString());
+        userInfo = new UserInfo();
+
 
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<UserInfo> call = usersAPI.editUserDetails(
@@ -71,9 +93,13 @@ public class EditProfileActivity extends AppCompatActivity {
                     editor.putString("last_name", lastName.getText().toString());
                     editor.putString("room_no", roomNo.getText().toString());
                     editor.putString("contact_no", contactNo.getText().toString());
-                    editor.putString("hostel", hostel.getText().toString());
-
+                    editor.putString("hostel", hostel);
                     editor.apply();
+                    userInfo.setFirstName(firstName.getText().toString());
+                    userInfo.setLastName(lastName.getText().toString());
+                    userInfo.setRoomNo(roomNo.getText().toString());
+                    userInfo.setContactNo(contactNo.getText().toString());
+                    userInfo.setHostel(hostel);
 
                 } else {
                     Log.i("harshit", "response.body() is null)");
