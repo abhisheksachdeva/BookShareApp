@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:paddingRight="0dp">
 
         <ImageView
             android:id="@+id/row_books_imageView"
@@ -59,10 +60,16 @@
 
         </LinearLayout>
         <Button
-            android:layout_width="40dp"
-            android:layout_height="match_parent"
-            android:background="#33691E"
-            android:id="@+id/add"/>
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/button_shape"
+            android:id="@+id/add"
+            android:text="Add"
+            android:layout_marginBottom="7dp"
+            android:layout_gravity="bottom" />
 
     </LinearLayout>
 

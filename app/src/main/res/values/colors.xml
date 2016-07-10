@@ -9,8 +9,10 @@
     <color name="Green">#19FF10</color>
     <color name="Peach">#FFDAB9</color>
     <color name="app_theme_background">#FFFFFF</color>
-    <color name="app_theme_toolbar">#f44336</color>
+    <color name="app_theme_toolbar">#e57373</color>
     <color name="app_theme_navigation_bar">#f44336</color>
-    <color name="app_theme_button">#d32f2f</color>
+    <color name="app_theme_button_start">#b71c1c</color>
+    <color name="app_theme_button_center">#f44336</color>
+    <color name="app_theme_button_end">#ef5350</color>
     <color name="app_theme_fab">#e91e63</color>
 </resources>
