@@ -70,7 +70,7 @@ public class BookDetailsActivity extends SlidingActivity{
         ratingCount = (TextView) findViewById(R.id.row_books_ratings_count);
         image = (ImageView) findViewById(R.id.row_books_imageView);
         setImage(R.drawable.b_image);
-        setFab(R.color.BGyellow, R.drawable.plus, new View.OnClickListener() {
+        setFab(R.color.app_theme_background, R.drawable.plus, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final CharSequence[] items = { "Yes", "No"};

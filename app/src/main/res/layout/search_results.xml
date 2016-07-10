@@ -2,13 +2,13 @@
 <RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/BGyellow"
+    android:background="@color/app_theme_background"
     android:orientation="vertical">
 
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/BGyellow"
+        android:background="@color/app_theme_background"
         android:id="@+id/scrollView"
         android:orientation="vertical"
         >
@@ -16,7 +16,7 @@
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/BGyellow"
+            android:background="@color/app_theme_background"
             android:orientation="vertical">
 
             <LinearLayout

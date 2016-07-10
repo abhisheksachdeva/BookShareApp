@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="26dp"
-    android:background="@color/BGyellow"
+    android:background="@color/app_theme_background"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -66,7 +66,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:layout_gravity="bottom"
-            android:background="@color/BGyellow" />
+            android:background="@color/app_theme_background" />
         </LinearLayout>
 
         <android.support.v7.widget.AppCompatButton

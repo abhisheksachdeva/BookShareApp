@@ -82,7 +82,7 @@ public class MyProfile extends SlidingActivity {
                     }
                 });
 
-        setFab(R.color.BGyellow, R.drawable.plus, new View.OnClickListener() {
+        setFab(R.color.app_theme_background, R.drawable.plus, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 selectImage(v);

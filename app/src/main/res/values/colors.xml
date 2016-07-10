@@ -8,12 +8,9 @@
     <color name="White">#ffffff</color>
     <color name="Green">#19FF10</color>
     <color name="Peach">#FFDAB9</color>
-    <color name="BGyellow">#FFF9C4
-    </color>
-
-
-
-
-
-
+    <color name="app_theme_background">#FFFFFF</color>
+    <color name="app_theme_toolbar">#f44336</color>
+    <color name="app_theme_navigation_bar">#f44336</color>
+    <color name="app_theme_button">#d32f2f</color>
+    <color name="app_theme_fab">#e91e63</color>
 </resources>
