@@ -268,8 +268,7 @@ public class MyProfile extends SlidingActivity {
                     @Override
                     public void onResponse(Call<Signup> call, Response<Signup> response) {
                         if (response.body() != null) {
-                            String detail = response.body().getDetail();
-                            Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
+                            final String detail = response.body().getDetail();
                             Helper.imageChanged = true;
                             Picasso.with(getApplicationContext())
                                     .load(url)
@@ -277,6 +276,7 @@ public class MyProfile extends SlidingActivity {
                                     .into(new Target() {
                                         @Override
                                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                            Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
                                             setImage(bitmap);
                                         }
 

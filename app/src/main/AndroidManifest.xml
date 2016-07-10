@@ -4,11 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <!--<uses-permission android:name="android.permission.CAMERA" />-->
-    <!--<uses-feature android:name="android.hardware.camera" />-->
-    <!--<uses-feature android:name="android.hardware.camera.autofocus" />-->
 
     <application
         android:allowBackup="true"
@@ -19,8 +16,7 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".ui.LoginActivity"
-            android:label="Login"
-             />
+            android:label="Login" />
         <activity
             android:name=".ui.SearchResultsActivity"
             android:label="Search">
@@ -41,23 +37,19 @@
             android:parentActivityName=".ui.MainActivity" />
         <activity
             android:name=".ui.BookDetailsActivity"
-            android:label="Book Details"
-            android:excludeFromRecents="true"
-            android:taskAffinity=""
-            android:theme="@style/Theme.Sliding.Light"
-           />
+            android:label="Book Details" />
         <activity
             android:name=".ui.UserProfile"
             android:label="User Details"
             android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"     />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.MyProfile"
-            android:label="My Profile"
             android:excludeFromRecents="true"
+            android:label="My Profile"
+            android:parentActivityName=".ui.MainActivity"
             android:taskAffinity=""
-            android:theme="@style/Theme.Sliding.Light"
-            android:parentActivityName=".ui.MainActivity" />
+            android:theme="@style/Theme.Sliding.Light" />
         <activity android:name=".ui.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -73,6 +65,9 @@
             android:name=".ui.ChangePasswordActivity"
             android:label="Change Password"
             android:parentActivityName=".ui.MyProfile" />
+        <activity
+            android:name=".ui.GuestActivity"
+            android:label="Campus Books" />
     </application>
 
 </manifest>
