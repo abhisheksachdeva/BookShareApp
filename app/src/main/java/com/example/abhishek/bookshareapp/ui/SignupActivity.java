@@ -2,12 +2,17 @@ package com.example.abhishek.bookshareapp.ui;
 
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,6 +21,9 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.Signup;
 import com.example.abhishek.bookshareapp.utils.Helper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -39,8 +47,10 @@ public class SignupActivity extends AppCompatActivity {
     EditText _roomText;
     @InjectView(R.id.input_roll_no)
     EditText _rollText;
-    @InjectView(R.id.input_hostel)
-    EditText _hostelText;
+//    @InjectView(R.id.input_hostel)
+//    EditText _hostelText;
+    @InjectView(R.id.hostel_spinner)
+    Spinner _hostelSpinner;
     @InjectView(R.id.input_college)
     EditText _collegeText;
     @InjectView(R.id.input_contact)
@@ -49,6 +59,8 @@ public class SignupActivity extends AppCompatActivity {
     Button _signupButton;
     @InjectView(R.id.link_login)
     TextView _loginLink;
+    String hostel;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,10 +68,46 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         ButterKnife.inject(this);
 
+        //////////////// Setting spinner for hostels \\\\\\\\\\\\\\\\\
+        List<String> hostelList = new ArrayList<String >();
+
+        hostelList.add("Azad");
+        hostelList.add("Cautley");
+        hostelList.add("Ganga");
+        hostelList.add("Govind");
+        hostelList.add("Jawahar");
+        hostelList.add("Kasturba");
+        hostelList.add("Malviya");
+        hostelList.add("Radhakrishnan");
+        hostelList.add("Rajendra");
+        hostelList.add("Rajiv");
+        hostelList.add("Ravindra");
+        hostelList.add("Sarojini");
+
+        ArrayAdapter<String> hostelAdapter =
+                new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, hostelList);
+        hostelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _hostelSpinner.setAdapter(hostelAdapter);
+
+
+        _hostelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                hostel = parent.getItemAtPosition(position).toString();
+//                hideKeyboard();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                hostel = "Azad";
+            }
+        });
+        /////////////////////////// Spinner complete \\\\\\\\\\\\\\\\\\\\\\\\\\\\
+
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                signup();
+                signup(hostel);
             }
         });
 
@@ -72,8 +120,15 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    public void signup() {
-        Log.d(TAG, "Signup");
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    public void signup(String hostel) {
 
         if (!validate()) {
             onSignupFailed("Fill details properly");
@@ -94,7 +149,6 @@ public class SignupActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();
-        String hostel = _hostelText.getText().toString();
         String college = _collegeText.getText().toString();
         String contact = _contactText.getText().toString();
 
@@ -146,7 +200,6 @@ public class SignupActivity extends AppCompatActivity {
         String cnf_password = _cnf_passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();
-        String hostel = _hostelText.getText().toString();
         String college = _collegeText.getText().toString();
         String contact = _contactText.getText().toString();
 
@@ -179,13 +232,6 @@ public class SignupActivity extends AppCompatActivity {
         } else {
             _rollText.setError(null);
         }
-        if (hostel.isEmpty()) {
-            valid = false;
-            _FnameText.setError("Please fill hostel Name");
-
-        } else {
-            _hostelText.setError(null);
-        }
         if (college.isEmpty()) {
             valid = false;
             _FnameText.setError("Please fill college Name");
@@ -208,8 +254,8 @@ public class SignupActivity extends AppCompatActivity {
             _emailText.setError(null);
         }
 
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            _passwordText.setError("between 4 and 10 alphanumeric characters");
+        if (password.isEmpty() || password.length() < 6 || password.length() > 15) {
+            _passwordText.setError("between 6 and 15 alphanumeric characters");
             valid = false;
         } else {
             _passwordText.setError(null);
