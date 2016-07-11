@@ -60,8 +60,10 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#FFF9C4"
+        android:background="#424242"
         android:fitsSystemWindows="true"
+        app:itemIconTint="@color/White"
+        app:itemTextColor="@color/White"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
