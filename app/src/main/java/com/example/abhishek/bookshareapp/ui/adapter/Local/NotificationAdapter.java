@@ -7,6 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.Log;
@@ -160,6 +161,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 i.putExtra("id", id);
                 context.startActivity(i);
             }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
+            }
         };
     }
 
@@ -170,6 +177,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 Intent i = new Intent(context, BookDetailsActivity.class);
                 i.putExtra("id", id);
                 context.startActivity(i);
+            }
+
+            @Override
+            public void updateDrawState(TextPaint ds) {
+                super.updateDrawState(ds);
+                ds.setUnderlineText(false);
             }
         };
     }
