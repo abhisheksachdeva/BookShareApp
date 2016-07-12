@@ -51,11 +51,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public ViewHolder(View v, Context context, int viewType) {
             super(v);
             content = (TextView) v.findViewById(R.id.content);
+            buttonLayout = v.findViewById(R.id.button_layout);
 
             if(viewType == 1) {
-                buttonLayout = v.findViewById(R.id.button_layout);
                 accept = v.findViewById(R.id.accept);
                 reject = v.findViewById(R.id.reject);
+            }
+            else if (viewType == 2){
+                buttonLayout.setVisibility(View.GONE);
             }
 
             this.context = context;
@@ -70,19 +73,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        View v = null;
-
-        switch (viewType) {
-            case 1:
-                v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.row_notification, parent, false);
-                break;
-            case 2:
-                v = LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.row_notification_without_button, parent, false);
-        }
-
-        return new ViewHolder(v, context, viewType);
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.row_notification, parent, false);
+                return new ViewHolder(v, context, viewType);
     }
 
     @Override
