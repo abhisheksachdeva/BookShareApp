@@ -44,7 +44,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView content;
-        View accept, reject;
+        View accept, reject, buttonLayout;
 
         Context context;
 
@@ -53,6 +53,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             content = (TextView) v.findViewById(R.id.content);
 
             if(viewType == 1) {
+                buttonLayout = v.findViewById(R.id.button_layout);
                 accept = v.findViewById(R.id.accept);
                 reject = v.findViewById(R.id.reject);
             }
@@ -117,14 +118,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    acceptRequest(notifId, bookId, bookTitle, Helper.getUserId(), Helper.getUserName(), targetId, v);
+                    acceptRequest( holder, notifId, bookId, bookTitle, Helper.getUserId(), Helper.getUserName(), targetId, v);
                 }
             });
 
             holder.reject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    rejectRequest(notifId);
+                    rejectRequest( holder, notifId);
                 }
             });
 
@@ -193,7 +194,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         };
     }
 
-    public void acceptRequest(final String nId, final String bookId, final String bookTitle, final String senderId, final String senderName, final String targetId, final View v) {
+    public void acceptRequest(final ViewHolder holder, final String nId, final String bookId, final String bookTitle, final String senderId, final String senderName, final String targetId, final View v) {
         final CharSequence[] items = {"Yes", "No"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Are you sure you want to accept this request?");
@@ -210,7 +211,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 Log.i("AcceptNotif", "Success");
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                 Log.i("response", response.body().getDetail());
-
+                                holder.buttonLayout.setVisibility(View.GONE);
                             } else {
                                 Log.i("AccpetNotif", "Response Null");
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
@@ -231,7 +232,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         builder.show();
     }
 
-    public void rejectRequest(final String nId) {
+    public void rejectRequest(final ViewHolder holder, final String nId) {
         final CharSequence[] items = {"Yes", "No"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Are you sure you want to reject this request?");
@@ -249,6 +250,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 Log.i("RejectNotif", "Success");
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                 Log.i("response", response.body().getDetail());
+                                holder.buttonLayout.setVisibility(View.GONE);
+
                             } else {
                                 Log.i("rejectNotif", "Response Null");
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();

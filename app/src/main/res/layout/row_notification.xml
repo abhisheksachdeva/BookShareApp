@@ -22,11 +22,12 @@
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:id="@+id/button_layout">
 
         <Button
             android:id="@+id/accept"
-            android:background="@drawable/button_search"
+            android:background="@drawable/button_shape"
             android:typeface="sans"
             android:text="Accept"
             android:textAllCaps="false"
@@ -37,7 +38,7 @@
         <Button
             android:id="@+id/reject"
             android:layout_width="wrap_content"
-            android:background="@drawable/button_search"
+            android:background="@drawable/button_shape"
             android:textAllCaps="false"
             android:typeface="sans"
             android:text="Reject"
