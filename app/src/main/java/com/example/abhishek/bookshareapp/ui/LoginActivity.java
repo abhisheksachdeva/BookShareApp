@@ -101,6 +101,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    public void guestModeClicked(View view) {
+        Intent i = new Intent(this, GuestActivity.class);
+        startActivity(i);
+    }
+
     public void login() {
         Log.d(TAG, "Login");
 
