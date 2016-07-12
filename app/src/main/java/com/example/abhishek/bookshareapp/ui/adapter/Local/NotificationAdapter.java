@@ -3,6 +3,8 @@ package com.example.abhishek.bookshareapp.ui.adapter.Local;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -115,14 +117,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    acceptRequest(holder, notifId, bookId, bookTitle, Helper.getUserId(), Helper.getUserName(), targetId, v);
+                    acceptRequest(notifId, bookId, bookTitle, Helper.getUserId(), Helper.getUserName(), targetId, v);
                 }
             });
 
             holder.reject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    rejectRequest(holder, notifId);
+                    rejectRequest(notifId);
                 }
             });
 
@@ -166,6 +168,8 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(false);
+                ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+                ds.setColor(Color.BLACK);
             }
         };
     }
@@ -183,11 +187,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void updateDrawState(TextPaint ds) {
                 super.updateDrawState(ds);
                 ds.setUnderlineText(false);
+                ds.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.ITALIC));
+                ds.setColor(Color.argb(255, 61, 61, 61));
             }
         };
     }
 
-    public void acceptRequest(final ViewHolder holder, final String nId, final String bookId, final String bookTitle, final String senderId, final String senderName, final String targetId, final View v) {
+    public void acceptRequest(final String nId, final String bookId, final String bookTitle, final String senderId, final String senderName, final String targetId, final View v) {
         final CharSequence[] items = {"Yes", "No"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Are you sure you want to accept this request?");
@@ -204,6 +210,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                                 Log.i("AcceptNotif", "Success");
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                 Log.i("response", response.body().getDetail());
+
                             } else {
                                 Log.i("AccpetNotif", "Response Null");
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
@@ -224,7 +231,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         builder.show();
     }
 
-    public void rejectRequest(final ViewHolder holder, final String nId) {
+    public void rejectRequest(final String nId) {
         final CharSequence[] items = {"Yes", "No"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Are you sure you want to reject this request?");
