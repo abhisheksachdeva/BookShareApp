@@ -60,10 +60,12 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/app_theme_toolbar"
+        android:background="@color/Grey"
         android:fitsSystemWindows="true"
-        app:itemIconTint="@color/White"
-        app:itemTextColor="@color/White"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        app:itemIconTint="@color/Black"
+        app:itemTextColor="@color/Black"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
@@ -71,14 +73,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:paddingTop="?attr/actionBarSize"
-        android:layout_gravity="end">
+        android:layout_gravity="end"
+        >
 
         <fragment
             android:id="@+id/right_drawer"
             android:name="com.example.abhishek.bookshareapp.ui.fragments.NotificationFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_notification" />
+            tools:layout="@layout/fragment_notification"
+            />
 
     </FrameLayout>
 
