@@ -1,6 +1,7 @@
 package com.example.abhishek.bookshareapp.ui;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -28,6 +29,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.blurry.Blurry;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -70,7 +72,7 @@ public class BookDetailsActivity extends AppCompatActivity{
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         rootView = (FrameLayout) findViewById(R.id.root_view);
         scrollView = (NestedScrollView) findViewById(R.id.scroll_view);
-        scrollView.setVisibility(View.GONE);
+        scrollView.setVisibility(View.INVISIBLE);
 
         SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
@@ -96,6 +98,13 @@ public class BookDetailsActivity extends AppCompatActivity{
                     ratingCount.setText("(" + book.getRatingsCount().toString() + ")"); ratingsCount=book.getRatingsCount();
                     ratingBook.setRating(book.getRating());rating = book.getRating();
                     Picasso.with(BookDetailsActivity.this).load(book.getGrImgUrl()).into(image);
+                    Blurry.with(BookDetailsActivity.this)
+                            .radius(25)
+                            .sampling(1)
+                            .color(Color.argb(66, 0, 0, 0))
+                            .async()
+                            .capture(findViewById(R.id.book_image))
+                            .into((ImageView) findViewById(R.id.book_image));
                     gr_img_url = book.getGrImgUrl();
                     List<UserInfo> userTempInfoList = book.getUserInfoList();
                     userInfoList.clear();
