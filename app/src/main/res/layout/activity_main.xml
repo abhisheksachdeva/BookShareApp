@@ -14,44 +14,32 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/app_theme_toolbar"
-            android:subtitleTextColor="@color/app_theme_background"
-            android:titleTextColor="@color/White"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
-
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/refresh_layout"
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:subtitleTextColor="@color/app_theme_background"
+                android:titleTextColor="@android:color/white"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/localBooksList"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scrollIndicators="start"
-                    android:scrollbarSize="2dp"
-                    android:scrollbarStyle="outsideOverlay"
-                    android:scrollbars="vertical">
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-                </android.support.v7.widget.RecyclerView>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/localBooksList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scrollIndicators="start"
+                android:scrollbarSize="2dp"
+                android:scrollbarStyle="outsideOverlay"
+                android:scrollbars="vertical">
 
-                <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="bottom|end"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/plus" />
+            </android.support.v7.widget.RecyclerView>
 
-            </android.support.v4.widget.SwipeRefreshLayout>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
@@ -60,18 +48,18 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/app_theme_toolbar"
+        android:background="@color/colorPrimary"
         android:fitsSystemWindows="true"
-        app:itemIconTint="@color/White"
-        app:itemTextColor="@color/White"
         app:headerLayout="@layout/nav_header_main"
+        app:itemIconTint="@android:color/white"
+        app:itemTextColor="@android:color/white"
         app:menu="@menu/activity_main_drawer" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="?attr/actionBarSize"
-        android:layout_gravity="end">
+        android:layout_gravity="end"
+        android:paddingTop="?attr/actionBarSize">
 
         <fragment
             android:id="@+id/right_drawer"

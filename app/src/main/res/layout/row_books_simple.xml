@@ -20,7 +20,7 @@
             android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:src="@android:drawable/ic_media_ff"/>
+            android:src="@drawable/default_book_image"/>
 
         <LinearLayout
             android:layout_width="0dp"

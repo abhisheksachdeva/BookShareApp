@@ -166,7 +166,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
 
         try {
             String url = CommonUtilities.local_books_api_url + "image/"+id+"/";
-            Picasso.with(this.context).load(url).into(holder.imageUser);
+            Picasso.with(this.context).load(url).placeholder(R.drawable.ic_account_circle_black_24dp).into(holder.imageUser);
         }
         catch (Exception e){
             Toast.makeText(this.context,e.toString(), Toast.LENGTH_SHORT).show();

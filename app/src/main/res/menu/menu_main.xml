@@ -6,7 +6,7 @@
     <item
         android:id="@+id/menu_notifs"
         android:title="Notifications"
-        android:icon="@drawable/ic_menu_send2"
+        android:icon="@drawable/ic_notifications_none_white_24dp"
         app:showAsAction="always" />
 
     <item android:id="@+id/search"

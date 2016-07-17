@@ -49,7 +49,6 @@
             android:excludeFromRecents="true"
             android:label="My Profile"
             android:parentActivityName=".ui.MainActivity"
-            android:taskAffinity=""
             android:theme="@style/Theme.Sliding.Light" />
         <activity android:name=".ui.SplashScreen">
             <intent-filter>

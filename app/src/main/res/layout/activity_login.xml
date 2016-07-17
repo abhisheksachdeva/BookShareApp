@@ -67,7 +67,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
-        android:background="@drawable/rounded_corner"
         android:padding="12dp"
         android:text="Login" />
 
@@ -85,7 +84,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:text="I'll Skip"
-        android:onClick="guestModeClicked"
-        android:background="@drawable/rounded_corner"/>
+        android:onClick="guestModeClicked"/>
 
 </LinearLayout>
