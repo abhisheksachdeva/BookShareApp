@@ -27,13 +27,14 @@
 
         <Button
             android:id="@+id/accept"
-            android:background="@drawable/button_shape"
+            android:background="@drawable/button_shape_other"
             android:typeface="sans"
             android:text="Accept"
             android:textAllCaps="false"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginRight="10dp"
+            android:textColor="@color/app_theme_button_start"/>
 
         <Button
             android:id="@+id/reject"
@@ -42,7 +43,8 @@
             android:textAllCaps="false"
             android:typeface="sans"
             android:text="Reject"
-            android:layout_height="30dp" />
+            android:layout_height="30dp"
+            android:textColor="@color/White"/>
 
     </LinearLayout>
 
