@@ -42,7 +42,7 @@
         android:layout_alignParentRight="true"
         android:layout_gravity="right"
         android:layout_margin="16dp"
-        android:background="@android:color/white"
+        android:background="@color/Yellow"
         android:src="@drawable/ic_add_white_24dp" />
 
 </RelativeLayout>

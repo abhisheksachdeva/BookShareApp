@@ -7,26 +7,32 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
+import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.Signup;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
+import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 import com.example.abhishek.bookshareapp.utils.FileUtils;
 import com.example.abhishek.bookshareapp.utils.Helper;
 import com.example.abhishek.bookshareapp.utils.PermissionUtils;
-import com.klinker.android.sliding.SlidingActivity;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -36,9 +42,12 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
-
+import jp.wasabeef.blurry.Blurry;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -46,55 +55,96 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyProfile extends SlidingActivity {
-    TextView userName, userEmail, address;
+public class MyProfile extends AppCompatActivity {
+
+    final String TAG = MyProfile.class.getSimpleName();
+
+    TextView userName, userEmail, address, booksCount;
     UserInfo user;
+    RecyclerView userBooksListView;
+    List<Book> userBooksList = new ArrayList<>();
     String id;
-    String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
+    String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
     int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     String userChoosenTask;
+    CircleImageView profilePicture;
+    BooksAdapterSimple adapter;
+    ImageView backgroundImageView;
 
     @Override
-    public void init(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setTitle("My Profile");
-        setPrimaryColors(
-                getResources().getColor(R.color.colorPrimary),
-                getResources().getColor(R.color.colorPrimaryDark)
-        );
-        setContent(R.layout.activity_my_profile);
+        setContentView(R.layout.activity_my_profile);
+
+        profilePicture = (CircleImageView)findViewById(R.id.profile_picture);
+        userName = (TextView) findViewById(R.id.user_name);
+        userEmail = (TextView)findViewById(R.id.user_email);
+        address = (TextView)findViewById(R.id.address);
+        userBooksListView = (RecyclerView)findViewById(R.id.user_books_list_view);
+        backgroundImageView = (ImageView)findViewById(R.id.background_image);
+        booksCount = (TextView)findViewById(R.id.books_count);
+
+        userBooksListView = (RecyclerView)findViewById(R.id.user_books_list_view);
+        userBooksListView.setLayoutManager(new LinearLayoutManager(this));
+        adapter = new BooksAdapterSimple(this, userBooksList, new BooksAdapterSimple.OnItemClickListener() {
+            @Override
+            public void onItemClick(Book book) {
+                Log.i("Click", "onItemClick");
+            }
+        });
+        userBooksListView.setAdapter(adapter);
+        userBooksListView.setNestedScrollingEnabled(false);
 
         String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
-        Picasso.with(getApplicationContext())
-                .load(url)
-                .into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                        setImage(bitmap);
-                    }
-
-                    @Override
-                    public void onBitmapFailed(Drawable errorDrawable) {
-                        Toast.makeText(getApplicationContext(),"failed to load image", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-                    }
-                });
-
-        setFab(R.color.app_theme_background, R.drawable.ic_add_white_24dp, new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                selectImage(v);
-            }
-            });
-
-        userName = (TextView) findViewById(R.id.username);
-        userEmail = (TextView) findViewById(R.id.useremail);
-        address = (TextView) findViewById(R.id.address);
 
         id = getIntent().getExtras().getString("id");
         getUserInfoDetails(id);
+    }
+
+    public void getUserInfoDetails(String id) {
+        UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
+        Call<UserInfo> call = api.getUserDetails(id);
+        call.enqueue(new Callback<UserInfo>() {
+            @Override
+            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                if (response.body() != null) {
+                    Log.d("UserProfile Response:", response.toString());
+                    user = response.body();
+                    userName.setText(user.getFirstName() + " " + user.getLastName());
+                    userEmail.setText(user.getEmail());
+                    address.setText(user.getRoomNo() + ", " + user.getHostel());
+                    userBooksList.clear();
+                    userBooksList.addAll(user.getUserBookList());
+                    booksCount.setText(String.valueOf(userBooksList.size()));
+                    adapter.notifyDataSetChanged();
+                    Picasso.with(getApplicationContext()).load(url).into(profilePicture);
+                    Picasso.with(getApplicationContext()).load(url).into(backgroundImageView, new com.squareup.picasso.Callback() {
+                        @Override
+                        public void onSuccess() {
+                            Log.i(TAG, "onSuccess: called");
+                            Blurry.with(getApplicationContext())
+                                    .radius(40)
+                                    .sampling(1)
+                                    .color(Color.argb(66, 0, 0, 0))
+                                    .async()
+                                    .capture(findViewById(R.id.background_image))
+                                    .into((ImageView) findViewById(R.id.background_image));
+                        }
+
+                        @Override
+                        public void onError() {
+
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserInfo> call, Throwable t) {
+                Log.d("BookDetails fail", t.toString());
+            }
+        });
     }
 
     public void  selectImage(View view){
@@ -173,7 +223,6 @@ public class MyProfile extends SlidingActivity {
             fo = new FileOutputStream(file);
             fo.write(bytes.toByteArray());
             fo.close();
-            setImage(thumbnail);
             sendToServer(file);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -200,7 +249,6 @@ public class MyProfile extends SlidingActivity {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        setImage(bitmap);
         File file = getFile(uri, bitmap);
         if (file != null) {
             sendToServer(file);
@@ -277,7 +325,7 @@ public class MyProfile extends SlidingActivity {
                                         @Override
                                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                                             Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
-                                            setImage(bitmap);
+                                            profilePicture.setImageBitmap(bitmap);
                                         }
 
                                         @Override
@@ -301,28 +349,6 @@ public class MyProfile extends SlidingActivity {
         catch (NullPointerException e){
             Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show();
         }
-    }
-    public void getUserInfoDetails(String id) {
-        UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<UserInfo> call = api.getUserDetails(id);
-        call.enqueue(new Callback<UserInfo>() {
-            @Override
-            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                if (response.body() != null) {
-                    Log.d("UserProfile Response:", response.toString());
-                    user = response.body();
-                    userName.setText(user.getFirstName() + " " + user.getLastName());
-                    userEmail.setText(user.getEmail());
-                    address.setText(user.getRoomNo() + ", " + user.getHostel());
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<UserInfo> call, Throwable t) {
-                Log.d("BookDetails fail", t.toString());
-            }
-        });
     }
 
     public void editProfile(View view) {

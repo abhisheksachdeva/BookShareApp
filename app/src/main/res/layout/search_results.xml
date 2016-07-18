@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_theme_background"
     android:orientation="vertical">
 
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/app_theme_background"
-        android:id="@+id/scrollView"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
@@ -22,8 +21,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="5dp"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="5dp">
 
                 <EditText
                     android:id="@+id/searchEditText"
@@ -64,41 +63,39 @@
             <Button
                 android:id="@+id/searchButton"
                 android:layout_width="80dp"
-                android:background="@drawable/button_search"
                 android:layout_height="40dp"
                 android:layout_gravity="center_horizontal"
+                android:background="@drawable/button_search"
                 android:onClick="search"
-                android:text="Search"
-                android:textColor="#FFFFFF"
                 android:shadowColor="#000000"
                 android:shadowDx="6"
                 android:shadowDy="6"
-                android:shadowRadius="7"/>
+                android:shadowRadius="7"
+                android:text="Search"
+                android:textColor="#FFFFFF" />
 
 
             <FrameLayout
                 android:id="@+id/container"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                />
-
-
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
+        android:id="@+id/scroll"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/scroll"
-        android:visibility="invisible"
-        android:src="@drawable/up"
-        android:background="@color/colorAccent"
-        android:layout_margin="16dp"
         android:layout_alignParentBottom="true"
-        android:foregroundGravity="center_vertical"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_gravity="right" />
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right"
+        android:layout_margin="16dp"
+        android:background="@color/Yellow"
+        android:foregroundGravity="center_vertical"
+        android:src="@drawable/up"
+        android:visibility="invisible" />
 </RelativeLayout>
 

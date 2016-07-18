@@ -44,13 +44,12 @@
             android:name=".ui.UserProfile"
             android:label="User Details"
             android:parentActivityName=".ui.MainActivity"
-             />
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.MyProfile"
             android:excludeFromRecents="true"
             android:label="My Profile"
-            android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/Theme.Sliding.Light" />
+            android:parentActivityName=".ui.MainActivity" />
         <activity android:name=".ui.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
