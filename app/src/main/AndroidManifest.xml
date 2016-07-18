@@ -38,12 +38,13 @@
             android:parentActivityName=".ui.MainActivity" />
         <activity
             android:name=".ui.BookDetailsActivity"
-            android:label="Book Details" />
+            android:label="Book Details"
+            />
         <activity
             android:name=".ui.UserProfile"
             android:label="User Details"
             android:parentActivityName=".ui.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+             />
         <activity
             android:name=".ui.MyProfile"
             android:excludeFromRecents="true"

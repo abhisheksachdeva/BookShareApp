@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#F44336</color>
-    <color name="colorPrimaryDark">#D32F2F</color>
-    <color name="colorAccent">#03A9F4</color>
-    <color name="app_theme_background">#FFFFFF</color>
-    <color name="app_theme_navigation_bar">#f44336</color>
-    <color name="app_theme_button_start">#b71c1c</color>
-    <color name="app_theme_button_center">#f44336</color>
-    <color name="app_theme_button_end">#ef5350</color>
-    <color name="Red">#ff0000</color>
+    <color name="colorPrimary">#4E342E</color>
+    <color name="colorPrimaryDark">#3E2723</color>
+    <color name="colorAccent">#FFD740</color>
+    <color name="Red">#ef020e</color>
+    <color name="Black">#3b3838</color>
+    <color name="White">#ffffff</color>
+    <color name="Green">#19FF10</color>
+    <color name="Peach">#FFDAB9</color>
+    <color name="Grey">#DDDDDD</color>
+    <color name="app_theme_background">#EEEEEE</color>
+    <color name="app_theme_toolbar">#e74c3c</color>
+    <color name="app_theme_navigation_bar">#bf3931</color>
+    <color name="app_theme_button_start">#f50057</color>
+    <color name="app_theme_button_center">#ff4081</color>
+    <color name="app_theme_button_end">#ff80ab</color>
+    <color name="app_theme_fab">#e91e63</color>
 </resources>
