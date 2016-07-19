@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     int backCounter=0;
     ImageView _profilePicture;
     String url;
+    NotificationFragment notifFragment;
 
     public String getResp() {
         return Resp;
@@ -86,6 +87,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setContentView(R.layout.activity_main);
         new ProgressLoader().execute(15);
+
+        notifFragment = (NotificationFragment)getSupportFragmentManager().findFragmentById(R.id.right_drawer);
 
         localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -278,20 +281,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
 
-        MenuItemCompat.setOnActionExpandListener(notifItem, new MenuItemCompat.OnActionExpandListener() {
-            @Override
-            public boolean onMenuItemActionExpand(MenuItem item) {
-                searchItem.setVisible(false);
-                return true;
-            }
-
-            @Override
-            public boolean onMenuItemActionCollapse(MenuItem item) {
-                searchItem.setVisible(true);
-                return true;
-            }
-        });
-
         notifItem.setIcon(R.drawable.ic_notifications_none_white_24dp);
 
         return true;
@@ -301,6 +290,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_notifs) {
+            notifFragment.getNotifications();
             Helper.setOld_total(Helper.getNew_total());
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END);
