@@ -73,9 +73,9 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:layout_gravity="bottom|center"
                         android:layout_marginBottom="24dp"
-                        android:layout_gravity="bottom|center">
+                        android:orientation="vertical">
 
                         <TextView
                             android:id="@+id/user_name"
@@ -101,8 +101,8 @@
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_horizontal"
                             android:text="Loading..."
-                            android:textSize="12dp"
-                            android:textColor="@android:color/white"/>
+                            android:textColor="@android:color/white"
+                            android:textSize="12dp" />
                     </LinearLayout>
 
                 </FrameLayout>
@@ -112,6 +112,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="80dp"
+                    android:orientation="horizontal">
+
+                    <ImageButton
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="editProfileClicked"
+                        android:src="@drawable/pen" />
+
+                    <ImageButton
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="changeImageClicked"
+                        android:src="@drawable/edit_image" />
+
+                    <ImageButton
+                        style="@style/Widget.AppCompat.Button.Colored"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:onClick="myBooksClicked"
+                        android:src="@drawable/my_books" />
+                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"

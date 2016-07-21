@@ -147,7 +147,17 @@ public class MyProfile extends AppCompatActivity {
         });
     }
 
-    public void  selectImage(View view){
+    public void myBooksClicked(View view) {
+        Intent i = new Intent(this, MyBooks.class);
+        startActivity(i);
+    }
+
+    public void editProfileClicked(View view) {
+        Intent i = new Intent(this, EditProfileActivity.class);
+        startActivity(i);
+    }
+
+    public void  changeImageClicked(View view){
         final CharSequence[] items = { "Take Photo", "Choose from Library",
                 "Cancel" };
         AlertDialog.Builder builder = new AlertDialog.Builder(MyProfile.this);

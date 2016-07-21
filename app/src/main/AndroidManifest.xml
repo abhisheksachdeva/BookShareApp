@@ -49,6 +49,7 @@
             android:name=".ui.MyProfile"
             android:excludeFromRecents="true"
             android:label="My Profile"
+            android:launchMode="singleTop"
             android:parentActivityName=".ui.MainActivity" />
         <activity android:name=".ui.SplashScreen">
             <intent-filter>
