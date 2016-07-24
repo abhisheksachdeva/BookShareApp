@@ -168,6 +168,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+    public void searchClicked(View view) {
+        Intent i = new Intent(this, SearchResultsActivity.class);
+        startActivity(i);
+    }
+
     class ProgressLoader extends AsyncTask<Integer, Integer, String> {
         @Override
         protected String doInBackground(Integer... params) {

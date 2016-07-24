@@ -66,9 +66,9 @@
                         android:layout_height="130dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="30dp"
-                        android:src="@drawable/ic_account_circle_black_24dp"
-                        app:civ_border_color="@color/app_theme_toolbar"
-                        app:civ_border_width="2dp" />
+                        android:src="@drawable/ic_perm_identity_white_24dp"
+                        app:civ_border_color="@android:color/white"
+                        app:civ_border_width="1dp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -105,6 +105,24 @@
                             android:textSize="12dp" />
                     </LinearLayout>
 
+                    <ImageView
+                        android:id="@+id/edit_profile_image"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="left|bottom"
+                        android:layout_margin="20dp"
+                        android:src="@drawable/change_image"
+                        android:onClick="changeImageClicked"/>
+
+                    <ImageView
+                        android:id="@+id/edit_profile"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_gravity="right|bottom"
+                        android:layout_margin="20dp"
+                        android:src="@drawable/pen"
+                        android:onClick="editProfileClicked"/>
+
                 </FrameLayout>
             </LinearLayout>
 
@@ -112,36 +130,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        style="@style/Widget.AppCompat.Button.Colored"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:onClick="editProfileClicked"
-                        android:src="@drawable/pen" />
-
-                    <ImageButton
-                        style="@style/Widget.AppCompat.Button.Colored"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:onClick="changeImageClicked"
-                        android:src="@drawable/edit_image" />
-
-                    <ImageButton
-                        style="@style/Widget.AppCompat.Button.Colored"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:onClick="myBooksClicked"
-                        android:src="@drawable/my_books" />
-                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"

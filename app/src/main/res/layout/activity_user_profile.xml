@@ -67,8 +67,8 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="30dp"
                         android:src="@drawable/ic_account_circle_black_24dp"
-                        app:civ_border_color="@color/app_theme_toolbar"
-                        app:civ_border_width="2dp" />
+                        app:civ_border_color="@android:color/white"
+                        app:civ_border_width="1dp" />
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -103,7 +103,25 @@
                             android:text="Loading..."
                             android:textColor="@android:color/white"
                             android:textSize="12dp" />
+
                     </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/call"
+                        android:layout_gravity="left|bottom"
+                        android:layout_margin="20dp"
+                        android:background="@android:color/transparent"
+                        android:onClick="callClicked"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/envelope"
+                        android:layout_gravity="right|bottom"
+                        android:layout_margin="20dp"
+                        android:onClick="emailClicked"/>
 
                 </FrameLayout>
             </LinearLayout>
@@ -112,36 +130,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:orientation="horizontal">
-                    <!--make background transparent-->
-                    <ImageButton
-                        style="@style/Widget.AppCompat.Button.Colored"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:onClick="callClicked"
-                        android:src="@drawable/phone" />
-
-                    <ImageButton
-                        style="@style/Widget.AppCompat.Button.Colored"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:onClick="chatClicked"
-                        android:src="@drawable/chat" />
-
-                    <ImageButton
-                        style="@style/Widget.AppCompat.Button.Colored"
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:onClick="emailClicked"
-                        android:src="@drawable/envelope" />
-                </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"

@@ -147,11 +147,6 @@ public class MyProfile extends AppCompatActivity {
         });
     }
 
-    public void myBooksClicked(View view) {
-        Intent i = new Intent(this, MyBooks.class);
-        startActivity(i);
-    }
-
     public void editProfileClicked(View view) {
         Intent i = new Intent(this, EditProfileActivity.class);
         startActivity(i);
@@ -359,18 +354,6 @@ public class MyProfile extends AppCompatActivity {
         catch (NullPointerException e){
             Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show();
         }
-    }
-
-    public void editProfile(View view) {
-        Intent i = new Intent(this, EditProfileActivity.class);
-        startActivity(i);
-        finish();
-    }
-
-    public void myBooks(View view) {
-        Intent i = new Intent(this, MyBooks.class);
-        startActivity(i);
-
     }
 
     public void changePassword(View view) {

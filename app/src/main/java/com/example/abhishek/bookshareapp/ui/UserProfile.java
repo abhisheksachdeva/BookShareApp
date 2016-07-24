@@ -116,12 +116,6 @@ public class UserProfile extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void chatClicked(View view) {
-
-        Intent i = new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", contactNo, null));
-        startActivity(i);
-    }
-
     public void emailClicked(View view) {
         Intent intent = new Intent(Intent.ACTION_SEND);
         intent.setType("text/html");
