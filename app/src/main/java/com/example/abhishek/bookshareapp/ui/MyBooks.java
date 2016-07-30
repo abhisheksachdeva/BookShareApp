@@ -69,6 +69,8 @@ public class MyBooks extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         noItemsTextView = (TextView) findViewById(R.id.no_items_text);
 
         prog = (ProgressBar) findViewById(R.id.progress);
@@ -89,7 +91,6 @@ public class MyBooks extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MyBooks.this, SearchResultsActivity.class);
                 startActivity(i);
-                finish();
             }
         });
 
@@ -158,8 +159,13 @@ public class MyBooks extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return(true);
+        }
 
-        return super.onOptionsItemSelected(item);
+        return(super.onOptionsItemSelected(item));
     }
 
     public void getUserBookList(String id) {

@@ -178,6 +178,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onClick(View widget) {
                 Intent i = new Intent(context, BookDetailsActivity.class);
                 i.putExtra("id", id);
+                Log.i(TAG, "Book Id : " + id);
                 context.startActivity(i);
             }
 

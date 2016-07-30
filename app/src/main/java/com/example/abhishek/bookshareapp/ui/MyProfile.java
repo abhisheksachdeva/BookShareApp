@@ -356,6 +356,11 @@ public class MyProfile extends AppCompatActivity {
         }
     }
 
+    public void editBooksClicked(View view){
+        Intent i = new Intent(this, MyBooks.class);
+        startActivity(i);
+    }
+
     public void changePassword(View view) {
         Intent i = new Intent(this, ChangePasswordActivity.class);
         startActivity(i);

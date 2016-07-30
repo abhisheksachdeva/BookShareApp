@@ -1,23 +1,15 @@
 package com.example.abhishek.bookshareapp.ui;
 
 import android.content.Context;
-import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.view.NestedScrollingChild;
-import android.support.v4.view.ScrollingView;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.ui.fragments.BookListFragment;
@@ -33,29 +25,22 @@ public class SearchResultsActivity extends AppCompatActivity {
     NestedScrollView scrollingView;
     FloatingActionButton button;
 
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent i = new Intent(this,MyBooks.class);
-        startActivity(i);
-        finish();
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results);
-        scrollingView =(NestedScrollView)findViewById(R.id.scrollView);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        scrollingView = (NestedScrollView) findViewById(R.id.scrollView);
         button = (FloatingActionButton) findViewById(R.id.scroll);
 
         scrollingView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                if(scrollY>1000){
+                if (scrollY > 1000) {
                     button.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     button.setVisibility(View.INVISIBLE);
 
                 }
@@ -75,14 +60,24 @@ public class SearchResultsActivity extends AppCompatActivity {
         r3 = (RadioButton) findViewById(R.id.author);
         bookListFragment = new BookListFragment();
 
-        getFragmentManager().beginTransaction()
+        getFragmentManager()
+                .beginTransaction()
                 .replace(R.id.container, bookListFragment)
                 .commit();
-
 
     }
 
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return (true);
+        }
+
+        return (super.onOptionsItemSelected(item));
+    }
 
     public void search(View view) {
 
@@ -91,8 +86,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
         if (r2.isChecked()) {
             mode = "title";
-        }
-        else if (r3.isChecked()) {
+        } else if (r3.isChecked()) {
             mode = "author";
         }
 
@@ -104,7 +98,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }

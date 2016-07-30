@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -42,6 +43,9 @@ public class UserProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         name = (TextView)findViewById(R.id.user_name);
         emailTextView = (TextView)findViewById(R.id.user_email);
         address = (TextView)findViewById(R.id.address);
@@ -65,6 +69,17 @@ public class UserProfile extends AppCompatActivity {
         userBooksList.setNestedScrollingEnabled(false);
 
         getUserInfoDetails(id);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return(true);
+        }
+
+        return(super.onOptionsItemSelected(item));
     }
 
     public void getUserInfoDetails(final String id){
