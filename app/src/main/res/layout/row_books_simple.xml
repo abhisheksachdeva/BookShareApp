@@ -11,54 +11,52 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center">
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/row_books_imageView"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            android:src="@android:drawable/ic_media_ff"/>
+            android:layout_weight="1"
+            android:src="@drawable/default_book_image" />
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_weight="3"
             android:layout_height="wrap_content"
+            android:layout_weight="3"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/row_books_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="2"
                 android:text="Title"
-                android:textStyle="bold"
                 android:textSize="16sp"
-                android:maxLines="2"/>
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/row_books_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Author"
-                android:textStyle="italic"
-                android:textSize="14sp" />
+                android:textSize="14sp"
+                android:textStyle="italic" />
 
             <RatingBar
-                android:layout_width="wrap_content"
+                android:id="@+id/row_books_rating"
                 style="?android:attr/ratingBarStyleSmall"
-                android:layout_height="wrap_content"
-                android:id="@+id/row_books_rating"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
 
             <TextView
                 android:id="@+id/row_books_ratings_count"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
-
 
     </LinearLayout>
 

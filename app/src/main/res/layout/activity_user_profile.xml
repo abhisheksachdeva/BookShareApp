@@ -1,21 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_theme_background"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scrollbars="vertical"
         android:clipToPadding="false"
+        android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,128 +20,130 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/la"
                 android:layout_width="match_parent"
-                android:layout_height="240dp"
-                android:orientation="vertical"
-                android:id="@+id/la">
+                android:layout_height="270dp"
+                android:orientation="vertical">
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/Black">
+
                     <ImageView
+                        android:id="@+id/background_image"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:id="@+id/background_image"
                         android:scaleType="centerCrop" />
 
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginTop="35dp"
-                            android:layout_marginEnd="50dp"
-                            android:orientation="horizontal">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginEnd="40dp"
+                        android:layout_marginTop="35dp"
+                        android:orientation="horizontal">
+
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:src="@drawable/ic_book_white_48dp"
-                            android:tint="@color/app_theme_toolbar"
-                            />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="no"
-                                android:textSize="16dp"
-                                android:textColor="@color/White"
-                                android:id="@+id/books_count" />
-                        </LinearLayout>
+                            android:tint="@color/app_theme_toolbar" />
+
+                        <TextView
+                            android:id="@+id/books_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="no"
+                            android:textColor="@color/White"
+                            android:textSize="16dp" />
+
+                    </LinearLayout>
+
                     <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/profile_picture"
                         android:layout_width="130dp"
                         android:layout_height="130dp"
-                        android:layout_gravity="center"
-                        android:id="@+id/profile_picture"
-                        android:src="@drawable/default_book_image"
-                        app:civ_border_width="2dp"
-                        app:civ_border_color="@color/app_theme_toolbar"/>
-                    <TextView
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="30dp"
+                        android:src="@drawable/ic_account_circle_black_24dp"
+                        app:civ_border_color="@android:color/white"
+                        app:civ_border_width="1dp" />
+
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/name"
-                        android:textColor="@color/White"
-                        android:text="Abhishek Sachdeva"
-                        android:textSize="20dp"
-                        android:layout_gravity="bottom|center_horizontal"
-                        android:layout_marginBottom="24dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/email"
-                        android:textColor="@color/White"
-                        android:text="abhis.uec2014@iitr.ac.in"
-                        android:textSize="14dp"
-                        android:layout_gravity="bottom|center_horizontal"
-                        android:layout_marginBottom="5dp"
-                        />
+                        android:layout_gravity="bottom|center"
+                        android:layout_marginBottom="24dp"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/user_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:text="Abhishek Sachdeva"
+                            android:textColor="@color/White"
+                            android:textSize="20dp" />
+
+                        <TextView
+                            android:id="@+id/user_email"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="bottom|center_horizontal"
+                            android:text="abhis.uec2014@iitr.ac.in"
+                            android:textColor="@color/White"
+                            android:textSize="14dp" />
+
+                        <TextView
+                            android:id="@+id/address"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="Loading..."
+                            android:textColor="@android:color/white"
+                            android:textSize="12dp" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/call"
+                        android:layout_gravity="left|bottom"
+                        android:layout_margin="20dp"
+                        android:background="@android:color/transparent"
+                        android:onClick="callClicked"/>
+
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:src="@drawable/envelope"
+                        android:layout_gravity="right|bottom"
+                        android:layout_margin="20dp"
+                        android:onClick="emailClicked"/>
 
                 </FrameLayout>
             </LinearLayout>
 
-            <android.support.v7.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:layout_marginBottom="10dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginBottom="10dp">
-
-                   M<TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Address"
-                    android:layout_gravity="center_horizontal"
-                    android:textSize="20dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/address"
-                        android:text="Loading..."
-                        android:layout_gravity="center_horizontal"
-                        android:textSize="16dp"/>
-
-                    <!--<View-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="1dp"-->
-                        <!--android:background="@android:color/darker_gray" />-->
-
-                </LinearLayout>
-            </android.support.v7.widget.CardView>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                >
+                android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:textSize="20dp"
-                    android:textStyle="bold"
-                    android:fontFamily="casual"
-                    android:textAlignment="center"
                     android:layout_gravity="center"
-                    android:text="Books owned" />
+                    android:layout_margin="10dp"
+                    android:fontFamily="casual"
+                    android:text="Books owned"
+                    android:textAlignment="center"
+                    android:textSize="20dp"
+                    android:textStyle="bold" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/userBooksLists"
+                    android:id="@+id/user_books_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="16dp" />
@@ -156,4 +155,3 @@
     </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
-

@@ -5,16 +5,16 @@
         >
         <item
             android:id="@+id/nav_mybooks"
-            android:icon="@drawable/ic_menu_camera"
-            android:title="My Books"
-            />
+            android:icon="@drawable/ic_book_white_24dp"
+            android:title="My Books" />
+
         <item
             android:id="@+id/nav_myprofile"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_perm_identity_white_24dp"
             android:title="My Profile" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_exit_to_app_white_24dp"
             android:title="Logout" />
     </group>
 

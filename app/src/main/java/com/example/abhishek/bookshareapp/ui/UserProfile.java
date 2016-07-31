@@ -1,21 +1,17 @@
 package com.example.abhishek.bookshareapp.ui;
 
-import android.graphics.Bitmap;
+import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
@@ -35,25 +31,30 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class UserProfile extends AppCompatActivity {
-    TextView name,email,address, booksCount;
+    TextView name,emailTextView,address, booksCount;
     UserInfo user;
     List<Book> booksList;
     BooksAdapterSimple adapter;
     ImageView profile_picture, background_image;
+    String contactNo;
+    String email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
-        name = (TextView)findViewById(R.id.name);
-        email = (TextView)findViewById(R.id.email);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        name = (TextView)findViewById(R.id.user_name);
+        emailTextView = (TextView)findViewById(R.id.user_email);
         address = (TextView)findViewById(R.id.address);
         profile_picture = (ImageView) findViewById(R.id.profile_picture);
         background_image = (ImageView) findViewById(R.id.background_image);
         booksCount = (TextView) findViewById(R.id.books_count);
         String id = getIntent().getExtras().getString("id");
 
-        RecyclerView userBooksList = (RecyclerView) findViewById(R.id.userBooksLists);
+        RecyclerView userBooksList = (RecyclerView) findViewById(R.id.user_books_list_view);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         userBooksList.setLayoutManager(layoutManager);
         booksList = new ArrayList<>();
@@ -70,6 +71,16 @@ public class UserProfile extends AppCompatActivity {
         getUserInfoDetails(id);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return(true);
+        }
+
+        return(super.onOptionsItemSelected(item));
+    }
 
     public void getUserInfoDetails(final String id){
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
@@ -81,7 +92,9 @@ public class UserProfile extends AppCompatActivity {
                     Log.d("UserProfile Response:", response.toString());
                     user = response.body();
                     name.setText(user.getName());
-                    email.setText(user.getEmail());
+                    email = user.getEmail();
+                    emailTextView.setText(email);
+                    contactNo = user.getContactNo();
                     String ad = user.getRoomNo()+", "+user.getHostel();
                     address.setText(ad);
                     String url = CommonUtilities.local_books_api_url + "image/"+id+"/";
@@ -107,6 +120,22 @@ public class UserProfile extends AppCompatActivity {
                 Log.d("BookDetails fail", t.toString());
             }
         });
+    }
+
+    public void callClicked(View view) {
+
+        String uri = "tel:" + contactNo.trim();
+
+        Intent i = new Intent(Intent.ACTION_DIAL);
+        i.setData(Uri.parse(uri));
+        startActivity(i);
+    }
+
+    public void emailClicked(View view) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/html");
+        intent.putExtra(Intent.EXTRA_EMAIL, email);
+        startActivity(Intent.createChooser(intent, "Send Email"));
     }
 
     @Override

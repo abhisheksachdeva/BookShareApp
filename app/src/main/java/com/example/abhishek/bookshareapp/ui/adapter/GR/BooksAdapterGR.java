@@ -90,7 +90,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
 
         holder.titleBook.setText(tempValues.getBookDetails().getTitle());
         holder.authorBook.setText(tempValues.getBookDetails().getAuthor().getAuthor_name());
-        Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.imageBook);
+        Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).placeholder(R.drawable.default_book_image).into(holder.imageBook);
         holder.ratingBook.setRating(tempValues.getRating());
         holder.ratingCount.setText(tempValues.getRatingCount() + " votes");
         title = tempValues.getBookDetails().getTitle();

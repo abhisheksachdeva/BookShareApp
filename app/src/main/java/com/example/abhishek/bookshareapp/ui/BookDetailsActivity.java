@@ -84,7 +84,7 @@ public class BookDetailsActivity extends AppCompatActivity{
         call.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
-                if(response.body()!=null) {
+                if(!response.body().getDetail().equals("Not found.")) {
                     Log.d("bda Response:", response.toString());
                     book = response.body();
                     Response= response.toString();
@@ -112,6 +112,9 @@ public class BookDetailsActivity extends AppCompatActivity{
                     usersAdapter.setBookId(book.getId());
                     usersAdapter.setBookTitle(book.getTitle());
                     usersAdapter.notifyDataSetChanged();
+                }
+                else {
+                    Toast.makeText(getApplicationContext(), "Book not found", Toast.LENGTH_SHORT).show();
                 }
                 TransitionManager.beginDelayedTransition(rootView);
                 progressBar.setVisibility(View.GONE);

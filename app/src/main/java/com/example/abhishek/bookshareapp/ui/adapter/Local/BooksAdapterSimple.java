@@ -68,7 +68,7 @@ public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.
         holder.titleBook.setText(tempValues.getTitle());
         holder.authorBook.setText(tempValues.getAuthor());
         if(!tempValues.getGrImgUrl().isEmpty()) {
-            Picasso.with(this.context).load(tempValues.getGrImgUrl()).into(holder.imageBook);
+            Picasso.with(this.context).load(tempValues.getGrImgUrl()).placeholder(R.drawable.default_book_image).into(holder.imageBook);
         }
         holder.ratingBook.setRating(tempValues.getRating());
         holder.ratingCount.setText(tempValues.getRatingsCount() + " votes");

@@ -99,10 +99,12 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         SpannableString content = null;
         final String bookId, notifId, targetId, bookTitle;
 
-        if (notifications.getMessage().equals("requested for")) {
+        String message = notifications.getMessage();
+
+        if (message.equals("requested for")) {
             content = new SpannableString(notifications.getSenderName() + " requested for " + notifications.getBookTitle()) ;
             content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 0, senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), senderNameLength + 15, senderNameLength + 15 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), senderNameLength + message.length(), senderNameLength + message.length() + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             bookId = notifications.getBookId();
             bookTitle = notifications.getBookTitle();
             targetId = notifications.getSenderId();
@@ -122,21 +124,23 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 }
             });
 
-        } else if (notifications.getMessage().equals("You rejected request for")) {
+        } else if (message.equals("You rejected request for")) {
             if (!notifications.getSenderId().equals(Helper.getUserId())) {
-                content = new SpannableString("You rejected your request by " + notifications.getSenderName() + " for " + notifications.getBookTitle());
-                content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 29, 29 + senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), 29 + senderNameLength + 5, 29 + senderNameLength + 5 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                String localMessage = "You rejected your request by ";
+                content = new SpannableString(localMessage + notifications.getSenderName() + " for " + notifications.getBookTitle());
+                content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), localMessage.length(), localMessage.length() + senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), localMessage.length() + senderNameLength + 5, localMessage.length() + senderNameLength + 5 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
-        } else if (notifications.getMessage().equals("has accepted your request for")) {
-            content = new SpannableString(notifications.getSenderName() + " " + notifications.getMessage() + " " + notifications.getBookTitle());
+        } else if (message.equals("has accepted your request for")) {
+            content = new SpannableString(notifications.getSenderName() + " " + message + " " + notifications.getBookTitle());
             content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 0, senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), senderNameLength + 31, senderNameLength + 31 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        } else if (notifications.getMessage().equals("You accepted request for")) {
+            content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), senderNameLength + message.length() + 2, senderNameLength + message.length() + 2 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        } else if (message.equals("You accepted request for")) {
             if (!notifications.getSenderId().equals(Helper.getUserId())) {
-                content = new SpannableString("You accepted the request by " + notifications.getSenderName() + " for " + notifications.getBookTitle());
-                content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 28, 28 + senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), 28 + senderNameLength + 5, 28 + senderNameLength + 5 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                String localMessage = "You accepted the request by ";
+                content = new SpannableString(localMessage + notifications.getSenderName() + " for " + notifications.getBookTitle());
+                content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), localMessage.length(), localMessage.length() + senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), localMessage.length() + senderNameLength + 5, localMessage.length() + senderNameLength + 5 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
         }
 
@@ -174,6 +178,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onClick(View widget) {
                 Intent i = new Intent(context, BookDetailsActivity.class);
                 i.putExtra("id", id);
+                Log.i(TAG, "Book Id : " + id);
                 context.startActivity(i);
             }
 

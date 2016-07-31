@@ -14,17 +14,21 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/app_theme_toolbar"
-            android:subtitleTextColor="@color/app_theme_background"
-            android:titleTextColor="@color/White"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@color/colorPrimary"
+                android:subtitleTextColor="@color/app_theme_background"
+                android:titleTextColor="@android:color/white"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/refresh_layout"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <FrameLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
@@ -40,18 +44,19 @@
                 </android.support.v7.widget.RecyclerView>
 
                 <android.support.design.widget.FloatingActionButton
-                    android:id="@+id/button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:layout_gravity="bottom|end"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/plus" />
+                    android:layout_gravity="right|bottom"
+                    android:src="@android:drawable/ic_menu_search"
+                    android:onClick="searchClicked"
+                    android:layout_margin="16dp"/>
 
-            </android.support.v4.widget.SwipeRefreshLayout>
+            </FrameLayout>
+
+        </android.support.v4.widget.SwipeRefreshLayout>
 
     </LinearLayout>
 
@@ -72,9 +77,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="?attr/actionBarSize"
         android:layout_gravity="end"
-        >
+        android:paddingTop="?attr/actionBarSize">
 
         <fragment
             android:id="@+id/right_drawer"

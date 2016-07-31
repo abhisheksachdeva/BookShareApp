@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -17,6 +16,7 @@ import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
+import com.example.abhishek.bookshareapp.utils.Helper;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,7 +75,11 @@ public class EditProfileActivity extends AppCompatActivity {
     public void saveClicked(View view) {
 
         userInfo = new UserInfo();
-
+        userInfo.setFirstName(firstName.getText().toString());
+        userInfo.setLastName(lastName.getText().toString());
+        userInfo.setRoomNo(roomNo.getText().toString());
+        userInfo.setContactNo(contactNo.getText().toString());
+        userInfo.setHostel(hostel);
 
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<UserInfo> call = usersAPI.editUserDetails(
@@ -95,11 +99,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     editor.putString("contact_no", contactNo.getText().toString());
                     editor.putString("hostel", hostel);
                     editor.apply();
-                    userInfo.setFirstName(firstName.getText().toString());
-                    userInfo.setLastName(lastName.getText().toString());
-                    userInfo.setRoomNo(roomNo.getText().toString());
-                    userInfo.setContactNo(contactNo.getText().toString());
-                    userInfo.setHostel(hostel);
+                    Helper.setUserName(firstName.getText().toString() + " " + lastName.getText().toString());
 
                 } else {
                     Log.i("harshit", "response.body() is null)");

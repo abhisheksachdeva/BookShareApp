@@ -69,6 +69,8 @@ public class MyBooks extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         noItemsTextView = (TextView) findViewById(R.id.no_items_text);
 
         prog = (ProgressBar) findViewById(R.id.progress);
@@ -89,7 +91,6 @@ public class MyBooks extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MyBooks.this, SearchResultsActivity.class);
                 startActivity(i);
-                finish();
             }
         });
 
@@ -158,8 +159,13 @@ public class MyBooks extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return(true);
+        }
 
-        return super.onOptionsItemSelected(item);
+        return(super.onOptionsItemSelected(item));
     }
 
     public void getUserBookList(String id) {
@@ -208,7 +214,7 @@ public class MyBooks extends AppCompatActivity {
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.RED);
+                background = new ColorDrawable(Color.GRAY);
                 xMark = ContextCompat.getDrawable(MyBooks.this, R.drawable.ic_clear_24dp);
                 xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 xMarkMargin = (int) MyBooks.this.getResources().getDimension(R.dimen.ic_clear_margin);
@@ -289,7 +295,7 @@ public class MyBooks extends AppCompatActivity {
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.RED);
+                background = new ColorDrawable(Color.GRAY);
                 initiated = true;
             }
 
@@ -383,7 +389,7 @@ public class MyBooks extends AppCompatActivity {
 
             if (itemsPendingRemoval.contains(rbook)) {
                 // we need to show the "undo" state of the row
-                viewHolder.itemView.setBackgroundColor(Color.RED);
+                viewHolder.itemView.setBackgroundColor(Color.GRAY);
                 viewHolder.titleBook.setVisibility(View.INVISIBLE);
                 viewHolder.authorBook.setText("Delete Book ?");
                 viewHolder.ratingCount.setVisibility(View.INVISIBLE);

@@ -19,8 +19,7 @@
             android:label="Login" />
         <activity
             android:name=".ui.SearchResultsActivity"
-            android:label="Search"
-            android:parentActivityName=".ui.MainActivity">
+            android:label="Search">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCHRESULTS" />
 
@@ -34,24 +33,20 @@
         <activity android:name=".ui.SignupActivity" />
         <activity
             android:name=".ui.MyBooks"
-            android:label="My Books"
-            android:parentActivityName=".ui.MainActivity" />
+            android:label="My Books" />
         <activity
             android:name=".ui.BookDetailsActivity"
             android:label="Book Details"
-            />
+            android:parentActivityName=".ui.MainActivity"/>
         <activity
             android:name=".ui.UserProfile"
-            android:label="User Details"
-            android:parentActivityName=".ui.MainActivity"
-             />
+            android:label="User Details" />
         <activity
             android:name=".ui.MyProfile"
             android:excludeFromRecents="true"
             android:label="My Profile"
-            android:parentActivityName=".ui.MainActivity"
-            android:taskAffinity=""
-            android:theme="@style/Theme.Sliding.Light" />
+            android:launchMode="singleTop"
+            android:parentActivityName=".ui.MainActivity" />
         <activity android:name=".ui.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

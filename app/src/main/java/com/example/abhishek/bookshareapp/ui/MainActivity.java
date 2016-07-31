@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -39,8 +39,8 @@ import com.example.abhishek.bookshareapp.api.models.LocalBooks.Book;
 import com.example.abhishek.bookshareapp.api.models.LocalBooks.BookList;
 import com.example.abhishek.bookshareapp.ui.adapter.Local.BooksAdapterSimple;
 import com.example.abhishek.bookshareapp.ui.fragments.NotificationFragment;
-import com.example.abhishek.bookshareapp.utils.Helper;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
+import com.example.abhishek.bookshareapp.utils.Helper;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -65,12 +65,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     String Resp;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
-    FloatingActionButton button;
     RecyclerView localBooksList;
     Toolbar toolbar;
     int backCounter=0;
     ImageView _profilePicture;
     String url;
+    NotificationFragment notifFragment;
 
     public String getResp() {
         return Resp;
@@ -88,7 +88,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
         new ProgressLoader().execute(15);
 
-        button = (FloatingActionButton) findViewById(R.id.button);
+        notifFragment = (NotificationFragment)getSupportFragmentManager().findFragmentById(R.id.right_drawer);
+
         localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         localBooksList.setLayoutManager(layoutManager);
@@ -121,15 +122,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         };
 
         localBooksList.addOnScrollListener(endlessScrollListener);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
-                startActivity(i);
-            }
-        });
-
         navigationView = (NavigationView) findViewById(R.id.left_drawer);
         navigationView.setNavigationItemSelectedListener(this);
 
@@ -140,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this._profilePicture = _profilePicture;
         String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
         this.url = url;
-        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).into(_profilePicture);
+        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_account_circle_black_24dp).into(_profilePicture);
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
 
@@ -154,9 +146,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.White));
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawerLayout.setScrimColor(Color.TRANSPARENT);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -174,6 +166,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         });
+    }
+
+    public void searchClicked(View view) {
+        Intent i = new Intent(this, SearchResultsActivity.class);
+        startActivity(i);
     }
 
     class ProgressLoader extends AsyncTask<Integer, Integer, String> {
@@ -270,19 +267,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
-        final MenuItem notif_item = menu.findItem(R.id.menu_notifs);
-
-        MenuItem searchItem = menu.findItem(R.id.search);
+        final MenuItem notifItem = menu.findItem(R.id.menu_notifs);
+        final MenuItem searchItem = menu.findItem(R.id.search);
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
-                notif_item.setVisible(false);
+                notifItem.setVisible(false);
                 return true;
             }
 
             @Override
             public boolean onMenuItemActionCollapse(MenuItem item) {
-                notif_item.setVisible(true);
+                notifItem.setVisible(true);
                 getLocalBooks("1");
                 return true;
             }
@@ -290,7 +286,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
 
-        notif_item.setIcon(R.drawable.notification);
+        notifItem.setIcon(R.drawable.ic_notifications_none_white_24dp);
 
         return true;
     }
@@ -299,7 +295,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_notifs) {
-            item.setIcon(R.drawable.notification);
+            notifFragment.getNotifications();
             Helper.setOld_total(Helper.getNew_total());
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END);
