@@ -37,7 +37,7 @@
         <activity
             android:name=".ui.BookDetailsActivity"
             android:label="Book Details"
-            android:parentActivityName=".ui.MainActivity"/>
+            android:parentActivityName=".ui.MainActivity" />
         <activity
             android:name=".ui.UserProfile"
             android:label="User Details" />
@@ -65,6 +65,7 @@
         <activity
             android:name=".ui.GuestActivity"
             android:label="Campus Books" />
+        <activity android:name=".ui.UserSearchActivity"></activity>
     </application>
 
 </manifest>

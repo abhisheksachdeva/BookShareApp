@@ -144,6 +144,10 @@ public interface UsersAPI {
             @Query("search") String searchQuery
     );
 
+    @GET("search-user/")
+    Call<List<UserInfo>> searchUser(
+            @Query("search") String searchQuery
+    );
 
     @Multipart
     @POST("/image/{id}/")
