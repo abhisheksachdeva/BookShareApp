@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/app_theme_background"
-    tools:context=".ui.MyBooks">
+    tools:context="com.sdsmdg.bookshareapp.BSA.ui.MyBooks">
 
     <TextView
         android:id="@+id/no_items_text"

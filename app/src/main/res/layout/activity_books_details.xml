@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:id="@+id/root_view"
-    tools:context="com.example.abhishek.bookshareapp.ui.BookDetailsActivity">
+    tools:context="com.sdsmdg.bookshareapp.BSA.ui.BookDetailsActivity">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll_view"
