@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -17,7 +18,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.abhishek.bookshareapp.R;
+import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
@@ -34,12 +35,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class BookDetailsActivity extends AppCompatActivity{
+public class BookDetailsActivity extends AppCompatActivity {
 
     public static final String TAG = BookDetailsActivity.class.getSimpleName();
 
     Book book;
-    String title,author,gr_id,gr_img_url;
+    String title, author, gr_id, gr_img_url;
     Long ratingsCount;
     Float rating;
     public TextView authorBook;
@@ -50,7 +51,7 @@ public class BookDetailsActivity extends AppCompatActivity{
     UsersAdapter usersAdapter;
     String bookId, bookTitleText;
     ImageView image;
-    public static  String Response;
+    public static String Response;
     ProgressBar progressBar;
     FrameLayout rootView;
     NestedScrollView scrollView;
@@ -63,6 +64,8 @@ public class BookDetailsActivity extends AppCompatActivity{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_details);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         authorBook = (TextView) findViewById(R.id.book_author);
         ratingBook = (RatingBar) findViewById(R.id.book_rating);
@@ -84,19 +87,22 @@ public class BookDetailsActivity extends AppCompatActivity{
         call.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
-                if(!response.body().getDetail().equals("Not found.")) {
-                    Log.d("bda Response:", response.toString());
+                if (response.body() != null && response.body().getDetail() == null) {
                     book = response.body();
-                    Response= response.toString();
+                    Response = response.toString();
                     Helper.setBookId(book.getId());
                     Helper.setBookTitle(book.getTitle());
-                    bookId=book.getId(); gr_id = book.getId();
+                    bookId = book.getId();
+                    gr_id = book.getId();
                     bookTitleText = book.getTitle();
                     bookTitle.setText(book.getTitle());
                     title = book.getTitle();
-                    authorBook.setText("by  "+book.getAuthor()); author = book.getAuthor();
-                    ratingCount.setText("(" + book.getRatingsCount().toString() + ")"); ratingsCount=book.getRatingsCount();
-                    ratingBook.setRating(book.getRating());rating = book.getRating();
+                    authorBook.setText("by  " + book.getAuthor());
+                    author = book.getAuthor();
+                    ratingCount.setText("(" + book.getRatingsCount().toString() + ")");
+                    ratingsCount = book.getRatingsCount();
+                    ratingBook.setRating(book.getRating());
+                    rating = book.getRating();
                     Picasso.with(BookDetailsActivity.this).load(book.getGrImgUrl()).into(image);
                     Blurry.with(BookDetailsActivity.this)
                             .radius(25)
@@ -112,8 +118,7 @@ public class BookDetailsActivity extends AppCompatActivity{
                     usersAdapter.setBookId(book.getId());
                     usersAdapter.setBookTitle(book.getTitle());
                     usersAdapter.notifyDataSetChanged();
-                }
-                else {
+                } else {
                     Toast.makeText(getApplicationContext(), "Book not found", Toast.LENGTH_SHORT).show();
                 }
                 TransitionManager.beginDelayedTransition(rootView);
@@ -133,7 +138,7 @@ public class BookDetailsActivity extends AppCompatActivity{
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         usersList.setLayoutManager(layoutManager);
         userInfoList = new ArrayList<>();
-        usersAdapter = new UsersAdapter(idd,this, userInfoList,bookTitleText,bookId, new UsersAdapter.OnItemClickListener() {
+        usersAdapter = new UsersAdapter(idd, this, userInfoList, bookTitleText, bookId, new UsersAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(UserInfo userInfo) {
                 Log.i(TAG, "onItemClick");
@@ -142,9 +147,20 @@ public class BookDetailsActivity extends AppCompatActivity{
         usersList.setAdapter(usersAdapter);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return (true);
+        }
+
+        return (super.onOptionsItemSelected(item));
+    }
+
     public void addToMyLibraryClicked(View view) {
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url);
+        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(), title, author, gr_id, ratingsCount, rating, gr_img_url);
         addBookCall.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
@@ -153,12 +169,13 @@ public class BookDetailsActivity extends AppCompatActivity{
                     Toast.makeText(BookDetailsActivity.this, response.body().getDetail(), Toast.LENGTH_SHORT).show();
 
                 } else {
-                    Toast.makeText(BookDetailsActivity.this, response.body().getDetail()+"ssss" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BookDetailsActivity.this, response.body().getDetail() + "ssss", Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
-                Log.i("AddBook","Failed!!");
+                Log.i("AddBook", "Failed!!");
             }
         });
     }

@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.abhishek.bookshareapp.R;
+import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
@@ -46,6 +46,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
     public int getItemViewType(int position) {
         if(userList.get(position).getId().equals(userId)) {
             return 1;
+        } else if(userId == null) {
+            return 2;
         }
         return 0;
     }
@@ -63,7 +65,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
             nameUser = (TextView)v.findViewById(R.id.row_user_name);
             imageUser = (ImageView)v.findViewById(R.id.row_user_image);
 
-            if(viewType == 0) {
+            if(viewType != 1) {
                 emailUser = (TextView) v.findViewById(R.id.row_user_email);
                 hostelUser = (TextView) v.findViewById(R.id.row_user_hostel);
                 request = (Button) v.findViewById(R.id.requestButton);
@@ -76,7 +78,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
     public UsersAdapter(String userId,Context context, List<UserInfo> userList, String bookTitle,String bookId,OnItemClickListener listener){
         this.userList =userList;
         this.context=context;
-        Log.d("UsersAdapter","Constructor");
+        Log.d("UsersAdapter", "Constructor");
         this.listener = listener;
         this.bookTitle=bookTitle;
         this.bookId=bookId;
@@ -89,9 +91,12 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
         if(viewType == 1) {
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.row_you_own_book, parent, false);
-        } else {
+        } else if(viewType == 0) {
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.row_users, parent, false);
+        } else {
+            v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.row_users_without_request, parent, false);
         }
         return new ViewHolder(v, context, viewType);
     }
@@ -101,7 +106,6 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
         final String id;
         tempValues = userList.get(position);
         id = tempValues.getId();
-
         if(!id.equals(userId)){
             holder.nameUser.setText(tempValues.getName());
             holder.emailUser.setText(tempValues.getEmail());
@@ -115,53 +119,55 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
                     context.startActivity(i);
                 }
             });
+            if(userId != null) {
+                holder.request.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
 
-            holder.request.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                        final CharSequence[] items = {"Yes", "No"};
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        builder.setTitle("Do you want to send a request?");
+                        builder.setItems(items, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                if (items[which].equals("Yes")) {
+                                    String process = "request";
+                                    UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                                    Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, id, "request for");
+                                    sendNotif.enqueue(new Callback<Notifications>() {
+                                        @Override
+                                        public void onResponse(Call<Notifications> call, Response<Notifications> response) {
+                                            Log.i("Email iD ", Helper.getUserEmail());
+                                            if (response.body() != null) {
+                                                Log.i("SendNotif", "Success");
+                                                Log.d("SendNotif", Helper.getUserId() + " ID" + id);
+                                                Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                                Log.i("response", response.body().getDetail());
+                                                holder.request.setEnabled(false);
 
-                    final CharSequence[] items = { "Yes", "No"};
-                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                    builder.setTitle("Do you want to send a request?");
-                    builder.setItems(items, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            if (items[which].equals("Yes")){
-                                String process = "request";
-                                UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                                Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(),Helper.getUserName(), bookId,bookTitle,process,id,"request for");
-                                sendNotif.enqueue(new Callback<Notifications>() {
-                                    @Override
-                                    public void onResponse(Call<Notifications> call, Response<Notifications> response) {
-                                        Log.i("Email iD ", Helper.getUserEmail());
-                                        if (response.body() != null) {
-                                            Log.i("SendNotif", "Success");
-                                            Log.d("SendNotif", Helper.getUserId()+" ID"+id);
-                                            Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                            Log.i("response", response.body().getDetail());
-                                            holder.request.setEnabled(false);
-
-                                        } else {
-                                            Log.i("SendNotif", "Response Null");
-                                            Toast.makeText(context, response.body().getDetail() , Toast.LENGTH_SHORT).show();
+                                            } else {
+                                                Log.i("SendNotif", "Response Null");
+                                                Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                            }
                                         }
-                                    }
-                                    @Override
-                                    public void onFailure(Call<Notifications> call, Throwable t) {
-                                        Log.i("SendNotif","Failed!!");
-                                        Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
-                                    }
-                                });
-                            }
-                            else{
-                                dialog.dismiss();
-                            }
-                        }
-                    });
-                    builder.show();
 
-                }
-            });
+                                        @Override
+                                        public void onFailure(Call<Notifications> call, Throwable t) {
+                                            Log.i("SendNotif", "Failed!!");
+                                            Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                                        }
+                                    });
+                                } else {
+                                    dialog.dismiss();
+                                }
+                            }
+                        });
+                        builder.show();
+
+
+                    }
+                });
+            }
         }
 
         try {

@@ -5,11 +5,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.abhishek.bookshareapp.R;
+import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
@@ -30,11 +31,24 @@ public class ChangePasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         prefs = getSharedPreferences("Token", MODE_PRIVATE);
         id = prefs.getString("id", null);
         token = prefs.getString("token", null);
 
         newPasswordInput = (EditText) findViewById(R.id.new_password);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return(true);
+        }
+
+        return(super.onOptionsItemSelected(item));
     }
 
     public void onSaveClicked(View view) {

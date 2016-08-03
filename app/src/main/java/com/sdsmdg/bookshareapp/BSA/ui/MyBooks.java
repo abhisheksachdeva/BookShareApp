@@ -31,7 +31,7 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.abhishek.bookshareapp.R;
+import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
@@ -76,7 +76,6 @@ public class MyBooks extends AppCompatActivity {
         prog = (ProgressBar) findViewById(R.id.progress);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         new ProgressLoader().execute(15);
-
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
         String id = preferences.getString("id", "");

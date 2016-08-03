@@ -17,12 +17,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.abhishek.bookshareapp.R;
+import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
@@ -33,6 +34,7 @@ import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.FileUtils;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.sdsmdg.bookshareapp.BSA.utils.PermissionUtils;
+import com.sdsmdg.bookshareapp.BSA.utils.SPDataLoader;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
@@ -71,11 +73,24 @@ public class MyProfile extends AppCompatActivity {
     BooksAdapterSimple adapter;
     ImageView backgroundImageView;
 
+    SPDataLoader loader = new SPDataLoader();
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        userName.setText(loader.getUserName(this));
+        userEmail.setText(loader.getUserEmail(this));
+        address.setText(loader.getRoomNo(this) + ", " + loader.getHostel(this));
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("My Profile");
         setContentView(R.layout.activity_my_profile);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         profilePicture = (CircleImageView)findViewById(R.id.profile_picture);
         userName = (TextView) findViewById(R.id.user_name);
@@ -102,6 +117,17 @@ public class MyProfile extends AppCompatActivity {
         getUserInfoDetails(id);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return(true);
+        }
+
+        return(super.onOptionsItemSelected(item));
+    }
+
     public void getUserInfoDetails(String id) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<UserInfo> call = api.getUserDetails(id);
@@ -111,14 +137,13 @@ public class MyProfile extends AppCompatActivity {
                 if (response.body() != null) {
                     Log.d("UserProfile Response:", response.toString());
                     user = response.body();
-                    userName.setText(user.getFirstName() + " " + user.getLastName());
-                    userEmail.setText(user.getEmail());
-                    address.setText(user.getRoomNo() + ", " + user.getHostel());
                     userBooksList.clear();
                     userBooksList.addAll(user.getUserBookList());
                     booksCount.setText(String.valueOf(userBooksList.size()));
                     adapter.notifyDataSetChanged();
+
                     Picasso.with(getApplicationContext()).load(url).into(profilePicture);
+
                     Picasso.with(getApplicationContext()).load(url).into(backgroundImageView, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
@@ -381,11 +406,6 @@ public class MyProfile extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 
 

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.abhishek.bookshareapp">
+    package="com.sdsmdg.bookshareapp.BSA">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -36,8 +36,7 @@
             android:label="My Books" />
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.BookDetailsActivity"
-            android:label="Book Details"
-            android:parentActivityName="com.sdsmdg.bookshareapp.BSA.ui.MainActivity" />
+            android:label="Book Details" />
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.UserProfile"
             android:label="User Details" />
@@ -45,8 +44,7 @@
             android:name="com.sdsmdg.bookshareapp.BSA.ui.MyProfile"
             android:excludeFromRecents="true"
             android:label="My Profile"
-            android:launchMode="singleTop"
-            android:parentActivityName="com.sdsmdg.bookshareapp.BSA.ui.MainActivity" />
+            android:launchMode="singleTop" />
         <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -60,8 +58,7 @@
             android:parentActivityName="com.sdsmdg.bookshareapp.BSA.ui.MyProfile" />
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.ChangePasswordActivity"
-            android:label="Change Password"
-            android:parentActivityName="com.sdsmdg.bookshareapp.BSA.ui.MyProfile" />
+            android:label="Change Password" />
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.GuestActivity"
             android:label="Campus Books" />

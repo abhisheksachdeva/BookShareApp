@@ -1,4 +1,4 @@
-package com.example.abhishek.bookshareapp;
+package com.sdsmdg.bookshareapp.BSA;
 
 import org.junit.Test;
 

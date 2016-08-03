@@ -32,7 +32,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
-import com.example.abhishek.bookshareapp.R;
+import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
@@ -353,6 +353,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //who cares
             }
 
+        } else if(id == R.id.nav_usersearch) {
+            Intent i = new Intent(this, UserSearchActivity.class);
+            startActivity(i);
         }
 
         drawerLayout.closeDrawer(GravityCompat.START);
