@@ -11,6 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
+        android:foreground="@drawable/window_dim"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -168,5 +169,13 @@
         </LinearLayout>
 
     </android.support.v4.widget.NestedScrollView>
-
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="313dp"
+        android:layout_height="164dp"
+        android:scaleX="0.4"
+        android:scaleY="0.4"
+        android:layout_gravity="center"
+        android:indeterminate="true"
+        android:indeterminateDrawable="@drawable/progress_indeterminate_horizontal" />
 </android.support.design.widget.CoordinatorLayout>

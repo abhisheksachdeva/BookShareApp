@@ -3,6 +3,7 @@ package com.example.abhishek.bookshareapp.ui;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -75,7 +76,8 @@ public class BookDetailsActivity extends AppCompatActivity{
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         rootView = (FrameLayout) findViewById(R.id.root_view);
         scrollView = (NestedScrollView) findViewById(R.id.scroll_view);
-        scrollView.setVisibility(View.INVISIBLE);
+//        scrollView.setVisibility(View.INVISIBLE);
+        scrollView.getForeground().setAlpha(180);
 
 
         bookDescription.setOnClickListener(new View.OnClickListener() {
@@ -139,8 +141,16 @@ public class BookDetailsActivity extends AppCompatActivity{
                     Toast.makeText(getApplicationContext(), "Book not found", Toast.LENGTH_SHORT).show();
                 }
                 TransitionManager.beginDelayedTransition(rootView);
-                beprogressBar.setVisibility(View.GONE);
-                scrollView.setVisibility(View.VISIBLE);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.GONE);
+                        scrollView.getForeground().setAlpha(0);
+
+                    }
+                }, 1000);
+
             }
 
             @Override
@@ -148,7 +158,9 @@ public class BookDetailsActivity extends AppCompatActivity{
                 Log.d("BookDetails fail", t.toString());
                 TransitionManager.beginDelayedTransition(rootView);
                 progressBar.setVisibility(View.GONE);
-                scrollView.setVisibility(View.VISIBLE);
+//                scrollView.setVisibility(View.VISIBLE);
+                scrollView.getForeground().setAlpha(0);
+
             }
         });
         RecyclerView usersList = (RecyclerView) findViewById(R.id.reader_list);

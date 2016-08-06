@@ -6,10 +6,17 @@
     android:layout_height="match_parent"
     tools:context="com.example.abhishek.bookshareapp.ui.GuestActivity">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/frameLayout"
+        android:foreground="@drawable/window_dim">
+
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/swipe_to_refresh_layout"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/local_books_list"
@@ -18,10 +25,14 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    </FrameLayout>
+
     <ProgressBar
         android:id="@+id/progress_bar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="313dp"
+        android:layout_height="164dp"
+        android:scaleX="0.4"
+        android:scaleY="0.4"
         android:layout_gravity="center"
         android:indeterminate="true"
         android:indeterminateDrawable="@drawable/progress_indeterminate_horizontal" />

@@ -1,7 +1,6 @@
 
 package com.example.abhishek.bookshareapp.ui;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -9,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -29,7 +27,6 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,7 +54,6 @@ public class MyBooks extends AppCompatActivity {
     BookAdapter adapter;
     RecyclerView mRecyclerView;
     Integer count = 1;
-    ProgressDialog progress; // this is not used ,in this activity as of now...Just for testing purposes.
     ProgressBar prog;
     String Resp;
 
@@ -76,12 +72,10 @@ public class MyBooks extends AppCompatActivity {
         prog = (ProgressBar) findViewById(R.id.progress);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         frameLayout = (FrameLayout) findViewById(R.id.myBookFLayout);
-//        frameLayout.getForeground().setAlpha(180);
+        frameLayout.getForeground().setAlpha(180);
 
         prog.bringToFront();
 
-//        new ProgressLoader().execute(15);
-//        prog.setIndeterminate(true);
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
         String id = preferences.getString("id", "");
 
@@ -101,60 +95,6 @@ public class MyBooks extends AppCompatActivity {
 
     }
 
-    class ProgressLoader extends AsyncTask<Integer, Integer, String> {
-        @Override
-        protected String doInBackground(Integer... params) {
-            for (; count <= params[0]; count++) {
-                try {
-                    Thread.sleep(1000);
-                    Log.d("MBAs", getResp() + "+" + count.toString());
-                    if (getResp() != null) {
-                        break;
-                    }
-                    publishProgress(count);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (getResp() != null) {
-                    break;
-                }
-            }
-
-
-            return "Task Completed.";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (getResp() == null) {
-                Toast.makeText(MyBooks.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
-                prog.setVisibility(View.INVISIBLE);
-            } else {
-                prog.setVisibility(View.INVISIBLE);
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-//            progress=new ProgressDialog(MyBooks.this);
-//            progress.setMessage("Wont Take Long Bruh!...");
-//            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//            progress.setIndeterminate(true);
-//            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.loading));
-
-//            prog.setMax(5);
-//            prog.setProgress(0);
-////            progress.setCancelable(false);
-//            prog.setVisibility(View.VISIBLE);
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-//            progress.setProgress(values[0]);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -184,14 +124,23 @@ public class MyBooks extends AppCompatActivity {
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);
                     adapter.notifyDataSetChanged();
-//                    frameLayout.getForeground().setAlpha(0);
-                    prog.setVisibility(View.GONE);
+
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            frameLayout.getForeground().setAlpha(0);
+                            prog.setVisibility(View.GONE);
+                        }
+                    }, 1000);
                 }
             }
 
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 Log.d("BookDetails fail", t.toString());
+                frameLayout.getForeground().setAlpha(0);
+                prog.setVisibility(View.GONE);
             }
         });
     }

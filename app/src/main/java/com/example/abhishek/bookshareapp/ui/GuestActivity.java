@@ -1,6 +1,7 @@
 package com.example.abhishek.bookshareapp.ui;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -31,7 +32,7 @@ public class GuestActivity extends AppCompatActivity {
 
     final String TAG = GuestActivity.class.getSimpleName();
 
-    FrameLayout rootView;
+    FrameLayout rootView,innerLayout;
     RecyclerView localBookList;
     List<Book> booksList = new ArrayList<>();
     BooksAdapterSimple adapter;
@@ -45,7 +46,8 @@ public class GuestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_guest);
 
         rootView = (FrameLayout) findViewById(R.id.root_view);
-
+        innerLayout = (FrameLayout) findViewById(R.id.frameLayout);
+        innerLayout.getForeground().setAlpha(180);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
 
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
@@ -70,8 +72,6 @@ public class GuestActivity extends AppCompatActivity {
         };
 
         localBookList.addOnScrollListener(endlessScrollListener);
-
-        refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh_layout);
 
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh_layout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -104,7 +104,16 @@ public class GuestActivity extends AppCompatActivity {
                     refreshLayout.setRefreshing(false);
                 }
                 TransitionManager.beginDelayedTransition(rootView);
-                progressBar.setVisibility(View.GONE);
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.GONE);
+                        innerLayout.getForeground().setAlpha(0);
+                    }
+                }, 1000);
+
             }
 
             @Override
@@ -113,6 +122,8 @@ public class GuestActivity extends AppCompatActivity {
                 refreshLayout.setRefreshing(false);
                 TransitionManager.beginDelayedTransition(rootView);
                 progressBar.setVisibility(View.GONE);
+                innerLayout.getForeground().setAlpha(0);
+
             }
         });
 

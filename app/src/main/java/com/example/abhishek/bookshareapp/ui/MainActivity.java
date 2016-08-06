@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             progress.setMessage("Turning To Page 394...");
             progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progress.setIndeterminate(true);
-            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.loading));
+            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_indeterminate_horizontal));
             progress.setMax(5);
             progress.setProgress(0);
             progress.setCancelable(false);

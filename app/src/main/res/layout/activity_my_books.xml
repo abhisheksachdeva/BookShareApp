@@ -10,6 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/myBookFLayout"
+        android:foreground="@drawable/window_dim"
         tools:context=".ui.MyBooks"
         >
         <RelativeLayout
@@ -57,7 +58,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/button"
-                android:src="@drawable/pen"
+                android:src="@drawable/plus"
                 android:background="@color/Red"
                 android:layout_marginBottom="48dp"
                 android:layout_alignParentBottom="true"
