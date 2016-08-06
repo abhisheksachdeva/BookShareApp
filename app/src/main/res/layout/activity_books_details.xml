@@ -27,7 +27,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:scaleType="centerCrop"
-                    android:focusableInTouchMode="true"
                     />
 
                 <LinearLayout
@@ -44,7 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/White"
                         android:textSize="20sp" />
 
                     <TextView
@@ -52,7 +51,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/White"
                         android:textSize="16dp"
                         android:textStyle="italic" />
 
@@ -71,7 +70,7 @@
                             android:id="@+id/ratings_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@android:color/white" />
+                            android:textColor="@color/White" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -95,6 +94,19 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/description"
+                android:layout_margin="16dp"
+                android:maxLines="3"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:text="Book Description"
+                android:ellipsize="end"
+                android:textSize="18sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
                 android:layout_margin="16dp"
                 android:text="Readers in campus"
                 android:textSize="18sp" />
@@ -110,8 +122,10 @@
 
     <ProgressBar
         android:id="@+id/progress_bar"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="313dp"
+        android:layout_height="164dp"
+        android:scaleX="0.4"
+        android:scaleY="0.4"
         android:layout_gravity="center"
         android:indeterminate="true"
         android:indeterminateDrawable="@drawable/progress_indeterminate_horizontal" />

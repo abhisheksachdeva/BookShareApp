@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,9 +16,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
+import com.example.abhishek.bookshareapp.api.BooksAPI;
 import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.Book;
+import com.example.abhishek.bookshareapp.api.models.BookDescription;
+import com.example.abhishek.bookshareapp.api.models.GoodreadsResponse2;
+import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 import com.example.abhishek.bookshareapp.utils.Helper;
 import com.squareup.picasso.Picasso;
 
@@ -32,11 +37,14 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
     private Context context;
     private List<Book> bookList;
     Book tempValues=null;
+    BookDescription tempDescp;
+    String description;
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
         public void onItemClick(Book book);
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder{
         public TextView titleBook;
@@ -83,14 +91,14 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
         final String email,title,author,gr_id,gr_img_url;
+        final Integer search_id;
         final Long ratingsCount;
         final Float rating;
         holder.add.setEnabled(true);
         tempValues = bookList.get(position);
-
         holder.titleBook.setText(tempValues.getBookDetails().getTitle());
         holder.authorBook.setText(tempValues.getBookDetails().getAuthor().getAuthor_name());
-        Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).placeholder(R.drawable.default_book_image).into(holder.imageBook);
+        Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.imageBook);
         holder.ratingBook.setRating(tempValues.getRating());
         holder.ratingCount.setText(tempValues.getRatingCount() + " votes");
         title = tempValues.getBookDetails().getTitle();
@@ -100,7 +108,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
         rating=tempValues.getRating();
         ratingsCount = Long.parseLong(tempValues.getRatingCount());
         gr_id= tempValues.getId().toString();
-
+        search_id=tempValues.getBookDetails().getId();
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,6 +120,34 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
             @Override
             public void onClick(View v) {
 
+                Log.d("ssswwwqqq",tempValues.getBookDetails().getId()+" ID");
+
+                BooksAPI api = NetworkingFactory.getGRInstance().getBooksApi();
+                Call<GoodreadsResponse2> call = api.getBookDescription(search_id, CommonUtilities.API_KEY);
+                call.enqueue(new Callback<GoodreadsResponse2>() {
+                    @Override
+                    public void onResponse(Call<GoodreadsResponse2> call, Response<GoodreadsResponse2> response) {
+                        if(response!=null){
+                            tempDescp= response.body().getbDesc();
+                            description= tempDescp.getBDescription();
+                            description= Html.fromHtml(description).toString();
+                            if(description.length()>1000){
+                                description=description.substring(0,990)+"...";
+                            }
+                        }
+                        else {
+                            description="No Description Available";
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<GoodreadsResponse2> call, Throwable t) {
+                        description="No Description Available";
+                    }
+                });
+
+
                 final CharSequence[] items = { "Yes", "No"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Do you want to add this Book?");
@@ -120,7 +156,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                     public void onClick(DialogInterface dialog, int which) {
                         if (items[which].equals("Yes")){
                             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                            Call<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> addBook = usersAPI.addBook(email,title, author,gr_id,ratingsCount,rating,gr_img_url);
+                            Call<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> addBook = usersAPI.addBook(email,title, author,gr_id,ratingsCount,rating,gr_img_url,description);
                             addBook.enqueue(new Callback<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book>() {
                                 @Override
                                 public void onResponse(Call<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> call, Response<com.example.abhishek.bookshareapp.api.models.LocalBooks.Book> response) {

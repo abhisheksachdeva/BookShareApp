@@ -7,6 +7,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
@@ -39,11 +40,11 @@ public class BookDetailsActivity extends AppCompatActivity{
     public static final String TAG = BookDetailsActivity.class.getSimpleName();
 
     Book book;
-    String title,author,gr_id,gr_img_url;
+    String title,author,gr_id,gr_img_url,description;
     Long ratingsCount;
     Float rating;
     public TextView authorBook;
-    TextView bookTitle;
+    TextView bookTitle,bookDescription;
     public RatingBar ratingBook;
     public TextView ratingCount;
     List<UserInfo> userInfoList;
@@ -54,6 +55,7 @@ public class BookDetailsActivity extends AppCompatActivity{
     ProgressBar progressBar;
     FrameLayout rootView;
     NestedScrollView scrollView;
+    Boolean showMore=false;
 
     public static String getResponse() {
         return Response;
@@ -69,10 +71,28 @@ public class BookDetailsActivity extends AppCompatActivity{
         ratingCount = (TextView) findViewById(R.id.ratings_count);
         image = (ImageView) findViewById(R.id.book_image);
         bookTitle = (TextView) findViewById(R.id.book_title);
+        bookDescription = (TextView) findViewById(R.id.description);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         rootView = (FrameLayout) findViewById(R.id.root_view);
         scrollView = (NestedScrollView) findViewById(R.id.scroll_view);
         scrollView.setVisibility(View.INVISIBLE);
+
+
+        bookDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMore=!showMore;
+
+                if(showMore) {
+                    bookDescription.setMaxLines(50);
+                    bookDescription.setEllipsize(null);
+                }else {
+                    bookDescription.setMaxLines(4);
+                    bookDescription.setEllipsize(TextUtils.TruncateAt.END);
+                }
+            }
+        });
+
 
         SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
@@ -84,7 +104,7 @@ public class BookDetailsActivity extends AppCompatActivity{
         call.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
-                if(!response.body().getDetail().equals("Not found.")) {
+                if (response.body() != null && response.body().getDetail() == null) {
                     Log.d("bda Response:", response.toString());
                     book = response.body();
                     Response= response.toString();
@@ -94,6 +114,8 @@ public class BookDetailsActivity extends AppCompatActivity{
                     bookTitleText = book.getTitle();
                     bookTitle.setText(book.getTitle());
                     title = book.getTitle();
+                    bookDescription.setText(book.getDescription());
+                    description=book.getDescription();
                     authorBook.setText("by  "+book.getAuthor()); author = book.getAuthor();
                     ratingCount.setText("(" + book.getRatingsCount().toString() + ")"); ratingsCount=book.getRatingsCount();
                     ratingBook.setRating(book.getRating());rating = book.getRating();
@@ -117,7 +139,7 @@ public class BookDetailsActivity extends AppCompatActivity{
                     Toast.makeText(getApplicationContext(), "Book not found", Toast.LENGTH_SHORT).show();
                 }
                 TransitionManager.beginDelayedTransition(rootView);
-                progressBar.setVisibility(View.GONE);
+                beprogressBar.setVisibility(View.GONE);
                 scrollView.setVisibility(View.VISIBLE);
             }
 
@@ -144,7 +166,7 @@ public class BookDetailsActivity extends AppCompatActivity{
 
     public void addToMyLibraryClicked(View view) {
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url);
+        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url,description);
         addBookCall.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {

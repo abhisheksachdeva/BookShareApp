@@ -1,48 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/app_theme_background"
-    tools:context=".ui.MyBooks">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/no_items_text"
+    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:text="No books in your collection"
-        android:textSize="18sp"
-        android:visibility="gone" />
+        android:id="@+id/myBookFLayout"
+        tools:context=".ui.MyBooks"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="2dp"
-        android:layout_weight="1"
-        android:scrollbars="vertical" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textSize="18sp"
+                android:text="No books in your collection"
+                android:id="@+id/no_items_text"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/textView"
+                android:fontFamily="casual"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:layout_gravity="center"
+                android:textSize="25dp"
+                android:layout_marginTop="5dp"
+                android:textStyle="bold|italic"
+                android:text="Books that you've got !"
+                android:layout_below="@+id/toolbar"
+                android:layout_centerHorizontal="true" />
+
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:paddingBottom="@dimen/activity_vertical_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin"
+                android:paddingTop="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:scrollbars="vertical"
+                android:layout_marginBottom="2dp"
+                android:layout_below="@+id/textView"/>
+
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/button"
+                android:src="@drawable/pen"
+                android:background="@color/Red"
+                android:layout_marginBottom="48dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_gravity="right" />
+        </RelativeLayout>
+    </FrameLayout>
 
     <ProgressBar
+        android:layout_width="313dp"
         android:id="@+id/progress"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_height="164dp"
         android:layout_centerHorizontal="true"
         android:layout_centerInParent="true"
         android:foregroundGravity="center"
+        android:scaleX="0.4"
+        android:scaleY="0.4"
         android:indeterminate="true"
-        android:indeterminateDrawable="@drawable/progress_indeterminate_horizontal" />
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_gravity="right"
-        android:layout_margin="16dp"
-        android:background="@color/Yellow"
-        android:src="@drawable/ic_add_white_24dp" />
+        android:indeterminateDrawable="@drawable/progress_indeterminate_horizontal"
+        />
 
 </RelativeLayout>

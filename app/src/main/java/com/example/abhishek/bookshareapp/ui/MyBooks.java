@@ -25,9 +25,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,14 +53,15 @@ import retrofit2.Response;
 
 public class MyBooks extends AppCompatActivity {
     List<Book> booksList;
+    FrameLayout frameLayout;
     BookAdapter adapter;
     RecyclerView mRecyclerView;
     Integer count = 1;
     ProgressDialog progress; // this is not used ,in this activity as of now...Just for testing purposes.
     ProgressBar prog;
     String Resp;
-    TextView noItemsTextView;
 
+    TextView noItemsTextView;
     public String getResp() {
         return Resp;
     }
@@ -69,15 +72,16 @@ public class MyBooks extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         noItemsTextView = (TextView) findViewById(R.id.no_items_text);
-
         prog = (ProgressBar) findViewById(R.id.progress);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        new ProgressLoader().execute(15);
+        frameLayout = (FrameLayout) findViewById(R.id.myBookFLayout);
+//        frameLayout.getForeground().setAlpha(180);
 
+        prog.bringToFront();
 
+//        new ProgressLoader().execute(15);
+//        prog.setIndeterminate(true);
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
         String id = preferences.getString("id", "");
 
@@ -91,6 +95,7 @@ public class MyBooks extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MyBooks.this, SearchResultsActivity.class);
                 startActivity(i);
+                finish();
             }
         });
 
@@ -138,10 +143,10 @@ public class MyBooks extends AppCompatActivity {
 //            progress.setIndeterminate(true);
 //            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.loading));
 
-            prog.setMax(5);
-            prog.setProgress(0);
-//            progress.setCancelable(false);
-            prog.setVisibility(View.VISIBLE);
+//            prog.setMax(5);
+//            prog.setProgress(0);
+////            progress.setCancelable(false);
+//            prog.setVisibility(View.VISIBLE);
 
         }
 
@@ -159,13 +164,8 @@ public class MyBooks extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return(true);
-        }
 
-        return(super.onOptionsItemSelected(item));
+        return super.onOptionsItemSelected(item);
     }
 
     public void getUserBookList(String id) {
@@ -184,6 +184,8 @@ public class MyBooks extends AppCompatActivity {
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);
                     adapter.notifyDataSetChanged();
+//                    frameLayout.getForeground().setAlpha(0);
+                    prog.setVisibility(View.GONE);
                 }
             }
 
@@ -214,7 +216,7 @@ public class MyBooks extends AppCompatActivity {
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.GRAY);
+                background = new ColorDrawable(Color.RED);
                 xMark = ContextCompat.getDrawable(MyBooks.this, R.drawable.ic_clear_24dp);
                 xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 xMarkMargin = (int) MyBooks.this.getResources().getDimension(R.dimen.ic_clear_margin);
@@ -295,7 +297,7 @@ public class MyBooks extends AppCompatActivity {
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.GRAY);
+                background = new ColorDrawable(Color.RED);
                 initiated = true;
             }
 
@@ -389,7 +391,7 @@ public class MyBooks extends AppCompatActivity {
 
             if (itemsPendingRemoval.contains(rbook)) {
                 // we need to show the "undo" state of the row
-                viewHolder.itemView.setBackgroundColor(Color.GRAY);
+                viewHolder.itemView.setBackgroundColor(Color.RED);
                 viewHolder.titleBook.setVisibility(View.INVISIBLE);
                 viewHolder.authorBook.setText("Delete Book ?");
                 viewHolder.ratingCount.setVisibility(View.INVISIBLE);
