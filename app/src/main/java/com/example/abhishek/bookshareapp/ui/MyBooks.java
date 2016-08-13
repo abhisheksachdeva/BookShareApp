@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -56,6 +57,8 @@ public class MyBooks extends AppCompatActivity {
     Integer count = 1;
     ProgressBar prog;
     String Resp;
+    LinearLayout l1, l2 ;
+    Button dismiss;
 
     TextView noItemsTextView;
     public String getResp() {
@@ -71,6 +74,20 @@ public class MyBooks extends AppCompatActivity {
         noItemsTextView = (TextView) findViewById(R.id.no_items_text);
         prog = (ProgressBar) findViewById(R.id.progress);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        l1= (LinearLayout)findViewById(R.id.layoutp1);
+        l2= (LinearLayout)findViewById(R.id.layoutp2);
+        dismiss = (Button)findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                frameLayout.getForeground().setAlpha(0);
+                prog.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+            }
+        });
+
         frameLayout = (FrameLayout) findViewById(R.id.myBookFLayout);
         frameLayout.getForeground().setAlpha(180);
 
@@ -131,6 +148,11 @@ public class MyBooks extends AppCompatActivity {
                         public void run() {
                             frameLayout.getForeground().setAlpha(0);
                             prog.setVisibility(View.GONE);
+                            l1.setVisibility(View.GONE);
+                            l2.setVisibility(View.GONE);
+
+
+
                         }
                     }, 1000);
                 }

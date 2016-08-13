@@ -9,7 +9,9 @@ import android.support.v7.widget.RecyclerView;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -39,6 +41,8 @@ public class GuestActivity extends AppCompatActivity {
     SwipeRefreshLayout refreshLayout;
     LinearLayoutManager layoutManager;
     ProgressBar progressBar;
+    LinearLayout l1,l2;
+    Button dismiss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,8 +52,22 @@ public class GuestActivity extends AppCompatActivity {
         rootView = (FrameLayout) findViewById(R.id.root_view);
         innerLayout = (FrameLayout) findViewById(R.id.frameLayout);
         innerLayout.getForeground().setAlpha(180);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
+        l1 = (LinearLayout) findViewById(R.id.layoutp1);
+        l2 = (LinearLayout) findViewById(R.id.layoutp2);
 
+
+        dismiss = (Button)findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                innerLayout.getForeground().setAlpha(0);
+                progressBar.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+            }
+        });
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
@@ -111,6 +129,8 @@ public class GuestActivity extends AppCompatActivity {
                     public void run() {
                         progressBar.setVisibility(View.GONE);
                         innerLayout.getForeground().setAlpha(0);
+                        l1.setVisibility(View.GONE);
+                        l2.setVisibility(View.GONE);
                     }
                 }, 1000);
 
@@ -123,6 +143,8 @@ public class GuestActivity extends AppCompatActivity {
                 TransitionManager.beginDelayedTransition(rootView);
                 progressBar.setVisibility(View.GONE);
                 innerLayout.getForeground().setAlpha(0);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
 
             }
         });

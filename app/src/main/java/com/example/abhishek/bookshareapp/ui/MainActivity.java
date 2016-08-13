@@ -12,7 +12,9 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,7 +29,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +77,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageView _profilePicture;
     String url;
     NotificationFragment notifFragment;
+    ProgressBar progressBar;
+    LinearLayout linearLayout1,linearLayout2;
+    FrameLayout frameLayout;
+    Button dismiss;
 
     public String getResp() {
         return Resp;
@@ -86,7 +96,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
 
         setContentView(R.layout.activity_main);
-        new ProgressLoader().execute(15);
+        progressBar = (ProgressBar)findViewById(R.id.progress);
+        linearLayout1 = (LinearLayout) findViewById(R.id.layoutp1) ;
+        linearLayout2 = (LinearLayout) findViewById(R.id.layoutp2) ;
+        frameLayout = (FrameLayout) findViewById(R.id.mainframelyout);
+        frameLayout.getForeground().setAlpha(180);
+        dismiss = (Button)findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                frameLayout.getForeground().setAlpha(0);
+                progressBar.setVisibility(View.GONE);
+                linearLayout2.setVisibility(View.GONE);
+                linearLayout1.setVisibility(View.GONE);
+            }
+        });
+
+
+        new ProgressLoader().execute( );
 
         notifFragment = (NotificationFragment)getSupportFragmentManager().findFragmentById(R.id.right_drawer);
 
@@ -177,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected String doInBackground(Integer... params) {
 
-            for (; count <= params[0]; count++) {
+            do {
                 try {
                     Thread.sleep(1000);
                     Log.d("MAAs", getResp() + "+" + count.toString());
@@ -191,7 +219,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (getResp() != null) {
                     break;
                 }
-            }
+                count++;
+            }while (getResp()==null);
 
 
             return "Task Completed.";
@@ -201,23 +230,40 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         protected void onPostExecute(String result) {
             if (getResp() == null) {
                 Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
-                progress.dismiss();
+                linearLayout1.setVisibility(View.GONE);
+                linearLayout2.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+
             } else {
-                progress.dismiss();
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        frameLayout.getForeground().setAlpha(0);
+                        progressBar.setVisibility(View.GONE);
+                        linearLayout1.setVisibility(View.GONE);
+                        linearLayout2.setVisibility(View.GONE);
+
+
+
+                    }
+                }, 1000);
+
             }
         }
 
         @Override
         protected void onPreExecute() {
-            progress = new ProgressDialog(MainActivity.this);
-            progress.setMessage("Turning To Page 394...");
-            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progress.setIndeterminate(true);
-            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_indeterminate_horizontal));
-            progress.setMax(5);
-            progress.setProgress(0);
-            progress.setCancelable(false);
-            progress.show();
+//            progress = new ProgressDialog(MainActivity.this);
+//            progress.setMessage("Turning To Page 394...");
+//            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+//            progress.setIndeterminate(true);
+//            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_indeterminate_horizontal));
+//            progress.setMax(5);
+//            progress.setProgress(0);
+//            progress.setCancelable(false);
+//            progress.show();
+
 
         }
 
@@ -414,8 +460,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(intent);
 
         } else {
-            Toast.makeText(this, "Press  again to exit.", Toast.LENGTH_SHORT).show();
+            Snackbar.make(findViewById(android.R.id.content), "       Press Again To Exit", Snackbar.LENGTH_LONG).show();
             backCounter++;
+            new Handler().postDelayed(new Runnable() {
+
+                @Override
+                public void run() {
+                    backCounter=0;
+                }
+            }, 2000);
+
         }
     }
 

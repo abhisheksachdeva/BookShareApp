@@ -12,8 +12,10 @@ import android.text.TextUtils;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -54,9 +56,11 @@ public class BookDetailsActivity extends AppCompatActivity{
     ImageView image;
     public static  String Response;
     ProgressBar progressBar;
+    LinearLayout l1,l2;
     FrameLayout rootView;
     NestedScrollView scrollView;
     Boolean showMore=false;
+    Button dismiss;
 
     public static String getResponse() {
         return Response;
@@ -73,11 +77,24 @@ public class BookDetailsActivity extends AppCompatActivity{
         image = (ImageView) findViewById(R.id.book_image);
         bookTitle = (TextView) findViewById(R.id.book_title);
         bookDescription = (TextView) findViewById(R.id.description);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
         rootView = (FrameLayout) findViewById(R.id.root_view);
         scrollView = (NestedScrollView) findViewById(R.id.scroll_view);
 //        scrollView.setVisibility(View.INVISIBLE);
         scrollView.getForeground().setAlpha(180);
+        l1 = (LinearLayout)findViewById(R.id.layoutp1);
+        l2 = (LinearLayout)findViewById(R.id.layoutp2);
+        dismiss = (Button)findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                scrollView.getForeground().setAlpha(0);
+                progressBar.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+            }
+        });
 
 
         bookDescription.setOnClickListener(new View.OnClickListener() {
@@ -146,6 +163,8 @@ public class BookDetailsActivity extends AppCompatActivity{
                     @Override
                     public void run() {
                         progressBar.setVisibility(View.GONE);
+                        l1.setVisibility(View.GONE);
+                        l2.setVisibility(View.GONE);
                         scrollView.getForeground().setAlpha(0);
 
                     }
@@ -159,6 +178,8 @@ public class BookDetailsActivity extends AppCompatActivity{
                 TransitionManager.beginDelayedTransition(rootView);
                 progressBar.setVisibility(View.GONE);
 //                scrollView.setVisibility(View.VISIBLE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
                 scrollView.getForeground().setAlpha(0);
 
             }

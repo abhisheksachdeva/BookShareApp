@@ -4,13 +4,18 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.abhishek.bookshareapp.R;
@@ -38,6 +43,11 @@ public class UserProfile extends AppCompatActivity {
     ImageView profile_picture, background_image;
     String contactNo;
     String email;
+    LinearLayout l1, l2 ;
+    NestedScrollView scrollView;
+    ProgressBar progress;
+    Button dismiss;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +62,24 @@ public class UserProfile extends AppCompatActivity {
         profile_picture = (ImageView) findViewById(R.id.profile_picture);
         background_image = (ImageView) findViewById(R.id.background_image);
         booksCount = (TextView) findViewById(R.id.books_count);
+        scrollView = (NestedScrollView) findViewById(R.id.scroll);
+        scrollView.getForeground().setAlpha(180);
+        l1 = (LinearLayout)findViewById(R.id.layoutp1);
+        l2 = (LinearLayout)findViewById(R.id.layoutp2);
+        progress = (ProgressBar) findViewById(R.id.progress);
+        dismiss = (Button)findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                scrollView.getForeground().setAlpha(0);
+                progress.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+            }
+        });
+
+
         String id = getIntent().getExtras().getString("id");
 
         RecyclerView userBooksList = (RecyclerView) findViewById(R.id.user_books_list_view);
@@ -113,11 +141,27 @@ public class UserProfile extends AppCompatActivity {
                     booksList.addAll(booksTempInfoList);
                     adapter.notifyDataSetChanged();
                 }
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progress.setVisibility(View.GONE);
+                        l1.setVisibility(View.GONE);
+                        l2.setVisibility(View.GONE);
+                        scrollView.getForeground().setAlpha(0);
+
+                    }
+                }, 1000);
             }
 
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 Log.d("BookDetails fail", t.toString());
+                progress.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+                scrollView.getForeground().setAlpha(0);
             }
         });
     }

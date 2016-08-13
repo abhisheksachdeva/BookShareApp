@@ -2,6 +2,7 @@ package com.example.abhishek.bookshareapp.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -20,7 +22,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -70,11 +74,21 @@ public class MyProfile extends AppCompatActivity {
     int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     String userChoosenTask;
     CircleImageView profilePicture;
-    ProgressBar progressBar;
     BooksAdapterSimple adapter;
     ImageView backgroundImageView;
     NestedScrollView scrollView;
+    ProgressBar progress;
+    String Resp;
+    Integer count=0;
+    LinearLayout l1, l2 ;
+    Button dismiss;
 
+
+
+
+    public String getResp() {
+        return Resp;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -89,9 +103,24 @@ public class MyProfile extends AppCompatActivity {
         userBooksListView = (RecyclerView)findViewById(R.id.user_books_list_view);
         backgroundImageView = (ImageView)findViewById(R.id.background_image);
         booksCount = (TextView)findViewById(R.id.books_count);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progress = (ProgressBar) findViewById(R.id.progress);
         userBooksListView = (RecyclerView)findViewById(R.id.user_books_list_view);
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
+        scrollView.getForeground().setAlpha(180);
+        l1 = (LinearLayout)findViewById(R.id.layoutp1);
+        l2 = (LinearLayout)findViewById(R.id.layoutp2);
+        dismiss = (Button)findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                scrollView.getForeground().setAlpha(0);
+                progress.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+            }
+        });
+
         userBooksListView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new BooksAdapterSimple(this, userBooksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
@@ -107,6 +136,7 @@ public class MyProfile extends AppCompatActivity {
 
         id = getIntent().getExtras().getString("id");
         getUserInfoDetails(id);
+
     }
 
     public void getUserInfoDetails(String id) {
@@ -117,6 +147,7 @@ public class MyProfile extends AppCompatActivity {
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
                 if (response.body() != null) {
                     Log.d("UserProfile Response:", response.toString());
+                    Resp = response.toString();
                     user = response.body();
                     userName.setText(user.getFirstName() + " " + user.getLastName());
                     userEmail.setText(user.getEmail());
@@ -149,7 +180,9 @@ public class MyProfile extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        progressBar.setVisibility(View.GONE);
+                        progress.setVisibility(View.GONE);
+                        l1.setVisibility(View.GONE);
+                        l2.setVisibility(View.GONE);
                         scrollView.getForeground().setAlpha(0);
 
                     }
@@ -160,8 +193,11 @@ public class MyProfile extends AppCompatActivity {
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 Log.d("BookDetails fail", t.toString());
+                progress.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
                 scrollView.getForeground().setAlpha(0);
-                progressBar.setVisibility(View.GONE);
+
             }
         });
     }
