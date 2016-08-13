@@ -344,10 +344,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             notifFragment.getNotifications();
             Helper.setOld_total(Helper.getNew_total());
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                frameLayout.getForeground().setAlpha(0);
                 drawerLayout.closeDrawer(GravityCompat.END);
             } else {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 drawerLayout.openDrawer(GravityCompat.END);
+                frameLayout.getForeground().setAlpha(180);
+
             }
             return true;
         }
