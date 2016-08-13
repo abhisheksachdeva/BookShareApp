@@ -22,6 +22,8 @@ public class Book {
     String email;
     @SerializedName("owner")
     List<UserInfo> userInfoList;
+    @SerializedName("description")
+    String description;
 
 
     public String getAuthor() {
@@ -57,6 +59,10 @@ public class Book {
     public String getTitle() {
         return title;
     }
+    public String getDescription() {
+        return description;
+    }
+
 
     public List<UserInfo> getUserInfoList() {
         return userInfoList;

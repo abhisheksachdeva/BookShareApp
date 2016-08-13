@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginRight="10dp"
-            android:textColor="@color/app_theme_button_start"/>
+            android:textColor="#14AAFA"/>
 
         <Button
             android:id="@+id/reject"

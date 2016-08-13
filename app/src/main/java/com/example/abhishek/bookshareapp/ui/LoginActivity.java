@@ -62,7 +62,7 @@ public class LoginActivity extends AppCompatActivity {
 
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
         token = pref.getString("token", "");
-        Log.i("harshit", token + "  adf");
+        Log.i("Login token", token + " n");
 
         _showPassword.setOnClickListener(new View.OnClickListener() {
             @Override

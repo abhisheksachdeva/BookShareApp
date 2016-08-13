@@ -3,15 +3,19 @@ package com.example.abhishek.bookshareapp.ui;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -39,11 +43,11 @@ public class BookDetailsActivity extends AppCompatActivity{
     public static final String TAG = BookDetailsActivity.class.getSimpleName();
 
     Book book;
-    String title,author,gr_id,gr_img_url;
+    String title,author,gr_id,gr_img_url,description;
     Long ratingsCount;
     Float rating;
     public TextView authorBook;
-    TextView bookTitle;
+    TextView bookTitle,bookDescription;
     public RatingBar ratingBook;
     public TextView ratingCount;
     List<UserInfo> userInfoList;
@@ -52,8 +56,11 @@ public class BookDetailsActivity extends AppCompatActivity{
     ImageView image;
     public static  String Response;
     ProgressBar progressBar;
+    LinearLayout l1,l2;
     FrameLayout rootView;
     NestedScrollView scrollView;
+    Boolean showMore=false;
+    Button dismiss;
 
     public static String getResponse() {
         return Response;
@@ -69,10 +76,42 @@ public class BookDetailsActivity extends AppCompatActivity{
         ratingCount = (TextView) findViewById(R.id.ratings_count);
         image = (ImageView) findViewById(R.id.book_image);
         bookTitle = (TextView) findViewById(R.id.book_title);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        bookDescription = (TextView) findViewById(R.id.description);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
         rootView = (FrameLayout) findViewById(R.id.root_view);
         scrollView = (NestedScrollView) findViewById(R.id.scroll_view);
-        scrollView.setVisibility(View.INVISIBLE);
+//        scrollView.setVisibility(View.INVISIBLE);
+        scrollView.getForeground().setAlpha(180);
+        l1 = (LinearLayout)findViewById(R.id.layoutp1);
+        l2 = (LinearLayout)findViewById(R.id.layoutp2);
+        dismiss = (Button)findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                scrollView.getForeground().setAlpha(0);
+                progressBar.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+            }
+        });
+
+
+        bookDescription.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showMore=!showMore;
+
+                if(showMore) {
+                    bookDescription.setMaxLines(50);
+                    bookDescription.setEllipsize(null);
+                }else {
+                    bookDescription.setMaxLines(4);
+                    bookDescription.setEllipsize(TextUtils.TruncateAt.END);
+                }
+            }
+        });
+
 
         SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
@@ -84,8 +123,7 @@ public class BookDetailsActivity extends AppCompatActivity{
         call.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
-                if(!response.body().getDetail().equals("Not found.")) {
-                    Log.d("bda Response:", response.toString());
+                if (response.body() != null && response.body().getDetail() == null) {
                     book = response.body();
                     Response= response.toString();
                     Helper.setBookId(book.getId());
@@ -94,6 +132,8 @@ public class BookDetailsActivity extends AppCompatActivity{
                     bookTitleText = book.getTitle();
                     bookTitle.setText(book.getTitle());
                     title = book.getTitle();
+                    bookDescription.setText(book.getDescription());
+                    description=book.getDescription();
                     authorBook.setText("by  "+book.getAuthor()); author = book.getAuthor();
                     ratingCount.setText("(" + book.getRatingsCount().toString() + ")"); ratingsCount=book.getRatingsCount();
                     ratingBook.setRating(book.getRating());rating = book.getRating();
@@ -117,16 +157,30 @@ public class BookDetailsActivity extends AppCompatActivity{
                     Toast.makeText(getApplicationContext(), "Book not found", Toast.LENGTH_SHORT).show();
                 }
                 TransitionManager.beginDelayedTransition(rootView);
-                progressBar.setVisibility(View.GONE);
-                scrollView.setVisibility(View.VISIBLE);
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.GONE);
+                        l1.setVisibility(View.GONE);
+                        l2.setVisibility(View.GONE);
+                        scrollView.getForeground().setAlpha(0);
+
+                    }
+                }, 1000);
+
             }
 
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
-                Log.d("BookDetails fail", t.toString());
+                Log.d("BDA fail", t.toString());
                 TransitionManager.beginDelayedTransition(rootView);
                 progressBar.setVisibility(View.GONE);
-                scrollView.setVisibility(View.VISIBLE);
+//                scrollView.setVisibility(View.VISIBLE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+                scrollView.getForeground().setAlpha(0);
+
             }
         });
         RecyclerView usersList = (RecyclerView) findViewById(R.id.reader_list);
@@ -136,7 +190,6 @@ public class BookDetailsActivity extends AppCompatActivity{
         usersAdapter = new UsersAdapter(idd,this, userInfoList,bookTitleText,bookId, new UsersAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(UserInfo userInfo) {
-                Log.i(TAG, "onItemClick");
             }
         });
         usersList.setAdapter(usersAdapter);
@@ -144,11 +197,10 @@ public class BookDetailsActivity extends AppCompatActivity{
 
     public void addToMyLibraryClicked(View view) {
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url);
+        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url,description);
         addBookCall.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
-                Log.i("Email iD ", Helper.getUserEmail());
                 if (response.body() != null) {
                     Toast.makeText(BookDetailsActivity.this, response.body().getDetail(), Toast.LENGTH_SHORT).show();
 
@@ -158,7 +210,7 @@ public class BookDetailsActivity extends AppCompatActivity{
             }
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
-                Log.i("AddBook","Failed!!");
+                Log.i("BDA AddBook","Failed!!"+t.toString());
             }
         });
     }

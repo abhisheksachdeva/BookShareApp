@@ -2,6 +2,7 @@ package com.example.abhishek.bookshareapp.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,15 +11,21 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,7 +51,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 import jp.wasabeef.blurry.Blurry;
@@ -70,6 +76,19 @@ public class MyProfile extends AppCompatActivity {
     CircleImageView profilePicture;
     BooksAdapterSimple adapter;
     ImageView backgroundImageView;
+    NestedScrollView scrollView;
+    ProgressBar progress;
+    String Resp;
+    Integer count=0;
+    LinearLayout l1, l2 ;
+    Button dismiss;
+
+
+
+
+    public String getResp() {
+        return Resp;
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -84,22 +103,39 @@ public class MyProfile extends AppCompatActivity {
         userBooksListView = (RecyclerView)findViewById(R.id.user_books_list_view);
         backgroundImageView = (ImageView)findViewById(R.id.background_image);
         booksCount = (TextView)findViewById(R.id.books_count);
-
+        progress = (ProgressBar) findViewById(R.id.progress);
         userBooksListView = (RecyclerView)findViewById(R.id.user_books_list_view);
+        scrollView = (NestedScrollView) findViewById(R.id.scroll);
+        scrollView.getForeground().setAlpha(180);
+        l1 = (LinearLayout)findViewById(R.id.layoutp1);
+        l2 = (LinearLayout)findViewById(R.id.layoutp2);
+        dismiss = (Button)findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                scrollView.getForeground().setAlpha(0);
+                progress.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+            }
+        });
+
         userBooksListView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new BooksAdapterSimple(this, userBooksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                Log.i("Click", "onItemClick");
             }
         });
         userBooksListView.setAdapter(adapter);
         userBooksListView.setNestedScrollingEnabled(false);
+        scrollView.getForeground().setAlpha(180);
 
         String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
 
         id = getIntent().getExtras().getString("id");
         getUserInfoDetails(id);
+
     }
 
     public void getUserInfoDetails(String id) {
@@ -110,6 +146,7 @@ public class MyProfile extends AppCompatActivity {
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
                 if (response.body() != null) {
                     Log.d("UserProfile Response:", response.toString());
+                    Resp = response.toString();
                     user = response.body();
                     userName.setText(user.getFirstName() + " " + user.getLastName());
                     userEmail.setText(user.getEmail());
@@ -138,11 +175,28 @@ public class MyProfile extends AppCompatActivity {
                         }
                     });
                 }
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        progress.setVisibility(View.GONE);
+                        l1.setVisibility(View.GONE);
+                        l2.setVisibility(View.GONE);
+                        scrollView.getForeground().setAlpha(0);
+
+                    }
+                }, 1000);
+
             }
 
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 Log.d("BookDetails fail", t.toString());
+                progress.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+                scrollView.getForeground().setAlpha(0);
+
             }
         });
     }

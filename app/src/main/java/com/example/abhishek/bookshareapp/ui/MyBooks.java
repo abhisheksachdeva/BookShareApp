@@ -1,7 +1,6 @@
 
 package com.example.abhishek.bookshareapp.ui;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -9,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
@@ -25,7 +23,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -51,14 +51,16 @@ import retrofit2.Response;
 
 public class MyBooks extends AppCompatActivity {
     List<Book> booksList;
+    FrameLayout frameLayout;
     BookAdapter adapter;
     RecyclerView mRecyclerView;
     Integer count = 1;
-    ProgressDialog progress; // this is not used ,in this activity as of now...Just for testing purposes.
     ProgressBar prog;
     String Resp;
-    TextView noItemsTextView;
+    LinearLayout l1, l2 ;
+    Button dismiss;
 
+    TextView noItemsTextView;
     public String getResp() {
         return Resp;
     }
@@ -69,14 +71,27 @@ public class MyBooks extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         noItemsTextView = (TextView) findViewById(R.id.no_items_text);
-
         prog = (ProgressBar) findViewById(R.id.progress);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        new ProgressLoader().execute(15);
+        l1= (LinearLayout)findViewById(R.id.layoutp1);
+        l2= (LinearLayout)findViewById(R.id.layoutp2);
+        dismiss = (Button)findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(new View.OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+                frameLayout.getForeground().setAlpha(0);
+                prog.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+            }
+        });
+
+        frameLayout = (FrameLayout) findViewById(R.id.myBookFLayout);
+        frameLayout.getForeground().setAlpha(180);
+
+        prog.bringToFront();
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
         String id = preferences.getString("id", "");
@@ -91,65 +106,12 @@ public class MyBooks extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MyBooks.this, SearchResultsActivity.class);
                 startActivity(i);
+                finish();
             }
         });
 
     }
 
-    class ProgressLoader extends AsyncTask<Integer, Integer, String> {
-        @Override
-        protected String doInBackground(Integer... params) {
-            for (; count <= params[0]; count++) {
-                try {
-                    Thread.sleep(1000);
-                    Log.d("MBAs", getResp() + "+" + count.toString());
-                    if (getResp() != null) {
-                        break;
-                    }
-                    publishProgress(count);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                if (getResp() != null) {
-                    break;
-                }
-            }
-
-
-            return "Task Completed.";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (getResp() == null) {
-                Toast.makeText(MyBooks.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
-                prog.setVisibility(View.INVISIBLE);
-            } else {
-                prog.setVisibility(View.INVISIBLE);
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-//            progress=new ProgressDialog(MyBooks.this);
-//            progress.setMessage("Wont Take Long Bruh!...");
-//            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//            progress.setIndeterminate(true);
-//            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.loading));
-
-            prog.setMax(5);
-            prog.setProgress(0);
-//            progress.setCancelable(false);
-            prog.setVisibility(View.VISIBLE);
-
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-//            progress.setProgress(values[0]);
-        }
-    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -159,13 +121,8 @@ public class MyBooks extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return(true);
-        }
 
-        return(super.onOptionsItemSelected(item));
+        return super.onOptionsItemSelected(item);
     }
 
     public void getUserBookList(String id) {
@@ -175,7 +132,6 @@ public class MyBooks extends AppCompatActivity {
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
                 if (response.body() != null) {
-                    Log.d("UserProfile Response:", response.toString());
                     Resp = response.toString();
                     List<Book> booksTempInfoList = response.body().getUserBookList();
                     if(booksTempInfoList.size() == 0) {
@@ -184,12 +140,28 @@ public class MyBooks extends AppCompatActivity {
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);
                     adapter.notifyDataSetChanged();
+
+                    final Handler handler = new Handler();
+                    handler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            frameLayout.getForeground().setAlpha(0);
+                            prog.setVisibility(View.GONE);
+                            l1.setVisibility(View.GONE);
+                            l2.setVisibility(View.GONE);
+
+
+
+                        }
+                    }, 1000);
                 }
             }
 
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
-                Log.d("BookDetails fail", t.toString());
+                Log.d("MyBooksLoad fail", t.toString());
+                frameLayout.getForeground().setAlpha(0);
+                prog.setVisibility(View.GONE);
             }
         });
     }
@@ -214,7 +186,7 @@ public class MyBooks extends AppCompatActivity {
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.GRAY);
+                background = new ColorDrawable(Color.RED);
                 xMark = ContextCompat.getDrawable(MyBooks.this, R.drawable.ic_clear_24dp);
                 xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 xMarkMargin = (int) MyBooks.this.getResources().getDimension(R.dimen.ic_clear_margin);
@@ -295,7 +267,7 @@ public class MyBooks extends AppCompatActivity {
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.GRAY);
+                background = new ColorDrawable(Color.RED);
                 initiated = true;
             }
 
@@ -389,7 +361,7 @@ public class MyBooks extends AppCompatActivity {
 
             if (itemsPendingRemoval.contains(rbook)) {
                 // we need to show the "undo" state of the row
-                viewHolder.itemView.setBackgroundColor(Color.GRAY);
+                viewHolder.itemView.setBackgroundColor(Color.RED);
                 viewHolder.titleBook.setVisibility(View.INVISIBLE);
                 viewHolder.authorBook.setText("Delete Book ?");
                 viewHolder.ratingCount.setVisibility(View.INVISIBLE);

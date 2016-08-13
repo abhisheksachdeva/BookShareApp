@@ -12,7 +12,9 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -27,7 +29,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +77,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageView _profilePicture;
     String url;
     NotificationFragment notifFragment;
+    ProgressBar progressBar;
+    LinearLayout linearLayout1,linearLayout2;
+    FrameLayout frameLayout;
+    Button dismiss;
+    Boolean progress_isVisible = false;
 
     public String getResp() {
         return Resp;
@@ -86,7 +97,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
 
         setContentView(R.layout.activity_main);
-        new ProgressLoader().execute(15);
+        progressBar = (ProgressBar)findViewById(R.id.progress);
+        linearLayout1 = (LinearLayout) findViewById(R.id.layoutp1) ;
+        linearLayout2 = (LinearLayout) findViewById(R.id.layoutp2) ;
+        frameLayout = (FrameLayout) findViewById(R.id.mainframelyout);
+        frameLayout.getForeground().setAlpha(180);
+        dismiss = (Button)findViewById(R.id.dismiss);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                frameLayout.getForeground().setAlpha(0);
+                progressBar.setVisibility(View.GONE);
+                linearLayout2.setVisibility(View.GONE);
+                linearLayout1.setVisibility(View.GONE);
+                progress_isVisible= false;
+            }
+        });
+
+
+        new ProgressLoader().execute( );
 
         notifFragment = (NotificationFragment)getSupportFragmentManager().findFragmentById(R.id.right_drawer);
 
@@ -102,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(MainActivity.this,BookDetailsActivity.class);
                 intent.putExtra("id", book.getId());
                 startActivity(intent);
-                Log.i(TAG, "onItemClick");}
+                }
                 else {
                     Toast.makeText(getApplicationContext(),"Not connected to Internet", Toast.LENGTH_SHORT).show();
                 }
@@ -160,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG, "onRefresh called from SwipeRefreshLayout ");
                 endlessScrollListener.reset();
                 getLocalBooks("1");
             }
@@ -177,10 +206,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected String doInBackground(Integer... params) {
 
-            for (; count <= params[0]; count++) {
+            do {
                 try {
                     Thread.sleep(1000);
-                    Log.d("MAAs", getResp() + "+" + count.toString());
                     if (getResp() != null) {
                         break;
                     }
@@ -191,34 +219,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (getResp() != null) {
                     break;
                 }
-            }
+                count++;
+            }while (getResp()==null);
 
 
             return "Task Completed.";
         }
 
         @Override
-        protected void onPostExecute(String result) {
-            if (getResp() == null) {
-                Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
-                progress.dismiss();
-            } else {
-                progress.dismiss();
-            }
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress_isVisible= true;
+
         }
 
         @Override
-        protected void onPreExecute() {
-            progress = new ProgressDialog(MainActivity.this);
-            progress.setMessage("Turning To Page 394...");
-            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            progress.setIndeterminate(true);
-            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.loading));
-            progress.setMax(5);
-            progress.setProgress(0);
-            progress.setCancelable(false);
-            progress.show();
+        protected void onPostExecute(String result) {
+            if (getResp() == null) {
+                Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+                linearLayout1.setVisibility(View.GONE);
+                linearLayout2.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
+                progress_isVisible= false;
 
+
+            } else {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        frameLayout.getForeground().setAlpha(0);
+                        progressBar.setVisibility(View.GONE);
+                        linearLayout1.setVisibility(View.GONE);
+                        linearLayout2.setVisibility(View.GONE);
+                        progress_isVisible= false;
+                    }
+                }, 1000);
+
+            }
         }
 
         @Override
@@ -240,7 +278,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
                 if (response.body() != null) {
-                    Log.d("Search Response:", response.toString());
                     List<Book> localBooksList = response.body();
                     booksList.clear();
                     booksList.addAll(localBooksList);
@@ -298,10 +335,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             notifFragment.getNotifications();
             Helper.setOld_total(Helper.getNew_total());
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                frameLayout.getForeground().setAlpha(0);
                 drawerLayout.closeDrawer(GravityCompat.END);
             } else {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 drawerLayout.openDrawer(GravityCompat.END);
+                frameLayout.getForeground().setAlpha(180);
+
             }
             return true;
         }
@@ -367,7 +407,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Call<BookList> call, Response<BookList> response) {
                 if (response.body() != null) {
-                    Log.d("Search Response:", response.toString());
                     Resp = response.toString();
                     List<Book> localBooksList = response.body().getResults();
                     if (page.equals("1")) {
@@ -383,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(Call<BookList> call, Throwable t) {
-                Log.d("searchresp", "searchOnFail " + t.toString());
+                Log.d("MA_SearchResponse", "searchOnFail " + t.toString());
                 refreshLayout.setRefreshing(false);
 
             }
@@ -406,16 +445,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
 
-        if (backCounter >= 1) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Toast.makeText(this, "Ciao Buddy !", Toast.LENGTH_SHORT).show();
-            startActivity(intent);
+        if(!progress_isVisible) {
 
-        } else {
-            Toast.makeText(this, "Press  again to exit.", Toast.LENGTH_SHORT).show();
-            backCounter++;
+
+            if (backCounter >= 1) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Toast.makeText(this, "Ciao Buddy !", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
+
+            } else {
+                Snackbar.make(findViewById(R.id.drawer_layout), "       Press Again To Exit", Snackbar.LENGTH_LONG).show();
+                backCounter++;
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        backCounter = 0;
+                    }
+                }, 2000);
+
+            }
         }
     }
 

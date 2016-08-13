@@ -1,17 +1,25 @@
 package com.example.abhishek.bookshareapp.ui;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
+import com.example.abhishek.bookshareapp.api.models.LocalBooks.BookList;
 import com.example.abhishek.bookshareapp.ui.fragments.BookListFragment;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 
@@ -24,6 +32,10 @@ public class SearchResultsActivity extends AppCompatActivity {
     BookListFragment bookListFragment;
     NestedScrollView scrollingView;
     FloatingActionButton button;
+    ProgressBar progress;
+    LinearLayout l1, l2 ;
+    Button dismiss;
+    Integer count = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,6 +45,26 @@ public class SearchResultsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         scrollingView = (NestedScrollView) findViewById(R.id.scrollView);
+        scrollingView.getForeground().setAlpha(0);
+        progress = (ProgressBar) findViewById(R.id.progress);
+        l1 = (LinearLayout)findViewById(R.id.layoutp1);
+        l2 = (LinearLayout)findViewById(R.id.layoutp2);
+        l1.setVisibility(View.INVISIBLE);
+        l2.setVisibility(View.INVISIBLE);
+        progress.setVisibility(View.INVISIBLE);
+        dismiss = (Button)findViewById(R.id.dismiss);
+        dismiss.setVisibility(View.INVISIBLE);
+        dismiss.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                scrollingView.getForeground().setAlpha(0);
+                progress.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+            }
+        });
+
         button = (FloatingActionButton) findViewById(R.id.scroll);
 
         scrollingView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -67,6 +99,70 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     }
 
+    class ProgressLoader extends AsyncTask<Integer, Integer, String> {
+
+        @Override
+        protected String doInBackground(Integer... params) {
+
+            do {
+                try {
+                    Thread.sleep(1000);
+                    if (bookListFragment.getResp() != null) {
+                        break;
+                    }
+                    publishProgress(count);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (bookListFragment.getResp() != null) {
+                    break;
+                }
+                count++;
+            }while (bookListFragment.getResp()==null);
+
+
+            return "Task Completed.";
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (bookListFragment.getResp() == null) {
+                Toast.makeText(SearchResultsActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+                scrollingView.getForeground().setAlpha(0);
+                progress.setVisibility(View.GONE);
+                l1.setVisibility(View.GONE);
+                l2.setVisibility(View.GONE);
+
+            } else {
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        scrollingView.getForeground().setAlpha(0);
+                        progress.setVisibility(View.GONE);
+                        l1.setVisibility(View.GONE);
+                        l2.setVisibility(View.GONE);
+                    }
+                }, 1000);
+
+            }
+        }
+
+        @Override
+        protected void onPreExecute() {
+
+            scrollingView.getForeground().setAlpha(180);
+            l1.setVisibility(View.VISIBLE);
+            l2.setVisibility(View.VISIBLE);
+            progress.setVisibility(View.VISIBLE);
+            dismiss.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            progress.setProgress(values[0]);
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -93,6 +189,9 @@ public class SearchResultsActivity extends AppCompatActivity {
         hideKeyboard();
         query = searchEditText.getText().toString();
         bookListFragment.getBooks(query, mode, API_KEY);
+        new ProgressLoader().execute();
+
+
     }
 
     public void hideKeyboard() {
