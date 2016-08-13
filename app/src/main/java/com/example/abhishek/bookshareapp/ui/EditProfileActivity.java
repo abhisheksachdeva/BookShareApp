@@ -102,7 +102,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     Helper.setUserName(firstName.getText().toString() + " " + lastName.getText().toString());
 
                 } else {
-                    Log.i("harshit", "response.body() is null)");
+                    Log.i("EditProfile", "response.body() is null)");
                 }
             }
 

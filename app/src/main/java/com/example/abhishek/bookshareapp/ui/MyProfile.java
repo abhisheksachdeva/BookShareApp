@@ -125,7 +125,6 @@ public class MyProfile extends AppCompatActivity {
         adapter = new BooksAdapterSimple(this, userBooksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                Log.i("Click", "onItemClick");
             }
         });
         userBooksListView.setAdapter(adapter);

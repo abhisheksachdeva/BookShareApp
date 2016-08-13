@@ -124,7 +124,6 @@ public class BookDetailsActivity extends AppCompatActivity{
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
                 if (response.body() != null && response.body().getDetail() == null) {
-                    Log.d("bda Response:", response.toString());
                     book = response.body();
                     Response= response.toString();
                     Helper.setBookId(book.getId());
@@ -174,7 +173,7 @@ public class BookDetailsActivity extends AppCompatActivity{
 
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
-                Log.d("BookDetails fail", t.toString());
+                Log.d("BDA fail", t.toString());
                 TransitionManager.beginDelayedTransition(rootView);
                 progressBar.setVisibility(View.GONE);
 //                scrollView.setVisibility(View.VISIBLE);
@@ -191,7 +190,6 @@ public class BookDetailsActivity extends AppCompatActivity{
         usersAdapter = new UsersAdapter(idd,this, userInfoList,bookTitleText,bookId, new UsersAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(UserInfo userInfo) {
-                Log.i(TAG, "onItemClick");
             }
         });
         usersList.setAdapter(usersAdapter);
@@ -203,7 +201,6 @@ public class BookDetailsActivity extends AppCompatActivity{
         addBookCall.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
-                Log.i("Email iD ", Helper.getUserEmail());
                 if (response.body() != null) {
                     Toast.makeText(BookDetailsActivity.this, response.body().getDetail(), Toast.LENGTH_SHORT).show();
 
@@ -213,7 +210,7 @@ public class BookDetailsActivity extends AppCompatActivity{
             }
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
-                Log.i("AddBook","Failed!!");
+                Log.i("BDA AddBook","Failed!!"+t.toString());
             }
         });
     }

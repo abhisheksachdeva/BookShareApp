@@ -29,6 +29,12 @@ import retrofit2.Response;
 
 public class BookListFragment extends Fragment {
 
+    public static String resp;
+
+    public static String getResp() {
+        return resp;
+    }
+
     private RecyclerView resultsList;
     List<Book> bookList = new ArrayList<>();
     BooksAdapterGR adapter;
@@ -72,12 +78,14 @@ public class BookListFragment extends Fragment {
                     bookList.clear();
                     bookList.addAll(sr.getBooks());
                     adapter.notifyDataSetChanged();
+                    resp = response.toString();
                 }
             }
 
             @Override
             public void onFailure(Call<GoodreadsResponse> call, Throwable t) {
                 Log.d("searchresp", "searchOnFail " + t.toString());
+                resp = "failed";
             }
         });
 

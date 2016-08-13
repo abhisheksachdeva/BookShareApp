@@ -95,7 +95,6 @@ public class GuestActivity extends AppCompatActivity {
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG, "onRefresh called from SwipeRefreshLayout ");
                 endlessScrollListener.reset();
                 getLocalBooks("1");
             }
@@ -138,7 +137,7 @@ public class GuestActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<BookList> call, Throwable t) {
-                Log.d("searchresp", "searchOnFail " + t.toString());
+                Log.d("GA_search", "searchOnFail " + t.toString());
                 refreshLayout.setRefreshing(false);
                 TransitionManager.beginDelayedTransition(rootView);
                 progressBar.setVisibility(View.GONE);

@@ -81,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     LinearLayout linearLayout1,linearLayout2;
     FrameLayout frameLayout;
     Button dismiss;
+    Boolean progress_isVisible = false;
 
     public String getResp() {
         return Resp;
@@ -110,6 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 progressBar.setVisibility(View.GONE);
                 linearLayout2.setVisibility(View.GONE);
                 linearLayout1.setVisibility(View.GONE);
+                progress_isVisible= false;
             }
         });
 
@@ -130,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent intent = new Intent(MainActivity.this,BookDetailsActivity.class);
                 intent.putExtra("id", book.getId());
                 startActivity(intent);
-                Log.i(TAG, "onItemClick");}
+                }
                 else {
                     Toast.makeText(getApplicationContext(),"Not connected to Internet", Toast.LENGTH_SHORT).show();
                 }
@@ -188,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                Log.i(TAG, "onRefresh called from SwipeRefreshLayout ");
                 endlessScrollListener.reset();
                 getLocalBooks("1");
             }
@@ -208,7 +209,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             do {
                 try {
                     Thread.sleep(1000);
-                    Log.d("MAAs", getResp() + "+" + count.toString());
                     if (getResp() != null) {
                         break;
                     }
@@ -227,12 +227,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progress_isVisible= true;
+
+        }
+
+        @Override
         protected void onPostExecute(String result) {
             if (getResp() == null) {
                 Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
                 linearLayout1.setVisibility(View.GONE);
                 linearLayout2.setVisibility(View.GONE);
                 progressBar.setVisibility(View.GONE);
+                progress_isVisible= false;
+
 
             } else {
                 final Handler handler = new Handler();
@@ -243,28 +252,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         progressBar.setVisibility(View.GONE);
                         linearLayout1.setVisibility(View.GONE);
                         linearLayout2.setVisibility(View.GONE);
-
-
-
+                        progress_isVisible= false;
                     }
                 }, 1000);
 
             }
-        }
-
-        @Override
-        protected void onPreExecute() {
-//            progress = new ProgressDialog(MainActivity.this);
-//            progress.setMessage("Turning To Page 394...");
-//            progress.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-//            progress.setIndeterminate(true);
-//            progress.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_indeterminate_horizontal));
-//            progress.setMax(5);
-//            progress.setProgress(0);
-//            progress.setCancelable(false);
-//            progress.show();
-
-
         }
 
         @Override
@@ -286,7 +278,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
                 if (response.body() != null) {
-                    Log.d("Search Response:", response.toString());
                     List<Book> localBooksList = response.body();
                     booksList.clear();
                     booksList.addAll(localBooksList);
@@ -416,7 +407,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onResponse(Call<BookList> call, Response<BookList> response) {
                 if (response.body() != null) {
-                    Log.d("Search Response:", response.toString());
                     Resp = response.toString();
                     List<Book> localBooksList = response.body().getResults();
                     if (page.equals("1")) {
@@ -432,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(Call<BookList> call, Throwable t) {
-                Log.d("searchresp", "searchOnFail " + t.toString());
+                Log.d("MA_SearchResponse", "searchOnFail " + t.toString());
                 refreshLayout.setRefreshing(false);
 
             }
@@ -455,24 +445,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
 
-        if (backCounter >= 1) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            Toast.makeText(this, "Ciao Buddy !", Toast.LENGTH_SHORT).show();
-            startActivity(intent);
+        if(!progress_isVisible) {
 
-        } else {
-            Snackbar.make(findViewById(android.R.id.content), "       Press Again To Exit", Snackbar.LENGTH_LONG).show();
-            backCounter++;
-            new Handler().postDelayed(new Runnable() {
 
-                @Override
-                public void run() {
-                    backCounter=0;
-                }
-            }, 2000);
+            if (backCounter >= 1) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                Toast.makeText(this, "Ciao Buddy !", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
 
+            } else {
+                Snackbar.make(findViewById(R.id.drawer_layout), "       Press Again To Exit", Snackbar.LENGTH_LONG).show();
+                backCounter++;
+                new Handler().postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        backCounter = 0;
+                    }
+                }, 2000);
+
+            }
         }
     }
 

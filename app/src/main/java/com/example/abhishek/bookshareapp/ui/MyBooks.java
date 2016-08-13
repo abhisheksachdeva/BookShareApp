@@ -132,7 +132,6 @@ public class MyBooks extends AppCompatActivity {
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
                 if (response.body() != null) {
-                    Log.d("UserProfile Response:", response.toString());
                     Resp = response.toString();
                     List<Book> booksTempInfoList = response.body().getUserBookList();
                     if(booksTempInfoList.size() == 0) {
@@ -160,7 +159,7 @@ public class MyBooks extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
-                Log.d("BookDetails fail", t.toString());
+                Log.d("MyBooksLoad fail", t.toString());
                 frameLayout.getForeground().setAlpha(0);
                 prog.setVisibility(View.GONE);
             }
