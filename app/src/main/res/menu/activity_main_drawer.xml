@@ -12,6 +12,12 @@
             android:id="@+id/nav_myprofile"
             android:icon="@drawable/ic_perm_identity_white_24dp"
             android:title="My Profile" />
+
+        <item
+            android:id="@+id/nav_usersearch"
+            android:icon="@drawable/ic_account_circle_black_24dp"
+            android:title="User Search" />
+
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_exit_to_app_white_24dp"
