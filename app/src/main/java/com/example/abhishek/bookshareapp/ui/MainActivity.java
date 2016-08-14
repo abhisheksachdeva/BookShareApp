@@ -178,7 +178,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerLayout.setScrimColor(Color.TRANSPARENT);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -335,12 +334,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             notifFragment.getNotifications();
             Helper.setOld_total(Helper.getNew_total());
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
-                frameLayout.getForeground().setAlpha(0);
                 drawerLayout.closeDrawer(GravityCompat.END);
             } else {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 drawerLayout.openDrawer(GravityCompat.END);
-                frameLayout.getForeground().setAlpha(180);
 
             }
             return true;
