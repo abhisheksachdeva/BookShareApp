@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.abhishek.bookshareapp">
+    package="com.sdsmdg.bookshareapp.BSA">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -15,10 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.LoginActivity"
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.LoginActivity"
             android:label="Login" />
         <activity
-            android:name=".ui.SearchResultsActivity"
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.SearchResultsActivity"
             android:label="Search">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCHRESULTS" />
@@ -27,27 +27,25 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.MainActivity"
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.MainActivity"
             android:label="Campus Books"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.SignupActivity" />
+        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.SignupActivity" />
         <activity
-            android:name=".ui.MyBooks"
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.MyBooks"
             android:label="My Books" />
         <activity
-            android:name=".ui.BookDetailsActivity"
-            android:label="Book Details"
-            android:parentActivityName=".ui.MainActivity"/>
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.BookDetailsActivity"
+            android:label="Book Details" />
         <activity
-            android:name=".ui.UserProfile"
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.UserProfile"
             android:label="User Details" />
         <activity
-            android:name=".ui.MyProfile"
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.MyProfile"
             android:excludeFromRecents="true"
             android:label="My Profile"
-            android:launchMode="singleTop"
-            android:parentActivityName=".ui.MainActivity" />
-        <activity android:name=".ui.SplashScreen">
+            android:launchMode="singleTop" />
+        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -55,16 +53,16 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.EditProfileActivity"
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.EditProfileActivity"
             android:label="Edit your details"
-            android:parentActivityName=".ui.MyProfile" />
+            android:parentActivityName="com.sdsmdg.bookshareapp.BSA.ui.MyProfile" />
         <activity
-            android:name=".ui.ChangePasswordActivity"
-            android:label="Change Password"
-            android:parentActivityName=".ui.MyProfile" />
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.ChangePasswordActivity"
+            android:label="Change Password" />
         <activity
-            android:name=".ui.GuestActivity"
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.GuestActivity"
             android:label="Campus Books" />
+        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.UserSearchActivity"></activity>
     </application>
 
 </manifest>
