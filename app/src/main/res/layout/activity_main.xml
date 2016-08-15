@@ -126,11 +126,10 @@
 
         <fragment
             android:id="@+id/right_drawer"
-            android:name="com.example.abhishek.bookshareapp.ui.fragments.NotificationFragment"
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.fragments.NotificationFragment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:layout="@layout/fragment_notification"
-            />
+            tools:layout="@layout/fragment_notification" />
 
     </FrameLayout>
 
