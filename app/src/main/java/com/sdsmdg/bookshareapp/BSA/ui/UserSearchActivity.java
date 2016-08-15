@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
@@ -30,6 +31,7 @@ public class UserSearchActivity extends AppCompatActivity {
     SharedPreferences preferences;
     EditText queryEditText;
     UsersAdapter adapter;
+    TextView noUsersTextView;
 
     private final String TAG = UserSearchActivity.class.getSimpleName();
 
@@ -37,6 +39,8 @@ public class UserSearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_search);
+
+        noUsersTextView = (TextView) findViewById(R.id.no_users_textView);
 
         preferences = getSharedPreferences("Token", MODE_PRIVATE);
 
@@ -57,14 +61,18 @@ public class UserSearchActivity extends AppCompatActivity {
     }
 
     public void userSearchClicked(View view) {
+        noUsersTextView.setVisibility(View.GONE);
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<List<UserInfo>> call = api.searchUser(queryEditText.getText().toString());
         call.enqueue(new Callback<List<UserInfo>>() {
             @Override
             public void onResponse(Call<List<UserInfo>> call, Response<List<UserInfo>> response) {
-                Log.i(TAG, "onResponse: " + response.body().get(0).getEmail());
                 userInfoList.clear();
-                userInfoList.addAll(response.body());
+                if (response.body().size() != 0) {
+                    userInfoList.addAll(response.body());
+                } else {
+                    noUsersTextView.setVisibility(View.VISIBLE);
+                }
                 adapter.notifyDataSetChanged();
             }
 
