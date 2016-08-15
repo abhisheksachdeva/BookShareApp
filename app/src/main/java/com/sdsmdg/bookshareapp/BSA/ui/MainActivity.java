@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -82,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     FrameLayout frameLayout;
     Button dismiss;
     Boolean progress_isVisible = false;
+    //Search Menu item reference in the toolbar
+    MenuItem searchItem;
 
     public String getResp() {
         return Resp;
@@ -180,7 +181,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                searchItem.setVisible(true);
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                searchItem.setVisible(false);
+            }
+        };
         drawerLayout.setDrawerListener(toggle);
 
         toggle.syncState();
@@ -304,7 +317,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
         final MenuItem notifItem = menu.findItem(R.id.menu_notifs);
-        final MenuItem searchItem = menu.findItem(R.id.search);
+        searchItem = menu.findItem(R.id.search);
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
@@ -335,10 +348,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Helper.setOld_total(Helper.getNew_total());
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END);
+
             } else {
                 drawerLayout.closeDrawer(GravityCompat.START);
                 drawerLayout.openDrawer(GravityCompat.END);
-
             }
             return true;
         }
