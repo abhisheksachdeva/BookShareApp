@@ -23,7 +23,7 @@ import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
-import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterSimple;
+import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterRequest;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.squareup.picasso.Picasso;
 
@@ -35,11 +35,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
 public class UserProfile extends AppCompatActivity {
     TextView name,emailTextView,address, booksCount;
     UserInfo user;
     List<Book> booksList;
-    BooksAdapterSimple adapter;
+    BooksAdapterRequest adapter;
     ImageView profile_picture, background_image;
     String contactNo;
     String email;
@@ -86,12 +87,12 @@ public class UserProfile extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         userBooksList.setLayoutManager(layoutManager);
         booksList = new ArrayList<>();
-        adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
+        adapter = new BooksAdapterRequest(this, booksList, new BooksAdapterRequest.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
                 Log.i("Click", "onItemClick");
             }
-        });
+        },id);
 
         userBooksList.setAdapter(adapter);
         userBooksList.setNestedScrollingEnabled(false);
@@ -120,6 +121,7 @@ public class UserProfile extends AppCompatActivity {
                     Log.d("UserProfile Response:", response.toString());
                     user = response.body();
                     name.setText(user.getName());
+
                     email = user.getEmail();
                     emailTextView.setText(email);
                     contactNo = user.getContactNo();
