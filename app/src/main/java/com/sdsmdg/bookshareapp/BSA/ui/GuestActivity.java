@@ -119,7 +119,6 @@ public class GuestActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
                 }
-                //TransitionManager.beginDelayedTransition(rootView);
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -138,7 +137,6 @@ public class GuestActivity extends AppCompatActivity {
             public void onFailure(Call<BookList> call, Throwable t) {
                 Log.d("GA_search", "searchOnFail " + t.toString());
                 refreshLayout.setRefreshing(false);
-                //TransitionManager.beginDelayedTransition(rootView);
                 progressBar.setVisibility(View.GONE);
                 innerLayout.getForeground().setAlpha(0);
                 l1.setVisibility(View.GONE);
