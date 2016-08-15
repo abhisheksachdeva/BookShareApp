@@ -102,9 +102,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         String message = notifications.getMessage();
 
         if (message.equals("requested for")) {
-            content = new SpannableString(notifications.getSenderName() + " requested for " + notifications.getBookTitle()) ;
+            content = new SpannableString(notifications.getSenderName() + " " + message + " " + notifications.getBookTitle()) ;
             content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 0, senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), senderNameLength + message.length(), senderNameLength + message.length() + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), senderNameLength + message.length() + 2, senderNameLength + message.length() + 2 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             bookId = notifications.getBookId();
             bookTitle = notifications.getBookTitle();
             targetId = notifications.getSenderId();

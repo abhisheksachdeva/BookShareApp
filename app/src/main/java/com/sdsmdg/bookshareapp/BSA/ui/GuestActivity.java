@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -120,7 +119,7 @@ public class GuestActivity extends AppCompatActivity {
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
                 }
-                TransitionManager.beginDelayedTransition(rootView);
+                //TransitionManager.beginDelayedTransition(rootView);
 
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -139,7 +138,7 @@ public class GuestActivity extends AppCompatActivity {
             public void onFailure(Call<BookList> call, Throwable t) {
                 Log.d("GA_search", "searchOnFail " + t.toString());
                 refreshLayout.setRefreshing(false);
-                TransitionManager.beginDelayedTransition(rootView);
+                //TransitionManager.beginDelayedTransition(rootView);
                 progressBar.setVisibility(View.GONE);
                 innerLayout.getForeground().setAlpha(0);
                 l1.setVisibility(View.GONE);
