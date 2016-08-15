@@ -116,9 +116,11 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, R.style.AppTheme);
+        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMessage("        Authenticating...                ");
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
+        progressDialog.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_indeterminate_horizontal));
+        progressDialog.setInverseBackgroundForced(true);
         progressDialog.show();
 
         String email = _emailText.getText().toString() + "@iitr.ac.in";
