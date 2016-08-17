@@ -37,7 +37,7 @@ public class GuestActivity extends AppCompatActivity {
 
     final String TAG = GuestActivity.class.getSimpleName();
 
-    FrameLayout rootView,innerLayout;
+    FrameLayout rootView;
     RecyclerView localBookList;
     List<Book> booksList = new ArrayList<>();
     BooksAdapterSimple adapter;
@@ -57,14 +57,7 @@ public class GuestActivity extends AppCompatActivity {
         customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
 
         rootView = (FrameLayout) findViewById(R.id.root_view);
-        innerLayout = (FrameLayout) findViewById(R.id.frameLayout);
-        innerLayout.getForeground().setAlpha(180);
-        innerLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
