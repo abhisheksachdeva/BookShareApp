@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -51,14 +53,12 @@ import retrofit2.Response;
 
 public class MyBooks extends AppCompatActivity {
     List<Book> booksList;
-    FrameLayout frameLayout;
     BookAdapter adapter;
     RecyclerView mRecyclerView;
     Integer count = 1;
-    ProgressBar prog;
     String Resp;
-    LinearLayout l1, l2 ;
-    Button dismiss;
+    CustomProgressDialog customProgressDialog;
+
 
     TextView noItemsTextView;
     public String getResp() {
@@ -71,27 +71,13 @@ public class MyBooks extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_books);
 
+        customProgressDialog = new CustomProgressDialog(MyBooks.this);
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.show();
+        customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+
         noItemsTextView = (TextView) findViewById(R.id.no_items_text);
-        prog = (ProgressBar) findViewById(R.id.progress);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-        l1= (LinearLayout)findViewById(R.id.layoutp1);
-        l2= (LinearLayout)findViewById(R.id.layoutp2);
-        dismiss = (Button)findViewById(R.id.dismiss);
-        dismiss.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                frameLayout.getForeground().setAlpha(0);
-                prog.setVisibility(View.GONE);
-                l1.setVisibility(View.GONE);
-                l2.setVisibility(View.GONE);
-            }
-        });
-
-        frameLayout = (FrameLayout) findViewById(R.id.myBookFLayout);
-        frameLayout.getForeground().setAlpha(180);
-
-        prog.bringToFront();
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
         String id = preferences.getString("id", "");
@@ -145,12 +131,8 @@ public class MyBooks extends AppCompatActivity {
                     handler.postDelayed(new Runnable() {
                         @Override
                         public void run() {
-                            frameLayout.getForeground().setAlpha(0);
-                            prog.setVisibility(View.GONE);
-                            l1.setVisibility(View.GONE);
-                            l2.setVisibility(View.GONE);
 
-
+                    customProgressDialog.dismiss();
 
                         }
                     }, 1000);
@@ -160,8 +142,8 @@ public class MyBooks extends AppCompatActivity {
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 Log.d("MyBooksLoad fail", t.toString());
-                frameLayout.getForeground().setAlpha(0);
-                prog.setVisibility(View.GONE);
+                customProgressDialog.dismiss();
+
             }
         });
     }

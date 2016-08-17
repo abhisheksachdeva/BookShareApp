@@ -1,12 +1,16 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -39,40 +43,50 @@ public class GuestActivity extends AppCompatActivity {
     BooksAdapterSimple adapter;
     SwipeRefreshLayout refreshLayout;
     LinearLayoutManager layoutManager;
-    ProgressBar progressBar;
-    LinearLayout l1,l2;
-    Button dismiss;
+    View.OnClickListener signupclicklistener;
+    CustomProgressDialog customProgressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest);
+        customProgressDialog = new CustomProgressDialog(GuestActivity.this);
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.show();
+        customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
 
         rootView = (FrameLayout) findViewById(R.id.root_view);
         innerLayout = (FrameLayout) findViewById(R.id.frameLayout);
         innerLayout.getForeground().setAlpha(180);
-        progressBar = (ProgressBar) findViewById(R.id.progress);
-        l1 = (LinearLayout) findViewById(R.id.layoutp1);
-        l2 = (LinearLayout) findViewById(R.id.layoutp2);
-
-
-        dismiss = (Button)findViewById(R.id.dismiss);
-        dismiss.setOnClickListener(new View.OnClickListener() {
-
+        innerLayout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-                innerLayout.getForeground().setAlpha(0);
-                progressBar.setVisibility(View.GONE);
-                l1.setVisibility(View.GONE);
-                l2.setVisibility(View.GONE);
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
             }
         });
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                Toast.makeText(getApplicationContext(), "Login to get details", Toast.LENGTH_SHORT).show();
+                Snackbar snbar= Snackbar.make(findViewById(R.id.frameLayout),"Create a new account ! ",Snackbar.LENGTH_SHORT)
+                        .setAction("Sign Up", signupclicklistener);
+                snbar.setActionTextColor(getResources().getColor(R.color.colorPrimary));
+                snbar.show();
+                snbar.show();
+
+
+
             }
         });
+
+
+        signupclicklistener = new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(GuestActivity.this,SignupActivity.class);
+                startActivity(i);
+            }
+        };
 
         layoutManager = new LinearLayoutManager(this);
 
@@ -124,10 +138,7 @@ public class GuestActivity extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        progressBar.setVisibility(View.GONE);
-                        innerLayout.getForeground().setAlpha(0);
-                        l1.setVisibility(View.GONE);
-                        l2.setVisibility(View.GONE);
+                        customProgressDialog.dismiss();
                     }
                 }, 1000);
 
@@ -137,10 +148,7 @@ public class GuestActivity extends AppCompatActivity {
             public void onFailure(Call<BookList> call, Throwable t) {
                 Log.d("GA_search", "searchOnFail " + t.toString());
                 refreshLayout.setRefreshing(false);
-                progressBar.setVisibility(View.GONE);
-                innerLayout.getForeground().setAlpha(0);
-                l1.setVisibility(View.GONE);
-                l2.setVisibility(View.GONE);
+                customProgressDialog.dismiss();
 
             }
         });

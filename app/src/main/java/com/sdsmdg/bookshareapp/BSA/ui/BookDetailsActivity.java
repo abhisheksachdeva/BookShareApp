@@ -6,18 +6,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -56,12 +56,10 @@ public class BookDetailsActivity extends AppCompatActivity {
     String bookId, bookTitleText;
     ImageView image;
     public static String Response;
-    ProgressBar progressBar;
-    LinearLayout l1,l2;
     FrameLayout rootView;
     NestedScrollView scrollView;
     Boolean showMore=false;
-    Button dismiss;
+    CustomProgressDialog customProgressDialog;
 
     public static String getResponse() {
         return Response;
@@ -73,6 +71,10 @@ public class BookDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_books_details);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        customProgressDialog = new CustomProgressDialog(BookDetailsActivity.this);
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.show();
+        customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
 
         authorBook = (TextView) findViewById(R.id.book_author);
         ratingBook = (RatingBar) findViewById(R.id.book_rating);
@@ -80,26 +82,8 @@ public class BookDetailsActivity extends AppCompatActivity {
         image = (ImageView) findViewById(R.id.book_image);
         bookTitle = (TextView) findViewById(R.id.book_title);
         bookDescription = (TextView) findViewById(R.id.description);
-        progressBar = (ProgressBar) findViewById(R.id.progress);
         rootView = (FrameLayout) findViewById(R.id.root_view);
         scrollView = (NestedScrollView) findViewById(R.id.scroll_view);
-//        scrollView.setVisibility(View.INVISIBLE);
-        scrollView.getForeground().setAlpha(180);
-        l1 = (LinearLayout)findViewById(R.id.layoutp1);
-        l2 = (LinearLayout)findViewById(R.id.layoutp2);
-        dismiss = (Button)findViewById(R.id.dismiss);
-        dismiss.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                scrollView.getForeground().setAlpha(0);
-                progressBar.setVisibility(View.GONE);
-                l1.setVisibility(View.GONE);
-                l2.setVisibility(View.GONE);
-            }
-        });
-
-
         bookDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -164,11 +148,8 @@ public class BookDetailsActivity extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        progressBar.setVisibility(View.GONE);
-                        l1.setVisibility(View.GONE);
-                        l2.setVisibility(View.GONE);
-                        scrollView.getForeground().setAlpha(0);
 
+                    customProgressDialog.dismiss();
                     }
                 }, 1000);
 
@@ -178,11 +159,7 @@ public class BookDetailsActivity extends AppCompatActivity {
             public void onFailure(Call<Book> call, Throwable t) {
                 Log.d("BDA fail", t.toString());
                 TransitionManager.beginDelayedTransition(rootView);
-                progressBar.setVisibility(View.GONE);
-//                scrollView.setVisibility(View.VISIBLE);
-                l1.setVisibility(View.GONE);
-                l2.setVisibility(View.GONE);
-                scrollView.getForeground().setAlpha(0);
+                customProgressDialog.dismiss();
 
             }
         });
@@ -197,6 +174,8 @@ public class BookDetailsActivity extends AppCompatActivity {
         });
         usersList.setAdapter(usersAdapter);
     }
+
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

@@ -116,10 +116,10 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, ProgressDialog.STYLE_HORIZONTAL);
+            final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setMessage("        Authenticating...                ");
         progressDialog.setIndeterminate(true);
-        progressDialog.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_indeterminate_horizontal));
+        progressDialog.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_indeterminate_horizontal2));
         progressDialog.setInverseBackgroundForced(true);
         progressDialog.show();
 
@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity {
                         saveinSP(response.body().getToken(), response.body().getUserInfo());
                     }
                 }
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
 
             @Override

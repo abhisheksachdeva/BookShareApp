@@ -7,8 +7,10 @@ import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -31,10 +33,8 @@ public class SearchResultsActivity extends AppCompatActivity {
     BookListFragment bookListFragment;
     NestedScrollView scrollingView;
     FloatingActionButton button;
-    ProgressBar progress;
-    LinearLayout l1, l2 ;
-    Button dismiss;
     Integer count = 0;
+    CustomProgressDialog customProgressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -42,28 +42,9 @@ public class SearchResultsActivity extends AppCompatActivity {
         setContentView(R.layout.search_results);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        customProgressDialog = new CustomProgressDialog(SearchResultsActivity.this);
+        customProgressDialog.setCancelable(false);
         scrollingView = (NestedScrollView) findViewById(R.id.scrollView);
-        scrollingView.getForeground().setAlpha(0);
-        progress = (ProgressBar) findViewById(R.id.progress);
-        l1 = (LinearLayout)findViewById(R.id.layoutp1);
-        l2 = (LinearLayout)findViewById(R.id.layoutp2);
-        l1.setVisibility(View.INVISIBLE);
-        l2.setVisibility(View.INVISIBLE);
-        progress.setVisibility(View.INVISIBLE);
-        dismiss = (Button)findViewById(R.id.dismiss);
-        dismiss.setVisibility(View.INVISIBLE);
-        dismiss.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                scrollingView.getForeground().setAlpha(0);
-                progress.setVisibility(View.GONE);
-                l1.setVisibility(View.GONE);
-                l2.setVisibility(View.GONE);
-            }
-        });
-
         button = (FloatingActionButton) findViewById(R.id.scroll);
 
         scrollingView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
@@ -127,20 +108,15 @@ public class SearchResultsActivity extends AppCompatActivity {
         protected void onPostExecute(String result) {
             if (bookListFragment.getResp() == null) {
                 Toast.makeText(SearchResultsActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
-                scrollingView.getForeground().setAlpha(0);
-                progress.setVisibility(View.GONE);
-                l1.setVisibility(View.GONE);
-                l2.setVisibility(View.GONE);
+                customProgressDialog.dismiss();
+
 
             } else {
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        scrollingView.getForeground().setAlpha(0);
-                        progress.setVisibility(View.GONE);
-                        l1.setVisibility(View.GONE);
-                        l2.setVisibility(View.GONE);
+                        customProgressDialog.dismiss();
                     }
                 }, 1000);
 
@@ -149,17 +125,9 @@ public class SearchResultsActivity extends AppCompatActivity {
 
         @Override
         protected void onPreExecute() {
+            customProgressDialog.show();
+            customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
 
-            scrollingView.getForeground().setAlpha(180);
-            l1.setVisibility(View.VISIBLE);
-            l2.setVisibility(View.VISIBLE);
-            progress.setVisibility(View.VISIBLE);
-            dismiss.setVisibility(View.VISIBLE);
-        }
-
-        @Override
-        protected void onProgressUpdate(Integer... values) {
-            progress.setProgress(values[0]);
         }
     }
 
