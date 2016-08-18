@@ -37,6 +37,7 @@
             android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:text="\@iitr.ac.in"
+            android:textStyle=""
             android:textSize="18dp" />
     </LinearLayout>
 
@@ -74,11 +75,13 @@
 
     <android.support.v7.widget.AppCompatButton
         android:id="@+id/btn_login"
-        android:layout_width="fill_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/button_shape"
+        android:layout_gravity="center"
+        android:textColor="@color/White"
         android:padding="12dp"
         android:text="Login" />
 
@@ -91,13 +94,32 @@
         android:gravity="center"
         android:text="No account yet? Create one"
         android:textSize="16dp" />
-
+<LinearLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:text="Guest mode"
+        android:textColor="@color/White"
         android:onClick="guestModeClicked"
         android:background="@drawable/button_shape"/>
+
+    <Button
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:text="Sign Up"
+        android:textColor="#14AAFA"
+        android:id="@+id/signup"
+        android:onClick="signUpClicked"
+        android:background="@drawable/button_shape_other"
+        android:layout_marginLeft="10dp"
+        />
+
+</LinearLayout>
+
 
 </LinearLayout>

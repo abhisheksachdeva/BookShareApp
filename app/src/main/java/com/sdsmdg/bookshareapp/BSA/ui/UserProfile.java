@@ -1,30 +1,39 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterRequest;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
+import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -44,10 +53,9 @@ public class UserProfile extends AppCompatActivity {
     ImageView profile_picture, background_image;
     String contactNo;
     String email;
-    LinearLayout l1, l2 ;
     NestedScrollView scrollView;
-    ProgressBar progress;
-    Button dismiss;
+    CustomProgressDialog customProgressDialog;
+
 
 
     @Override
@@ -56,6 +64,10 @@ public class UserProfile extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        customProgressDialog = new CustomProgressDialog(UserProfile.this);
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.show();
+        customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
 
         name = (TextView)findViewById(R.id.user_name);
         emailTextView = (TextView)findViewById(R.id.user_email);
@@ -64,21 +76,6 @@ public class UserProfile extends AppCompatActivity {
         background_image = (ImageView) findViewById(R.id.background_image);
         booksCount = (TextView) findViewById(R.id.books_count);
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
-        scrollView.getForeground().setAlpha(180);
-        l1 = (LinearLayout)findViewById(R.id.layoutp1);
-        l2 = (LinearLayout)findViewById(R.id.layoutp2);
-        progress = (ProgressBar) findViewById(R.id.progress);
-        dismiss = (Button)findViewById(R.id.dismiss);
-        dismiss.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                scrollView.getForeground().setAlpha(0);
-                progress.setVisibility(View.GONE);
-                l1.setVisibility(View.GONE);
-                l2.setVisibility(View.GONE);
-            }
-        });
 
 
         String id = getIntent().getExtras().getString("id");
@@ -148,11 +145,7 @@ public class UserProfile extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        progress.setVisibility(View.GONE);
-                        l1.setVisibility(View.GONE);
-                        l2.setVisibility(View.GONE);
-                        scrollView.getForeground().setAlpha(0);
-
+                        customProgressDialog.dismiss();
                     }
                 }, 1000);
             }
@@ -160,21 +153,41 @@ public class UserProfile extends AppCompatActivity {
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 Log.d("BookDetails fail", t.toString());
-                progress.setVisibility(View.GONE);
-                l1.setVisibility(View.GONE);
-                l2.setVisibility(View.GONE);
-                scrollView.getForeground().setAlpha(0);
+                customProgressDialog.dismiss();
+
             }
         });
     }
 
     public void callClicked(View view) {
+        final CharSequence[] items = { "Call", "Copy Contact Number","Cancel"};
+        AlertDialog.Builder builder = new AlertDialog.Builder(UserProfile.this);
+        builder.setTitle("Do you want to :");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (items[which].equals("Call")){
 
-        String uri = "tel:" + contactNo.trim();
+                    String uri = "tel:" + contactNo.trim();
 
-        Intent i = new Intent(Intent.ACTION_DIAL);
-        i.setData(Uri.parse(uri));
-        startActivity(i);
+                    Intent i = new Intent(Intent.ACTION_DIAL);
+                    i.setData(Uri.parse(uri));
+                    startActivity(i);
+                }
+                else if(items[which].equals("Copy Contact Number")) {
+                    ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
+                    ClipData clip = ClipData.newPlainText("Contact No.",contactNo.trim());
+                    clipboard.setPrimaryClip(clip);
+                    Toast.makeText(UserProfile.this,"Contact Number Copied",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    dialog.dismiss();
+
+                }
+            }
+        });
+        builder.show();
+
     }
 
     public void emailClicked(View view) {

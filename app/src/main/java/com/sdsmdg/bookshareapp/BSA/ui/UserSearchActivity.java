@@ -1,12 +1,17 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +37,8 @@ public class UserSearchActivity extends AppCompatActivity {
     EditText queryEditText;
     UsersAdapter adapter;
     TextView noUsersTextView;
+    CustomProgressDialog customProgressDialog;
+
 
     private final String TAG = UserSearchActivity.class.getSimpleName();
 
@@ -39,6 +46,9 @@ public class UserSearchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_search);
+
+        customProgressDialog = new CustomProgressDialog(UserSearchActivity.this);
+        customProgressDialog.setCancelable(false);
 
         noUsersTextView = (TextView) findViewById(R.id.no_users_textView);
 
@@ -61,7 +71,10 @@ public class UserSearchActivity extends AppCompatActivity {
     }
 
     public void userSearchClicked(View view) {
+        hideKeyboard();
         noUsersTextView.setVisibility(View.GONE);
+        customProgressDialog.show();
+        customProgressDialog.getWindow().setLayout(464,LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<List<UserInfo>> call = api.searchUser(queryEditText.getText().toString());
         call.enqueue(new Callback<List<UserInfo>>() {
@@ -74,13 +87,29 @@ public class UserSearchActivity extends AppCompatActivity {
                     noUsersTextView.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
+
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        customProgressDialog.dismiss();
+                    }
+                }, 1000);
             }
 
             @Override
             public void onFailure(Call<List<UserInfo>> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Check your internet connectivity and try again", Toast.LENGTH_SHORT).show();
+                customProgressDialog.dismiss();
             }
         });
+    }
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
     }
 
 }

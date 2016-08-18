@@ -121,8 +121,6 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
             @Override
             public void onClick(View v) {
 
-                Log.d("ssswwwqqq",tempValues.getBookDetails().getId()+" ID");
-
                 BooksAPI api = NetworkingFactory.getGRInstance().getBooksApi();
                 Call<GoodreadsResponse2> call = api.getBookDescription(search_id, CommonUtilities.API_KEY);
                 call.enqueue(new Callback<GoodreadsResponse2>() {

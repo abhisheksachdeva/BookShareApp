@@ -29,7 +29,8 @@
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.MainActivity"
             android:label="Campus Books"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize"/>
         <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.SignupActivity" />
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.MyBooks"

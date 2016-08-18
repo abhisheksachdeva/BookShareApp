@@ -20,6 +20,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -27,6 +28,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -66,8 +68,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SwipeRefreshLayout refreshLayout;
     SearchView searchView;
     Integer count = 1;
-    ProgressDialog progress;
     String Resp;
+    CustomProgressDialog customProgressDialog;
+
+    public String getResplocal() {
+        return resplocal;
+    }
+
+    String resplocal;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     RecyclerView localBooksList;
@@ -76,13 +84,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ImageView _profilePicture;
     String url;
     NotificationFragment notifFragment;
-    ProgressBar progressBar;
-    LinearLayout linearLayout1,linearLayout2;
-    FrameLayout frameLayout;
-    Button dismiss;
     Boolean progress_isVisible = false;
     //Search Menu item reference in the toolbar
     MenuItem searchItem;
+    TextView noBookstextview;
 
     public String getResp() {
         return Resp;
@@ -91,30 +96,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        customProgressDialog = new CustomProgressDialog(MainActivity.this);
+        customProgressDialog.setCancelable(false);
         prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
         Helper.setUserId(prefs.getString("id", prefs.getString("id", "")));
         Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
 
         setContentView(R.layout.activity_main);
-        progressBar = (ProgressBar)findViewById(R.id.progress);
-        linearLayout1 = (LinearLayout) findViewById(R.id.layoutp1) ;
-        linearLayout2 = (LinearLayout) findViewById(R.id.layoutp2) ;
-        frameLayout = (FrameLayout) findViewById(R.id.mainframelyout);
-        frameLayout.getForeground().setAlpha(180);
-        dismiss = (Button)findViewById(R.id.dismiss);
-        dismiss.setOnClickListener(new View.OnClickListener() {
+        noBookstextview = (TextView)findViewById(R.id.no_books_textView);
+        noBookstextview.setVisibility(View.GONE);
 
-            @Override
-            public void onClick(View v) {
-                frameLayout.getForeground().setAlpha(0);
-                progressBar.setVisibility(View.GONE);
-                linearLayout2.setVisibility(View.GONE);
-                linearLayout1.setVisibility(View.GONE);
-                progress_isVisible= false;
-            }
-        });
+        progress_isVisible= false;
 
 
         new ProgressLoader().execute( );
@@ -148,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 getLocalBooks(String.valueOf(page + 1));
-                Toast.makeText(getApplicationContext(), "Loading Page " + (page + 1), Toast.LENGTH_SHORT).show();
+                Snackbar.make(findViewById(R.id.coordinatorlayout),"Loadied Page "+(page +1),Snackbar.LENGTH_SHORT).show();
             }
         };
 
@@ -221,18 +214,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             do {
                 try {
                     Thread.sleep(1000);
-                    if (getResp() != null) {
+                    if (getResp() != null || getResplocal()!=null) {
                         break;
                     }
                     publishProgress(count);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (getResp() != null) {
+                if (getResp() != null || getResplocal()!=null){
                     break;
                 }
                 count++;
-            }while (getResp()==null);
+            }while (getResp()==null || getResplocal()!=null);
 
 
             return "Task Completed.";
@@ -241,17 +234,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            noBookstextview.setVisibility(View.GONE);
             progress_isVisible= true;
-
+            customProgressDialog.show();
+            customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
         }
 
         @Override
         protected void onPostExecute(String result) {
-            if (getResp() == null) {
-                Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
-                linearLayout1.setVisibility(View.GONE);
-                linearLayout2.setVisibility(View.GONE);
-                progressBar.setVisibility(View.GONE);
+            if (getResp() == "null" || getResplocal()=="null") {
+                if(getResp() == "null"){
+                    Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+                }
+                customProgressDialog.dismiss();
                 progress_isVisible= false;
 
 
@@ -260,20 +255,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        frameLayout.getForeground().setAlpha(0);
-                        progressBar.setVisibility(View.GONE);
-                        linearLayout1.setVisibility(View.GONE);
-                        linearLayout2.setVisibility(View.GONE);
+                        customProgressDialog.dismiss();
                         progress_isVisible= false;
                     }
                 }, 1000);
 
             }
+            Resp=null;
+            resplocal=null;
+
         }
 
         @Override
         protected void onProgressUpdate(Integer... values) {
-            progress.setProgress(values[0]);
         }
     }
 
@@ -284,18 +278,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onQueryTextSubmit(String query) {
+        new ProgressLoader().execute();
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<List<Book>> call = api.search(query);
         call.enqueue(new Callback<List<Book>>() {
             @Override
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
-                if (response.body() != null) {
+                booksList.clear();
+                if (response.body().size() != 0) {
+                    resplocal = response.toString();
                     List<Book> localBooksList = response.body();
-                    booksList.clear();
                     booksList.addAll(localBooksList);
-                    adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
                 }
+                else {
+                    resplocal="null";
+                    noBookstextview.setVisibility(View.VISIBLE);
+                }
+                adapter.notifyDataSetChanged();
+
 
             }
 
@@ -329,6 +330,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 notifItem.setVisible(true);
                 getLocalBooks("1");
+                noBookstextview.setVisibility(View.GONE);
+
                 return true;
             }
         });
@@ -429,6 +432,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     booksList.addAll(localBooksList);
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
+                }else {
+                    Resp = "null";
                 }
 
             }
@@ -458,29 +463,36 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void onBackPressed() {
 
-        if(!progress_isVisible) {
+        if (this.drawerLayout.isDrawerVisible(GravityCompat.START)) {
+
+            this.drawerLayout.closeDrawer(GravityCompat.START);
+
+        }else{
+            if(!progress_isVisible) {
 
 
-            if (backCounter >= 1) {
-                Intent intent = new Intent(Intent.ACTION_MAIN);
-                intent.addCategory(Intent.CATEGORY_HOME);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                Toast.makeText(this, "Ciao Buddy !", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
+                if (backCounter >= 1) {
+                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                    intent.addCategory(Intent.CATEGORY_HOME);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    Toast.makeText(this, "Ciao Buddy !", Toast.LENGTH_SHORT).show();
+                    startActivity(intent);
 
-            } else {
-                Snackbar.make(findViewById(R.id.drawer_layout), "       Press Again To Exit", Snackbar.LENGTH_LONG).show();
-                backCounter++;
-                new Handler().postDelayed(new Runnable() {
+                } else {
+                    Snackbar.make(findViewById(R.id.coordinatorlayout), "       Press Again To Exit", Snackbar.LENGTH_LONG).show();
+                    backCounter++;
+                    new Handler().postDelayed(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        backCounter = 0;
-                    }
-                }, 2000);
+                        @Override
+                        public void run() {
+                            backCounter = 0;
+                        }
+                    }, 2000);
 
+                }
             }
         }
+
     }
 
     @Override
