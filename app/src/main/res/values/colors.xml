@@ -11,6 +11,7 @@
     <color name="Grey">#DDDDDD</color>
     <color name="Yellow">#FFFF00</color>
     <color name="app_theme_background">#EEEEEE</color>
+    <color name="app_theme_button_other">#14AAFA</color>
     <color name="app_theme_toolbar">#e74c3c</color>
     <color name="app_theme_navigation_bar">#bf3931</color>
     <color name="app_theme_button_start">#f50057</color>

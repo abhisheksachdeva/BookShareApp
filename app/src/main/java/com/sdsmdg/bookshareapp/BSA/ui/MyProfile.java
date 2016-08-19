@@ -2,7 +2,6 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -11,7 +10,6 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -410,6 +408,14 @@ public class MyProfile extends AppCompatActivity {
                                         public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                                             Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
                                             profilePicture.setImageBitmap(bitmap);
+                                            backgroundImageView.setImageBitmap(bitmap);
+                                            Blurry.with(getApplicationContext())
+                                                    .radius(40)
+                                                    .sampling(1)
+                                                    .color(Color.argb(66, 0, 0, 0))
+                                                    .async()
+                                                    .capture(findViewById(R.id.background_image))
+                                                    .into((ImageView) findViewById(R.id.background_image));
                                         }
 
                                         @Override
@@ -427,6 +433,8 @@ public class MyProfile extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<Signup> call, Throwable t) {
                         Log.d("BookDetails fail", t.toString());
+                        Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
+
                     }
                 });
         }

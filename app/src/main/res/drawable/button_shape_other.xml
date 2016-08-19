@@ -14,6 +14,6 @@
         />
     <stroke
         android:width="2dp"
-        android:color="#14AAFA"
+        android:color="@color/app_theme_button_other"
         />
 </shape>

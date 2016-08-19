@@ -67,10 +67,6 @@
             android:textAllCaps="false"
             android:layout_marginRight="5dp"
             android:textColor="#FFFFFF"
-            android:shadowColor="#000000"
-            android:shadowDx="6"
-            android:shadowDy="6"
-            android:shadowRadius="7"
             />
     </LinearLayout>
 

@@ -69,10 +69,6 @@
                 android:layout_gravity="center_horizontal"
                 android:background="@drawable/button_search"
                 android:onClick="search"
-                android:shadowColor="#000000"
-                android:shadowDx="6"
-                android:shadowDy="6"
-                android:shadowRadius="7"
                 android:text="Search"
                 android:textColor="#FFFFFF" />
 
