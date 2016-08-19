@@ -10,7 +10,7 @@
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:foreground="@drawable/window_dim">
+        >
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_to_refresh_layout"
@@ -25,47 +25,4 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
     </FrameLayout>
-
-    <LinearLayout
-        android:id="@+id/layoutp1"
-        android:layout_width="200dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center"
-        android:background="@drawable/border"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="313dp"
-            android:layout_height="164dp"
-            android:indeterminate="true"
-            android:indeterminateDrawable="@drawable/progress_indeterminate_horizontal"
-            android:scaleX="0.4"
-            android:scaleY="0.4" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layoutp2"
-        android:layout_width="200dp"
-        android:layout_height="32dp"
-        android:layout_below="@+id/layoutp1"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/border1"
-        android:gravity="center"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/dismiss"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:layout_marginBottom="2dp"
-            android:layout_marginTop="2dp"
-            android:background="@drawable/error" />
-
-    </LinearLayout>
-
 </FrameLayout>

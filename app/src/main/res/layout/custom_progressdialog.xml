@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <LinearLayout
+        android:id="@+id/layoutp1"
+        android:layout_width="200dp"
+        android:layout_height="70dp"
+        android:layout_gravity="center"
+        android:background="@drawable/border_progress"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/progress"
+            android:layout_width="313dp"
+            android:layout_height="164dp"
+            android:indeterminate="true"
+            android:indeterminateDrawable="@drawable/progress_indeterminate_horizontal"
+            android:scaleX="0.4"
+            android:scaleY="0.4" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/layoutp2"
+        android:layout_width="200dp"
+        android:layout_height="32dp"
+        android:layout_below="@+id/layoutp1"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/border_progress2"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/dismiss"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/error" />
+
+    </LinearLayout>
+
+</LinearLayout>

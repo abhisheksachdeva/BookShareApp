@@ -16,10 +16,12 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -77,19 +79,8 @@ public class MyProfile extends AppCompatActivity {
     BooksAdapterSimple adapter;
     ImageView backgroundImageView;
     NestedScrollView scrollView;
-    ProgressBar progress;
+    CustomProgressDialog customProgressDialog;
     String Resp;
-    Integer count=0;
-    LinearLayout l1, l2 ;
-    Button dismiss;
-
-
-
-
-    public String getResp() {
-        return Resp;
-    }
-
     SPDataLoader loader = new SPDataLoader();
 
     @Override
@@ -108,7 +99,10 @@ public class MyProfile extends AppCompatActivity {
         setContentView(R.layout.activity_my_profile);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        customProgressDialog = new CustomProgressDialog(MyProfile.this);
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.show();
+        customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
         profilePicture = (CircleImageView)findViewById(R.id.profile_picture);
         userName = (TextView) findViewById(R.id.user_name);
         userEmail = (TextView)findViewById(R.id.user_email);
@@ -116,23 +110,9 @@ public class MyProfile extends AppCompatActivity {
         userBooksListView = (RecyclerView)findViewById(R.id.user_books_list_view);
         backgroundImageView = (ImageView)findViewById(R.id.background_image);
         booksCount = (TextView)findViewById(R.id.books_count);
-        progress = (ProgressBar) findViewById(R.id.progress);
         userBooksListView = (RecyclerView)findViewById(R.id.user_books_list_view);
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
-        scrollView.getForeground().setAlpha(180);
-        l1 = (LinearLayout)findViewById(R.id.layoutp1);
-        l2 = (LinearLayout)findViewById(R.id.layoutp2);
-        dismiss = (Button)findViewById(R.id.dismiss);
-        dismiss.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                scrollView.getForeground().setAlpha(0);
-                progress.setVisibility(View.GONE);
-                l1.setVisibility(View.GONE);
-                l2.setVisibility(View.GONE);
-            }
-        });
 
         userBooksListView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new BooksAdapterSimple(this, userBooksList, new BooksAdapterSimple.OnItemClickListener() {
@@ -142,7 +122,6 @@ public class MyProfile extends AppCompatActivity {
         });
         userBooksListView.setAdapter(adapter);
         userBooksListView.setNestedScrollingEnabled(false);
-        scrollView.getForeground().setAlpha(180);
 
         String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
 
@@ -202,11 +181,7 @@ public class MyProfile extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        progress.setVisibility(View.GONE);
-                        l1.setVisibility(View.GONE);
-                        l2.setVisibility(View.GONE);
-                        scrollView.getForeground().setAlpha(0);
-
+                    customProgressDialog.dismiss();
                     }
                 }, 1000);
 
@@ -215,10 +190,8 @@ public class MyProfile extends AppCompatActivity {
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 Log.d("BookDetails fail", t.toString());
-                progress.setVisibility(View.GONE);
-                l1.setVisibility(View.GONE);
-                l2.setVisibility(View.GONE);
-                scrollView.getForeground().setAlpha(0);
+                customProgressDialog.dismiss();
+
 
             }
         });

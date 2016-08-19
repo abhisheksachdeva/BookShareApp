@@ -44,7 +44,6 @@ public class LoginActivity extends AppCompatActivity {
     Button _loginButton;
     @InjectView(R.id.link_signup)
     TextView _signupLink;
-
     String token;
     Context context;
     boolean showPassword = false;
@@ -53,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
         ButterKnife.inject(this);
 
         context = this;
@@ -106,6 +106,11 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(i);
     }
 
+    public void signUpClicked(View view) {
+        Intent i = new Intent(this, SignupActivity.class);
+        startActivity(i);
+    }
+
     public void login() {
         Log.d(TAG, "Login");
 
@@ -116,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, ProgressDialog.STYLE_HORIZONTAL);
+            final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setMessage("        Authenticating...                ");
         progressDialog.setIndeterminate(true);
         progressDialog.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_indeterminate_horizontal));
@@ -141,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
                         saveinSP(response.body().getToken(), response.body().getUserInfo());
                     }
                 }
-                progressDialog.dismiss();
+//                progressDialog.dismiss();
             }
 
             @Override
