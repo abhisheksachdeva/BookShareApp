@@ -32,6 +32,13 @@ public class Notifications {
     @SerializedName("is_cancelled")
     boolean isCancelled;
 
+    @SerializedName("unix_time")
+    long unix_time;
+
+    public long getUnix_time() {
+        return unix_time;
+    }
+
     public String getDetail() {
         return detail;
     }

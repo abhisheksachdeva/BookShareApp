@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Hostel"
-        android:textSize="12dp"
+        android:textSize="12sp"
         android:paddingLeft="4dp"
         android:layout_marginTop="8dp" />
     <Spinner
@@ -75,9 +75,15 @@
     </Spinner>
 
     <Button
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Save"
-        android:onClick="saveClicked"/>
+        android:paddingLeft="50dp"
+        android:paddingRight="50dp"
+        android:background="@drawable/button_shape"
+        android:textColor="#ffffff"
+        android:layout_gravity="center"
+        android:onClick="saveClicked"
+        />
 
 </LinearLayout>

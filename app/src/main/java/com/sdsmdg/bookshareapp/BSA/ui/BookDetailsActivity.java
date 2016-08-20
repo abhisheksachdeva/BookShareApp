@@ -74,7 +74,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         customProgressDialog = new CustomProgressDialog(BookDetailsActivity.this);
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
-        customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+        customProgressDialog.getWindow().setLayout(100, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
 
         authorBook = (TextView) findViewById(R.id.book_author);
         ratingBook = (RatingBar) findViewById(R.id.book_rating);

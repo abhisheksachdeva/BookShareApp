@@ -53,7 +53,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:textColor="@color/White"
-                        android:textSize="16dp"
+                        android:textSize="16sp"
                         android:textStyle="italic" />
 
                     <LinearLayout
@@ -101,15 +101,6 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:text="Book Description"
                 android:ellipsize="end"
-                android:textSize="18sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
-                android:layout_margin="16dp"
-                android:text="Readers in campus"
                 android:textSize="18sp" />
 
             <android.support.v7.widget.RecyclerView

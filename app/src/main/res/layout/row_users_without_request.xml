@@ -35,7 +35,7 @@
                 android:maxLines="2"
                 android:text="Name"
                 android:textAlignment="center"
-                android:textSize="16dp"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -45,7 +45,7 @@
                 android:layout_gravity="center"
                 android:text="Email"
                 android:textAlignment="center"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textStyle="italic" />
 
             <TextView
@@ -55,7 +55,7 @@
                 android:layout_gravity="center"
                 android:text="Hostel"
                 android:textAlignment="center"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textStyle="italic" />
 
         </LinearLayout>
