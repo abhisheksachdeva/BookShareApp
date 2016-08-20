@@ -9,15 +9,18 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
@@ -72,6 +75,16 @@ public class SearchResultsActivity extends AppCompatActivity {
         r3 = (RadioButton) findViewById(R.id.author);
         bookListFragment = new BookListFragment();
 
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    search(v);
+                    return true;
+                }
+                return false;
+            }
+        });
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, bookListFragment)

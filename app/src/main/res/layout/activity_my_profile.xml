@@ -40,20 +40,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:layout_margin="20dp"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical">
 
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:src="@drawable/ic_book_white_48dp"
-                            android:tint="@color/app_theme_toolbar" />
+                            android:tint="@color/White" />
 
                         <TextView
                             android:id="@+id/books_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="no"
+                            android:text="0"
+                            android:layout_gravity="center"
                             android:textColor="@color/White"
                             android:textSize="16dp" />
 
@@ -81,7 +83,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom|center_horizontal"
-                            android:text="Abhishek Sachdeva"
+                            android:text="Loading..."
                             android:textColor="@color/White"
                             android:textSize="20dp" />
 
@@ -90,7 +92,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom|center_horizontal"
-                            android:text="abhis.uec2014@iitr.ac.in"
+                            android:text="Loading..."
                             android:textColor="@color/White"
                             android:textSize="14dp" />
 
@@ -106,21 +108,21 @@
 
                     <ImageView
                         android:id="@+id/edit_profile_image"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="left|bottom"
                         android:layout_margin="20dp"
                         android:onClick="changeImageClicked"
-                        android:src="@drawable/change_image" />
+                        android:src="@drawable/ic_insert_photo_white_48dp" />
 
                     <ImageView
                         android:id="@+id/edit_profile"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="right|bottom"
                         android:layout_margin="20dp"
                         android:onClick="editProfileClicked"
-                        android:src="@drawable/pen" />
+                        android:src="@drawable/ic_edit_white_48dp" />
 
                 </FrameLayout>
             </LinearLayout>
@@ -140,19 +142,19 @@
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:layout_height="40dp"
-                        android:layout_gravity="center"
-                        android:fontFamily="casual"
-                        android:text="Books owned"
-                        android:textAlignment="center"
-                        android:gravity="center_vertical"
-                        android:textSize="20dp"
-                        android:textStyle="bold" />
+                        android:text="Books"
+                        android:gravity="right"
+                        android:paddingTop="5dp"
+                        android:paddingRight="50dp"
+                        android:textSize="20sp"
+                        />
 
                     <Button
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="40dp"
                         android:text="Edit"
+                        android:layout_gravity="center_vertical"
                         android:textSize="16sp"
                         android:textColor="@color/White"
                         android:background="@drawable/button_shape"

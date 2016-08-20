@@ -5,7 +5,7 @@ android {
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "com.example.abhishek.bookshareapp"
+        applicationId "com.sdsmdg.bookshareapp.BSA"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1

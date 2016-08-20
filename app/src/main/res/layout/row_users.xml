@@ -20,6 +20,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             app:civ_border_width="2dp"
+            android:layout_marginStart="5dp"
             app:civ_border_color="#FFFFFF"/>
 
         <LinearLayout
@@ -69,12 +70,8 @@
             android:background="@drawable/button_shape"
             android:text="Request"
             android:textAllCaps="false"
-            android:layout_marginRight="5dp"
+            android:layout_marginEnd="5dp"
             android:textColor="#FFFFFF"
-            android:shadowColor="#000000"
-            android:shadowDx="6"
-            android:shadowDy="6"
-            android:shadowRadius="7"
             />
     </LinearLayout>
 

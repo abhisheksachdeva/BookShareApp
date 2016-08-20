@@ -66,8 +66,6 @@ public class BookListFragment extends Fragment {
 
     public void getBooks(String query, String field, String key) {
 
-        Toast.makeText(getActivity(), "Searching...", Toast.LENGTH_SHORT).show();
-
         BooksAPI api = NetworkingFactory.getGRInstance().getBooksApi();
         Call<GoodreadsResponse> call = api.getBooks(query, field, key);
         call.enqueue(new Callback<GoodreadsResponse>() {

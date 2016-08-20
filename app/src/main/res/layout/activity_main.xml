@@ -65,8 +65,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:layout_gravity="right|bottom"
+                    android:layout_gravity="end|bottom"
                     android:src="@android:drawable/ic_menu_search"
                     android:onClick="searchClicked"
                     android:layout_margin="16dp"/>

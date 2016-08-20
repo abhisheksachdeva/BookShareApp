@@ -18,17 +18,18 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             app:civ_border_color="#FFFFFF"
+            android:layout_marginStart="5dp"
             app:civ_border_width="2dp" />
 
         <TextView
             android:id="@+id/row_user_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:gravity="center_vertical"
+            android:paddingStart="40sp"
             android:maxLines="2"
-            android:text="You own the book"
-            android:textAlignment="center"
-            android:textSize="16dp"
+            android:text="You own this book"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
     </LinearLayout>

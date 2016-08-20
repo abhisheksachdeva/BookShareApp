@@ -8,7 +8,20 @@
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     android:paddingTop="26dp"
-    android:background="@color/app_theme_background">
+    android:background="@color/app_theme_background"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Citadel"
+        android:paddingStart="10dp"
+        android:paddingEnd="20dp"
+        android:layout_gravity="center_horizontal"
+        android:textSize="50sp"
+        android:fontFamily="cursive"
+        android:textColor="@color/app_theme_button_other"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,14 +35,16 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:layout_weight="2">
+            android:layout_weight="2"
+            >
 
             <EditText
                 android:id="@+id/input_email"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:hint="Email"
-                android:inputType="textEmailAddress" />
+                android:inputType="textEmailAddress"
+                />
         </android.support.design.widget.TextInputLayout>
 
         <TextView
@@ -38,12 +53,7 @@
             android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:text="\@iitr.ac.in"
-<<<<<<< HEAD
             android:textSize="18sp" />
-=======
-            android:textStyle=""
-            android:textSize="18dp" />
->>>>>>> a103d24306360e1c702d16ac6a689a02bfa81b94
     </LinearLayout>
 
 
@@ -61,7 +71,7 @@
 
         <EditText
             android:id="@+id/input_password"
-            android:layout_width="230dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
             android:inputType="textPassword" />
@@ -74,25 +84,25 @@
             android:layout_gravity="center_vertical"
             android:src="@drawable/ic_visibility_off"
             android:background="@color/app_theme_background"
-            android:layout_weight="1" />
+            android:layout_weight="0"
+            />
         </LinearLayout>
 
-
-
-    <android.support.v7.widget.AppCompatButton
+    <Button
         android:id="@+id/btn_login"
         android:layout_width="150dp"
-        android:layout_height="45dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/button_shape"
-        android:layout_gravity="center"
         android:textColor="@color/White"
-        android:padding="12dp"
+        android:layout_gravity="center_horizontal"
+        android:textAllCaps="false"
         android:text="Login"
-        android:textSize="18sp"
-        android:layout_gravity="center"
-        android:textColor="@color/White"
+        android:textSize="20sp"
         />
 
     <TextView
@@ -103,45 +113,39 @@
         android:layout_marginBottom="25dp"
         android:gravity="center"
         android:text="No account yet? Create one"
+        android:textColor="@color/Black"
         android:textSize="16dp" />
 <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="horizontal">
+    android:orientation="horizontal"
+    android:layout_gravity="center_horizontal"
+    android:layout_marginRight="10dp"
+    android:layout_marginLeft="10dp"
+    >
     <Button
-        android:layout_width="150dp"
+        android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:text="Guest mode"
+        android:text="Guest"
+        android:textAllCaps="false"
         android:textColor="@color/White"
         android:onClick="guestModeClicked"
         android:background="@drawable/button_shape"
-        android:textColor="@color/White"
         android:textSize="20sp"
-        android:layout_marginRight="20dp"
         />
-    <Button
-        android:layout_width="130dp"
-        android:layout_height="match_parent"
-        android:text="Sign Up"
-        android:textAllCaps="false"
-        android:onClick="guestModeClicked"
-        android:background="@drawable/button_shape_other"
-        android:textColor="@color/app_theme_button_other"
-        android:textSize="20sp" />
-        </LinearLayout>
 
-    <Button
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="Sign Up"
-        android:textColor="#14AAFA"
-        android:id="@+id/signup"
-        android:onClick="signUpClicked"
-        android:background="@drawable/button_shape_other"
-        android:layout_marginLeft="10dp"
-        />
+
+    <!--<Button-->
+        <!--android:layout_width="130dp"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:text="Sign Up"-->
+        <!--android:textAllCaps="false"-->
+        <!--android:onClick="guestModeClicked"-->
+        <!--android:background="@drawable/button_shape_other"-->
+        <!--android:textColor="@color/app_theme_button_other"-->
+        <!--android:textSize="20sp"-->
+        <!--/>-->
 
 </LinearLayout>
 

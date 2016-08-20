@@ -40,21 +40,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="right"
-                        android:layout_marginEnd="40dp"
-                        android:layout_marginTop="35dp"
-                        android:orientation="horizontal">
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical">
 
                         <ImageView
                             android:layout_width="50dp"
                             android:layout_height="50dp"
                             android:src="@drawable/ic_book_white_48dp"
-                            android:tint="@color/app_theme_toolbar" />
+                            android:tint="@color/White" />
 
                         <TextView
                             android:id="@+id/books_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="no"
+                            android:text="0"
+                            android:layout_gravity="center"
                             android:textColor="@color/White"
                             android:textSize="16dp" />
 
@@ -82,7 +83,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom|center_horizontal"
-                            android:text="Abhishek Sachdeva"
+                            android:text="Loading..."
                             android:textColor="@color/White"
                             android:textSize="20dp" />
 
@@ -91,7 +92,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="bottom|center_horizontal"
-                            android:text="abhis.uec2014@iitr.ac.in"
+                            android:text="Loading..."
                             android:textColor="@color/White"
                             android:textSize="14dp" />
 
@@ -109,16 +110,17 @@
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/call"
-                        android:layout_gravity="left|bottom"
+                        android:src="@drawable/ic_call_white_48dp"
+                        android:layout_gravity="start|bottom"
                         android:layout_margin="20dp"
                         android:background="@android:color/transparent"
-                        android:onClick="callClicked"/>
+                        android:onClick="callClicked"
+                        />
 
                     <ImageView
                         android:layout_width="30dp"
                         android:layout_height="30dp"
-                        android:src="@drawable/envelope"
+                        android:src="@drawable/ic_email_white_48dp"
                         android:layout_gravity="right|bottom"
                         android:layout_margin="20dp"
                         android:onClick="emailClicked"/>
@@ -131,16 +133,15 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="10dp"
-                    android:fontFamily="casual"
-                    android:text="Books owned"
-                    android:textAlignment="center"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
+                <!--<TextView-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_margin="10dp"-->
+                    <!--android:text="Books owned"-->
+                    <!--android:textAlignment="center"-->
+                    <!--android:textSize="20sp"-->
+                    <!--/>-->
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/user_books_list_view"

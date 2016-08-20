@@ -13,8 +13,8 @@
         android:bottom="0dp"
         />
 
-    <stroke
-        android:width="0dp"
-        android:color="@color/White"
-        />
+    <!--<stroke-->
+        <!--android:width="2dp"-->
+        <!--android:color="@color/White"-->
+        <!--/>-->
 </shape>

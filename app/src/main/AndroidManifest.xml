@@ -16,7 +16,8 @@
         android:theme="@style/AppTheme">
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.LoginActivity"
-            android:label="Login" />
+            android:label="Login"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.SearchResultsActivity"
             android:label="Search">
@@ -63,7 +64,8 @@
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.GuestActivity"
             android:label="Campus Books" />
-        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.UserSearchActivity"></activity>
+        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.UserSearchActivity"
+            android:label="Search users" />
     </application>
 
 </manifest>
