@@ -28,10 +28,11 @@
                     android:id="@+id/searchEditText"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Search By" />
+                    android:inputType="text"
+                    android:imeOptions="actionSearch"
+                    android:hint="Search" />
 
             </LinearLayout>
-
 
             <RadioGroup
                 android:layout_width="wrap_content"
