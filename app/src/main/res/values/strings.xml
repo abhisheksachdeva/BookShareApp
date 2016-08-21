@@ -18,5 +18,10 @@
         <item>Ravindra</item>
         <item>Sarojini</item>
     </string-array>
+    <string-array name="options">
+        <item>All</item>
+        <item>Title</item>
+        <item>Author</item>
+    </string-array>
 
 </resources>

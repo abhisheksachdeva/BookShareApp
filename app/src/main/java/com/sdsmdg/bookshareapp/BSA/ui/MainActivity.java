@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void searchClicked(View view) {
-        Intent i = new Intent(this, SearchResultsActivity.class);
+        Intent i = new Intent(this, SearchResultsActivity2.class);
         startActivity(i);
     }
 

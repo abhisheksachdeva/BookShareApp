@@ -8,18 +8,16 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,12 +25,12 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.BookListFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 
-public class SearchResultsActivity extends AppCompatActivity {
+public class SearchResultsActivity2 extends AppCompatActivity {
     String query;
     String API_KEY = CommonUtilities.API_KEY;
     EditText searchEditText;
     String mode = "all";
-    RadioButton r1, r2, r3;
+    Spinner select;
     BookListFragment bookListFragment;
     NestedScrollView scrollingView;
     FloatingActionButton button;
@@ -42,13 +40,35 @@ public class SearchResultsActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.search_results);
+        setContentView(R.layout.search_results2);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        customProgressDialog = new CustomProgressDialog(SearchResultsActivity.this);
+        customProgressDialog = new CustomProgressDialog(SearchResultsActivity2.this);
         customProgressDialog.setCancelable(false);
         scrollingView = (NestedScrollView) findViewById(R.id.scrollView);
         button = (FloatingActionButton) findViewById(R.id.scroll);
+        select = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.options, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        select.setAdapter(adapter);
+        select.setSelection(0);
+        select.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if(parent.getItemAtPosition(position).toString()=="All"){
+                    mode ="all";
+                }else if(parent.getItemAtPosition(position).toString()=="Title"){
+                    mode ="title";
+                }else {
+                    mode = "author";
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                mode = "all";
+            }
+        });
 
         scrollingView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -70,25 +90,22 @@ public class SearchResultsActivity extends AppCompatActivity {
             }
         });
         searchEditText = (EditText) findViewById(R.id.searchEditText);
-        r1 = (RadioButton) findViewById(R.id.all);
-        r2 = (RadioButton) findViewById(R.id.title);
-        r3 = (RadioButton) findViewById(R.id.author);
         bookListFragment = new BookListFragment();
 
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-//                    search(v);
-                    return false;
+                    search(v);
+                    return true;
                 }
                 return false;
             }
         });
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container, bookListFragment)
-                .commit();
+                .replace(R.id.container2, bookListFragment)
+                      .commit();
 
     }
 
@@ -120,7 +137,7 @@ public class SearchResultsActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String result) {
             if (bookListFragment.getResp() == null) {
-                Toast.makeText(SearchResultsActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchResultsActivity2.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
                 customProgressDialog.dismiss();
 
 
@@ -155,24 +172,15 @@ public class SearchResultsActivity extends AppCompatActivity {
         return (super.onOptionsItemSelected(item));
     }
 
-//    public void search(View view) {
-//
-//        if (r1.isChecked()) {
-//            mode = "all";
-//        }
-//        if (r2.isChecked()) {
-//            mode = "title";
-//        } else if (r3.isChecked()) {
-//            mode = "author";
-//        }
-//
-//        hideKeyboard();
-//        query = searchEditText.getText().toString();
-//        bookListFragment.getBooks(query, mode, API_KEY);
-//        new ProgressLoader().execute();
-//
-//
-//    }
+    public void search(View view) {
+
+        hideKeyboard();
+        query = searchEditText.getText().toString();
+        bookListFragment.getBooks(query, mode, API_KEY);
+        new ProgressLoader().execute();
+
+
+    }
 
     public void hideKeyboard() {
         View view = this.getCurrentFocus();

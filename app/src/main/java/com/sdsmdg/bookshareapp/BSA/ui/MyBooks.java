@@ -90,7 +90,7 @@ public class MyBooks extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MyBooks.this, SearchResultsActivity.class);
+                Intent i = new Intent(MyBooks.this, SearchResultsActivity2.class);
                 startActivity(i);
                 finish();
             }

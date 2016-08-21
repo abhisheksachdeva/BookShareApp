@@ -18,8 +18,9 @@
             android:name="com.sdsmdg.bookshareapp.BSA.ui.LoginActivity"
             android:label="Login"
             android:theme="@style/AppTheme.NoActionBar"/>
+
         <activity
-            android:name="com.sdsmdg.bookshareapp.BSA.ui.SearchResultsActivity"
+            android:name="com.sdsmdg.bookshareapp.BSA.ui.SearchResultsActivity2"
             android:label="Search">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCHRESULTS" />

@@ -109,17 +109,38 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         days = hours/24;
 
         if(timeDiff<60){
-            time = " "+timeDiff.toString() + " seconds ago";
+            if(timeDiff==1){
+                time = " "+timeDiff.toString() + " second ago";
+            } else {
+                time = " "+timeDiff.toString() + " seconds ago";
+            }
         }else {
             if (minutes < 60) {
-                time = " "+minutes.toString() + " minutes ago";
+                if(minutes==1){
+                    time = " "+minutes.toString() + " minute ago";
+                } else {
+                    time = " "+minutes.toString() + " minutes ago";
+                }
+
 
             } else {
                 if (hours < 60) {
-                    time = " "+hours.toString() + " hours ago";
+                    if(hours==1){
+                        time = " "+hours.toString() + " hour ago";
+
+                    }else {
+                        time = " "+hours.toString() + " hours ago";
+
+                    }
 
                 } else {
-                    time = " "+days.toString() + " days ago";
+                    if(days==1){
+                        time = " "+days.toString() + " day ago";
+
+                    }else {
+                        time = " "+days.toString() + " days ago";
+
+                    }
                 }
             }
 
