@@ -371,7 +371,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(i);
 
         } else if (id == R.id.nav_grlogin) {
-            Intent i = new Intent(this, GRLogin.class);
+            Intent i = new Intent(this, GRLogin3.class);
             startActivity(i);
 
         }else if (id == R.id.nav_logout) {
