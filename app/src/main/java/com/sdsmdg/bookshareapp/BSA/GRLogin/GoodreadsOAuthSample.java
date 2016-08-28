@@ -62,7 +62,7 @@ public class GoodreadsOAuthSample {
         System.out.println("Goodreads oAuth sample: Please visit the following URL to authorize:");
         System.out.println(authUrl);
         System.out.println("Waiting 10s to allow time for visiting auth URL and authorizing...");
-        Thread.sleep(20000);
+        Thread.sleep(10000);
 
         System.out.println("Waiting time complete - assuming access granted and attempting to get access token");
         // Get Access Token using Temporary token and Verifier Code
@@ -82,9 +82,12 @@ public class GoodreadsOAuthSample {
         oauthParameters.consumerKey = GOODREADS_KEY;
         oauthParameters.token = accessTokenResponse.token;
 
+
+        System.out.println(accessTokenResponse.token.toString());
+
         // Use OAuthParameters to access the desired Resource URL
         HttpRequestFactory requestFactory = new ApacheHttpTransport().createRequestFactory(oauthParameters);
-        GenericUrl genericUrl = new GenericUrl("https://www.goodreads.com/review/list/?shelf=to-read");
+        GenericUrl genericUrl = new GenericUrl("https://www.goodreads.com/api/auth_user");
         HttpResponse resp = requestFactory.buildGetRequest(genericUrl).execute();
         System.out.println(resp.parseAsString());
     }
