@@ -1,27 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/app_theme_background"
     android:orientation="vertical"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
-    android:paddingTop="26dp"
-    android:background="@color/app_theme_background"
-    >
+    android:paddingTop="26dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Citadel"
-        android:paddingStart="10dp"
-        android:paddingEnd="20dp"
         android:layout_gravity="center_horizontal"
-        android:textSize="50sp"
         android:fontFamily="cursive"
+        android:paddingEnd="20dp"
+        android:paddingStart="10dp"
+        android:text="Citadel"
         android:textColor="@color/app_theme_button_other"
-        />
+        android:textSize="50sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,16 +33,17 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
-            android:layout_weight="2"
-            >
+            android:layout_weight="2">
 
-            <EditText
+            <AutoCompleteTextView
                 android:id="@+id/input_email"
                 android:layout_width="230dp"
                 android:layout_height="wrap_content"
                 android:hint="Email"
+                android:completionThreshold="1"
                 android:inputType="textEmailAddress"
-                />
+                android:imeOptions="actionNext"/>
+
         </android.support.design.widget.TextInputLayout>
 
         <TextView
@@ -62,81 +61,80 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="0dp"
-        android:layout_weight="3"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp">
 
-        <EditText
-            android:id="@+id/input_password"
-            android:layout_width="match_parent"
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword" />
-    </android.support.design.widget.TextInputLayout>
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:layout_weight="3">
+
+            <EditText
+                android:id="@+id/input_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Password"
+                android:inputType="textPassword" />
+        </android.support.design.widget.TextInputLayout>
 
         <ImageButton
             android:id="@+id/_btn_show_password"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_visibility_off"
-            android:background="@color/app_theme_background"
             android:layout_weight="0"
-            />
-        </LinearLayout>
+            android:background="@color/app_theme_background"
+            android:src="@drawable/ic_visibility_off" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/button_shape"
-        android:textColor="@color/White"
-        android:layout_gravity="center_horizontal"
-        android:textAllCaps="false"
+        android:gravity="center"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
         android:text="Login"
-        android:textSize="20sp"
-        />
+        android:textAllCaps="false"
+        android:textColor="@color/White"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/link_signup"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="25dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="No account yet? Create one"
         android:textColor="@color/Black"
         android:textSize="16dp" />
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginRight="10dp"
-    android:layout_marginLeft="10dp"
-    >
-    <Button
-        android:layout_width="130dp"
+
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="Guest"
-        android:textAllCaps="false"
-        android:textColor="@color/White"
-        android:onClick="guestModeClicked"
-        android:background="@drawable/button_shape"
-        android:textSize="20sp"
-        />
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@drawable/button_shape"
+            android:onClick="guestModeClicked"
+            android:text="Guest"
+            android:textAllCaps="false"
+            android:textColor="@color/White"
+            android:textSize="20sp" />
 
 
-    <!--<Button-->
+        <!--<Button-->
         <!--android:layout_width="130dp"-->
         <!--android:layout_height="match_parent"-->
         <!--android:text="Sign Up"-->
@@ -147,7 +145,7 @@
         <!--android:textSize="20sp"-->
         <!--/>-->
 
-</LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>
