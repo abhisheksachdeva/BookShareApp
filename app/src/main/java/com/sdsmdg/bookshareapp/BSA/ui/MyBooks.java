@@ -457,17 +457,10 @@ public class MyBooks extends AppCompatActivity {
 
         public void remove(int position) {
             Book rbook = bookList.get(position);
-            removeBook(rbook.getId());
-            if (itemsPendingRemoval.contains(rbook)) {
-                itemsPendingRemoval.remove(rbook);
-            }
-            if (bookList.contains(rbook)) {
-                bookList.remove(position);
-                notifyItemRemoved(position);
-            }
+            removeBook(rbook.getId(), position);
         }
 
-        public void removeBook(String bookId) {
+        public void removeBook(final String bookId, final int position) {
 
             RemoveBook removeBook = new RemoveBook();
             removeBook.setBookId(bookId);
@@ -481,11 +474,22 @@ public class MyBooks extends AppCompatActivity {
                     if (response.body() != null) {
                         notifyDataSetChanged();
                         Toast.makeText(MyBooks.this, "Successfully removed", Toast.LENGTH_SHORT).show();
+                        Book rbook = bookList.get(position);
+                        if (itemsPendingRemoval.contains(rbook)) {
+                            itemsPendingRemoval.remove(rbook);
+                        }
+                        if (bookList.contains(rbook)) {
+                            bookList.remove(position);
+                            notifyItemRemoved(position);
+                        }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Detail> call, Throwable t) {
+                    itemsPendingRemoval.remove(bookList.get(position));
+                    //This line will remove the undo button and show the book row completely
+                    notifyItemChanged(position);
                     Toast.makeText(MyBooks.this, "Check your network connectivity and try again", Toast.LENGTH_SHORT).show();
                 }
             });
