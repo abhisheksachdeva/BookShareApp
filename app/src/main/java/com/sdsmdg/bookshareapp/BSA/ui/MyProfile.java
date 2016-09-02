@@ -123,8 +123,6 @@ public class MyProfile extends AppCompatActivity {
         userBooksListView.setAdapter(adapter);
         userBooksListView.setNestedScrollingEnabled(false);
 
-        String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
-
         id = getIntent().getExtras().getString("id");
         getUserInfoDetails(id);
 

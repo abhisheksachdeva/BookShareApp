@@ -22,6 +22,7 @@ import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.UsersAdapter;
+import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +61,7 @@ public class UserSearchActivity extends AppCompatActivity {
         usersRecyclerView = (RecyclerView) findViewById(R.id.user_list);
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new UsersAdapter(null, this, userInfoList, null, null, new UsersAdapter.OnItemClickListener() {
+        adapter = new UsersAdapter(false, Helper.getUserId(), this, userInfoList, null, null, new UsersAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(UserInfo userInfo) {
                 Log.i(TAG, "onItemClick: " + userInfo.getFirstName());
