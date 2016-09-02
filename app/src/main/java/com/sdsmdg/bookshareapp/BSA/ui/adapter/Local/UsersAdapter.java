@@ -87,7 +87,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = null;
+        View v;
         if(viewType == 1) {
             v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.row_you_own_book, parent, false);
@@ -125,7 +125,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
                     public void onClick(View v) {
 
                         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                        builder.setTitle("Do you want to send a request?");
+                        builder.setTitle("Send request?");
                         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -135,23 +135,17 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder>{
                                 sendNotif.enqueue(new Callback<Notifications>() {
                                     @Override
                                     public void onResponse(Call<Notifications> call, Response<Notifications> response) {
-                                        Log.i("Email iD ", Helper.getUserEmail());
                                         if (response.body() != null) {
-                                            Log.i("SendNotif", "Success");
-                                            Log.d("SendNotif", Helper.getUserId() + " ID" + id);
                                             Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                            Log.i("response", response.body().getDetail());
                                             holder.request.setEnabled(false);
 
                                         } else {
-                                            Log.i("SendNotif", "Response Null");
                                             Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                         }
                                     }
 
                                     @Override
                                     public void onFailure(Call<Notifications> call, Throwable t) {
-                                        Log.i("SendNotif", "Failed!!");
                                         Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
                                     }
                                 });
