@@ -9,17 +9,14 @@ public class BookDetailsToRead {
 	@Element(name = "title")
 	public String title;
 
-	@Element(name="id")
-	public Integer search_id;
-
 	@Element(name = "image_url")
 	public String image_url;
 
 	@Element(name = "small_image_url")
 	public String small_image_url;
 
-	@Element(name = "author")
-	Author author;
+	@Element(name = "authors")
+	public Authors authors;
 
 	@Element(name="average_rating")
 	public float rating;
@@ -35,9 +32,6 @@ public class BookDetailsToRead {
         return ratingCount;
     }
 
-    public Integer getId(){
-		return search_id;
-	}
 
 	public String getTitle(){
 		return title;
@@ -51,8 +45,8 @@ public class BookDetailsToRead {
 		return  small_image_url;
 	}
 
-	public Author getAuthor(){
-		return author;
+	public Authors getAuthor(){
+		return authors;
 	}
 
 

@@ -1,13 +1,20 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.content.Intent;
-import android.net.Uri;
+import android.content.SharedPreferences;
+import android.net.http.*;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.SurfaceHolder;
 import android.view.View;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.google.api.client.auth.oauth.OAuthAuthorizeTemporaryTokenUrl;
 import com.google.api.client.auth.oauth.OAuthCredentialsResponse;
@@ -16,25 +23,15 @@ import com.google.api.client.auth.oauth.OAuthGetTemporaryToken;
 import com.google.api.client.auth.oauth.OAuthHmacSigner;
 import com.google.api.client.auth.oauth.OAuthParameters;
 import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpHeaders;
 import com.google.api.client.http.HttpRequestFactory;
     import com.google.api.client.http.HttpResponse;
 import com.google.api.client.http.apache.ApacheHttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.json.webtoken.JsonWebSignature;
-import com.google.gson.JsonObject;
-import com.sdsmdg.bookshareapp.BSA.GRLogin.AccessToken;
 import com.sdsmdg.bookshareapp.BSA.GRLogin.GRLoginInterface;
-import com.sdsmdg.bookshareapp.BSA.GRLogin.GoodreadsOAuthResponse;
-import com.sdsmdg.bookshareapp.BSA.GRLogin.ServiceGenerator;
 import com.sdsmdg.bookshareapp.BSA.R;
-import com.sdsmdg.bookshareapp.BSA.api.models.GoodreadsResponse;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
-import org.apache.http.Header;
-import org.apache.http.HttpEntity;
-import org.json.JSONArray;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -44,7 +41,7 @@ import org.xml.sax.SAXException;
 
 import java.io.IOException;
 import java.io.StringReader;
-import java.lang.reflect.Type;
+import java.util.Timer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -56,29 +53,56 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 
-public class GRLogin4 extends AppCompatActivity {
+public class GRLoginActivity extends AppCompatActivity {
 
-    Button login;
+    Button login,toRead;
     public static final String BASE_GOODREADS_URL = "https://www.goodreads.com";
     public static final String TOKEN_SERVER_URL = BASE_GOODREADS_URL + "/oauth/request_token";
-    public static final String AUTHENTICATE_URL = BASE_GOODREADS_URL + "/oauth/authorize";
+    public static final String AUTHENTICATE_URL = BASE_GOODREADS_URL + "/oauth/authorize?mobile=1";
     public static final String ACCESS_TOKEN_URL = BASE_GOODREADS_URL + "/oauth/access_token";
 
     public static final String GOODREADS_KEY = CommonUtilities.API_KEY;
     public static final String GOODREADS_SECRET = CommonUtilities.SECRET;
     public static String authUrl;
-
+    private Handler handler = new Handler();
 
     OAuthHmacSigner signer;
     OAuthGetTemporaryToken getTemporaryToken;
     OAuthCredentialsResponse temporaryTokenResponse;
     OAuthAuthorizeTemporaryTokenUrl accessTempToken;
+    SharedPreferences pref;
+    WebView webView;
+
+//
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grlogin);
+        pref = getApplicationContext().getSharedPreferences("UserId", MODE_PRIVATE);
+        webView = (WebView)findViewById(R.id.webview);
+        webView.setWebViewClient(new WebViewClient(){
+
+            @Override
+            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error){
+                handler.proceed();
+            }
+        });
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.getSettings().setLoadWithOverviewMode(true);
+        webView.getSettings().setUseWideViewPort(true);
+        webView.clearCache(true);
+
         login = (Button) findViewById(R.id.btn_login);
+        toRead = (Button) findViewById(R.id.btn_to_read);
+        toRead.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i =new Intent(GRLoginActivity.this,ToReadActivity.class);
+                startActivity(i);
+                finish();
+            }
+        });
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -86,9 +110,12 @@ public class GRLogin4 extends AppCompatActivity {
                 // Get Temporary Token
                  getTemporaryToken = new OAuthGetTemporaryToken(TOKEN_SERVER_URL);
                 signer.clientSharedSecret = GOODREADS_SECRET;
-                getTemporaryToken.signer = signer;
+                getTemporaryToken.signer    = signer;
                 getTemporaryToken.consumerKey = GOODREADS_KEY;
                 getTemporaryToken.transport = new NetHttpTransport();
+
+
+
                 Thread thread = new Thread() {
                     @Override
                     public void run() {
@@ -99,18 +126,66 @@ public class GRLogin4 extends AppCompatActivity {
                             authUrl = accessTempToken.build(); System.out.println("Goodreads oAuth sample: Please visit the following URL to authorize:");
                             System.out.println(authUrl);
                             System.out.println("Waiting 10s to allow time for visiting auth URL and authorizing...");
-                            Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(authUrl));
-                            startActivity(i);
 
-                            Thread.sleep(20000);
+                            GRLoginActivity.this.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    webView.loadUrl(authUrl);
+                                    Log.i("ebb","wesaldaf");
+                                }
+                            });
+
                             OAuthGetAccessToken getAccessToken = new OAuthGetAccessToken(ACCESS_TOKEN_URL);
+                            if(getAccessToken == null){
+                                Log.i("getaccc","null");
+                            }else {
+                                Log.i("getacc",getAccessToken.toString());
+                            }
                             getAccessToken.signer = signer;
-                            // NOTE: This is the main difference from the StackOverflow example
+
                             signer.tokenSharedSecret = temporaryTokenResponse.tokenSecret;
                             getAccessToken.temporaryToken = temporaryTokenResponse.token;
                             getAccessToken.transport = new NetHttpTransport();
                             getAccessToken.consumerKey = GOODREADS_KEY;
-                            OAuthCredentialsResponse accessTokenResponse = getAccessToken.execute();
+
+
+                            OAuthCredentialsResponse accessTokenResponse =null;
+                            final Long start = System.currentTimeMillis();
+                            Long s;
+                            while (true){
+                                s = System.currentTimeMillis()-start;
+
+                                if(s>=10000){
+                                    GRLoginActivity.this.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            Toast.makeText(GRLoginActivity.this, "TimeOut!Please Try Again", Toast.LENGTH_SHORT).show();
+                                            Intent i = new Intent(GRLoginActivity.this,GRLoginActivity.class);
+                                            startActivity(i);
+                                            finish();
+                                        }
+                                    });
+                                    Log.i("inside else",s.toString());
+                                    Intent i = new Intent(GRLoginActivity.this,GRLoginActivity.class);
+                                    startActivity(i);
+                                    finish();
+                                    break;
+
+                                }else {
+                                    try {
+
+                                        accessTokenResponse = getAccessToken.execute();
+                                        Log.i("ACCESSTOKEN", accessTokenResponse.toString());
+                                        if (!accessTokenResponse.toString().contains("Invalid OAuth Request")) {
+                                            Log.i("time", s.toString());
+                                            break;
+                                        }
+                                    } catch (IOException e) {
+                                        Log.i("ffucf", e.toString());
+                                        Log.i("sddsd", s.toString());
+                                    }
+                                }
+                            }
 
                             // Build OAuthParameters in order to use them while accessing the resource
                             OAuthParameters oauthParameters = new OAuthParameters();
@@ -125,34 +200,8 @@ public class GRLogin4 extends AppCompatActivity {
                             HttpRequestFactory requestFactory = new ApacheHttpTransport().createRequestFactory(oauthParameters);
                             GenericUrl genericUrl = new GenericUrl("https://www.goodreads.com/api/auth_user");
                             HttpResponse resp = requestFactory.buildGetRequest(genericUrl).execute();
-//                            System.out.println(resp.parseAsString());
 
 
-//                            GoodreadsOAuthResponse g ;
-//                            g= resp.parseAs(GoodreadsOAuthResponse.class);
-//                            System.out.println(g.getId());
-
-
-//                            String xml= resp.parseAsString();
-//                            System.out.println(resp.parseAsString());
-//
-//                            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-//                            DocumentBuilder builder;
-//                            InputSource is;
-//                            try {
-//                                builder = factory.newDocumentBuilder();
-//                                is = new InputSource(new StringReader(resp.parseAsString()));
-//                                Document doc = builder.parse(is);
-//                                 String userid = doc.getAttributes().getNamedItem("id").getNodeValue();
-//                                System.out.println(userid+"sddg");
-//                            } catch (ParserConfigurationException e) {
-//                            } catch (SAXException e) {
-//                            } catch (IOException e) {
-//                            }
-
-
-
-                            DocumentBuilderFactory domFactory = DocumentBuilderFactory.newInstance();
                             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                             DocumentBuilder builder;
                             InputSource is;
@@ -169,43 +218,31 @@ public class GRLogin4 extends AppCompatActivity {
                                     Node currentItem = nl.item(x);
                                     String key = currentItem.getAttributes().getNamedItem("id").getNodeValue();
                                     System.out.println(key);
+                                    SharedPreferences.Editor editor = pref.edit();
+                                    editor.putString("userGrId",key);
+                                    editor.apply();
                                     Helper.setUserGRid(key);
                                 }
 
                             }catch (ParserConfigurationException p){
 
-                            }catch (SAXException s){
+                            }catch (SAXException sa){
 
                             }catch (XPathExpressionException x){
 
                             }
 
-
-//                            HttpRequestFactory requestFactory2 = new ApacheHttpTransport().createRequestFactory(oauthParameters);
-//                            GenericUrl genericUrl2 = new GenericUrl("https://www.goodreads.com/review/list/"+Helper.getUserGRid()
-//                                    +".xml?shelf=to-read?key="+CommonUtilities.API_KEY);
-//                            HttpResponse resp2 = requestFactory2.buildGetRequest(genericUrl2).execute();
-//                            System.out.println(resp2.parseAsString());
-
-
-
-
                         } catch (IOException e) {
                             e.printStackTrace();
-
-                        }catch (InterruptedException ie){
-                            ie.printStackTrace();
-
+                            Log.i("fff",e.toString());
                         }
+//                        }catch (InterruptedException ie){
+//                            ie.printStackTrace();
+//
+//                        }
                     }
                 };
                 thread.start();
-
-                // Build Authenticate URL
-
-
-                // Redirect to Authenticate URL in order to get Verifier Code
-
 
             }
         });

@@ -67,41 +67,8 @@
         <activity
             android:name=".ui.UserSearchActivity"
             android:label="Search users" />
-        <activity android:name=".ui.GRLogin">
-
-        <intent-filter>
-            <action android:name="android.intent.action.VIEW" />
-            <category android:name="android.intent.category.DEFAULT" />
-            <category android:name="android.intent.category.BROWSABLE" />
-            <data
-                android:host="www.goodreads.com"
-                android:scheme="your" />
-        </intent-filter>
-        </activity>
-        <activity android:name=".ui.GRLogin2">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="www.goodreads.com"
-                    android:scheme="your" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".ui.ToRead"/>
-        <activity android:name=".ui.GRLogin3">
-
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data
-                    android:host="www.goodreads.com"
-                    android:scheme="your" />
-            </intent-filter>
-        </activity>
-        <activity android:name=".ui.GRLogin4">
+        <activity android:name=".ui.ToReadActivity"/>
+        <activity android:name=".ui.GRLoginActivity">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

@@ -27,7 +27,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -371,13 +370,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(i);
 
         } else if (id == R.id.nav_grlogin) {
-            if(Helper.getUserGRid()==null){
-                Intent i = new Intent(this, GRLogin4.class);
+            SharedPreferences preff = getSharedPreferences("UserId",MODE_PRIVATE);
+//            if(preff.getString("userGrId",null)==null){
+//                Intent i = new Intent(this, GRLoginActivity.class);
+//                startActivity(i);
+//            }else {
+//                Intent i = new Intent(this, ToReadActivity.class);
+//                startActivity(i);
+//            }
+            Intent i = new Intent(this, GRLoginActivity.class);
                 startActivity(i);
-            }else {
-                Intent i = new Intent(this, ToRead.class);
-                startActivity(i);
-            }
 
 
         }else if (id == R.id.nav_logout) {

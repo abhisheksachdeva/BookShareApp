@@ -1,17 +1,25 @@
 package com.sdsmdg.bookshareapp.BSA.api.models;
 
 import org.simpleframework.xml.Element;
+import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
+
+import java.util.List;
 
 @Root(name="GoodreadsResponse",strict = false)
 public class GoodreadsResponse3 {
 
 
-    @Element(name="book")
-    public BookDescription bDesc;
+    @ElementList(name="books")
+    public List<BookDetailsToRead> bookDetailsToReads;
 
-    public BookDescription getbDesc() {
-        return bDesc;
+//    public ToReadModel getToReadModelReviews() {
+//        return toReadModelReviews;
+//    }
+
+
+    public List<BookDetailsToRead> getBookDetailsToReads() {
+        return bookDetailsToReads;
     }
 
     public GoodreadsResponse3(){
