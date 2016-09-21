@@ -56,6 +56,7 @@ import javax.xml.xpath.XPathFactory;
 public class GRLoginActivity extends AppCompatActivity {
 
     Button login,toRead;
+    //url tags
     public static final String BASE_GOODREADS_URL = "https://www.goodreads.com";
     public static final String TOKEN_SERVER_URL = BASE_GOODREADS_URL + "/oauth/request_token";
     public static final String AUTHENTICATE_URL = BASE_GOODREADS_URL + "/oauth/authorize?mobile=1";
@@ -64,7 +65,6 @@ public class GRLoginActivity extends AppCompatActivity {
     public static final String GOODREADS_KEY = CommonUtilities.API_KEY;
     public static final String GOODREADS_SECRET = CommonUtilities.SECRET;
     public static String authUrl;
-    private Handler handler = new Handler();
 
     OAuthHmacSigner signer;
     OAuthGetTemporaryToken getTemporaryToken;
@@ -88,6 +88,7 @@ public class GRLoginActivity extends AppCompatActivity {
                 handler.proceed();
             }
         });
+        //webview settings
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
@@ -106,6 +107,8 @@ public class GRLoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //Here we are generating a temporary token
                 signer = new OAuthHmacSigner();
                 // Get Temporary Token
                  getTemporaryToken = new OAuthGetTemporaryToken(TOKEN_SERVER_URL);
@@ -115,7 +118,9 @@ public class GRLoginActivity extends AppCompatActivity {
                 getTemporaryToken.transport = new NetHttpTransport();
 
 
-
+                /*Everything is inside this thread,
+                the webview is updated using runOnUiThread
+                 */
                 Thread thread = new Thread() {
                     @Override
                     public void run() {
@@ -123,23 +128,25 @@ public class GRLoginActivity extends AppCompatActivity {
                             temporaryTokenResponse = getTemporaryToken.execute();
                             accessTempToken = new OAuthAuthorizeTemporaryTokenUrl(AUTHENTICATE_URL);
                             accessTempToken.temporaryToken = temporaryTokenResponse.token;
-                            authUrl = accessTempToken.build(); System.out.println("Goodreads oAuth sample: Please visit the following URL to authorize:");
+                            authUrl = accessTempToken.build();
+                            System.out.println("Goodreads oAuth sample: Please visit the following URL to authorize:");
+                            //this is the authentication url
                             System.out.println(authUrl);
-                            System.out.println("Waiting 10s to allow time for visiting auth URL and authorizing...");
-
+//                            System.out.println("Waiting 10s to allow time for visiting auth URL and authorizing...");
                             GRLoginActivity.this.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    //opening it on webview, if its already authenticated..will open homepage..else sign in page of GR
                                     webView.loadUrl(authUrl);
-                                    Log.i("ebb","wesaldaf");
+                                    Log.i("ebb", "wesaldaf");
                                 }
                             });
-
+                            // we are obtaining the access token ...
                             OAuthGetAccessToken getAccessToken = new OAuthGetAccessToken(ACCESS_TOKEN_URL);
-                            if(getAccessToken == null){
-                                Log.i("getaccc","null");
-                            }else {
-                                Log.i("getacc",getAccessToken.toString());
+                            if (getAccessToken == null) {
+                                Log.i("getaccc", "null");
+                            } else {
+                                Log.i("getacc", getAccessToken.toString());
                             }
                             getAccessToken.signer = signer;
 
@@ -149,29 +156,31 @@ public class GRLoginActivity extends AppCompatActivity {
                             getAccessToken.consumerKey = GOODREADS_KEY;
 
 
-                            OAuthCredentialsResponse accessTokenResponse =null;
+                            OAuthCredentialsResponse accessTokenResponse = null;
                             final Long start = System.currentTimeMillis();
                             Long s;
-                            while (true){
-                                s = System.currentTimeMillis()-start;
-
-                                if(s>=10000){
+                            while (true) {
+                                s = System.currentTimeMillis() - start;
+                                // we've put up a timeout of s seconds..
+                                if (s >= 18000) {
                                     GRLoginActivity.this.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            Toast.makeText(GRLoginActivity.this, "TimeOut!Please Try Again", Toast.LENGTH_SHORT).show();
-                                            Intent i = new Intent(GRLoginActivity.this,GRLoginActivity.class);
+                                            Toast.makeText(GRLoginActivity.this, "TimeOut! Please Try Again", Toast.LENGTH_SHORT).show();
+                                            Intent i = new Intent(GRLoginActivity.this, GRLoginActivity.class);
+                                            interrupt();
                                             startActivity(i);
                                             finish();
                                         }
                                     });
-                                    Log.i("inside else",s.toString());
-                                    Intent i = new Intent(GRLoginActivity.this,GRLoginActivity.class);
-                                    startActivity(i);
-                                    finish();
+                                    Log.i("inside timeout", s.toString());
+
+//
+
+
                                     break;
 
-                                }else {
+                                } else {
                                     try {
 
                                         accessTokenResponse = getAccessToken.execute();
@@ -187,13 +196,25 @@ public class GRLoginActivity extends AppCompatActivity {
                                 }
                             }
 
+
                             // Build OAuthParameters in order to use them while accessing the resource
+//                            if(signer==null){
+//                                Log.i("signer",accessTokenResponse.tokenSecret.toString()+"hhh");
+//                            }
+
+
+                            if(accessTokenResponse== null) {
+                                throw new IOException ("nill") ;
+
+                            }
+
                             OAuthParameters oauthParameters = new OAuthParameters();
                             signer.tokenSharedSecret = accessTokenResponse.tokenSecret;
+
                             oauthParameters.signer = signer;
                             oauthParameters.consumerKey = GOODREADS_KEY;
                             oauthParameters.token = accessTokenResponse.token;
-                            System.out.println(accessTokenResponse.token+" and "+accessTokenResponse.tokenSecret);
+                            System.out.println(accessTokenResponse.token + " and " + accessTokenResponse.tokenSecret);
                             Helper.setAccessToken(accessTokenResponse.token);
                             Helper.setAccessSecret(accessTokenResponse.tokenSecret);
 
@@ -201,6 +222,7 @@ public class GRLoginActivity extends AppCompatActivity {
                             GenericUrl genericUrl = new GenericUrl("https://www.goodreads.com/api/auth_user");
                             HttpResponse resp = requestFactory.buildGetRequest(genericUrl).execute();
 
+                            //for extracting the id from the xml http response..
 
                             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
                             DocumentBuilder builder;
@@ -219,30 +241,38 @@ public class GRLoginActivity extends AppCompatActivity {
                                     String key = currentItem.getAttributes().getNamedItem("id").getNodeValue();
                                     System.out.println(key);
                                     SharedPreferences.Editor editor = pref.edit();
-                                    editor.putString("userGrId",key);
+                                    editor.putString("userGrId", key);
                                     editor.apply();
                                     Helper.setUserGRid(key);
                                 }
 
-                            }catch (ParserConfigurationException p){
+                            } catch (ParserConfigurationException p) {
 
-                            }catch (SAXException sa){
+                            } catch (SAXException sa) {
 
-                            }catch (XPathExpressionException x){
+                            } catch (XPathExpressionException x) {
 
                             }
 
                         } catch (IOException e) {
                             e.printStackTrace();
-                            Log.i("fff",e.toString());
+                            Log.i("fff", e.toString());
+                            if(e.toString()=="nill"){
+                                Intent i = new Intent(GRLoginActivity.this,GRLoginActivity.class);
+                                    startActivity(i);
+                                    finish();
+                            }
+
                         }
-//                        }catch (InterruptedException ie){
-//                            ie.printStackTrace();
-//
-//                        }
+
+
                     }
+
+
                 };
                 thread.start();
+
+
 
             }
         });
