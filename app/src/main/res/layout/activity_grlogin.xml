@@ -4,63 +4,28 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:paddingLeft="24dp"
-    android:paddingRight="24dp"
-    android:paddingTop="26dp"
-    android:background="@color/app_theme_background"
-    android:gravity="center"
-    >
 
-
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/button_shape"
-        android:textColor="@color/White"
-        android:layout_gravity="center_horizontal"
-        android:textAllCaps="false"
-        android:text="Login"
-        android:textSize="20sp"
-        />
-
-
-    <Button
-        android:id="@+id/btn_to_read"
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/button_shape"
-        android:textColor="@color/White"
-        android:layout_gravity="center_horizontal"
-        android:textAllCaps="false"
-        android:text="To Read"
-        android:textSize="20sp"
-        android:layout_marginLeft="50dp"
-        />
-
-</LinearLayout>
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:gravity="center">
 
-
+        <Button
+            android:id="@+id/gr_login"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/button_shape"
+            android:textColor="@color/White"
+            android:textAllCaps="false"
+            android:text="Login to Goodreads"
+            android:textSize="20sp"
+            android:layout_gravity="center"/>
         <WebView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -68,5 +33,5 @@
 
         </WebView>
 
-    </LinearLayout>
+    </FrameLayout>
 </LinearLayout>

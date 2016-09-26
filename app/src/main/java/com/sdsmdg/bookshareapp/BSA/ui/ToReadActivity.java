@@ -1,6 +1,7 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,7 +9,10 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -20,6 +24,7 @@ import com.sdsmdg.bookshareapp.BSA.api.models.BookDetailsToRead;
 import com.sdsmdg.bookshareapp.BSA.api.models.GoodreadsResponse3;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.GR.BooksAdapterToRead;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
+import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,12 +46,19 @@ public class ToReadActivity extends AppCompatActivity {
     String userGrId;
 
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_to_read, menu);
+        return true;
 
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_toread);
+//        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+//        setSupportActionBar(myToolbar);
 
 
         pref = getSharedPreferences("UserId",MODE_PRIVATE);
@@ -130,6 +142,30 @@ public class ToReadActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                SharedPreferences.Editor editor = pref.edit();
+                editor.putString("userGrId", null);
+                editor.apply();
+                Helper.setUserGRid(null);
+
+
+
+                Intent i = new Intent(this,MainActivity.class);
+                startActivity(i);
+                finish();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
 

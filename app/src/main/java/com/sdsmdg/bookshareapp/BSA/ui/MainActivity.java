@@ -371,15 +371,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_grlogin) {
             SharedPreferences preff = getSharedPreferences("UserId",MODE_PRIVATE);
-//            if(preff.getString("userGrId",null)==null){
-//                Intent i = new Intent(this, GRLoginActivity.class);
-//                startActivity(i);
-//            }else {
-//                Intent i = new Intent(this, ToReadActivity.class);
-//                startActivity(i);
-//            }
-            Intent i = new Intent(this, GRLoginActivity.class);
+            if(preff.getString("userGrId",null)==null){
+                Intent in = new Intent(this, GRLoginActivity.class);
+                startActivity(in);
+            }else {
+                Intent i = new Intent(this, ToReadActivity.class);
                 startActivity(i);
+            }
+//            Intent i = new Intent(this, GRLoginActivity.class);
+//                startActivity(i);
 
 
         }else if (id == R.id.nav_logout) {
