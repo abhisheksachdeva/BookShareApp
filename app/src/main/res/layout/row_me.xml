@@ -28,7 +28,7 @@
             android:gravity="center_vertical"
             android:paddingStart="40sp"
             android:maxLines="2"
-            android:text="You own this book"
+            android:text="Me"
             android:textSize="16sp"
             android:textStyle="bold" />
 

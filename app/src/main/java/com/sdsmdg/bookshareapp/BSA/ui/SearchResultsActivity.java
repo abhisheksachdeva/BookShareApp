@@ -8,18 +8,15 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,17 +24,21 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.BookListFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class SearchResultsActivity extends AppCompatActivity {
     String query;
     String API_KEY = CommonUtilities.API_KEY;
     EditText searchEditText;
     String mode = "all";
-    RadioButton r1, r2, r3;
     BookListFragment bookListFragment;
     NestedScrollView scrollingView;
     FloatingActionButton button;
     Integer count = 0;
+    Spinner spinner;//This is used to know whether the search query is author or title, or can be anything
     CustomProgressDialog customProgressDialog;
+    String selected = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +51,36 @@ public class SearchResultsActivity extends AppCompatActivity {
         scrollingView = (NestedScrollView) findViewById(R.id.scrollView);
         button = (FloatingActionButton) findViewById(R.id.scroll);
 
+        final List<String> searchModeList = new ArrayList<>();
+        searchModeList.add("Author");
+        searchModeList.add("Title");
+        searchModeList.add("All");
+
+        spinner = (Spinner) findViewById(R.id.spinner);
+
+        // Creating adapter for spinner
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, searchModeList);
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+        spinner.setAdapter(dataAdapter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selected = searchModeList.get(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        spinner.setSelection(2);//Setting the default vaule of spinner to "All"
+
         scrollingView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -57,7 +88,6 @@ public class SearchResultsActivity extends AppCompatActivity {
                     button.setVisibility(View.VISIBLE);
                 } else {
                     button.setVisibility(View.INVISIBLE);
-
                 }
             }
         });
@@ -70,9 +100,6 @@ public class SearchResultsActivity extends AppCompatActivity {
             }
         });
         searchEditText = (EditText) findViewById(R.id.searchEditText);
-        r1 = (RadioButton) findViewById(R.id.all);
-        r2 = (RadioButton) findViewById(R.id.title);
-        r3 = (RadioButton) findViewById(R.id.author);
         bookListFragment = new BookListFragment();
 
         searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -157,18 +184,9 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     public void search(View view) {
 
-        if (r1.isChecked()) {
-            mode = "all";
-        }
-        if (r2.isChecked()) {
-            mode = "title";
-        } else if (r3.isChecked()) {
-            mode = "author";
-        }
-
         hideKeyboard();
         query = searchEditText.getText().toString();
-        bookListFragment.getBooks(query, mode, API_KEY);
+        bookListFragment.getBooks(query, selected.toLowerCase(), API_KEY);
         new ProgressLoader().execute();
 
 
