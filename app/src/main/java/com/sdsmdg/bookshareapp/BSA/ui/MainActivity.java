@@ -1,6 +1,5 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,13 +27,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -141,7 +135,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 getLocalBooks(String.valueOf(page + 1));
-                Snackbar.make(findViewById(R.id.coordinatorlayout),"Loadied Page "+(page +1),Snackbar.LENGTH_SHORT).show();
             }
         };
 
