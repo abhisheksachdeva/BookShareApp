@@ -99,42 +99,42 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
         holder.request.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final CharSequence[] items = { "Yes", "No"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Do you want to send a request?");
-                builder.setItems(items, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (items[which].equals("Yes")){
-                            String process = "request";
-                            UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                            Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(),Helper.getUserName(), bookId,bookTitle,process,userId,"request for");
-                            sendNotif.enqueue(new Callback<Notifications>() {
-                                @Override
-                                public void onResponse(Call<Notifications> call, Response<Notifications> response) {
-                                    Log.i("Email iD ", Helper.getUserEmail());
-                                    if (response.body() != null) {
-                                        Log.i("SendNotif", "Success");
-                                        Log.d("SendNotif", Helper.getUserId()+" ID"+userId);
-                                        Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                        Log.i("response", response.body().getDetail());
-                                        holder.request.setEnabled(false);
+                        String process = "request";
+                        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                        Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(),Helper.getUserName(), bookId,bookTitle,process,userId,"request for");
+                        sendNotif.enqueue(new Callback<Notifications>() {
+                            @Override
+                            public void onResponse(Call<Notifications> call, Response<Notifications> response) {
+                                Log.i("Email iD ", Helper.getUserEmail());
+                                if (response.body() != null) {
+                                    Log.i("SendNotif", "Success");
+                                    Log.d("SendNotif", Helper.getUserId()+" ID"+userId);
+                                    Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                    Log.i("response", response.body().getDetail());
+                                    holder.request.setEnabled(false);
 
-                                    } else {
-                                        Log.i("SendNotif", "Response Null");
-                                        Toast.makeText(context, response.body().getDetail() , Toast.LENGTH_SHORT).show();
-                                    }
+                                } else {
+                                    Log.i("SendNotif", "Response Null");
+                                    Toast.makeText(context, response.body().getDetail() , Toast.LENGTH_SHORT).show();
                                 }
-                                @Override
-                                public void onFailure(Call<Notifications> call, Throwable t) {
-                                    Log.i("SendNotif","Failed!!");
-                                    Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                        }
-                        else{
-                            dialog.dismiss();
-                        }
+                            }
+                            @Override
+                            public void onFailure(Call<Notifications> call, Throwable t) {
+                                Log.i("SendNotif","Failed!!");
+                                Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
                     }
                 });
                 builder.show();
