@@ -26,61 +26,32 @@
 
                 <EditText
                     android:id="@+id/searchEditText"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:imeOptions="actionSearch"
-                    android:hint="Search" />
+                    android:hint="Search by" />
+
+                <Spinner
+                    android:id="@+id/spinner"
+                    style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <ImageButton
+                    android:id="@+id/searchButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_search"
+                    android:onClick="search" />
 
             </LinearLayout>
-
-            <RadioGroup
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:orientation="horizontal">
-
-                <RadioButton
-                    android:id="@+id/all"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="All" />
-
-                <RadioButton
-                    android:id="@+id/title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Title" />
-
-                <RadioButton
-                    android:id="@+id/author"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Author" />
-
-            </RadioGroup>
-
-            <Button
-                android:id="@+id/searchButton"
-                android:layout_width="80dp"
-                android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/button_search"
-                android:onClick="search"
-                android:text="Search"
-                android:textColor="#FFFFFF" />
-
 
             <FrameLayout
                 android:id="@+id/container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-
         </LinearLayout>
-
     </android.support.v4.widget.NestedScrollView>
-
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/scroll"
@@ -96,4 +67,3 @@
         android:src="@drawable/up"
         android:visibility="invisible" />
 </RelativeLayout>
-

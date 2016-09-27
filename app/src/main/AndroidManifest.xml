@@ -19,7 +19,7 @@
             android:label="Login"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ui.SearchResultsActivity2"
+            android:name=".ui.SearchResultsActivity"
             android:label="Search">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCHRESULTS" />

@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -23,6 +22,7 @@ import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.UsersAdapter;
+import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +61,7 @@ public class UserSearchActivity extends AppCompatActivity {
         usersRecyclerView = (RecyclerView) findViewById(R.id.user_list);
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new UsersAdapter(null, this, userInfoList, null, null, new UsersAdapter.OnItemClickListener() {
+        adapter = new UsersAdapter(false, Helper.getUserId(), this, userInfoList, null, null, new UsersAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(UserInfo userInfo) {
                 Log.i(TAG, "onItemClick: " + userInfo.getFirstName());

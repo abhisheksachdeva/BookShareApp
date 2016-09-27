@@ -13,9 +13,7 @@ import android.text.TextUtils;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -166,7 +164,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         usersList.setLayoutManager(layoutManager);
         userInfoList = new ArrayList<>();
-        usersAdapter = new UsersAdapter(idd, this, userInfoList, bookTitleText, bookId, new UsersAdapter.OnItemClickListener() {
+        usersAdapter = new UsersAdapter(true, idd, this, userInfoList, bookTitleText, bookId, new UsersAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(UserInfo userInfo) {
             }

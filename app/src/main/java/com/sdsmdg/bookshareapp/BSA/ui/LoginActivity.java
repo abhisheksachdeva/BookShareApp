@@ -10,6 +10,8 @@ import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -32,10 +34,10 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
     private static final int REQUEST_SIGNUP = 0;
-    SharedPreferences pref;
+    SharedPreferences pref, prevEmail;//The prevEmail preference is used to store the last two email of the user for the suggestion
 
     @InjectView(R.id.input_email)
-    EditText _emailText;
+    AutoCompleteTextView _emailText;
     @InjectView(R.id.input_password)
     EditText _passwordText;
     @InjectView(R.id._btn_show_password)
@@ -61,6 +63,12 @@ public class LoginActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(_emailText.getWindowToken(), 0);
 
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
+        prevEmail = getApplicationContext().getSharedPreferences("Previous Email", MODE_PRIVATE);
+        String emails[] = {prevEmail.getString("email1", null), prevEmail.getString("email2", null)};
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_dropdown_item_1line, emails);
+        _emailText.setAdapter(adapter);
+
         token = pref.getString("token", "");
         Log.i("Login token", token + " n");
 
@@ -132,6 +140,8 @@ public class LoginActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
         Helper.setUserEmail(email);
 
+        setNewEmail(_emailText.getText().toString());//This function sets the new entered email into the shared prefs for suggestions
+
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<Login> call = usersAPI.getToken(email, password);
         call.enqueue(new Callback<Login>() {
@@ -159,6 +169,22 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    public void setNewEmail(String email) {
+
+        String email2 = prevEmail.getString("email2", null);
+
+        String email1 = email2;
+        if(!email.equals(email1)) {
+            email2 = email;
+        } else {
+            email2 = null;
+        }
+
+        SharedPreferences.Editor editor = prevEmail.edit();
+        editor.putString("email1", email1);
+        editor.putString("email2", email2);
+        editor.apply();
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

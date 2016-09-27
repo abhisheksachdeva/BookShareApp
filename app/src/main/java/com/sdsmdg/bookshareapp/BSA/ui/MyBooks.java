@@ -1,6 +1,7 @@
 
 package com.sdsmdg.bookshareapp.BSA.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
@@ -18,17 +19,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
+import android.util.SparseBooleanArray;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,6 +58,8 @@ public class MyBooks extends AppCompatActivity {
     Integer count = 1;
     String Resp;
     CustomProgressDialog customProgressDialog;
+
+    ActionMode mActionMode;
 
 
     TextView noItemsTextView;
@@ -90,7 +92,7 @@ public class MyBooks extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MyBooks.this, SearchResultsActivity2.class);
+                Intent i = new Intent(MyBooks.this, SearchResultsActivity.class);
                 startActivity(i);
                 finish();
             }
@@ -151,7 +153,7 @@ public class MyBooks extends AppCompatActivity {
     private void setUpRecyclerView(String id) {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MyBooks.this));
         booksList = new ArrayList<>();
-        adapter = new BookAdapter(id, booksList);
+        adapter = new BookAdapter(id, booksList, this);
         mRecyclerView.setAdapter(adapter);
         setUpItemTouchHelper();
         setUpAnimationDecoratorHelper();
@@ -321,14 +323,35 @@ public class MyBooks extends AppCompatActivity {
         String userId;
         private List<Book> bookList;
         boolean undoOn = true; // is undo on, you can turn it on from the toolbar menu
+        //this array stores whether the current book is selected or not
+        SparseBooleanArray selected;
+        //This activity reference is required to activate the contextual action bar
+        Activity activity;
 
         private Handler handler = new Handler(); // hanlder for running delayed runnables
         HashMap<Book, Runnable> pendingRunnables = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
 
-        public BookAdapter(String userId, List<Book> bookList) {
+        public BookAdapter(String userId, List<Book> bookList, Activity activity) {
             itemsPendingRemoval = new ArrayList<>();
             this.bookList = bookList;
+            selected = new SparseBooleanArray();
             this.userId = userId;
+            this.activity = activity;
+        }
+
+        //This function is used to delete the selected items
+        public void deleteSelectedItem() {
+            for (int i = 0; i < bookList.size(); i++) {
+                if(selected.get(i)) {
+                    remove(i);
+                }
+            }
+        }
+
+        //This method is called after the contextual action bar is disabled
+        public void reset() {
+            selected.clear();
+            notifyDataSetChanged();
         }
 
         @Override
@@ -337,9 +360,21 @@ public class MyBooks extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            BookViewHolder viewHolder = (BookViewHolder) holder;
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+            final BookViewHolder viewHolder = (BookViewHolder) holder;
             final Book rbook = bookList.get(position);
+
+            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Toast.makeText(getApplicationContext(), "Selected", Toast.LENGTH_SHORT).show();
+                    //This line activates the contextual action bar
+                    mActionMode = activity.startActionMode(mActionModeCallback);
+                    selected.put(position, true);
+                    viewHolder.itemView.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
+                    return false;
+                }
+            });
 
             if (itemsPendingRemoval.contains(rbook)) {
                 // we need to show the "undo" state of the row
@@ -363,6 +398,7 @@ public class MyBooks extends AppCompatActivity {
                         notifyItemChanged(bookList.indexOf(rbook));
                     }
                 });
+
             } else {
                 // we need to show the "normal" state
                 tempValues = bookList.get(position);
@@ -374,6 +410,10 @@ public class MyBooks extends AppCompatActivity {
                 viewHolder.ratingBook.setRating(tempValues.getRating());
                 viewHolder.ratingCount.setText(tempValues.getRatingsCount() + " votes");
                 viewHolder.itemView.setBackgroundColor(Color.WHITE);
+                //if the book is selected, change it's color to holo blue light
+                if(selected.get(position)) {
+                    viewHolder.itemView.setBackgroundColor(getResources().getColor(android.R.color.holo_blue_light));
+                }
                 viewHolder.titleBook.setVisibility(View.VISIBLE);
                 viewHolder.authorBook.setVisibility(View.VISIBLE);
                 viewHolder.ratingBook.setVisibility(View.VISIBLE);
@@ -417,17 +457,10 @@ public class MyBooks extends AppCompatActivity {
 
         public void remove(int position) {
             Book rbook = bookList.get(position);
-            removeBook(rbook.getId());
-            if (itemsPendingRemoval.contains(rbook)) {
-                itemsPendingRemoval.remove(rbook);
-            }
-            if (bookList.contains(rbook)) {
-                bookList.remove(position);
-                notifyItemRemoved(position);
-            }
+            removeBook(rbook.getId(), position);
         }
 
-        public void removeBook(String bookId) {
+        public void removeBook(final String bookId, final int position) {
 
             RemoveBook removeBook = new RemoveBook();
             removeBook.setBookId(bookId);
@@ -441,11 +474,22 @@ public class MyBooks extends AppCompatActivity {
                     if (response.body() != null) {
                         notifyDataSetChanged();
                         Toast.makeText(MyBooks.this, "Successfully removed", Toast.LENGTH_SHORT).show();
+                        Book rbook = bookList.get(position);
+                        if (itemsPendingRemoval.contains(rbook)) {
+                            itemsPendingRemoval.remove(rbook);
+                        }
+                        if (bookList.contains(rbook)) {
+                            bookList.remove(position);
+                            notifyItemRemoved(position);
+                        }
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Detail> call, Throwable t) {
+                    itemsPendingRemoval.remove(bookList.get(position));
+                    //This line will remove the undo button and show the book row completely
+                    notifyItemChanged(position);
                     Toast.makeText(MyBooks.this, "Check your network connectivity and try again", Toast.LENGTH_SHORT).show();
                 }
             });
@@ -481,5 +525,44 @@ public class MyBooks extends AppCompatActivity {
 
 
     }
+
+    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+
+        // Called when the action mode is created; startActionMode() was called
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            // Inflate a menu resource providing context menu items
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.contextual_menu, menu);
+            return true;
+        }
+
+        // Called each time the action mode is shown. Always called after onCreateActionMode, but
+        // may be called multiple times if the mode is invalidated.
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false; // Return false if nothing is done
+        }
+
+        // Called when the user selects a contextual menu item
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.menu_delete:
+                    adapter.deleteSelectedItem();
+                    mode.finish(); // Action picked, so close the CAB
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        // Called when the user exits the action mode
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            adapter.reset();
+            mActionMode = null;
+        }
+    };
 
 }
