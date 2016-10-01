@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
@@ -17,10 +17,12 @@
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.LoginActivity"
             android:label="Login"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.SearchResultsActivity"
-            android:label="Search">
+            android:label="Search"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCHRESULTS" />
 
@@ -31,23 +33,30 @@
             android:name="com.sdsmdg.bookshareapp.BSA.ui.MainActivity"
             android:label="Campus Books"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan|adjustResize"/>
-        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.SignupActivity" />
+            android:windowSoftInputMode="adjustPan|adjustResize"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.SignupActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.MyBooks"
-            android:label="My Books" />
+            android:label="My Books"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.BookDetailsActivity"
-            android:label="Book Details" />
+            android:label="Book Details"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.UserProfile"
-            android:label="User Details" />
+            android:label="User Details"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.MyProfile"
             android:excludeFromRecents="true"
             android:label="My Profile"
-            android:launchMode="singleTop" />
-        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.SplashScreen">
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -57,15 +66,20 @@
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.EditProfileActivity"
             android:label="Edit your details"
+            android:screenOrientation="portrait"
             android:parentActivityName="com.sdsmdg.bookshareapp.BSA.ui.MyProfile" />
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.ChangePasswordActivity"
-            android:label="Change Password" />
+            android:label="Change Password"
+            android:screenOrientation="portrait"/>
         <activity
             android:name="com.sdsmdg.bookshareapp.BSA.ui.GuestActivity"
-            android:label="Campus Books" />
+            android:label="Campus Books"
+            android:screenOrientation="portrait"/>
         <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.UserSearchActivity"
-            android:label="Search users" />
+            android:label="Search User"
+            android:parentActivityName=".ui.MainActivity"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

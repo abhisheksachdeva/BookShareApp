@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MenuItem searchItem;
     TextView noBookstextview;
 
+
     public String getResp() {
         return Resp;
     }
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorAccent));
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

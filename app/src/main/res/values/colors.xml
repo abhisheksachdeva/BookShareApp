@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#e74c3c</color>
-    <color name="colorPrimaryDark">#bf3931</color>
-    <color name="colorAccent">#33ccff</color>
+    <color name="colorPrimary">#2e2b2b</color>
+    <color name="colorPrimaryDark">#2a2828</color>
+    <color name="colorAccent">#15a015</color>
+    <color name="textColorSecondary">#15a015</color>
     <color name="Red">#ef020e</color>
     <color name="Black">#3b3838</color>
     <color name="White">#ffffff</color>
@@ -11,11 +12,12 @@
     <color name="Grey">#DDDDDD</color>
     <color name="Yellow">#FFFF00</color>
     <color name="app_theme_background">#EEEEEE</color>
-    <color name="app_theme_button_other">#14AAFA</color>
-    <color name="app_theme_toolbar">#e74c3c</color>
-    <color name="app_theme_navigation_bar">#bf3931</color>
+    <color name="app_theme_button_other">#15a015</color>
+    <color name="app_theme_toolbar">#2e2b2b</color>
+    <color name="app_theme_navigation_bar">#2e2b2b</color>
     <color name="app_theme_button_start">#f50057</color>
     <color name="app_theme_button_center">#ff4081</color>
     <color name="app_theme_button_end">#ff80ab</color>
     <color name="app_theme_fab">#e91e63</color>
+
 </resources>
