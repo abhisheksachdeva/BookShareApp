@@ -30,13 +30,6 @@
             android:maxLines="2"
             android:text="You own this book!"
             android:textSize="22sp" />
-
     </LinearLayout>
-
-    <!--<View-->
-        <!--android:background="#D2D5CE"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:layout_gravity="bottom"/>-->
 
 </android.support.v7.widget.CardView>

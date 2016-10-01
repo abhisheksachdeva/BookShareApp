@@ -362,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_mybooks) {
-            Intent i = new Intent(this, MyBooks.class);
+            Intent i = new Intent(this, MyBooks2.class);
             startActivity(i);
 
         } else if (id == R.id.nav_myprofile) {
@@ -370,7 +370,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
             startActivity(i);
 
-        } else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_grlogin) {
+            SharedPreferences preff = getSharedPreferences("UserId",MODE_PRIVATE);
+            if(preff.getString("userGrId",null)==null){
+                Intent in = new Intent(this, GRLoginActivity.class);
+                startActivity(in);
+            }else {
+                Intent i = new Intent(this, ToReadActivity.class);
+                startActivity(i);
+            }
+//            Intent i = new Intent(this, GRLoginActivity.class);
+//                startActivity(i);
+
+
+        }else if (id == R.id.nav_logout) {
             SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.clear();

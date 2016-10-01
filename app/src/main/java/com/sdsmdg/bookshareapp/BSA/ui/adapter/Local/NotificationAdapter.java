@@ -42,8 +42,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     List<Notifications> notificationList = new ArrayList<>();
     Notifications notifications = null;
 
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView content;
+        public TextView content,timeTextView;
         View accept, reject, buttonLayout;
 
         Context context;
@@ -51,6 +52,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         public ViewHolder(View v, Context context, int viewType) {
             super(v);
             content = (TextView) v.findViewById(R.id.content);
+            timeTextView = (TextView) v.findViewById(R.id.time);
             buttonLayout = v.findViewById(R.id.button_layout);
 
             if(viewType == 1) {
@@ -97,18 +99,68 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         int bookNameLength = notifications.getBookTitle().length();
 
         SpannableString content = null;
-        final String bookId, notifId, targetId, bookTitle;
+        final String bookId, notifId, targetId, bookTitle,time;
+        Long timeDiff,minutes;
+        Integer days , hours;
+
+        timeDiff = System.currentTimeMillis()/1000-notifications.getUnix_time();
+        minutes = timeDiff/60;
+        hours = minutes.intValue()/60;
+        days = hours/24;
+
+        if(timeDiff<60){
+            if(timeDiff==1){
+                time = " "+timeDiff.toString() + " second ago";
+            } else {
+                time = " "+timeDiff.toString() + " seconds ago";
+            }
+        }else {
+            if (minutes < 60) {
+                if(minutes==1){
+                    time = " "+minutes.toString() + " minute ago";
+                } else {
+                    time = " "+minutes.toString() + " minutes ago";
+                }
+
+
+            } else {
+                if (hours < 60) {
+                    if(hours==1){
+                        time = " "+hours.toString() + " hour ago";
+
+                    }else {
+                        time = " "+hours.toString() + " hours ago";
+
+                    }
+
+                } else {
+                    if(days==1){
+                        time = " "+days.toString() + " day ago";
+
+                    }else {
+                        time = " "+days.toString() + " days ago";
+
+                    }
+                }
+            }
+
+        }
+
+
 
         String message = notifications.getMessage();
 
         if (message.equals("requested for")) {
-            content = new SpannableString(notifications.getSenderName() + " " + message + " " + notifications.getBookTitle()) ;
-            content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 0, senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), senderNameLength + message.length() + 2, senderNameLength + message.length() + 2 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             bookId = notifications.getBookId();
             bookTitle = notifications.getBookTitle();
             targetId = notifications.getSenderId();
             notifId = notifications.getId();
+
+            content = new SpannableString(notifications.getSenderName() + " " + message + " " + notifications.getBookTitle()) ;
+            content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 0, senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), senderNameLength + message.length() + 2, senderNameLength + message.length() + 2 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.timeTextView.setText(time);
+
 
             holder.accept.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -130,23 +182,31 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 content = new SpannableString(localMessage + notifications.getSenderName() + " for " + notifications.getBookTitle());
                 content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), localMessage.length(), localMessage.length() + senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), localMessage.length() + senderNameLength + 5, localMessage.length() + senderNameLength + 5 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.timeTextView.setText(time);
+
             }
         } else if (message.equals("has accepted your request for")) {
             content = new SpannableString(notifications.getSenderName() + " " + message + " " + notifications.getBookTitle());
             content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 0, senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), senderNameLength + message.length() + 2, senderNameLength + message.length() + 2 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            holder.timeTextView.setText(time);
+
         } else if (message.equals("You accepted request for")) {
             if (!notifications.getSenderId().equals(Helper.getUserId())) {
                 String localMessage = "You accepted the request by ";
                 content = new SpannableString(localMessage + notifications.getSenderName() + " for " + notifications.getBookTitle());
                 content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), localMessage.length(), localMessage.length() + senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), localMessage.length() + senderNameLength + 5, localMessage.length() + senderNameLength + 5 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                holder.timeTextView.setText(time);
+
             }
         }
 
         if (content != null) {
             holder.content.setText(content);
             holder.content.setMovementMethod(LinkMovementMethod.getInstance());
+            holder.timeTextView.setText(time);
+
         } else {
             Log.i("Notif_Adapter", "content == null");
         }
@@ -232,7 +292,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     public void rejectRequest(final ViewHolder holder, final String nId) {
-        final CharSequence[] items = {"Yes", "No"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Are you sure you want to reject this request?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -262,6 +321,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
                     }
                 });
+
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -270,6 +330,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 dialog.dismiss();
             }
         });
+
         builder.show();
     }
 

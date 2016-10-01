@@ -54,7 +54,6 @@ public class GuestActivity extends AppCompatActivity {
         customProgressDialog = new CustomProgressDialog(GuestActivity.this);
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
-        customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
 
         rootView = (FrameLayout) findViewById(R.id.root_view);
 

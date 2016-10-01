@@ -1,9 +1,11 @@
+
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,19 +16,20 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
+
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +37,11 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.RemoveBook;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
+import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BookAdapter;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterSimple;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.FileUtils;
@@ -52,7 +58,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 import jp.wasabeef.blurry.Blurry;
@@ -63,79 +71,82 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class MyProfile extends AppCompatActivity {
+
+public class MyBooks2 extends AppCompatActivity {
 
     final String TAG = MyProfile.class.getSimpleName();
 
     TextView userName, userEmail, address, booksCount;
     UserInfo user;
-    RecyclerView userBooksListView;
-    List<Book> userBooksList = new ArrayList<>();
     String id;
     String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
     int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     String userChoosenTask;
     CircleImageView profilePicture;
-    BooksAdapterSimple adapter;
     ImageView backgroundImageView;
     NestedScrollView scrollView;
-    CustomProgressDialog customProgressDialog;
-    String Resp;
     SPDataLoader loader = new SPDataLoader();
 
-    @Override
-    protected void onResume() {
-        super.onResume();
 
-        userName.setText(loader.getUserName(this));
-        userEmail.setText(loader.getUserEmail(this));
-        address.setText(loader.getRoomNo(this) + ", " + loader.getHostel(this));
-    }
+    List<Book> booksList;
+    BookAdapter adapter;
+    RecyclerView mRecyclerView;
+    String Resp;
+    CustomProgressDialog customProgressDialog;
+    FloatingActionButton button;
+    TextView noItemsTextView;
+
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("My Profile");
-        setContentView(R.layout.activity_my_profile);
+        setContentView(R.layout.activity_my_profile2);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        customProgressDialog = new CustomProgressDialog(MyProfile.this);
+        customProgressDialog = new CustomProgressDialog(MyBooks2.this);
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
         customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+
+        noItemsTextView = (TextView) findViewById(R.id.no_items_text);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+        SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
+        String id = preferences.getString("id", "");
+
+        setUpRecyclerView(id);
+
+        getUserInfoDetails(id);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         profilePicture = (CircleImageView)findViewById(R.id.profile_picture);
         userName = (TextView) findViewById(R.id.user_name);
         userEmail = (TextView)findViewById(R.id.user_email);
         address = (TextView)findViewById(R.id.address);
         backgroundImageView = (ImageView)findViewById(R.id.background_image);
         booksCount = (TextView)findViewById(R.id.books_count);
-        userBooksListView = (RecyclerView)findViewById(R.id.recycler_view);
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
+        scrollView.setSmoothScrollingEnabled(true);
+        mRecyclerView.setNestedScrollingEnabled(false);
 
 
-        userBooksListView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new BooksAdapterSimple(this, userBooksList, new BooksAdapterSimple.OnItemClickListener() {
+        button= (FloatingActionButton) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(Book book) {
+            public void onClick(View v) {
+                Intent i = new Intent(MyBooks2.this, SearchResultsActivity.class);
+                startActivity(i);
+                finish();
             }
         });
-        userBooksListView.setAdapter(adapter);
-        userBooksListView.setNestedScrollingEnabled(false);
-
-        id = getIntent().getExtras().getString("id");
-        getUserInfoDetails(id);
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                onBackPressed();
-                return(true);
-        }
 
-        return(super.onOptionsItemSelected(item));
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_book, menu);
+        return true;
     }
 
     public void getUserInfoDetails(String id) {
@@ -148,10 +159,17 @@ public class MyProfile extends AppCompatActivity {
                     Log.d("UserProfile Response:", response.toString());
                     Resp = response.toString();
                     user = response.body();
-                    userBooksList.clear();
-                    userBooksList.addAll(user.getUserBookList());
-                    booksCount.setText(String.valueOf(userBooksList.size()));
+
+                    List<Book> booksTempInfoList = response.body().getUserBookList();
+                    if (booksTempInfoList.size() == 0) {
+                        noItemsTextView.setVisibility(View.VISIBLE);
+                    }
+                    booksList.clear();
+                    booksList.addAll(booksTempInfoList);
+                    booksCount.setText(String.valueOf(booksList.size()));
+
                     adapter.notifyDataSetChanged();
+
 
                     Picasso.with(getApplicationContext()).load(url).into(profilePicture);
 
@@ -178,7 +196,7 @@ public class MyProfile extends AppCompatActivity {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                    customProgressDialog.dismiss();
+                        customProgressDialog.dismiss();
                     }
                 }, 1000);
 
@@ -192,7 +210,43 @@ public class MyProfile extends AppCompatActivity {
 
             }
         });
+
+
     }
+
+
+    private void setUpRecyclerView(String id) {
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(MyBooks2.this));
+        booksList = new ArrayList<>();
+        adapter = new BookAdapter(this ,id, booksList,this);
+        mRecyclerView.setAdapter(adapter);
+        adapter.setUpItemTouchHelper(mRecyclerView);
+        adapter.setUpAnimationDecoratorHelper(mRecyclerView);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        userName.setText(loader.getUserName(this));
+        userEmail.setText(loader.getUserEmail(this));
+        address.setText(loader.getRoomNo(this) + ", " + loader.getHostel(this));
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return(true);
+        }
+
+        return(super.onOptionsItemSelected(item));
+    }
+
+
 
     public void editProfileClicked(View view) {
         Intent i = new Intent(this, EditProfileActivity.class);
@@ -202,12 +256,12 @@ public class MyProfile extends AppCompatActivity {
     public void  changeImageClicked(View view){
         final CharSequence[] items = { "Take Photo", "Choose from Library",
                 "Cancel" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(MyProfile.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(MyBooks2.this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result = PermissionUtils.checkPermission(MyProfile.this);
+                boolean result = PermissionUtils.checkPermission(MyBooks2.this);
                 if (items[item].equals("Take Photo")) {
                     userChoosenTask="Take Photo";
                     if(result)
@@ -254,23 +308,23 @@ public class MyProfile extends AppCompatActivity {
     protected void onActivityResult(int reqCode, int resCode, Intent data) {
         if (resCode == Activity.RESULT_OK && data != null) {
             if (reqCode == SELECT_FILE) {
-            onGalleryImageResult(data);
-        }
+                onGalleryImageResult(data);
+            }
             else if(reqCode == REQUEST_CAMERA){
                 onCaptureImageResult(data);
             }
-    }
+        }
     }
 
     private void onCaptureImageResult(Intent data) {
 
         try {
-        Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-        File file = new File(Environment.getExternalStorageDirectory(),
-                System.currentTimeMillis() + ".jpg");
-        FileOutputStream fo;
+            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+            File file = new File(Environment.getExternalStorageDirectory(),
+                    System.currentTimeMillis() + ".jpg");
+            FileOutputStream fo;
             file.createNewFile();
             fo = new FileOutputStream(file);
             fo.write(bytes.toByteArray());
@@ -352,61 +406,61 @@ public class MyProfile extends AppCompatActivity {
 
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         try {
-                File compressedFile = new Compressor.Builder(this)
-                        .setMaxWidth(640)
-                        .setMaxHeight(480)
-                        .setQuality(75)
-                        .setCompressFormat(Bitmap.CompressFormat.JPEG)
-                        .build()
-                        .compressToFile(file);
+            File compressedFile = new Compressor.Builder(this)
+                    .setMaxWidth(640)
+                    .setMaxHeight(480)
+                    .setQuality(75)
+                    .setCompressFormat(Bitmap.CompressFormat.JPEG)
+                    .build()
+                    .compressToFile(file);
 
-                RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), compressedFile);
-                MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestBody);
-                Call<Signup> call = api.uploadImage(body, Helper.getUserId());
+            RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), compressedFile);
+            MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestBody);
+            Call<Signup> call = api.uploadImage(body, Helper.getUserId());
             Toast.makeText(getApplicationContext(), "Updating picture. Please wait.", Toast.LENGTH_SHORT).show();
             call.enqueue(new Callback<Signup>() {
-                    @Override
-                    public void onResponse(Call<Signup> call, Response<Signup> response) {
-                        if (response.body() != null) {
-                            final String detail = response.body().getDetail();
-                            Helper.imageChanged = true;
-                            Picasso.with(getApplicationContext())
-                                    .load(url)
-                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                    .into(new Target() {
-                                        @Override
-                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                            Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
-                                            profilePicture.setImageBitmap(bitmap);
-                                            backgroundImageView.setImageBitmap(bitmap);
-                                            Blurry.with(getApplicationContext())
-                                                    .radius(40)
-                                                    .sampling(1)
-                                                    .color(Color.argb(66, 0, 0, 0))
-                                                    .async()
-                                                    .capture(findViewById(R.id.background_image))
-                                                    .into((ImageView) findViewById(R.id.background_image));
-                                        }
+                @Override
+                public void onResponse(Call<Signup> call, Response<Signup> response) {
+                    if (response.body() != null) {
+                        final String detail = response.body().getDetail();
+                        Helper.imageChanged = true;
+                        Picasso.with(getApplicationContext())
+                                .load(url)
+                                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                                .into(new Target() {
+                                    @Override
+                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                        Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
+                                        profilePicture.setImageBitmap(bitmap);
+                                        backgroundImageView.setImageBitmap(bitmap);
+                                        Blurry.with(getApplicationContext())
+                                                .radius(40)
+                                                .sampling(1)
+                                                .color(Color.argb(66, 0, 0, 0))
+                                                .async()
+                                                .capture(findViewById(R.id.background_image))
+                                                .into((ImageView) findViewById(R.id.background_image));
+                                    }
 
-                                        @Override
-                                        public void onBitmapFailed(Drawable errorDrawable) {
-                                            Toast.makeText(getApplicationContext(), "failed to load image", Toast.LENGTH_SHORT).show();
-                                        }
+                                    @Override
+                                    public void onBitmapFailed(Drawable errorDrawable) {
+                                        Toast.makeText(getApplicationContext(), "failed to load image", Toast.LENGTH_SHORT).show();
+                                    }
 
-                                        @Override
-                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-                                        }
-                                    });
-                        }
+                                    @Override
+                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                    }
+                                });
                     }
+                }
 
-                    @Override
-                    public void onFailure(Call<Signup> call, Throwable t) {
-                        Log.d("BookDetails fail", t.toString());
-                        Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
+                @Override
+                public void onFailure(Call<Signup> call, Throwable t) {
+                    Log.d("BookDetails fail", t.toString());
+                    Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
 
-                    }
-                });
+                }
+            });
         }
         catch (NullPointerException e){
             Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show();
@@ -439,6 +493,7 @@ public class MyProfile extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
     }
+
 
 
 }

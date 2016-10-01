@@ -5,6 +5,9 @@
     android:layout_height="match_parent"
     android:background="@color/app_theme_background"
     android:fitsSystemWindows="true">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll"
@@ -163,14 +166,37 @@
                 </LinearLayout>
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="8dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="16dp" />
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scrollbars="vertical"
+                    android:layout_marginBottom="2dp"
+                    />
+
 
             </LinearLayout>
 
         </LinearLayout>
-
     </android.support.v4.widget.NestedScrollView>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:src="@drawable/plus"
+        android:background="@color/Red"
+        android:elevation="2dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right" />
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

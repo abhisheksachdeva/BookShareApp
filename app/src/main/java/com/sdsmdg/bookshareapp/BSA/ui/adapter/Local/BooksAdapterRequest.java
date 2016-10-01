@@ -2,6 +2,7 @@ package com.sdsmdg.bookshareapp.BSA.ui.adapter.Local;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.res.Resources;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -137,6 +138,7 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
                         dialog.dismiss();
                     }
                 });
+
                 builder.show();
 
             }

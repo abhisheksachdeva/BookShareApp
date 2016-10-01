@@ -52,7 +52,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:textColor="@color/White"
-                        android:textSize="16dp"
+                        android:textSize="16sp"
                         android:textStyle="italic" />
 
                     <LinearLayout
@@ -115,6 +115,7 @@
                 android:ellipsize="end"
                 android:textColor="#444444"
                 android:textSize="16sp" />
+
 
             <TextView
                 android:layout_width="match_parent"

@@ -63,7 +63,6 @@
                 android:textAlignment="center"
                 android:textSize="14dp" />
 
-
         </LinearLayout>
 
         <View
@@ -92,11 +91,4 @@
         </FrameLayout>
 
     </RelativeLayout>
-
-    <!--<View-->
-        <!--android:layout_gravity="bottom"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="1dp"-->
-        <!--android:background="#D2D5CE" />-->
-
 </android.support.v7.widget.CardView>

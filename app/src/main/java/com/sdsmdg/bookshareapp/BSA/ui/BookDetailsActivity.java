@@ -74,7 +74,6 @@ public class BookDetailsActivity extends AppCompatActivity {
         customProgressDialog = new CustomProgressDialog(BookDetailsActivity.this);
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
-        customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
 
         addToMyLibraryButton = (Button) findViewById(R.id.add_to_my_library);
         authorBook = (TextView) findViewById(R.id.book_author);
@@ -168,7 +167,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         usersList.setLayoutManager(layoutManager);
         userInfoList = new ArrayList<>();
-        usersAdapter = new UsersAdapter(idd, this, userInfoList, bookTitleText, bookId, new UsersAdapter.OnItemClickListener() {
+        usersAdapter = new UsersAdapter(true, idd, this, userInfoList, bookTitleText, bookId, new UsersAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(UserInfo userInfo) {
             }
