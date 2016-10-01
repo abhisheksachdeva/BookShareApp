@@ -1,16 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <WebView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/webview">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center">
-
+    </WebView>
         <Button
             android:id="@+id/gr_login"
             android:layout_width="150dp"
@@ -26,12 +25,5 @@
             android:text="Login to Goodreads"
             android:textSize="20sp"
             android:layout_gravity="center"/>
-        <WebView
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:id="@+id/webview">
 
-        </WebView>
-
-    </FrameLayout>
-</LinearLayout>
+</FrameLayout>

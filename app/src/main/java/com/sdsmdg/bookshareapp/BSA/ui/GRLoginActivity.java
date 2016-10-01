@@ -84,7 +84,6 @@ public class GRLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grlogin);
         login = (Button)findViewById(R.id.gr_login);
-        login.setVisibility(View.VISIBLE);
         pref = getApplicationContext().getSharedPreferences("UserId", MODE_PRIVATE);
         webView = (WebView)findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient(){
@@ -99,8 +98,8 @@ public class GRLoginActivity extends AppCompatActivity {
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
         webView.clearCache(true);
-        webView.getSettings().setBuiltInZoomControls(true);
-        webView.getSettings().setSupportZoom(true);
+//        webView.getSettings().setBuiltInZoomControls(true);
+//        webView.getSettings().setSupportZoom(true);
         clearCookies(webView.getContext());
 
 
@@ -187,7 +186,7 @@ public class GRLoginActivity extends AppCompatActivity {
 //
 //
 //                                    break;
-
+//
 //                                } else {
                                     try {
 
@@ -201,7 +200,7 @@ public class GRLoginActivity extends AppCompatActivity {
                                         Log.i("ffucf", e.toString());
                                         Log.i("sddsd", s.toString());
                                     }
-                               // }
+//                                }
                             }
 
 

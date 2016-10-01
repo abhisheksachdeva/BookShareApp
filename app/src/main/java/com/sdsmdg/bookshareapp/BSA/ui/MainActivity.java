@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_mybooks) {
-            Intent i = new Intent(this, MyBooks.class);
+            Intent i = new Intent(this, MyBooks2.class);
             startActivity(i);
 
         } else if (id == R.id.nav_myprofile) {

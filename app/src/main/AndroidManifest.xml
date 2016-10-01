@@ -37,6 +37,9 @@
             android:name=".ui.MyBooks"
             android:label="My Books" />
         <activity
+            android:name=".ui.MyBooks2"
+            android:label="My Books2" />
+        <activity
             android:name=".ui.BookDetailsActivity"
             android:label="Book Details" />
         <activity
@@ -67,9 +70,11 @@
         <activity
             android:name=".ui.UserSearchActivity"
             android:label="Search users" />
-        <activity android:name=".ui.ToReadActivity"/>
-        <activity android:name=".ui.GRLoginActivity">
-
+        <activity android:name=".ui.ToReadActivity"
+            android:label="To-Read"/>
+        <activity android:name=".ui.GRLoginActivity"
+            android:label="To-Read"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
