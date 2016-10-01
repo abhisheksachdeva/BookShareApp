@@ -4,14 +4,15 @@
     cardUseCompatPadding="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="4dp"
-    card_view:cardCornerRadius="4dp"
-    card_view:cardElevation="4dp">
+    card_view:cardCornerRadius="0dp"
+    card_view:cardElevation="1dp"
+    android:layout_marginBottom="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:layout_gravity="center_vertical"
+        android:padding="16dp"
         android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -20,21 +21,21 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             app:civ_border_width="2dp"
-            app:civ_border_color="#FFFFFF"/>
+            app:civ_border_color="#FFFFFF"
+            android:layout_marginRight="16dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/row_user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:maxLines="2"
                 android:text="Name"
-                android:textAlignment="center"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -42,9 +43,7 @@
                 android:id="@+id/row_user_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="Email"
-                android:textAlignment="center"
                 android:textSize="14sp"
                 android:textStyle="italic" />
 
@@ -52,9 +51,7 @@
                 android:id="@+id/row_user_hostel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
                 android:text="Hostel"
-                android:textAlignment="center"
                 android:textSize="14sp"
                 android:textStyle="italic" />
 

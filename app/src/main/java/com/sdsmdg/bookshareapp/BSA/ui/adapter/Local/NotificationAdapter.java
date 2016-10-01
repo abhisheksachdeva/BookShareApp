@@ -321,6 +321,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
                     }
                 });
+
             }
         });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {

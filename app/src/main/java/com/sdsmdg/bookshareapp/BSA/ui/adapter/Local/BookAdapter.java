@@ -55,8 +55,11 @@ public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
     private List<Book> bookList;
     ActionMode mActionMode;
 
-    boolean undoOn = true; // is undo on, you can turn it on from the toolbar menu
+    boolean undoOn = true;
+    /**
+    // is undo on, you can turn it on from the toolbar menu
     //this array stores whether the current book is selected or not
+     */
     SparseBooleanArray selected;
     //This activity reference is required to activate the contextual action bar
     Activity activity ;

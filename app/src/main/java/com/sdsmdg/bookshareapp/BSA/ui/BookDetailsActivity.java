@@ -14,6 +14,7 @@ import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -58,6 +59,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     NestedScrollView scrollView;
     Boolean showMore=false;
     CustomProgressDialog customProgressDialog;
+    Button addToMyLibraryButton;
 
     public static String getResponse() {
         return Response;
@@ -73,6 +75,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
 
+        addToMyLibraryButton = (Button) findViewById(R.id.add_to_my_library);
         authorBook = (TextView) findViewById(R.id.book_author);
         ratingBook = (RatingBar) findViewById(R.id.book_rating);
         ratingCount = (TextView) findViewById(R.id.ratings_count);
@@ -95,7 +98,6 @@ public class BookDetailsActivity extends AppCompatActivity {
                 }
             }
         });
-
 
         SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
@@ -132,6 +134,7 @@ public class BookDetailsActivity extends AppCompatActivity {
                             .into((ImageView) findViewById(R.id.book_image));
                     gr_img_url = book.getGrImgUrl();
                     List<UserInfo> userTempInfoList = book.getUserInfoList();
+                    checkIfOwner(userTempInfoList);
                     userInfoList.clear();
                     userInfoList.addAll(userTempInfoList);
                     usersAdapter.setBookId(book.getId());
@@ -172,7 +175,13 @@ public class BookDetailsActivity extends AppCompatActivity {
         usersList.setAdapter(usersAdapter);
     }
 
-
+    public void checkIfOwner(List<UserInfo> userInfoList) {
+        for (UserInfo item:userInfoList) {
+            if(item.getId().equals(Helper.getUserId())) {
+                addToMyLibraryButton.setVisibility(View.GONE);
+            }
+        }
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

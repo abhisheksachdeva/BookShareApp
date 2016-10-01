@@ -83,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MenuItem searchItem;
     TextView noBookstextview;
 
+
     public String getResp() {
         return Resp;
     }
@@ -135,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 getLocalBooks(String.valueOf(page + 1));
-                Snackbar.make(findViewById(R.id.coordinatorlayout),"Loadied Page "+(page +1),Snackbar.LENGTH_SHORT).show();
             }
         };
 
@@ -163,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorAccent));
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

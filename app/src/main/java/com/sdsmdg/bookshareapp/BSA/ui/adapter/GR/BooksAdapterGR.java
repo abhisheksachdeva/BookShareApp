@@ -147,40 +147,40 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                 });
 
 
-                final CharSequence[] items = { "Yes", "No"};
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Do you want to add this Book?");
-                builder.setItems(items, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (items[which].equals("Yes")){
-                            UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                            Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> addBook = usersAPI.addBook(email,title, author,gr_id,ratingsCount,rating,gr_img_url,description);
-                            addBook.enqueue(new Callback<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book>() {
+                        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                        Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> addBook = usersAPI.addBook(email,title, author,gr_id,ratingsCount,rating,gr_img_url,description);
+                        addBook.enqueue(new Callback<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book>() {
 
-                                @Override
-                                public void onResponse(Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> call, Response<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> response) {
-                                    Log.i("Email iD ", Helper.getUserEmail());
-                                    if (response.body() != null) {
-                                        Log.i("AddBook", "Success");
-                                        Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                        Log.i("response", response.body().getDetail());
-                                        holder.add.setEnabled(false);
+                            @Override
+                            public void onResponse(Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> call, Response<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> response) {
+                                Log.i("Email iD ", Helper.getUserEmail());
+                                if (response.body() != null) {
+                                    Log.i("AddBook", "Success");
+                                    Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                    Log.i("response", response.body().getDetail());
+                                    holder.add.setEnabled(false);
 
-                                    } else {
-                                        Log.i("AddBook", "Response Null");
-                                        Toast.makeText(context, response.body().getDetail() , Toast.LENGTH_SHORT).show();
-                                    }
+                                } else {
+                                    Log.i("AddBook", "Response Null");
+                                    Toast.makeText(context, response.body().getDetail() , Toast.LENGTH_SHORT).show();
                                 }
-                                @Override
-                                public void onFailure(Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> call, Throwable t) {
-                                    Log.i("AddBook","Failed!!");
-                                }
-                            });
-                        }
-                        else{
-                            dialog.dismiss();
-                        }
+                            }
+                            @Override
+                            public void onFailure(Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> call, Throwable t) {
+                                Log.i("AddBook","Failed!!");
+                            }
+                        });
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
                     }
                 });
                 builder.show();

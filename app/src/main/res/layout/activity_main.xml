@@ -81,12 +81,12 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/Grey"
+        android:background="@color/colorPrimaryDark"
         android:fitsSystemWindows="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        app:itemIconTint="@color/Black"
-        app:itemTextColor="@color/Black"
+        app:itemIconTint="@color/White"
+        app:itemTextColor="@color/White"
         app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
