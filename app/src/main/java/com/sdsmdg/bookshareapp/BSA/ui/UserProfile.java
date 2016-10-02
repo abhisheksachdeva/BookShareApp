@@ -135,7 +135,8 @@ public class UserProfile extends AppCompatActivity {
                             .capture(findViewById(R.id.background_image))
                             .into((ImageView) findViewById(R.id.background_image));
                     List<Book> booksTempInfoList = user.getUserBookList();
-                    booksCount.setText(booksTempInfoList.size()+"");
+                    String bookCount= "Books("+booksTempInfoList.size()+")";
+                    booksCount.setText(bookCount);
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);
                     adapter.notifyDataSetChanged();

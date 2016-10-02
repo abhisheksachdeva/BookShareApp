@@ -8,21 +8,17 @@
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     android:paddingTop="26dp"
-    android:background="@color/app_theme_background"
+    android:background="@drawable/back"
+
     >
 
-    <TextView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Citadel"
-        android:paddingStart="10dp"
-        android:paddingEnd="20dp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="50sp"
-        android:fontFamily="cursive"
-        android:textColor="@color/app_theme_button_other"
-        />
-
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:layout_marginTop="100dp"
+        >
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -36,6 +32,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:layout_weight="2"
+            android:textColorHint="@color/White"
             >
 
             <EditText
@@ -44,6 +41,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Email"
                 android:inputType="textEmailAddress"
+                android:textColor="@color/White"
                 />
         </android.support.design.widget.TextInputLayout>
 
@@ -53,7 +51,11 @@
             android:layout_marginTop="5dp"
             android:layout_weight="1"
             android:text="\@iitr.ac.in"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textColorHint="@color/White"
+            android:textColor="@color/White"
+            android:alpha="0.7"
+            />
     </LinearLayout>
 
 
@@ -62,35 +64,42 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
-    <android.support.design.widget.TextInputLayout
-        android:layout_width="0dp"
-        android:layout_weight="3"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp">
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="4dp"
+            android:textColorHint="@color/White"
+            >
         <EditText
             android:id="@+id/input_password"
-            android:layout_width="match_parent"
+            android:layout_width="210dp"
             android:layout_height="wrap_content"
             android:hint="Password"
-            android:inputType="textPassword" />
-    </android.support.design.widget.TextInputLayout>
+            android:inputType="textPassword"
+            android:textColor="@color/White"
+            />
+        </android.support.design.widget.TextInputLayout>
 
         <ImageButton
             android:id="@+id/_btn_show_password"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_gravity="center_vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
             android:src="@drawable/ic_visibility_off"
-            android:background="@color/app_theme_background"
-            android:layout_weight="0"
+            android:background="#00FFFFFF"
+            android:tint="@color/White"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="right|bottom"
             />
+
+    </LinearLayout>
         </LinearLayout>
 
     <Button
         android:id="@+id/btn_login"
-        android:layout_width="150dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:paddingTop="2dp"
@@ -104,48 +113,51 @@
         android:text="Login"
         android:textSize="20sp"
         />
-
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal"
+        android:layout_margin="10dp"
+        >
     <TextView
         android:id="@+id/link_signup"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="25dp"
         android:gravity="center"
         android:text="No account yet? Create one"
-        android:textColor="@color/Black"
-        android:textSize="16dp" />
-<LinearLayout
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="horizontal"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginRight="10dp"
-    android:layout_marginLeft="10dp"
-    >
+        android:textColor="@color/White"
+        android:textSize="18sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Or"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:textSize="16sp"
+        android:textColor="@color/White"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Try now"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:textSize="18sp"
+        android:textColor="@color/White"/>
     <Button
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:text="Guest"
+        android:visibility="invisible"
         android:textAllCaps="false"
         android:textColor="@color/White"
         android:onClick="guestModeClicked"
         android:background="@drawable/button_shape"
         android:textSize="20sp"
         />
-
-
-    <!--<Button-->
-        <!--android:layout_width="130dp"-->
-        <!--android:layout_height="match_parent"-->
-        <!--android:text="Sign Up"-->
-        <!--android:textAllCaps="false"-->
-        <!--android:onClick="guestModeClicked"-->
-        <!--android:background="@drawable/button_shape_other"-->
-        <!--android:textColor="@color/app_theme_button_other"-->
-        <!--android:textSize="20sp"-->
-        <!--/>-->
 
 </LinearLayout>
 

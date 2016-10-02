@@ -153,7 +153,7 @@ public class MyProfile extends AppCompatActivity {
                     user = response.body();
                     userBooksList.clear();
                     userBooksList.addAll(user.getUserBookList());
-                    booksCount.setText(String.valueOf(userBooksList.size()));
+                    booksCount.setText(String.valueOf("Books("+userBooksList.size()+")"));
                     adapter.notifyDataSetChanged();
 
                     Picasso.with(getApplicationContext()).load(url).into(profilePicture);
