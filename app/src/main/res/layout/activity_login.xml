@@ -19,83 +19,83 @@
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
         >
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <!-- Email Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_weight="2"
-            android:textColorHint="@color/White"
-            >
+            android:gravity="center"
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/input_email"
-                android:layout_width="230dp"
+            <!-- Email Label -->
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="2"
+                android:textColorHint="@color/White"
+                >
+
+                <EditText
+                    android:id="@+id/input_email"
+                    android:layout_width="230dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/White"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:text="\@iitr.ac.in"
+                android:textSize="18sp"
+                android:textColorHint="@color/White"
                 android:textColor="@color/White"
+                android:alpha="0.7"
                 />
-        </android.support.design.widget.TextInputLayout>
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1"
-            android:text="\@iitr.ac.in"
-            android:textSize="18sp"
-            android:textColorHint="@color/White"
-            android:textColor="@color/White"
-            android:alpha="0.7"
-            />
-    </LinearLayout>
-
-
-    <!-- Password Label -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="4dp"
-            android:textColorHint="@color/White"
-            >
-        <EditText
-            android:id="@+id/input_password"
-            android:layout_width="210dp"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:textColor="@color/White"
-            />
-        </android.support.design.widget.TextInputLayout>
-
-        <ImageButton
-            android:id="@+id/_btn_show_password"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:src="@drawable/ic_visibility_off"
-            android:background="#00FFFFFF"
-            android:tint="@color/White"
-            android:layout_marginBottom="10dp"
-            android:layout_gravity="right|bottom"
-            />
-
-    </LinearLayout>
         </LinearLayout>
+
+
+        <!-- Password Label -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:textColorHint="@color/White"
+                >
+                <EditText
+                    android:id="@+id/input_password"
+                    android:layout_width="210dp"
+                    android:layout_height="wrap_content"
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:textColor="@color/White"
+                    />
+            </android.support.design.widget.TextInputLayout>
+
+            <ImageButton
+                android:id="@+id/_btn_show_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:src="@drawable/ic_visibility_off"
+                android:background="#00FFFFFF"
+                android:tint="@color/White"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="right|bottom"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
 
     <Button
         android:id="@+id/btn_login"
@@ -120,46 +120,46 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
         >
-    <TextView
-        android:id="@+id/link_signup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:text="No account yet? Create one"
-        android:textColor="@color/White"
-        android:textSize="18sp"
-        />
+        <TextView
+            android:id="@+id/link_signup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="No account yet? Create one"
+            android:textColor="@color/White"
+            android:textSize="18sp"
+            />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Or"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:textSize="16sp"
-        android:textColor="@color/White"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Try now"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="10dp"
-        android:textSize="18sp"
-        android:textColor="@color/White"/>
-    <Button
-        android:layout_width="130dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:text="Guest"
-        android:visibility="invisible"
-        android:textAllCaps="false"
-        android:textColor="@color/White"
-        android:onClick="guestModeClicked"
-        android:background="@drawable/button_shape"
-        android:textSize="20sp"
-        />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Or"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:textSize="16sp"
+            android:textColor="@color/White"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Try now"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
+            android:textSize="18sp"
+            android:textColor="@color/White"/>
+        <Button
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:text="Guest"
+            android:visibility="visible"
+            android:textAllCaps="false"
+            android:textColor="@color/White"
+            android:onClick="guestModeClicked"
+            android:background="@drawable/button_shape"
+            android:textSize="20sp"
+            />
 
-</LinearLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

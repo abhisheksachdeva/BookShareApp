@@ -193,80 +193,83 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
     public void acceptRequest(final ViewHolder holder, final String nId, final String bookId, final String bookTitle, final String senderId, final String senderName, final String targetId, final View v) {
-        final CharSequence[] items = {"Yes", "No"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Are you sure you want to accept this request?");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (items[which].equals("Yes")) {
-                    UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                    Call<Notifications> sendNotif = usersAPI.acceptNotif(nId, senderId, senderName, bookId, bookTitle, "accept", targetId, "accepted request");
-                    sendNotif.enqueue(new Callback<Notifications>() {
-                        @Override
-                        public void onResponse(Call<Notifications> call, Response<Notifications> response) {
-                            if (response.body() != null) {
-                                Log.i("AcceptNotif", "Success");
-                                Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                Log.i("response", response.body().getDetail());
-                                holder.buttonLayout.setVisibility(View.GONE);
-                            } else {
-                                Log.i("AccpetNotif", "Response Null");
-                                Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                            }
+                UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                Call<Notifications> sendNotif = usersAPI.acceptNotif(nId, senderId, senderName, bookId, bookTitle, "accept", targetId, "accepted request");
+                sendNotif.enqueue(new Callback<Notifications>() {
+                    @Override
+                    public void onResponse(Call<Notifications> call, Response<Notifications> response) {
+                        if (response.body() != null) {
+                            Log.i("AcceptNotif", "Success");
+                            Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                            Log.i("response", response.body().getDetail());
+                            holder.buttonLayout.setVisibility(View.GONE);
+                        } else {
+                            Log.i("AccpetNotif", "Response Null");
+                            Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<Notifications> call, Throwable t) {
-                            Log.i("AcceptNotif", "Failed!!");
-                            Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    dialog.dismiss();
-                }
+                    @Override
+                    public void onFailure(Call<Notifications> call, Throwable t) {
+                        Log.i("AcceptNotif", "Failed!!");
+                        Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
+        });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
             }
         });
         builder.show();
     }
 
     public void rejectRequest(final ViewHolder holder, final String nId) {
-        final CharSequence[] items = {"Yes", "No"};
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
         builder.setTitle("Are you sure you want to reject this request?");
-        builder.setItems(items, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (items[which].equals("Yes")) {
-                    String process = "request";
-                    UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                    Call<Notifications> sendNotif = usersAPI.rejectNotif(nId, "reject", "rejected request");
-                    sendNotif.enqueue(new Callback<Notifications>() {
-                        @Override
-                        public void onResponse(Call<Notifications> call, Response<Notifications> response) {
-                            if (response.body() != null) {
-                                Log.i("RejectNotif", "Success");
-                                Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                Log.i("response", response.body().getDetail());
-                                holder.buttonLayout.setVisibility(View.GONE);
+                String process = "request";
+                UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                Call<Notifications> sendNotif = usersAPI.rejectNotif(nId, "reject", "rejected request");
+                sendNotif.enqueue(new Callback<Notifications>() {
+                    @Override
+                    public void onResponse(Call<Notifications> call, Response<Notifications> response) {
+                        if (response.body() != null) {
+                            Log.i("RejectNotif", "Success");
+                            Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                            Log.i("response", response.body().getDetail());
+                            holder.buttonLayout.setVisibility(View.GONE);
 
-                            } else {
-                                Log.i("rejectNotif", "Response Null");
-                                Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                            }
+                        } else {
+                            Log.i("rejectNotif", "Response Null");
+                            Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<Notifications> call, Throwable t) {
-                            Log.i("rejectNotif", "Failed!!");
-                            Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                } else {
-                    dialog.dismiss();
-                }
+                    @Override
+                    public void onFailure(Call<Notifications> call, Throwable t) {
+                        Log.i("rejectNotif", "Failed!!");
+                        Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
         builder.show();
     }
 
