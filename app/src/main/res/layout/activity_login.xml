@@ -32,10 +32,9 @@
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="2"
-                android:textColorHint="@color/White"
-                >
+                android:textColorHint="@color/White">
 
-                <EditText
+                <AutoCompleteTextView
                     android:id="@+id/input_email"
                     android:layout_width="230dp"
                     android:layout_height="wrap_content"
