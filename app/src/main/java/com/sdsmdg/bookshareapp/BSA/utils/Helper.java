@@ -2,6 +2,34 @@ package com.sdsmdg.bookshareapp.BSA.utils;
 
 public class Helper {
 
+    public static String accessToken = "";
+    public static String accessSecret = "";
+    public static String userGRid =null;
+
+    public static String getUserGRid() {
+        return userGRid;
+    }
+
+    public static void setUserGRid(String userGRid) {
+        Helper.userGRid = userGRid;
+    }
+
+    public static String getAccessToken() {
+        return accessToken;
+    }
+
+    public static void setAccessToken(String accessToken) {
+        Helper.accessToken = accessToken;
+    }
+
+    public static String getAccessSecret() {
+        return accessSecret;
+    }
+
+    public static void setAccessSecret(String accessSecret) {
+        Helper.accessSecret = accessSecret;
+    }
+
     public static String userEmail = "";
     public static String userName = "";
     public static String userId = "";

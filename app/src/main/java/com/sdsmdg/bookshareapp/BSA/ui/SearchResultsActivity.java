@@ -8,6 +8,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -31,7 +32,6 @@ public class SearchResultsActivity extends AppCompatActivity {
     String query;
     String API_KEY = CommonUtilities.API_KEY;
     EditText searchEditText;
-    String mode = "all";
     BookListFragment bookListFragment;
     NestedScrollView scrollingView;
     FloatingActionButton button;
@@ -107,7 +107,7 @@ public class SearchResultsActivity extends AppCompatActivity {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     search(v);
-                    return true;
+                    return false;
                 }
                 return false;
             }
@@ -182,10 +182,13 @@ public class SearchResultsActivity extends AppCompatActivity {
         return (super.onOptionsItemSelected(item));
     }
 
+
+
     public void search(View view) {
 
         hideKeyboard();
         query = searchEditText.getText().toString();
+        Log.i("sss",selected.toLowerCase());
         bookListFragment.getBooks(query, selected.toLowerCase(), API_KEY);
         new ProgressLoader().execute();
 

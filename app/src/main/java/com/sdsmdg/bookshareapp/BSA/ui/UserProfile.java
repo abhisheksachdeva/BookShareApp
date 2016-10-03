@@ -67,7 +67,6 @@ public class UserProfile extends AppCompatActivity {
         customProgressDialog = new CustomProgressDialog(UserProfile.this);
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
-        customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
 
         name = (TextView)findViewById(R.id.user_name);
         emailTextView = (TextView)findViewById(R.id.user_email);

@@ -2,6 +2,8 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -25,13 +27,14 @@ public class CustomProgressDialog extends ProgressDialog{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.custom_progressdialog);
-        dismissButton = (Button)findViewById(R.id.dismiss);
-        dismissButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        dismissButton = (Button)findViewById(R.id.dismiss);
+//        dismissButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                dismiss();
+//            }
+//        });
 
 
     }

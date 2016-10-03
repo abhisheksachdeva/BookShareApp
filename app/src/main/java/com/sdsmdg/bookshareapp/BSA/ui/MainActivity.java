@@ -1,6 +1,5 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -28,13 +27,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -89,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     MenuItem searchItem;
     TextView noBookstextview;
 
+
     public String getResp() {
         return Resp;
     }
@@ -141,7 +136,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 getLocalBooks(String.valueOf(page + 1));
-                Snackbar.make(findViewById(R.id.coordinatorlayout),"Loadied Page "+(page +1),Snackbar.LENGTH_SHORT).show();
             }
         };
 
@@ -169,6 +163,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.colorAccent));
         setSupportActionBar(toolbar);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -367,7 +362,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.nav_mybooks) {
-            Intent i = new Intent(this, MyBooks.class);
+            Intent i = new Intent(this, MyBooks2.class);
             startActivity(i);
 
         } else if (id == R.id.nav_myprofile) {
@@ -375,7 +370,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
             startActivity(i);
 
-        } else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_grlogin) {
+            SharedPreferences preff = getSharedPreferences("UserId",MODE_PRIVATE);
+            if(preff.getString("userGrId",null)==null){
+                Intent in = new Intent(this, GRLoginActivity.class);
+                startActivity(in);
+            }else {
+                Intent i = new Intent(this, ToReadActivity.class);
+                startActivity(i);
+            }
+//            Intent i = new Intent(this, GRLoginActivity.class);
+//                startActivity(i);
+
+
+        }else if (id == R.id.nav_logout) {
             SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.clear();

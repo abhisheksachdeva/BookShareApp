@@ -5,6 +5,9 @@
     android:layout_height="match_parent"
     android:background="@color/app_theme_background"
     android:fitsSystemWindows="true">
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/scroll"
@@ -36,31 +39,30 @@
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop" />
 
-                    <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="right"-->
-                        <!--android:layout_marginTop="20dp"-->
-                        <!--android:layout_marginRight="10dp"-->
-                        <!--android:orientation="vertical"-->
-                        <!--android:visibility="invisible">-->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_marginTop="20dp"
+                        android:layout_marginRight="10dp"
+                        android:orientation="vertical">
 
-                        <!--<ImageView-->
-                            <!--android:layout_width="50dp"-->
-                            <!--android:layout_height="50dp"-->
-                            <!--android:src="@drawable/ic_book_white_48dp"-->
-                            <!--android:tint="@color/White" />-->
+                        <ImageView
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:src="@drawable/ic_book_white_48dp"
+                            android:tint="@color/White" />
 
-                        <!--<TextView-->
-                            <!--android:id="@+id/books_count"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="0"-->
-                            <!--android:layout_gravity="center"-->
-                            <!--android:textColor="@color/White"-->
-                            <!--android:textSize="16dp" />-->
+                        <TextView
+                            android:id="@+id/books_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="0"
+                            android:layout_gravity="center"
+                            android:textColor="@color/White"
+                            android:textSize="16dp" />
 
-                    <!--</LinearLayout>-->
+                    </LinearLayout>
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/profile_picture"
@@ -107,31 +109,23 @@
                             android:textSize="12dp" />
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right|bottom">
                     <ImageView
                         android:id="@+id/edit_profile_image"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_gravity="left|bottom"
+                        android:layout_margin="20dp"
                         android:onClick="changeImageClicked"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_gravity="right|bottom"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
                         android:src="@drawable/ic_insert_photo_white_48dp" />
 
                     <ImageView
                         android:id="@+id/edit_profile"
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:layout_gravity="right|bottom"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="20dp"                      android:onClick="editProfileClicked"
-                        android:src="@drawable/edit_details_icon" />
-                    </LinearLayout>
+                        android:layout_margin="20dp"
+                        android:onClick="editProfileClicked"
+                        android:src="@drawable/ic_edit_white_48dp" />
 
                 </FrameLayout>
             </LinearLayout>
@@ -145,45 +139,64 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    >
+                    android:layout_margin="10dp">
 
                     <TextView
-                        android:id="@+id/books_count"
                         android:layout_width="0dp"
                         android:layout_weight="2"
                         android:layout_height="40dp"
                         android:text="Books"
-                        android:textColor="@color/Black"
-                        android:layout_marginTop="5dp"
+                        android:gravity="right"
+                        android:paddingTop="5dp"
+                        android:paddingRight="50dp"
                         android:textSize="20sp"
-                        android:gravity="center_horizontal"
                         />
 
-                    <!--<Button-->
-                        <!--android:layout_width="0dp"-->
-                        <!--android:layout_weight="1"-->
-                        <!--android:layout_height="40dp"-->
-                        <!--android:text="Edit"-->
-                        <!--android:layout_gravity="center_vertical"-->
-                        <!--android:textSize="16sp"-->
-                        <!--android:textColor="@color/White"-->
-                        <!--android:background="@drawable/button_shape"-->
-                        <!--android:onClick="editBooksClicked"-->
-                        <!--android:visibility="invisible"/>-->
+                    <Button
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="40dp"
+                        android:text="Edit"
+                        android:layout_gravity="center_vertical"
+                        android:textSize="16sp"
+                        android:textColor="@color/White"
+                        android:background="@drawable/button_shape"
+                        android:onClick="editBooksClicked"/>
 
                 </LinearLayout>
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="8dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp"/>
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:scrollbars="vertical"
+                    android:layout_marginBottom="2dp"
+                    />
+
 
             </LinearLayout>
 
         </LinearLayout>
-
     </android.support.v4.widget.NestedScrollView>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button"
+        android:src="@drawable/plus"
+        android:background="@color/Red"
+        android:elevation="2dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="right" />
+
+    </RelativeLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -56,7 +56,6 @@ public class BookListFragment extends Fragment {
         adapter = new BooksAdapterGR(getActivity(), bookList, new BooksAdapterGR.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                Toast.makeText(context, book.getBookDetails().getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
         resultsList.setAdapter(adapter);

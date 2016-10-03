@@ -2,10 +2,16 @@ package com.sdsmdg.bookshareapp.BSA.api;
 
 import com.sdsmdg.bookshareapp.BSA.api.models.GoodreadsResponse;
 import com.sdsmdg.bookshareapp.BSA.api.models.GoodreadsResponse2;
+import com.sdsmdg.bookshareapp.BSA.api.models.GoodreadsResponse3;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 public interface BooksAPI {
 
@@ -22,6 +28,13 @@ public interface BooksAPI {
             @Query("id") Integer id,
             @Query("key") String key
     );
+
+    @GET("review/list.xml")
+    Call<GoodreadsResponse3> getToRead(
+            @QueryMap HashMap<String,String> params
+            );
+
+
 
 
 }

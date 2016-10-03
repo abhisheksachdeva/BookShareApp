@@ -17,6 +17,11 @@
             android:id="@+id/nav_usersearch"
             android:icon="@drawable/ic_account_circle_black_24dp"
             android:title="User Search" />
+        <item
+            android:id="@+id/nav_grlogin"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="To-Read" />
+
 
         <item
             android:id="@+id/nav_logout"
