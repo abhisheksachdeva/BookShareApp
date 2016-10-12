@@ -39,6 +39,7 @@ import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterSimple;
+import com.sdsmdg.bookshareapp.BSA.ui.fragments.BarcodeActivity;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.NotificationFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
@@ -366,8 +367,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(i);
 
         } else if (id == R.id.nav_myprofile) {
-            Intent i = new Intent(this, MyProfile.class);
-            i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
+            Intent i = new Intent(this, BarcodeActivity.class);
+//            i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
             startActivity(i);
 
         } else if (id == R.id.nav_grlogin) {
