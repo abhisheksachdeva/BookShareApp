@@ -1,4 +1,4 @@
-package com.sdsmdg.bookshareapp.BSA.ui.fragments;
+package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

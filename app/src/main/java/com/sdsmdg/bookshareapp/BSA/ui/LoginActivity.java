@@ -156,7 +156,7 @@ public class LoginActivity extends AppCompatActivity {
                         saveinSP(response.body().getToken(), response.body().getUserInfo());
                     }
                 }
-//                progressDialog.dismiss();
+                progressDialog.dismiss();
             }
 
             @Override

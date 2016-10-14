@@ -1,6 +1,7 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,10 +18,13 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.BookListFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
@@ -39,6 +43,7 @@ public class SearchResultsActivity extends AppCompatActivity {
     Spinner spinner;//This is used to know whether the search query is author or title, or can be anything
     CustomProgressDialog customProgressDialog;
     String selected = null;
+    String isbn;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,11 +55,11 @@ public class SearchResultsActivity extends AppCompatActivity {
         customProgressDialog.setCancelable(false);
         scrollingView = (NestedScrollView) findViewById(R.id.scrollView);
         button = (FloatingActionButton) findViewById(R.id.scroll);
-
         final List<String> searchModeList = new ArrayList<>();
         searchModeList.add("Author");
         searchModeList.add("Title");
         searchModeList.add("All");
+
 
         spinner = (Spinner) findViewById(R.id.spinner);
 
@@ -99,6 +104,7 @@ public class SearchResultsActivity extends AppCompatActivity {
 
             }
         });
+
         searchEditText = (EditText) findViewById(R.id.searchEditText);
         bookListFragment = new BookListFragment();
 
@@ -112,6 +118,15 @@ public class SearchResultsActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        if(getIntent().getExtras()!=null){
+
+        isbn = getIntent().getExtras().getString("isbn");
+        searchEditText.setText(isbn.toString());
+        bookListFragment.getBooks(isbn, "all", API_KEY);
+
+
+        }
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, bookListFragment)
@@ -195,6 +210,16 @@ public class SearchResultsActivity extends AppCompatActivity {
 
     }
 
+//    public void searchbyscan(String query_isbn) {
+//
+//        query = query_isbn;
+//        Log.i("sss",selected.toLowerCase());
+//        bookListFragment.getBooks(query, "all", API_KEY);
+//        new ProgressLoader().execute();
+//
+//
+//    }
+
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -202,4 +227,21 @@ public class SearchResultsActivity extends AppCompatActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+//        if(result != null) {
+//            if(result.getContents() == null) {
+//                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+//            } else {
+//                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
+//                searchEditText.setText(result.getContents());
+//                searchbyscan(result.getContents());
+//
+//            }
+//        } else {
+//            super.onActivityResult(requestCode, resultCode, data);
+//        }
+//    }
 }

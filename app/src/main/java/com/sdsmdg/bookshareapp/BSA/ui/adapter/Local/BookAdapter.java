@@ -2,6 +2,7 @@ package com.sdsmdg.bookshareapp.BSA.ui.adapter.Local;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -54,7 +55,7 @@ public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
     Context context;
     private List<Book> bookList;
     ActionMode mActionMode;
-
+    SharedPreferences prefs;
     boolean undoOn = true;
     /**
     // is undo on, you can turn it on from the toolbar menu
@@ -74,6 +75,7 @@ public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
         this.userId = userId;
         this.context = context;
         this.activity = activity;
+        prefs = context.getSharedPreferences("Token",Context.MODE_PRIVATE);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -226,7 +228,7 @@ public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
         removeBook.setUserId(userId);
 
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Detail> call = usersAPI.removeBook(removeBook);
+        Call<Detail> call = usersAPI.removeBook(removeBook,"Token "+prefs.getString("token",null));
         call.enqueue(new Callback<Detail>() {
             @Override
             public void onResponse(Call<Detail> call, Response<Detail> response) {

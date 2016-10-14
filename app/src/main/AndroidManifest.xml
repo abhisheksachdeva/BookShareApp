@@ -39,11 +39,7 @@
             android:name=".ui.SignupActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.MyBooks"
-            android:label="My Books"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.MyBooks2"
+            android:name=".ui.MyProfile"
             android:label="My Profile"
             android:screenOrientation="portrait" />
         <activity
@@ -53,12 +49,6 @@
         <activity
             android:name=".ui.UserProfile"
             android:label="User Details"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".ui.MyProfile"
-            android:excludeFromRecents="true"
-            android:label="My Profile"
-            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.SplashScreen"
@@ -104,7 +94,7 @@
         <activity
             android:name=".ui.ToReadActivity"
             android:label="To-Read" />
-        <activity android:name=".ui.fragments.BarcodeActivity"></activity>
+        <activity android:name=".ui.BarcodeActivity"></activity>
     </application>
 
 </manifest>

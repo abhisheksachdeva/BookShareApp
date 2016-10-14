@@ -18,6 +18,7 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -27,7 +28,6 @@ import retrofit2.http.Query;
 
 
 public interface UsersAPI {
-
     @FormUrlEncoded
     @POST("users/reg/?format=json")
     Call<Signup> getUserInfo(
@@ -50,11 +50,14 @@ public interface UsersAPI {
     );
 
     @GET("books/?format=json")
-    Call<List<Book>> getBooksList();
+    Call<List<Book>> getBooksList(
+            @Header("Authorization") String token
+    );
 
     @GET("books/?format=json")
     Call<BookList> getBList(
-            @Query("page") String page
+            @Query("page") String page,
+            @Header("Authorization") String token
     );
 
     @FormUrlEncoded
@@ -67,12 +70,14 @@ public interface UsersAPI {
             @Field("ratings_count") Long ratingsCount,
             @Field("rating") Float rating,
             @Field("gr_img_url") String gr_img_url,
-            @Field("description") String description
+            @Field("description") String description,
+            @Header("Authorization") String token
     );
 
     @GET("book/{id}/?format=json")
     Call<Book> getBookDetails(
-            @Path("id") String id
+            @Path("id") String id,
+            @Header("Authorization") String token
     );
 
     @GET("user/{id}/?format=json")
@@ -85,7 +90,8 @@ public interface UsersAPI {
 
     @GET("notifications/")
     Call<List<Notifications>> getNotifs(
-            @Query("user_id") String userId
+            @Query("user_id") String userId,
+            @Header("Authorization") String token
     );
 
     @FormUrlEncoded
@@ -97,7 +103,8 @@ public interface UsersAPI {
             @Field("book_title") String bookTitle,
             @Field("process") String process,
             @Field("target_id") String targetId,
-            @Field("message") String message
+            @Field("message") String message,
+            @Header("Authorization") String token
     );
 
     @FormUrlEncoded
@@ -110,7 +117,8 @@ public interface UsersAPI {
             @Field("book_title") String bookTitle,
             @Field("process") String process,
             @Field("target_id") String targetId,
-            @Field("message") String message
+            @Field("message") String message,
+            @Header("Authorization") String token
     );
 
     @FormUrlEncoded
@@ -118,7 +126,8 @@ public interface UsersAPI {
     Call<Notifications> rejectNotif(
             @Field("notif_id") String  notifId,
             @Field("process") String process,
-            @Field("message") String message
+            @Field("message") String message,
+            @Header("Authorization") String token
     );
 
     @PUT("user/{id}/")
@@ -137,7 +146,8 @@ public interface UsersAPI {
 
     @PUT("books/")
     Call<Detail> removeBook(
-            @Body RemoveBook removeBook
+            @Body RemoveBook removeBook,
+            @Header("Authorization") String token
     );
 
     @GET("search/")

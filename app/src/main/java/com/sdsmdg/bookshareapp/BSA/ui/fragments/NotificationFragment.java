@@ -1,6 +1,7 @@
 package com.sdsmdg.bookshareapp.BSA.ui.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -39,6 +40,7 @@ public class NotificationFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
     List<Notifications> notificationsList = new ArrayList<>();
     TextView noNotificationTextView;
+    SharedPreferences prefs;
 
     private OnFragmentInteractionListener mListener;
 
@@ -62,6 +64,7 @@ public class NotificationFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_notification, container, false);
 
+        prefs = getContext().getSharedPreferences("Token",Context.MODE_PRIVATE);
         noNotificationTextView = (TextView)v.findViewById(R.id.no_notification_text);
 
         nLinearLayoutManager = new LinearLayoutManager(getActivity());
@@ -73,7 +76,6 @@ public class NotificationFragment extends Fragment {
 
         adapter = new NotificationAdapter(getActivity(), notificationsList);
         notificationsListView.setAdapter(adapter);
-
         getNotifications();
 
         refreshLayout =(SwipeRefreshLayout)v.findViewById(R.id.notif_refresh_layout);
@@ -103,7 +105,7 @@ public class NotificationFragment extends Fragment {
                 .build();
 
         UsersAPI usersAPI = retrofit.create(UsersAPI.class);
-        Call<List<Notifications>> call = usersAPI.getNotifs(Helper.getUserId());
+        Call<List<Notifications>> call = usersAPI.getNotifs(Helper.getUserId(),"Token "+prefs.getString("token",null));
         call.enqueue(new Callback<List<Notifications>>() {
             @Override
             public void onResponse(Call<List<Notifications>> call, Response<List<Notifications>> response) {
