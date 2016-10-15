@@ -10,7 +10,6 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:orientation="horizontal"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
@@ -21,14 +20,13 @@
             android:layout_width="72dp"
             android:layout_height="96dp"
             android:layout_alignParentLeft="true"
-            android:layout_marginBottom="16dp"
+            android:layout_marginTop="6dp"
             android:scaleType="centerCrop" />
 
         <LinearLayout
             android:id="@+id/linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/row_books_imageView"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="5dp"
             android:layout_toRightOf="@id/row_books_imageView"
@@ -41,7 +39,7 @@
                 android:layout_marginBottom="10dp"
                 android:maxLines="2"
                 android:text="Title"
-                android:textAlignment="center"
+                android:textAlignment="viewStart"
                 android:textSize="20sp" />
 
             <TextView

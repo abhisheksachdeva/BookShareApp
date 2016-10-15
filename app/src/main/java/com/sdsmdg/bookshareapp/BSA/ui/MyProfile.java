@@ -71,7 +71,7 @@ public class MyProfile extends AppCompatActivity {
 
     final String TAG = MyProfile.class.getSimpleName();
 
-    TextView userName, userEmail, address, booksCount;
+    TextView userName, userEmail, address, booksCount, titleBooksCount;
     UserInfo user;
     String id;
     String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
@@ -105,6 +105,7 @@ public class MyProfile extends AppCompatActivity {
 
         noItemsTextView = (TextView) findViewById(R.id.no_items_text);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        titleBooksCount = (TextView) findViewById(R.id.title_books_count);
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
         String id = preferences.getString("id", "");
@@ -162,7 +163,7 @@ public class MyProfile extends AppCompatActivity {
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);
                     booksCount.setText(String.valueOf(booksList.size()));
-
+                    titleBooksCount.setText("Books" + "(" + booksList.size() + ")");
                     adapter.notifyDataSetChanged();
 
 
@@ -201,8 +202,6 @@ public class MyProfile extends AppCompatActivity {
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 Log.d("BookDetails fail", t.toString());
                 customProgressDialog.dismiss();
-
-
             }
         });
 
