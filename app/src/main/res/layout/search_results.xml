@@ -35,6 +35,8 @@
                     android:id="@+id/searchEditText"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
+                    android:inputType="text"
+                    android:imeOptions="actionSearch"
                     android:drawableRight="@drawable/search_icon"
                     android:hint="Search by" />
 
