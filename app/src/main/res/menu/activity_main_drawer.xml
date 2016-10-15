@@ -27,6 +27,12 @@
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_exit_to_app_white_24dp"
             android:title="Logout" />
+
+        <!-- This is used to unselect items in nav view-->
+        <item
+            android:id="@+id/menu_none"
+            android:title=""
+            android:visible="false"/>
     </group>
 
     <item android:title="Communicate">

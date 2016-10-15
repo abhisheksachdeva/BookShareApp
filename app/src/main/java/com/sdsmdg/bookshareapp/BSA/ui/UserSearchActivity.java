@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -49,6 +50,7 @@ public class UserSearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_search);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         customProgressDialog = new CustomProgressDialog(UserSearchActivity.this);
         customProgressDialog.setCancelable(false);
 
@@ -80,6 +82,16 @@ public class UserSearchActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return(true);
+        }
+        return(super.onOptionsItemSelected(item));
     }
 
     public void userSearchClicked(View view) {

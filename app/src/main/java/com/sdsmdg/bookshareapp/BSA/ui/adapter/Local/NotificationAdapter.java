@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.support.v4.app.SharedElementCallback;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -182,7 +181,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         } else if (message.equals("You rejected request for")) {
             if (!notifications.getSenderId().equals(Helper.getUserId())) {
-                String localMessage = "You rejected your request by ";
+                String localMessage = "You rejected request by ";
                 content = new SpannableString(localMessage + notifications.getSenderName() + " for " + notifications.getBookTitle());
                 content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), localMessage.length(), localMessage.length() + senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), localMessage.length() + senderNameLength + 5, localMessage.length() + senderNameLength + 5 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

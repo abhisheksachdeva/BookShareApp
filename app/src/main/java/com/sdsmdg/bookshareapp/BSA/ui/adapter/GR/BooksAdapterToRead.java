@@ -73,7 +73,7 @@ public class BooksAdapterToRead extends RecyclerView.Adapter<BooksAdapterToRead.
         }
         holder.ratingBook.setRating(tempValues.getRating());
         DecimalFormat formatter = new DecimalFormat("#,###,###");
-        String rating_count = formatter.format(tempValues.getRatingCount());
+        String rating_count = formatter.format(Long.parseLong(tempValues.getRatingCount().toString()));
         holder.ratingCount.setText(rating_count + " votes");
 
     }

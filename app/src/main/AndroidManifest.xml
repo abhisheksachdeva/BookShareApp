@@ -76,7 +76,6 @@
         <activity
             android:name=".ui.UserSearchActivity"
             android:label="Search User"
-            android:parentActivityName=".ui.MainActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.GRLoginActivity"
