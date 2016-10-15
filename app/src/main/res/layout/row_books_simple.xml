@@ -12,9 +12,9 @@
 
         <ImageView
             android:id="@+id/row_books_imageView"
-            android:layout_width="48dp"
-            android:layout_height="64dp"
-            android:layout_marginRight="8dp"
+            android:layout_width="72dp"
+            android:layout_height="96dp"
+            android:layout_marginRight="16dp"
             android:scaleType="centerCrop"
             android:src="@drawable/default_book_image" />
 
@@ -30,16 +30,15 @@
                 android:layout_height="wrap_content"
                 android:maxLines="2"
                 android:text="Title"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="20sp"
+                android:layout_marginBottom="6dp"/>
 
             <TextView
                 android:id="@+id/row_books_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Author"
-                android:textSize="14sp"
-                android:textStyle="italic" />
+                android:textSize="14sp" />
 
             <RatingBar
                 android:id="@+id/row_books_rating"
@@ -50,11 +49,13 @@
             <TextView
                 android:id="@+id/row_books_ratings_count"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:textSize="14sp"/>
 
         </LinearLayout>
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
