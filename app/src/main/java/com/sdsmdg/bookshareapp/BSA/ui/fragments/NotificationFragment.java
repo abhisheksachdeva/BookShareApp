@@ -121,6 +121,8 @@ public class NotificationFragment extends Fragment {
                     Log.i("dgg2","Token "+prefs.getString("token",null));
                     if(notifList.size() == 0) {
                         noNotificationTextView.setVisibility(View.VISIBLE);
+                    } else {
+                        noNotificationTextView.setVisibility(View.GONE);
                     }
                     notificationsList.clear();
                     Helper.setNew_total(notifList.size());

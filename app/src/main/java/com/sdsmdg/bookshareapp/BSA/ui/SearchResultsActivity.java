@@ -1,7 +1,6 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,13 +17,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.BookListFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
@@ -131,6 +127,17 @@ public class SearchResultsActivity extends AppCompatActivity {
                 .beginTransaction()
                 .replace(R.id.container, bookListFragment)
                 .commit();
+
+        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    search(v);
+                    return true;
+                }
+                return false;
+            }
+        });
 
     }
 

@@ -510,6 +510,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Picasso.with(this).load(url).into(_profilePicture);
             Helper.imageChanged = false;
         }
+        navigationView.setCheckedItem(R.id.menu_none);//This will check a invisible item, effectively unselecting all items
     }
 
     @Override
