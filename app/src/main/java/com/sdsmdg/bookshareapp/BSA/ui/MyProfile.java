@@ -96,7 +96,7 @@ public class MyProfile extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("My Profile");
-        setContentView(R.layout.activity_my_profile2);
+        setContentView(R.layout.activity_my_profile);
 
         customProgressDialog = new CustomProgressDialog(MyProfile.this);
         customProgressDialog.setCancelable(false);
