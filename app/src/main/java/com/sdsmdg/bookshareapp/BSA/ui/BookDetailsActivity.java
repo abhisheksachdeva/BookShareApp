@@ -212,7 +212,7 @@ public class BookDetailsActivity extends AppCompatActivity {
 
     public void addToMyLibraryClicked(View view) {
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url,description,token);
+        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url,description,"Token "+token);
         addBookCall.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {

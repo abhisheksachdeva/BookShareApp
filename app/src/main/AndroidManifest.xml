@@ -76,7 +76,9 @@
         <activity
             android:name=".ui.UserSearchActivity"
             android:label="Search User"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.UserSearch"
+            />
         <activity
             android:name=".ui.GRLoginActivity"
             android:label="To-Read">
