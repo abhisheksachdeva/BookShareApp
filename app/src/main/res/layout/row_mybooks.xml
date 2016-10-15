@@ -3,7 +3,10 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     cardUseCompatPadding="true"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    card_view:cardCornerRadius="0dp"
+    card_view:cardElevation="1dp"
+    android:layout_marginBottom="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -63,10 +66,5 @@
         android:text="Undo"
         android:textAllCaps="true"
         android:textColor="@android:color/white" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#D2D5CE" />
 
 </android.support.v7.widget.CardView>
