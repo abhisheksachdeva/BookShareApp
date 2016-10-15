@@ -24,25 +24,19 @@
                 android:orientation="horizontal"
                 android:padding="5dp">
 
-                <EditText
-                    android:id="@+id/searchEditText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Search by" />
-
                 <Spinner
                     android:id="@+id/spinner"
+                    android:layout_marginTop="4dp"
                     style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
-                <ImageButton
-                    android:id="@+id/searchButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="search"
-                    android:src="@android:drawable/ic_menu_search" />
+                <EditText
+                    android:id="@+id/searchEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:drawableRight="@drawable/search_icon"
+                    android:hint="Search by" />
 
             </LinearLayout>
 
@@ -50,7 +44,9 @@
                 android:id="@+id/container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
+
         </LinearLayout>
+
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
