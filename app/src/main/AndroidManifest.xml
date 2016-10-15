@@ -5,7 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -17,11 +17,10 @@
         <activity
             android:name=".ui.LoginActivity"
             android:label="Login"
-
-            android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name="com.sdsmdg.bookshareapp.BSA.ui.SearchResultsActivity"
+            android:name=".ui.SearchResultsActivity"
             android:label="Search"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -33,35 +32,26 @@
         <activity
             android:name=".ui.MainActivity"
             android:label="Campus Books"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
-
-            android:windowSoftInputMode="adjustPan|adjustResize"
-            android:screenOrientation="portrait"/>
-        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.SignupActivity"
-            android:screenOrientation="portrait"/>
+            android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
-            android:name="com.sdsmdg.bookshareapp.BSA.ui.MyBooks"
-            android:label="My Books"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.sdsmdg.bookshareapp.BSA.ui.MyBooks2"
-            android:label="My Profile"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.sdsmdg.bookshareapp.BSA.ui.BookDetailsActivity"
-            android:label="Book Details"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name="com.sdsmdg.bookshareapp.BSA.ui.UserProfile"
-            android:label="User Details"
-            android:screenOrientation="portrait"/>
+            android:name=".ui.SignupActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MyProfile"
-            android:excludeFromRecents="true"
             android:label="My Profile"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
-        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.SplashScreen"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.BookDetailsActivity"
+            android:label="Book Details"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserProfile"
+            android:label="User Details"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.SplashScreen"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -72,34 +62,39 @@
         <activity
             android:name=".ui.EditProfileActivity"
             android:label="Edit your details"
-            android:screenOrientation="portrait"
-            android:parentActivityName="com.sdsmdg.bookshareapp.BSA.ui.MyProfile" />
+            android:parentActivityName=".ui.MyProfile"
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.sdsmdg.bookshareapp.BSA.ui.ChangePasswordActivity"
+            android:name=".ui.ChangePasswordActivity"
             android:label="Change Password"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
-            android:name="com.sdsmdg.bookshareapp.BSA.ui.GuestActivity"
+            android:name=".ui.GuestActivity"
             android:label="Campus Books"
-            android:screenOrientation="portrait"/>
-        <activity android:name="com.sdsmdg.bookshareapp.BSA.ui.UserSearchActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserSearchActivity"
             android:label="Search User"
             android:parentActivityName=".ui.MainActivity"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".ui.GRLoginActivity"
-            android:label="To-Read"
-            >
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.GRLoginActivity"
+            android:label="To-Read">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
+
                 <data
                     android:host="www.goodreads.com"
                     android:scheme="your" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.ToReadActivity"
-            android:label="To-Read"/>
+        <activity
+            android:name=".ui.ToReadActivity"
+            android:label="To-Read" />
+        <activity android:name=".ui.BarcodeActivity"></activity>
     </application>
 
 </manifest>

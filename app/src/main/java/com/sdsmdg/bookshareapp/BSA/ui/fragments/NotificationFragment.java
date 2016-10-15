@@ -1,12 +1,14 @@
 package com.sdsmdg.bookshareapp.BSA.ui.fragments;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +17,7 @@ import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
+import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notification_Model;
 import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.NotificationAdapter;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
@@ -39,6 +42,7 @@ public class NotificationFragment extends Fragment {
     SwipeRefreshLayout refreshLayout;
     List<Notifications> notificationsList = new ArrayList<>();
     TextView noNotificationTextView;
+    SharedPreferences prefs;
 
     private OnFragmentInteractionListener mListener;
 
@@ -62,6 +66,7 @@ public class NotificationFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_notification, container, false);
 
+        prefs = getContext().getSharedPreferences("Token",Context.MODE_PRIVATE);
         noNotificationTextView = (TextView)v.findViewById(R.id.no_notification_text);
 
         nLinearLayoutManager = new LinearLayoutManager(getActivity());
@@ -73,7 +78,6 @@ public class NotificationFragment extends Fragment {
 
         adapter = new NotificationAdapter(getActivity(), notificationsList);
         notificationsListView.setAdapter(adapter);
-
         getNotifications();
 
         refreshLayout =(SwipeRefreshLayout)v.findViewById(R.id.notif_refresh_layout);
@@ -103,12 +107,18 @@ public class NotificationFragment extends Fragment {
                 .build();
 
         UsersAPI usersAPI = retrofit.create(UsersAPI.class);
-        Call<List<Notifications>> call = usersAPI.getNotifs(Helper.getUserId());
-        call.enqueue(new Callback<List<Notifications>>() {
+        Call<Notification_Model> call = usersAPI.getNotifs("Token "+prefs.getString("token",null));
+        Log.i("dgg","Token "+prefs.getString("token",null));
+        call.enqueue(new Callback<Notification_Model>() {
+
             @Override
-            public void onResponse(Call<List<Notifications>> call, Response<List<Notifications>> response) {
+            public void onResponse(Call<Notification_Model> call, Response<Notification_Model> response) {
+                Log.i("ss", "onResponse: " + response.body());
                 if (response.body() != null) {
-                    List<Notifications> notifList = response.body();
+
+                    List<Notifications> notifList = response.body().getNotificationsList();
+                    Log.i("here 1","yes");
+                    Log.i("dgg2","Token "+prefs.getString("token",null));
                     if(notifList.size() == 0) {
                         noNotificationTextView.setVisibility(View.VISIBLE);
                     }
@@ -121,8 +131,11 @@ public class NotificationFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<List<Notifications>> call, Throwable t) {
+            public void onFailure(Call<Notification_Model> call, Throwable t) {
                 Toast.makeText(getActivity(), "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                Log.i("OverHere","yea");
+                Log.i("dgg3","Token "+prefs.getString("token",null));
+                Log.i("ssg",t.toString());
             }
         });
     }

@@ -2,6 +2,7 @@ package com.sdsmdg.bookshareapp.BSA.ui.adapter.Local;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -34,6 +35,8 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
     private Context context;
     private List<Book> bookList;
     Book tempValues = null;
+    SharedPreferences prefs;
+
     String userId;
     private final OnItemClickListener listener;
 
@@ -68,6 +71,8 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
         this.context = context;
         this.listener = listener;
         this.userId=userId;
+        prefs = context.getSharedPreferences("Token",Context.MODE_PRIVATE);
+
     }
 
     @Override
@@ -107,7 +112,8 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
                     public void onClick(DialogInterface dialog, int which) {
                         String process = "request";
                         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                        Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(),Helper.getUserName(), bookId,bookTitle,process,userId,"request for");
+                        Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(),Helper.getUserName(), bookId,bookTitle,process,userId,"request for","Token "+prefs
+                                .getString("token",null));
                         sendNotif.enqueue(new Callback<Notifications>() {
                             @Override
                             public void onResponse(Call<Notifications> call, Response<Notifications> response) {

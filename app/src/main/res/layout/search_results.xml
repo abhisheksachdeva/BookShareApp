@@ -66,4 +66,5 @@
         android:foregroundGravity="center_vertical"
         android:src="@drawable/up"
         android:visibility="invisible" />
-</RelativeLayout>
+
+        </RelativeLayout>

@@ -143,12 +143,13 @@
             android:text="Try now"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:textSize="18sp"
             android:textColor="@color/White"/>
         <Button
             android:layout_width="130dp"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_gravity="bottom|center"
             android:text="Guest"
             android:visibility="visible"
             android:textAllCaps="false"
