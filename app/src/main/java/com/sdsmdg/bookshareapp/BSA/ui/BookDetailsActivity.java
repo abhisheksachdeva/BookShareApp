@@ -60,6 +60,8 @@ public class BookDetailsActivity extends AppCompatActivity {
     Boolean showMore=false;
     CustomProgressDialog customProgressDialog;
     Button addToMyLibraryButton;
+    String token;
+    SharedPreferences prefs;
 
     public static String getResponse() {
         return Response;
@@ -69,12 +71,13 @@ public class BookDetailsActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_books_details);
+        prefs = getSharedPreferences("Token", MODE_PRIVATE);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         customProgressDialog = new CustomProgressDialog(BookDetailsActivity.this);
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
-
+        token = prefs.getString("token", null);
         addToMyLibraryButton = (Button) findViewById(R.id.add_to_my_library);
         authorBook = (TextView) findViewById(R.id.book_author);
         ratingBook = (RatingBar) findViewById(R.id.book_rating);
@@ -105,7 +108,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         String idd = prefs.getString("id", "");
 
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Book> call = api.getBookDetails(id);
+        Call<Book> call = api.getBookDetails(id,token);
         call.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
@@ -196,7 +199,7 @@ public class BookDetailsActivity extends AppCompatActivity {
 
     public void addToMyLibraryClicked(View view) {
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url,description);
+        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url,description,token);
         addBookCall.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {

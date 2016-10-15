@@ -111,7 +111,7 @@ public class GuestActivity extends AppCompatActivity {
 
     public void getLocalBooks(final String page) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<BookList> call = api.getBList(page);
+        Call<BookList> call = api.getBList(page,"Token");
         call.enqueue(new Callback<BookList>() {
             @Override
             public void onResponse(Call<BookList> call, Response<BookList> response) {

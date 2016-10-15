@@ -2,6 +2,7 @@ package com.sdsmdg.bookshareapp.BSA.ui.adapter.GR;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -39,6 +40,8 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
     Book tempValues=null;
     BookDescription tempDescp;
     String description;
+    String token;
+    SharedPreferences prefs;
 
     private final OnItemClickListener listener;
 
@@ -76,6 +79,9 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
         this.context=context;
         Log.d("BookAdapter","Constructor");
         this.listener = listener;
+        prefs = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
+
+
     }
 
     @Override
@@ -95,6 +101,9 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
         final Integer search_id;
         final Long ratingsCount;
         final Float rating;
+        token = prefs.getString("token", null);
+        Log.i("token_value",token);
+
         holder.add.setEnabled(true);
         tempValues = bookList.get(position);
         holder.titleBook.setText(tempValues.getBookDetails().getTitle());
@@ -153,7 +162,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                        Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> addBook = usersAPI.addBook(email,title, author,gr_id,ratingsCount,rating,gr_img_url,description);
+                        Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> addBook = usersAPI.addBook(email,title, author,gr_id,ratingsCount,rating,gr_img_url,description,"Token "+token);
                         addBook.enqueue(new Callback<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book>() {
 
                             @Override

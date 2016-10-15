@@ -3,8 +3,10 @@ package com.sdsmdg.bookshareapp.BSA.ui.adapter.Local;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.support.v4.app.SharedElementCallback;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
@@ -41,6 +43,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     Context context;
     List<Notifications> notificationList = new ArrayList<>();
     Notifications notifications = null;
+    SharedPreferences prefs;
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -70,6 +73,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public NotificationAdapter(Context context, List<Notifications> list) {
         this.context = context;
         this.notificationList = list;
+        prefs = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
     }
 
     @Override
@@ -259,7 +263,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                Call<Notifications> sendNotif = usersAPI.acceptNotif(nId, senderId, senderName, bookId, bookTitle, "accept", targetId, "accepted request");
+                Call<Notifications> sendNotif = usersAPI.acceptNotif(nId, senderId, senderName, bookId, bookTitle, "accept", targetId, "accepted request","Token "+prefs.getString("token",null));
                 sendNotif.enqueue(new Callback<Notifications>() {
                     @Override
                     public void onResponse(Call<Notifications> call, Response<Notifications> response) {
@@ -299,7 +303,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onClick(DialogInterface dialog, int which) {
                 String process = "request";
                 UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                Call<Notifications> sendNotif = usersAPI.rejectNotif(nId, "reject", "rejected request");
+                Call<Notifications> sendNotif = usersAPI.rejectNotif(nId, "reject", "rejected request","Token "+prefs.getString("token",null));
                 sendNotif.enqueue(new Callback<Notifications>() {
                     @Override
                     public void onResponse(Call<Notifications> call, Response<Notifications> response) {

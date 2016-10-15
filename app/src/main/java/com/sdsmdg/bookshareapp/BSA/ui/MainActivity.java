@@ -32,6 +32,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
@@ -361,14 +363,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_mybooks) {
-            Intent i = new Intent(this, MyBooks2.class);
+        if (id == R.id.nav_myprofile) {
+            Intent i = new Intent(this, MyProfile.class);
             startActivity(i);
 
-        } else if (id == R.id.nav_myprofile) {
-            Intent i = new Intent(this, MyProfile.class);
-            i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
-            startActivity(i);
+        } else if (id == R.id.nav_barcode) {
+            new IntentIntegrator(MainActivity.this).initiateScan();
+
+
 
         } else if (id == R.id.nav_grlogin) {
             SharedPreferences preff = getSharedPreferences("UserId",MODE_PRIVATE);
@@ -379,8 +381,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent i = new Intent(this, ToReadActivity.class);
                 startActivity(i);
             }
-//            Intent i = new Intent(this, GRLoginActivity.class);
-//                startActivity(i);
 
 
         }else if (id == R.id.nav_logout) {
@@ -426,7 +426,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void getLocalBooks(final String page) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<BookList> call = api.getBList(page);
+        Call<BookList> call = api.getBList(page,"Token "+prefs.getString("token",null));
         call.enqueue(new Callback<BookList>() {
             @Override
             public void onResponse(Call<BookList> call, Response<BookList> response) {
@@ -509,6 +509,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if(Helper.imageChanged){
             Picasso.with(this).load(url).into(_profilePicture);
             Helper.imageChanged = false;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if(result != null) {
+            if(result.getContents() == null) {
+                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+            } else {
+                Intent i = new Intent(MainActivity.this,SearchResultsActivity.class);
+                i.putExtra("isbn",result.getContents());
+                startActivity(i);
+
+
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
