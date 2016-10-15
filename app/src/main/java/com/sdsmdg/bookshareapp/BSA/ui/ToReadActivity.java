@@ -29,6 +29,7 @@ import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.logging.Handler;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -44,6 +45,8 @@ public class ToReadActivity extends AppCompatActivity {
     SwipeRefreshLayout refreshLayout;
     SharedPreferences pref;
     String userGrId;
+    CustomProgressDialog customProgressDialog;
+
 
 
     @Override
@@ -60,6 +63,11 @@ public class ToReadActivity extends AppCompatActivity {
 //        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
 //        setSupportActionBar(myToolbar);
 
+        customProgressDialog = new CustomProgressDialog(ToReadActivity.this);
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.show();
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         pref = getSharedPreferences("UserId",MODE_PRIVATE);
         userGrId = pref.getString("userGrId",null);
@@ -123,13 +131,15 @@ public class ToReadActivity extends AppCompatActivity {
                     Log.i("GRTR","response = null");
                 }
 
-//                final Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        customProgressDialog.dismiss();
-//                    }
-//                }, 1000);
+                final android.os.Handler handler = new android.os.Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        customProgressDialog.dismiss();
+                    }
+                }, 1000);
+
+
 
             }
 
@@ -137,7 +147,7 @@ public class ToReadActivity extends AppCompatActivity {
             public void onFailure(Call<GoodreadsResponse3> call, Throwable t) {
                 Log.d("GRTR", "failedto parse " + t.toString());
                 refreshLayout.setRefreshing(false);
-//                customProgressDialog.dismiss();
+                customProgressDialog.dismiss();
 
             }
         });
@@ -149,6 +159,11 @@ public class ToReadActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+
             case R.id.action_settings:
                 SharedPreferences.Editor editor = pref.edit();
                 editor.putString("userGrId", null);

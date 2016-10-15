@@ -27,6 +27,7 @@ import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 import retrofit2.Call;
@@ -110,8 +111,9 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
         holder.authorBook.setText(tempValues.getBookDetails().getAuthor().getAuthor_name());
         Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.imageBook);
         holder.ratingBook.setRating(tempValues.getRating());
-        holder.ratingCount.setText(tempValues.getRatingCount() + " votes");
-        title = tempValues.getBookDetails().getTitle();
+        DecimalFormat formatter = new DecimalFormat("#,###,###");
+        String rating_count = formatter.format(tempValues.getRatingCount());
+        holder.ratingCount.setText(rating_count + " votes");        title = tempValues.getBookDetails().getTitle();
         email= Helper.getUserEmail();
         author=tempValues.getBookDetails().getAuthor().getAuthor_name();
         gr_img_url=tempValues.getBookDetails().getImage_url();

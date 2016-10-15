@@ -61,6 +61,11 @@ public interface UsersAPI {
             @Header("Authorization") String token
     );
 
+    @GET("guest/?format=json")
+    Call<BookList> getGuestBList(
+            @Query("page") String page
+    );
+
     @FormUrlEncoded
     @POST("books/?format=json")
     Call<Book> addBook(
