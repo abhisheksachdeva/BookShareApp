@@ -19,8 +19,8 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/row_books_imageView"
             android:layout_alignParentLeft="true"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="90dp"
+            android:layout_height="90dp"
             android:scaleType="centerCrop"
             android:layout_marginBottom="16dp"/>
 
@@ -38,7 +38,7 @@
                 android:id="@+id/row_books_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="center"
                 android:maxLines="2"
                 android:text="Title"
                 android:layout_marginBottom="10dp"
@@ -49,7 +49,7 @@
                 android:id="@+id/row_books_author"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="left"
+                android:layout_gravity="center"
                 android:text="Author"
                 android:textAlignment="center"
                 android:textSize="14dp" />
@@ -58,19 +58,24 @@
                 android:layout_width="wrap_content"
                 style="?android:attr/ratingBarStyleSmall"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+
                 android:id="@+id/row_books_rating"/>
 
             <TextView
                 android:id="@+id/row_books_ratings_count"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textAlignment="center"
+
                 android:text="Rating"
                 />
 
         </LinearLayout>
 
         <View
-            android:layout_below="@id/row_books_imageView"
+            android:layout_below="@id/linear_layout"
             android:layout_width="match_parent"
             android:id="@+id/divider"
             android:layout_height="1dp"

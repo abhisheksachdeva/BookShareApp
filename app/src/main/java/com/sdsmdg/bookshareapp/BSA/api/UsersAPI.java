@@ -4,6 +4,7 @@ import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.RemoveBook;
 import com.sdsmdg.bookshareapp.BSA.api.models.Login;
+import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notification_Model;
 import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
@@ -89,8 +90,7 @@ public interface UsersAPI {
     Call<Detail> getUserEmail(@Header("Authorization") String token);
 
     @GET("notifications/")
-    Call<List<Notifications>> getNotifs(
-            @Query("user_id") String userId,
+    Call<Notification_Model> getNotifs(
             @Header("Authorization") String token
     );
 

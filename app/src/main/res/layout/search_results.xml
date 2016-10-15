@@ -67,16 +67,4 @@
         android:src="@drawable/up"
         android:visibility="invisible" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/scanner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_gravity="left"
-        android:layout_margin="16dp"
-        android:background="@color/Yellow"
-        android:foregroundGravity="center_vertical"
-        android:src="@drawable/ic_menu_camera"
-        android:visibility="visible" />
-</RelativeLayout>
+        </RelativeLayout>

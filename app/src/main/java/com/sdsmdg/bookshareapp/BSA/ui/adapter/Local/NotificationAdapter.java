@@ -263,8 +263,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                Call<Notifications> sendNotif = usersAPI.acceptNotif(nId, senderId, senderName, bookId, bookTitle, "accept", targetId, "accepted request","Token "+prefs
-                .getString("token",null));
+                Call<Notifications> sendNotif = usersAPI.acceptNotif(nId, senderId, senderName, bookId, bookTitle, "accept", targetId, "accepted request","Token "+prefs.getString("token",null));
                 sendNotif.enqueue(new Callback<Notifications>() {
                     @Override
                     public void onResponse(Call<Notifications> call, Response<Notifications> response) {
@@ -304,8 +303,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onClick(DialogInterface dialog, int which) {
                 String process = "request";
                 UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                Call<Notifications> sendNotif = usersAPI.rejectNotif(nId, "reject", "rejected request","Token "+prefs
-                        .getString("token",null));
+                Call<Notifications> sendNotif = usersAPI.rejectNotif(nId, "reject", "rejected request","Token "+prefs.getString("token",null));
                 sendNotif.enqueue(new Callback<Notifications>() {
                     @Override
                     public void onResponse(Call<Notifications> call, Response<Notifications> response) {
