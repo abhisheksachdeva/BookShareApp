@@ -41,9 +41,9 @@
                 android:layout_gravity="left"
                 android:maxLines="2"
                 android:text="Name"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="6dp"
                 android:textAlignment="center"
-                android:textSize="22dp"/>
+                android:textSize="20dp"/>
 
             <TextView
                 android:id="@+id/row_user_email"
@@ -60,29 +60,29 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:text="Hostel"
+                android:layout_marginBottom="8dp"
                 android:textAlignment="center"
                 android:textSize="14dp" />
 
-        </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:id="@+id/divider"
+                android:layout_alignParentRight="true"
+                android:layout_height="1dp"
+                android:background="#D2D5CE" />
 
-        <View
-            android:layout_below="@id/linear_layout"
-            android:layout_marginTop="16dp"
-            android:layout_width="match_parent"
-            android:id="@+id/divider"
-            android:layout_height="1dp"
-            android:background="#D2D5CE" />
+        </LinearLayout>
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="#FFFFFF"
             android:id="@+id/frameLayout"
-            android:layout_below="@id/divider">
+            android:layout_below="@id/linear_layout">
             <Button
                 android:id="@+id/requestButton"
                 android:layout_width="wrap_content"
-                android:layout_height="40dp"
+                android:layout_height="34dp"
                 android:background="#FFFFFF"
                 style="?android:attr/borderlessButtonStyle"
                 android:text="Request"
