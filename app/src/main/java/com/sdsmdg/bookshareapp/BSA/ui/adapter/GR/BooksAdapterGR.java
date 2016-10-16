@@ -112,7 +112,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
         Picasso.with(this.context).load(tempValues.getBookDetails().getImage_url()).into(holder.imageBook);
         holder.ratingBook.setRating(tempValues.getRating());
         DecimalFormat formatter = new DecimalFormat("#,###,###");
-        String rating_count = formatter.format(tempValues.getRatingCount());
+        String rating_count = formatter.format(Long.parseLong(tempValues.getRatingCount().toString()));
         holder.ratingCount.setText(rating_count + " votes");        title = tempValues.getBookDetails().getTitle();
         email= Helper.getUserEmail();
         author=tempValues.getBookDetails().getAuthor().getAuthor_name();

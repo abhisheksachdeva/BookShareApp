@@ -127,7 +127,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 
             } else {
-                if (hours < 60) {
+                if (hours < 25) {
                     if(hours==1){
                         time = " "+hours.toString() + " hour ago";
 

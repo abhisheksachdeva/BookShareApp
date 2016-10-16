@@ -138,6 +138,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 getLocalBooks(String.valueOf(page + 1));
+//                Toast.makeText(getBaseContext(),"Loading page"+page,Toast.LENGTH_SHORT).show();
+
             }
         };
 
@@ -343,7 +345,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_notifs) {
-            notifFragment.getNotifications();
+            notifFragment.getNotifications("1");
             Helper.setOld_total(Helper.getNew_total());
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
                 drawerLayout.closeDrawer(GravityCompat.END);

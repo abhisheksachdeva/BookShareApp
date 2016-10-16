@@ -96,6 +96,7 @@ public interface UsersAPI {
 
     @GET("notifications/")
     Call<Notification_Model> getNotifs(
+            @Query("page") String count,
             @Header("Authorization") String token
     );
 
