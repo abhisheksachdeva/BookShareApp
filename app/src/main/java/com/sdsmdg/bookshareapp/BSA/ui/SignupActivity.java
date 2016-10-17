@@ -5,12 +5,14 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,8 +45,6 @@ public class SignupActivity extends AppCompatActivity {
     EditText _roomText;
     @InjectView(R.id.input_roll_no)
     EditText _rollText;
-//    @InjectView(R.id.input_hostel)
-//    EditText _hostelText;
     @InjectView(R.id.hostel_spinner)
     Spinner _hostelSpinner;
     @InjectView(R.id.input_college)
@@ -56,6 +56,11 @@ public class SignupActivity extends AppCompatActivity {
     @InjectView(R.id.link_login)
     TextView _loginLink;
     String hostel;
+    @InjectView(R.id._btn_show_password)
+    ImageButton _showPassword;
+    @InjectView(R.id._btn_show_cnf_password)
+    ImageButton _showCnfPassword;
+    boolean showPassword = false, showCnfPassword = false;
 
 
     @Override
@@ -97,6 +102,37 @@ public class SignupActivity extends AppCompatActivity {
                 // Finish the registration screen and return to the Login activity
                 finish();
             }
+        });
+
+        _showPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!showPassword){
+                    _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    showPassword=true;
+                    _showPassword.setImageResource(R.drawable.ic_visibility_off);
+                } else {
+                    _passwordText.setInputType(129); //input type = password
+                    showPassword=false;
+                    _showPassword.setImageResource(R.drawable.ic_visibility);
+                }
+            }
+
+        });
+        _showCnfPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(!showCnfPassword){
+                    _cnf_passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    showCnfPassword=true;
+                    _showCnfPassword.setImageResource(R.drawable.ic_visibility_off);
+                } else {
+                    _cnf_passwordText.setInputType(129); //input type = password
+                    showCnfPassword=false;
+                    _showCnfPassword.setImageResource(R.drawable.ic_visibility);
+                }
+            }
+
         });
     }
 

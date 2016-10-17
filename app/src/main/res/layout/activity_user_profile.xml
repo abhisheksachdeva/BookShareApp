@@ -128,7 +128,7 @@
                             android:layout_height="30dp"
                             android:layout_marginBottom="20dp"
                             android:layout_marginLeft="10dp"
-                            android:layout_marginRight="20dp"
+                            android:layout_marginRight="10dp"
                             android:layout_marginTop="20dp"
                             android:onClick="emailClicked"
                             android:src="@drawable/ic_email_white_48dp" />
@@ -157,7 +157,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
                     android:layout_marginTop="5dp"
-                    android:gravity="center_horizontal"
+                    android:gravity="center"
                     android:text="Books"
                     android:textColor="@color/Black"
                     android:textSize="20sp" />
@@ -168,6 +168,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
 
             </LinearLayout>
 

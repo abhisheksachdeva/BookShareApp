@@ -131,7 +131,6 @@ public class MyProfile extends AppCompatActivity {
             public void onClick(View v) {
                 Intent i = new Intent(MyProfile.this, SearchResultsActivity.class);
                 startActivity(i);
-                finish();
             }
         });
 
