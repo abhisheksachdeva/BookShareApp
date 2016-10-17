@@ -4,12 +4,16 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -32,7 +36,11 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserSearchActivity extends AppCompatActivity {
+public class UserSearchActivity extends ActionBarActivity {
+
+    private MenuItem mSearchAction;
+    private boolean isSearchOpened = false;
+    private EditText edtSeach;
 
     RecyclerView usersRecyclerView;
     List<UserInfo> userInfoList = new ArrayList<>();
@@ -41,6 +49,7 @@ public class UserSearchActivity extends AppCompatActivity {
     UsersAdapter adapter;
     TextView noUsersTextView;
     CustomProgressDialog customProgressDialog;
+    private Toolbar mToolbar;
 
 
     private final String TAG = UserSearchActivity.class.getSimpleName();
@@ -50,6 +59,9 @@ public class UserSearchActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_search);
 
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         customProgressDialog = new CustomProgressDialog(UserSearchActivity.this);
         customProgressDialog.setCancelable(false);
@@ -58,7 +70,6 @@ public class UserSearchActivity extends AppCompatActivity {
 
         preferences = getSharedPreferences("Token", MODE_PRIVATE);
 
-        queryEditText = (EditText) findViewById(R.id.edit_query);
 
         usersRecyclerView = (RecyclerView) findViewById(R.id.user_list);
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -71,17 +82,19 @@ public class UserSearchActivity extends AppCompatActivity {
         });
 
         usersRecyclerView.setAdapter(adapter);
-        queryEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    userSearchClicked(v);
-                    return true;
-                }
-                return false;
-            }
-        });
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_user_search, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        mSearchAction = menu.findItem(R.id.action_search);
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -89,18 +102,32 @@ public class UserSearchActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                return(true);
+                return (true);
+
+            case R.id.action_settings:
+                return true;
+            case R.id.action_search:
+                handleMenuSearch();
+                return true;
+
         }
-        return(super.onOptionsItemSelected(item));
+        return (super.onOptionsItemSelected(item));
     }
 
-    public void userSearchClicked(View view) {
+    public void hideKeyboard() {
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+    }
+
+    private void doSearch(String query) {
         hideKeyboard();
         noUsersTextView.setVisibility(View.GONE);
         customProgressDialog.show();
-        customProgressDialog.getWindow().setLayout(464,LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<List<UserInfo>> call = api.searchUser(queryEditText.getText().toString());
+        Call<List<UserInfo>> call = api.searchUser(query);
         call.enqueue(new Callback<List<UserInfo>>() {
             @Override
             public void onResponse(Call<List<UserInfo>> call, Response<List<UserInfo>> response) {
@@ -128,12 +155,77 @@ public class UserSearchActivity extends AppCompatActivity {
             }
         });
     }
-    public void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
+
+    @Override
+    public void onBackPressed() {
+        if (isSearchOpened) {
+            handleMenuSearch();
+            return;
         }
+        super.onBackPressed();
     }
 
+    protected void handleMenuSearch() {
+        ActionBar action = getSupportActionBar(); //get the actionbar
+
+        if (isSearchOpened) { //test if the search is open
+
+            action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
+            action.setDisplayShowTitleEnabled(true); //show the title in the action bar
+
+            //hides the keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
+
+            //add the search icon in the action bar
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.search_icon));
+
+            isSearchOpened = false;
+        } else { //open the search entry
+
+            action.setDisplayShowCustomEnabled(true); //enable it to display a
+            // custom view in the action bar.
+            action.setCustomView(R.layout.user_search_bar);//add the custom view
+            action.setDisplayShowTitleEnabled(false); //hide the title
+
+            edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
+
+            //this is a listener to do a search when the user clicks on search button
+            edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        doSearch(edtSeach.getText().toString());
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            edtSeach.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    edtSeach.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+
+                }
+            });
+
+
+            edtSeach.requestFocus();
+
+            //open the keyboard focused in the edtSearch
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+
+
+            //add the close icon
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_clear_24dp));
+
+            isSearchOpened = true;
+        }
+    }
 }
+
+

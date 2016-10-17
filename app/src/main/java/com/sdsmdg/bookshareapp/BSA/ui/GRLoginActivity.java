@@ -194,6 +194,7 @@ public class GRLoginActivity extends AppCompatActivity {
                             Log.i("ffucf", e.toString());
                             Log.i("sddsd", s.toString());
                         }
+//                                }
                     }
 
 

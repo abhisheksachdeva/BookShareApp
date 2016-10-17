@@ -234,15 +234,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             noBookstextview.setVisibility(View.GONE);
             progress_isVisible= true;
             customProgressDialog.show();
-            customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
         }
 
         @Override
         protected void onPostExecute(String result) {
             if (getResp() == "null" || getResplocal()=="null") {
-                if(getResp() == "null"){
-                    Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
-                }
+//                if(getResp() == "null"){
+//                    Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
+//                }
                 customProgressDialog.dismiss();
                 progress_isVisible= false;
 

@@ -13,6 +13,7 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.models.BookDetailsToRead;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class BooksAdapterToRead extends RecyclerView.Adapter<BooksAdapterToRead.ViewHolder> {
@@ -71,8 +72,9 @@ public class BooksAdapterToRead extends RecyclerView.Adapter<BooksAdapterToRead.
             Picasso.with(this.context).load(tempValues.getImage_url()).placeholder(R.drawable.default_book_image).into(holder.imageBook);
         }
         holder.ratingBook.setRating(tempValues.getRating());
-        holder.ratingCount.setText(tempValues.getRatingCount() + " votes");
-
+        DecimalFormat formatter = new DecimalFormat("#,###,###");
+        String rating_count = formatter.format(Long.parseLong(tempValues.getRatingCount().toString()));
+        holder.ratingCount.setText(rating_count + " votes");
 
     }
 

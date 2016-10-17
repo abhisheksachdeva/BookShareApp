@@ -50,6 +50,9 @@ public class LoginActivity extends AppCompatActivity {
     Context context;
     boolean showPassword = false;
 
+    CustomProgressDialog customProgressDialog;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,12 +143,9 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-            final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setMessage("        Authenticating...                ");
-        progressDialog.setIndeterminate(true);
-        progressDialog.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_indeterminate_horizontal));
-        progressDialog.setInverseBackgroundForced(true);
-        progressDialog.show();
+        customProgressDialog = new CustomProgressDialog(LoginActivity.this);
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.show();
 
         String email = _emailText.getText().toString() + "@iitr.ac.in";
         String password = _passwordText.getText().toString();
@@ -167,14 +167,14 @@ public class LoginActivity extends AppCompatActivity {
                         saveinSP(response.body().getToken(), response.body().getUserInfo());
                     }
                 }
-                progressDialog.dismiss();
+                customProgressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
                 Log.i(TAG, "onFailure: called");
                 onLoginFailed("Check your network connectivity and try again!");
-                progressDialog.dismiss();
+                customProgressDialog.dismiss();
             }
         });
 
