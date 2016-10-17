@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/back"
     android:orientation="vertical"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
     android:paddingTop="26dp"
-    android:background="@drawable/back"
 
     >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
-        >
-        <LinearLayout
+        android:orientation="vertical">
+
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
@@ -27,98 +27,94 @@
 
             <!-- Email Label -->
             <android.support.design.widget.TextInputLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_weight="2"
                 android:textColorHint="@color/White">
 
                 <AutoCompleteTextView
                     android:id="@+id/input_email"
-                    android:layout_width="230dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
-                    android:textColor="@color/White"
-                    />
+                    android:maxLength="18"
+                    android:textColor="@color/White" />
             </android.support.design.widget.TextInputLayout>
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:layout_weight="1"
-                android:text="\@iitr.ac.in"
-                android:textSize="18sp"
-                android:textColorHint="@color/White"
-                android:textColor="@color/White"
                 android:alpha="0.7"
-                />
-        </LinearLayout>
+                android:layout_gravity="right|center_vertical"
+                android:text="\@iitr.ac.in"
+                android:textColor="@color/White"
+                android:textColorHint="@color/White"
+                android:textSize="18sp" />
+        </FrameLayout>
 
 
         <!-- Password Label -->
-        <LinearLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
-                android:textColorHint="@color/White"
-                >
+                android:textColorHint="@color/White">
+
                 <EditText
                     android:id="@+id/input_password"
-                    android:layout_width="210dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Password"
+                    android:maxLength="20"
                     android:inputType="textPassword"
-                    android:textColor="@color/White"
-                    />
+                    android:textColor="@color/White" />
             </android.support.design.widget.TextInputLayout>
 
             <ImageButton
                 android:id="@+id/_btn_show_password"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:src="@drawable/ic_visibility_off"
+                android:layout_gravity="right|center_vertical"
                 android:background="#00FFFFFF"
-                android:tint="@color/White"
-                android:layout_marginBottom="10dp"
-                android:layout_gravity="right|bottom"
-                />
+                android:src="@drawable/ic_visibility_off"
+                android:tint="@color/White" />
 
-        </LinearLayout>
+        </FrameLayout>
+
     </LinearLayout>
 
     <Button
         android:id="@+id/btn_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:paddingTop="2dp"
-        android:paddingBottom="2dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/button_shape"
-        android:textColor="@color/White"
-        android:layout_gravity="center_horizontal"
-        android:textAllCaps="false"
+        android:gravity="center"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
         android:text="Login"
-        android:textSize="20sp"
-        />
+        android:textAllCaps="false"
+        android:textColor="@color/White"
+        android:textSize="20sp" />
+
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:layout_gravity="center_horizontal"
         android:layout_margin="10dp"
-        >
+        android:orientation="vertical">
+
         <TextView
             android:id="@+id/link_signup"
             android:layout_width="wrap_content"
@@ -126,29 +122,39 @@
             android:gravity="center"
             android:text="No account yet? Create one"
             android:textColor="@color/White"
-            android:textSize="18sp"
-            />
+            android:textSize="18sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Or"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="10dp"
-            android:textSize="16sp"
-            android:textColor="@color/White"/>
+            android:text="Or"
+            android:textColor="@color/White"
+            android:textSize="16sp" />
+
         <TextView
             android:id="@+id/trynow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Try now"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:textSize="18sp"
+            android:layout_marginTop="10dp"
+            android:text="Try now"
             android:textColor="@color/White"
-            android:onClick="guestModeClicked"/>
+            android:textSize="18sp" />
 
+        <Button
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:background="@drawable/button_shape"
+            android:onClick="guestModeClicked"
+            android:text="Guest"
+            android:textAllCaps="false"
+            android:textColor="@color/White"
+            android:textSize="20sp"
+            android:visibility="visible" />
 
     </LinearLayout>
 

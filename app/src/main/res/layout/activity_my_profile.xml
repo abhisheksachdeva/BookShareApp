@@ -108,7 +108,7 @@
                                 android:layout_gravity="right|bottom"
                                 android:layout_marginBottom="20dp"
                                 android:layout_marginLeft="10dp"
-                                android:layout_marginRight="20dp"
+                                android:layout_marginRight="10dp"
                                 android:layout_marginTop="20dp"
                                 android:onClick="editProfileClicked"
                                 android:src="@drawable/ic_edit_white_48dp" />
@@ -158,6 +158,9 @@
                         android:layout_weight="1"
                         android:scrollbars="vertical" />
 
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="60dp" />
 
                 </LinearLayout>
 
