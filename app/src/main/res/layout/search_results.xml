@@ -37,7 +37,7 @@
                     android:layout_height="50dp"
                     android:inputType="text"
                     android:imeOptions="actionSearch"
-                    android:drawableRight="@drawable/search_icon"
+                    android:drawableLeft="@drawable/search_icon"
                     android:hint="Search by" />
 
             </LinearLayout>
@@ -62,7 +62,7 @@
         android:layout_margin="16dp"
         android:background="@color/Yellow"
         android:foregroundGravity="center_vertical"
-        android:src="@drawable/up"
+        android:src="@drawable/up2"
         android:visibility="invisible" />
 
 </RelativeLayout>

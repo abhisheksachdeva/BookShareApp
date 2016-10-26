@@ -59,8 +59,11 @@ public class UserSearchActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_search);
 
+
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
+
+        mToolbar.setClickable(true);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         customProgressDialog = new CustomProgressDialog(UserSearchActivity.this);
@@ -70,7 +73,7 @@ public class UserSearchActivity extends ActionBarActivity {
 
         preferences = getSharedPreferences("Token", MODE_PRIVATE);
 
-
+        search_open();
         usersRecyclerView = (RecyclerView) findViewById(R.id.user_list);
         usersRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -109,6 +112,7 @@ public class UserSearchActivity extends ActionBarActivity {
             case R.id.action_search:
                 handleMenuSearch();
                 return true;
+
 
         }
         return (super.onOptionsItemSelected(item));
@@ -225,6 +229,48 @@ public class UserSearchActivity extends ActionBarActivity {
 
             isSearchOpened = true;
         }
+    }
+
+    private void search_open(){
+        ActionBar action = getSupportActionBar(); //get the actionbar
+
+        action.setDisplayShowCustomEnabled(true); //enable it to display a
+        // custom view in the action bar.
+        action.setCustomView(R.layout.user_search_bar);//add the custom view
+        action.setDisplayShowTitleEnabled(false); //hide the title
+        
+        edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
+
+        //this is a listener to do a search when the user clicks on search button
+        edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    doSearch(edtSeach.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
+        edtSeach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtSeach.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+
+            }
+        });
+
+
+        edtSeach.requestFocus();
+
+        //open the keyboard focused in the edtSearch
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+
+
+        //add the close icon
     }
 }
 

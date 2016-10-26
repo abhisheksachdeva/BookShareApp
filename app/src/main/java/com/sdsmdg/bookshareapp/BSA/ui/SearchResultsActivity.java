@@ -188,7 +188,6 @@ public class SearchResultsActivity extends AppCompatActivity {
         @Override
         protected void onPreExecute() {
             customProgressDialog.show();
-            customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
 
         }
     }
