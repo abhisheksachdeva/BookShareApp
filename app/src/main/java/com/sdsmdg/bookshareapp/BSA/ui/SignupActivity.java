@@ -180,12 +180,14 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<Signup> call, Response<Signup> response) {
-                String detail = response.body().getDetail();
+                if(response.body() != null) {
+                    String detail = response.body().getDetail();
 
-                if (detail.equals("Fill required details or Email id already registered.")) {
-                    onSignupFailed("Email already registered");
-                } else {
-                    onSignupSuccess();
+                    if (detail.equals("Fill required details or Email id already registered.")) {
+                        onSignupFailed("Email already registered");
+                    } else {
+                        onSignupSuccess();
+                    }
                 }
             }
         });

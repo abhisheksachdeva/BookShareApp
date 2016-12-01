@@ -1,6 +1,5 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
