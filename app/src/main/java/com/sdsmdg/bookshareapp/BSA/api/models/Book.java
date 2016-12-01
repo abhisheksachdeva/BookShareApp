@@ -19,7 +19,7 @@ public class Book {
 	public float rating;
 
 	@Element(name = "ratings_count")
-	public String ratingCount;
+	public long ratingCount;
 
 	public BookDetails getBookDetails(){
 		return bookDetails;
@@ -35,7 +35,7 @@ public class Book {
 	public float getRating(){
 		return rating;
 	}
-	public String getRatingCount(){
+	public long getRatingCount(){
 		return ratingCount;
 	}
 }

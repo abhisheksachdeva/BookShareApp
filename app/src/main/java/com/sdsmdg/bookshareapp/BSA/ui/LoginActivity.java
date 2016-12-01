@@ -1,6 +1,5 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -172,7 +171,6 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
-                Log.i(TAG, "onFailure: called");
                 onLoginFailed("Check your network connectivity and try again!");
                 customProgressDialog.dismiss();
             }

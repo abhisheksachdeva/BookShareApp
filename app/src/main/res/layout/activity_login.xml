@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
-                    android:maxLength="18"
+                    android:maxLength="19"
                     android:textColor="@color/White" />
             </android.support.design.widget.TextInputLayout>
 
