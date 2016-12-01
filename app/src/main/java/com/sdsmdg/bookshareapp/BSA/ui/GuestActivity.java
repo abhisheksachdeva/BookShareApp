@@ -62,7 +62,7 @@ public class GuestActivity extends AppCompatActivity {
             public void onItemClick(Book book) {
                 Snackbar snbar= Snackbar.make(findViewById(R.id.frameLayout),"Create a new account ! ",Snackbar.LENGTH_SHORT)
                         .setAction("Sign Up", signupclicklistener);
-                snbar.setActionTextColor(getResources().getColor(R.color.colorPrimary));
+                snbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
                 snbar.show();
                 snbar.show();
 
@@ -90,7 +90,6 @@ public class GuestActivity extends AppCompatActivity {
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 getLocalBooks(String.valueOf(page + 1));
-                Toast.makeText(getApplicationContext(), "Loading Page " + (page + 1), Toast.LENGTH_SHORT).show();
             }
         };
 
@@ -111,7 +110,7 @@ public class GuestActivity extends AppCompatActivity {
 
     public void getLocalBooks(final String page) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<BookList> call = api.getBList(page,"Token");
+        Call<BookList> call = api.getGuestBList(page);
         call.enqueue(new Callback<BookList>() {
             @Override
             public void onResponse(Call<BookList> call, Response<BookList> response) {

@@ -14,14 +14,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:background="@color/colorPrimary"
-                android:subtitleTextColor="@color/app_theme_background"
-                android:titleTextColor="@android:color/white"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/colorPrimary" />
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/refresh_layout"
@@ -29,10 +26,9 @@
             android:layout_height="match_parent">
 
             <FrameLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
                 android:id="@+id/mainframelyout"
-                >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/localBooksList"
@@ -50,26 +46,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
+                    android:gravity="center"
                     android:text="No Books Found"
                     android:textSize="18sp"
-                    android:visibility="gone"
-                    android:gravity="center"/>
+                    android:visibility="gone" />
+
                 <android.support.design.widget.CoordinatorLayout
                     android:id="@+id/coordinatorlayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center_horizontal|bottom">
 
-                <android.support.design.widget.FloatingActionButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentEnd="true"
-                    android:layout_gravity="end|bottom"
-                    android:src="@drawable/plus"
+                    <android.support.design.widget.FloatingActionButton
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end|bottom"
+                        android:layout_margin="16dp"
 
-                    android:onClick="searchClicked"
-                    android:layout_margin="16dp"/>
+                        android:onClick="searchClicked"
+                        android:src="@drawable/plus" />
                 </android.support.design.widget.CoordinatorLayout>
             </FrameLayout>
 
@@ -82,13 +77,13 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/colorPrimaryDark"
-        android:fitsSystemWindows="true"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
+        android:background="@color/colorPrimaryDark"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_header_main"
         app:itemIconTint="@color/White"
         app:itemTextColor="@color/White"
-        app:headerLayout="@layout/nav_header_main"
         app:menu="@menu/activity_main_drawer" />
 
     <FrameLayout

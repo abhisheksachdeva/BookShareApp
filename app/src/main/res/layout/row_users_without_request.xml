@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="1dp"
-    android:layout_marginBottom="1dp">
+    android:layout_marginBottom="2dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,8 +18,8 @@
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/row_user_image"
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             app:civ_border_width="2dp"
             app:civ_border_color="#FFFFFF"
             android:layout_marginRight="16dp"/>
@@ -35,25 +35,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:maxLines="2"
+                android:layout_marginBottom="6dp"
                 android:text="Name"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textSize="20sp"/>
 
             <TextView
                 android:id="@+id/row_user_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Email"
-                android:textSize="14sp"
-                android:textStyle="italic" />
+                android:textSize="14sp"/>
 
             <TextView
                 android:id="@+id/row_user_hostel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Hostel"
-                android:textSize="14sp"
-                android:textStyle="italic" />
+                android:textSize="14sp" />
 
         </LinearLayout>
 

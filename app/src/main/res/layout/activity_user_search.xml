@@ -1,36 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context="com.sdsmdg.bookshareapp.BSA.ui.UserSearchActivity">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp">
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_weight="2"
-            android:layout_height="wrap_content"
-            android:imeOptions="actionSearch"
-            android:inputType="text"
-            android:hint="Enter Name or Hostel"
-            android:id="@+id/edit_query"/>
-
-        <Button
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="30dp"
-            android:text="SEARCH"
-            android:background="@drawable/button_shape"
-            android:textColor="@color/White"
-            android:textSize="15sp"
-            android:onClick="userSearchClicked"/>
-
-    </LinearLayout>
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_usersearch">
+    </include>
 
     <FrameLayout
         android:layout_width="match_parent"

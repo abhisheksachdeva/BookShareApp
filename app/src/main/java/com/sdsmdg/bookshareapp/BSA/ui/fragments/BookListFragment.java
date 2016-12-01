@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
@@ -39,6 +40,7 @@ public class BookListFragment extends Fragment {
     List<Book> bookList = new ArrayList<>();
     BooksAdapterGR adapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    TextView no_books;
     Search sr;
     Context context;
 
@@ -46,7 +48,8 @@ public class BookListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.book_list_fragment, container, false);
-
+        no_books = (TextView) view.findViewById(R.id.no_books);
+        no_books.setVisibility(View.GONE);
         resultsList = (RecyclerView) view.findViewById(R.id.results_list);
         resultsList.setNestedScrollingEnabled(false);
         mLayoutManager = new LinearLayoutManager(getActivity());
@@ -75,6 +78,12 @@ public class BookListFragment extends Fragment {
                     bookList.clear();
                     bookList.addAll(sr.getBooks());
                     adapter.notifyDataSetChanged();
+                    if(bookList.size()==0){
+                        no_books.setVisibility(View.VISIBLE);
+                    }else {
+                        no_books.setVisibility(View.GONE);
+
+                    }
                     resp = response.toString();
                 }
             }

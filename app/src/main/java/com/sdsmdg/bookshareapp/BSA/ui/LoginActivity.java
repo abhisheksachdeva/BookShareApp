@@ -1,6 +1,5 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -50,6 +49,9 @@ public class LoginActivity extends AppCompatActivity {
     Context context;
     boolean showPassword = false;
 
+    CustomProgressDialog customProgressDialog;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +66,18 @@ public class LoginActivity extends AppCompatActivity {
 
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
         prevEmail = getApplicationContext().getSharedPreferences("Previous Email", MODE_PRIVATE);
-        String emails[] = {prevEmail.getString("email1", null), prevEmail.getString("email2", null)};
+        String emails[];
+        if(prevEmail.getString("email1", null) == null) {
+            emails = new String[1];
+            emails[0] = prevEmail.getString("email2", null);
+        } else if(prevEmail.getString("email2", null) == null) {
+            emails = new String[1];
+            emails[0] = prevEmail.getString("email1", null);
+        } else {
+            emails = new String[2];
+            emails[0] = prevEmail.getString("email1", null);
+            emails[1] = prevEmail.getString("email2", null);
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_dropdown_item_1line, emails);
         _emailText.setAdapter(adapter);
@@ -129,18 +142,14 @@ public class LoginActivity extends AppCompatActivity {
 
         _loginButton.setEnabled(false);
 
-            final ProgressDialog progressDialog = new ProgressDialog(LoginActivity.this, ProgressDialog.STYLE_HORIZONTAL);
-        progressDialog.setMessage("        Authenticating...                ");
-        progressDialog.setIndeterminate(true);
-        progressDialog.setIndeterminateDrawable(getResources().getDrawable(R.drawable.progress_indeterminate_horizontal));
-        progressDialog.setInverseBackgroundForced(true);
-        progressDialog.show();
+        customProgressDialog = new CustomProgressDialog(LoginActivity.this);
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.show();
 
         String email = _emailText.getText().toString() + "@iitr.ac.in";
         String password = _passwordText.getText().toString();
         Helper.setUserEmail(email);
 
-        setNewEmail(_emailText.getText().toString());//This function sets the new entered email into the shared prefs for suggestions
 
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<Login> call = usersAPI.getToken(email, password);
@@ -152,18 +161,18 @@ public class LoginActivity extends AppCompatActivity {
                         onLoginFailed(response.body().getDetail());
                     }
                     if(response.body().getToken() != null) {
+                        setNewEmail(_emailText.getText().toString());//This function sets the new entered email into the shared prefs for suggestions
                         onLoginSuccess();
                         saveinSP(response.body().getToken(), response.body().getUserInfo());
                     }
                 }
-                progressDialog.dismiss();
+                customProgressDialog.dismiss();
             }
 
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
-                Log.i(TAG, "onFailure: called");
                 onLoginFailed("Check your network connectivity and try again!");
-                progressDialog.dismiss();
+                customProgressDialog.dismiss();
             }
         });
 

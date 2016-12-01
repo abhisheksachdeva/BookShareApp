@@ -37,28 +37,28 @@
                         android:scaleType="centerCrop" />
 
                     <!--<LinearLayout-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_gravity="right"-->
-                        <!--android:layout_marginTop="20dp"-->
-                        <!--android:layout_marginRight="10dp"-->
-                        <!--android:orientation="vertical"-->
-                        <!--android:visibility="invisible">-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_gravity="right"-->
+                    <!--android:layout_marginTop="20dp"-->
+                    <!--android:layout_marginRight="10dp"-->
+                    <!--android:orientation="vertical"-->
+                    <!--android:visibility="invisible">-->
 
-                        <!--<ImageView-->
-                            <!--android:layout_width="50dp"-->
-                            <!--android:layout_height="50dp"-->
-                            <!--android:src="@drawable/ic_book_white_48dp"-->
-                            <!--android:tint="@color/White" />-->
+                    <!--<ImageView-->
+                    <!--android:layout_width="50dp"-->
+                    <!--android:layout_height="50dp"-->
+                    <!--android:src="@drawable/ic_book_white_48dp"-->
+                    <!--android:tint="@color/White" />-->
 
-                        <!--<TextView-->
-                            <!--android:id="@+id/books_count"-->
-                            <!--android:layout_width="wrap_content"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:text="0"-->
-                            <!--android:layout_gravity="center"-->
-                            <!--android:textColor="@color/White"-->
-                            <!--android:textSize="16dp" />-->
+                    <!--<TextView-->
+                    <!--android:id="@+id/books_count"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:text="0"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:textColor="@color/White"-->
+                    <!--android:textSize="16dp" />-->
 
                     <!--</LinearLayout>-->
 
@@ -113,24 +113,25 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="right|bottom"
                         android:orientation="horizontal">
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_call_white_48dp"
-                        android:background="@android:color/transparent"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:onClick="callClicked"
-                        />
-                    <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:src="@drawable/ic_email_white_48dp"
-                        android:layout_marginTop="20dp"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="20dp"
-                        android:layout_marginBottom="20dp"
-                        android:onClick="emailClicked"/>
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginTop="20dp"
+                            android:background="@android:color/transparent"
+                            android:onClick="callClicked"
+                            android:src="@drawable/ic_call_white_48dp" />
+
+                        <ImageView
+                            android:layout_width="30dp"
+                            android:layout_height="30dp"
+                            android:layout_marginBottom="20dp"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="10dp"
+                            android:layout_marginTop="20dp"
+                            android:onClick="emailClicked"
+                            android:src="@drawable/ic_email_white_48dp" />
                     </LinearLayout>
 
                 </FrameLayout>
@@ -142,31 +143,35 @@
                 android:orientation="vertical">
 
                 <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_gravity="center"-->
-                    <!--android:layout_margin="10dp"-->
-                    <!--android:text="Books owned"-->
-                    <!--android:textAlignment="center"-->
-                    <!--android:textSize="20sp"-->
-                    <!--/>-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:text="Books owned"-->
+                <!--android:textAlignment="center"-->
+                <!--android:textSize="20sp"-->
+                <!--/>-->
 
                 <TextView
                     android:id="@+id/books_count"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="Books"
-                    android:textSize="20sp"
-                    android:gravity="center_horizontal"
                     android:layout_marginTop="5dp"
-                    android:textColor="@color/Black"/>
+                    android:gravity="center"
+                    android:text="Books"
+                    android:textColor="@color/Black"
+                    android:textSize="20sp" />
+
+
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/user_books_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginRight="10dp" />
+                    android:layout_marginTop="5dp" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp" />
 
             </LinearLayout>
 

@@ -1,5 +1,6 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -30,6 +31,7 @@ import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.UsersAdapter;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     public static final String TAG = BookDetailsActivity.class.getSimpleName();
 
     Book book;
-    String title,author,gr_id,gr_img_url,description;
+    String title,author,gr_id,gr_img_url,description,rating_count;
     Long ratingsCount;
     Float rating;
     public TextView authorBook;
@@ -122,10 +124,18 @@ public class BookDetailsActivity extends AppCompatActivity {
                     bookTitleText = book.getTitle();
                     bookTitle.setText(book.getTitle());
                     title = book.getTitle();
-                    bookDescription.setText(book.getDescription());
+                    Log.i("bsssgsgs",book.getDescription().trim()+"a");
+                    if(book.getDescription().trim()==""){
+                        bookDescription.setText("No Description Available");
+                    }else{
+                        bookDescription.setText(book.getDescription());
+                    }
                     description=book.getDescription();
                     authorBook.setText("by  "+book.getAuthor()); author = book.getAuthor();
-                    ratingCount.setText("(" + book.getRatingsCount().toString() + ")"); ratingsCount=book.getRatingsCount();
+                    DecimalFormat formatter = new DecimalFormat("##,##,###");
+                    rating_count = formatter.format(book.getRatingsCount());
+
+                    ratingCount.setText("(" + rating_count + ")"); ratingsCount=book.getRatingsCount();
                     ratingBook.setRating(book.getRating());rating = book.getRating();
                     Picasso.with(BookDetailsActivity.this).load(book.getGrImgUrl()).into(image);
                     Blurry.with(BookDetailsActivity.this)
@@ -163,6 +173,9 @@ public class BookDetailsActivity extends AppCompatActivity {
                 Log.d("BDA fail", t.toString());
                 TransitionManager.beginDelayedTransition(rootView);
                 customProgressDialog.dismiss();
+                Toast.makeText(BookDetailsActivity.this,"Connection Failed",Toast.LENGTH_SHORT).show();
+                finish();
+
 
             }
         });
@@ -199,7 +212,7 @@ public class BookDetailsActivity extends AppCompatActivity {
 
     public void addToMyLibraryClicked(View view) {
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url,description,token);
+        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url,description,"Token "+token);
         addBookCall.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {

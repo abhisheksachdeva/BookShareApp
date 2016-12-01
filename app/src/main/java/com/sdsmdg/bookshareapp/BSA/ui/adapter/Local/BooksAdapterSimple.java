@@ -13,6 +13,7 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.squareup.picasso.Picasso;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.ViewHolder> {
@@ -71,8 +72,9 @@ public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.
             Picasso.with(this.context).load(tempValues.getGrImgUrl()).placeholder(R.drawable.default_book_image).into(holder.imageBook);
         }
         holder.ratingBook.setRating(tempValues.getRating());
-        holder.ratingCount.setText(tempValues.getRatingsCount() + " votes");
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        DecimalFormat formatter = new DecimalFormat("#,###,###");
+        String rating_count = formatter.format(tempValues.getRatingsCount());
+        holder.ratingCount.setText(rating_count + " votes");        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onItemClick(bookList.get(position));
