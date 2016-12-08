@@ -17,14 +17,17 @@ import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
+import java.util.Iterator;
+import java.util.Set;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class SplashScreen extends Activity {
     String token;
+    String extra_data = "none";
     SharedPreferences pref;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -33,6 +36,17 @@ public class SplashScreen extends Activity {
 
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
         token = pref.getString("token", null);
+
+        if(getIntent().getExtras()!=null){
+            Log.i("SPLASH ","not------ null"+getIntent().getExtras().toString());
+            String data = getIntent().getExtras().getString("google.message_id");
+            Log.i("Data " , data+"----->");
+
+            if(data!=null){
+                extra_data = "open_drawer";
+            }
+            dumpIntent(getIntent());
+        }
 
         if(isOnline()) {
             verifyToken();
@@ -73,6 +87,7 @@ public class SplashScreen extends Activity {
 
                                 Helper.setUserEmail(response.body().getDetail());
                                 Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+                                intent.putExtra("data_splash",extra_data);
                                 startActivity(intent);
                                 finish();
 
@@ -127,6 +142,22 @@ public class SplashScreen extends Activity {
 
         }
 
+    }
+
+    public static void dumpIntent(Intent i){
+
+        Bundle bundle = i.getExtras();
+        if (bundle != null) {
+            Set<String> keys = bundle.keySet();
+            Iterator<String> it = keys.iterator();
+            Log.e("DUMENT","Dumping Intent start");
+            while (it.hasNext()) {
+                String key = it.next();
+                Log.e("DUMP INTENT","[" + key + "=" + bundle.get(key)+"]");
+            }
+
+            Log.e("DUMP INTENT","Dumping Intent end");
+        }
     }
 
 }

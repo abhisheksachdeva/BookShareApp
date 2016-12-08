@@ -17,11 +17,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Login;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import butterknife.ButterKnife;
@@ -176,6 +178,33 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+
+//        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+//        Log.i("Token ", token+"---> This the token");
+//        Call<Detail> call2 = usersAPI.update_fcm_id(
+//                token,
+//                refreshedToken
+//        );
+//        call2.enqueue(new Callback<Detail>() {
+//            @Override
+//            public void onResponse(Call<Detail> call2, Response<Detail> response) {
+//                if (response.body() != null) {
+//                    if (response.body().getDetail().equals("FCM_ID changed")) {
+//                        Toast.makeText(getApplicationContext(), "FCM_ID changed", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(getApplicationContext(), "Request not valid", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Log.i("CPA", "request body is null");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Detail> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "Check internet connectivity and try again", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
     }
 
     public void setNewEmail(String email) {
@@ -216,6 +245,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("data_login","update");
         startActivity(i);
         finish();
     }

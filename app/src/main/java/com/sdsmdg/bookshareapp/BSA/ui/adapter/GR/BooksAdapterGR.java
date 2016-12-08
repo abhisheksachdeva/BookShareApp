@@ -114,7 +114,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
 
         DecimalFormat formatter = new DecimalFormat("#,###,###");
 
-        String rating_count = formatter.format(tempValues.getRatingCount()); 
+        String rating_count = formatter.format(tempValues.getRatingCount());
 
         holder.ratingCount.setText(rating_count + " votes");
         title = tempValues.getBookDetails().getTitle();

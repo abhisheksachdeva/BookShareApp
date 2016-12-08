@@ -32,6 +32,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
@@ -40,6 +41,7 @@ import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
+import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterSimple;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.NotificationFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
@@ -66,6 +68,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Integer count = 1;
     String Resp;
     CustomProgressDialog customProgressDialog;
+    public static Context contextOfApplication;
+
+
 
     public String getResplocal() {
         return resplocal;
@@ -84,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Search Menu item reference in the toolbar
     MenuItem searchItem;
     TextView noBookstextview;
-
+    String data = "none";
 
     public String getResp() {
         return Resp;
@@ -100,6 +105,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Helper.setUserId(prefs.getString("id", prefs.getString("id", "")));
         Helper.setUserName(prefs.getString("first_name", null) + " " + prefs.getString("last_name", null));
 
+        Helper.setId(prefs.getString("id", null));
+        Helper.setToken(prefs.getString("token", null));
+
+        SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
+
+
         setContentView(R.layout.activity_main);
         noBookstextview = (TextView)findViewById(R.id.no_books_textView);
         noBookstextview.setVisibility(View.GONE);
@@ -107,10 +118,73 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         progress_isVisible= false;
 
 
+
         new ProgressLoader().execute( );
 
         notifFragment = (NotificationFragment)getSupportFragmentManager().findFragmentById(R.id.right_drawer);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+        if(getIntent().getExtras()!=null) {
+
+            Log.i("REACHED HERE ","INSIDE PART ONE ");
+
+            data = getIntent().getExtras().getString("data");
+            Log.d("VALUE OF DATA ", data +"---==>>");
+            if(data!=null) {
+                if (data.equals("open")) {
+                    Log.d("Reached here ", "inside data== open ");
+                    notifFragment.getNotifications("1");
+                    drawerLayout.openDrawer(GravityCompat.END);
+                }
+            }
+
+            data = getIntent().getExtras().getString("data_splash");
+            Log.d("VALUE OF DATA ", data +"---==>>");
+            if (data!=null && data.equals("open_drawer")) {
+                Log.d("Reached here ", "inside data  SPLASH  == open ");
+                notifFragment.getNotifications("1");
+                drawerLayout.openDrawer(GravityCompat.END);
+            }
+
+            data = getIntent().getExtras().getString("data_login");
+            Log.d("VALUE OF DATA ", data +"---==>>");
+            if (data!=null && data.equals("update")) {
+                Log.d("Reached here ", "inside data  SPLASH  == open ");
+
+                String token = "Token "+preferences.getString("token",null);
+
+                String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                Log.i("Token ", token + "---> This the token");
+                UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                Call<Detail> call2 = usersAPI.update_fcm_id(
+                        token,
+                        refreshedToken
+                );
+                call2.enqueue(new Callback<Detail>() {
+                    @Override
+                    public void onResponse(Call<Detail> call2, Response<Detail> response) {
+                        if (response.body() != null) {
+                            if (response.body().getDetail().equals("FCM_ID changed")) {
+                                Toast.makeText(getApplicationContext(), "FCM_ID changed", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getApplicationContext(), "Request not valid", Toast.LENGTH_SHORT).show();
+                            }
+                        } else {
+                            Log.i("CPA", "request body is null");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Detail> call, Throwable t) {
+                        Toast.makeText(getApplicationContext(), "Check internet connectivity and try again", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
+            }
+
+        }
         localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         localBooksList.setLayoutManager(layoutManager);
@@ -156,7 +230,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this.url = url;
         Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_account_circle_black_24dp).into(_profilePicture);
 
-        SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
+
 
         if (_name != null) {
             _name.setText(preferences.getString("first_name", "") + " " + preferences.getString("last_name", ""));
@@ -170,7 +244,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorAccent));
         setSupportActionBar(toolbar);
 
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
@@ -369,8 +442,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(i);
 
         } else if (id == R.id.nav_barcode) {
-            new IntentIntegrator(MainActivity.this).initiateScan();
-
+//            new IntentIntegrator(MainActivity.this).initiateScan();
+            Intent i = new Intent(this, fcm_test.class);
+            startActivity(i);
 
 
         } else if (id == R.id.nav_grlogin) {
@@ -385,14 +459,45 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         }else if (id == R.id.nav_logout) {
-            SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.clear();
-            editor.apply();
+            final SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
+            final boolean logout = false;
+            String token = "Token "+prefs.getString("token",null);
+            Log.i("Token ", token + "---> This the token");
+            UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+            Call<Detail> call2 = usersAPI.update_fcm_id(
+                    token,
+                    "none"
+            );
+            call2.enqueue(new Callback<Detail>() {
+                @Override
+                public void onResponse(Call<Detail> call2, Response<Detail> response) {
+                    if (response.body() != null) {
+                        if (response.body().getDetail().equals("FCM_ID changed")) {
+                            Toast.makeText(getApplicationContext(), "FCM_ID changed", Toast.LENGTH_SHORT).show();
 
-            Intent i = new Intent(this, LoginActivity.class);
-            startActivity(i);
-            finish();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Request not valid", Toast.LENGTH_SHORT).show();
+                        }
+
+                        SharedPreferences.Editor editor = prefs.edit();
+                        editor.clear();
+                        editor.apply();
+                        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(i);
+                        finish();
+                    } else {
+                        Log.i("CPA", "request body is null");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<Detail> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "Check internet connectivity and try again", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+
 
         } else if (id == R.id.nav_share) {
 

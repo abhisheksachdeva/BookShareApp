@@ -22,6 +22,17 @@ public class UserInfo {
     @SerializedName("contact_no")
     String contactNo;
 
+    public String getFcm_id() {
+        return fcm_id;
+    }
+
+    public void setFcm_id(String fcm_id) {
+        this.fcm_id = fcm_id;
+    }
+
+    @SerializedName("fcm_id")
+    String fcm_id;
+
     @SerializedName("books")
     List<Book> userBookList;
 
