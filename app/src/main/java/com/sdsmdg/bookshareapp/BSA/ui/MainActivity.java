@@ -19,7 +19,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -49,9 +48,11 @@ import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+import io.realm.RealmResults;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -71,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public static Context contextOfApplication;
 
 
-
     public String getResplocal() {
         return resplocal;
     }
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     NavigationView navigationView;
     RecyclerView localBooksList;
     Toolbar toolbar;
-    int backCounter=0;
+    int backCounter = 0;
     ImageView _profilePicture;
     String url;
     NotificationFragment notifFragment;
@@ -91,6 +91,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     TextView noBookstextview;
     String data = "none";
 
+    //Create a realm object to handle our local database
+    Realm realm;
+
     public String getResp() {
         return Resp;
     }
@@ -98,6 +101,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Realm.init(this);
+
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
+
+        // Clear the realm from last time
+        Realm.deleteRealm(realmConfiguration);
+
+        // Create a new empty instance of Realm
+        realm = Realm.getInstance(realmConfiguration);
+
         customProgressDialog = new CustomProgressDialog(MainActivity.this);
         customProgressDialog.setCancelable(false);
         prefs = getSharedPreferences("Token", MODE_PRIVATE);
@@ -112,25 +126,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         setContentView(R.layout.activity_main);
-        noBookstextview = (TextView)findViewById(R.id.no_books_textView);
+        noBookstextview = (TextView) findViewById(R.id.no_books_textView);
         noBookstextview.setVisibility(View.GONE);
 
-        progress_isVisible= false;
+        progress_isVisible = false;
 
 
+        new ProgressLoader().execute();
 
-        new ProgressLoader().execute( );
-
-        notifFragment = (NotificationFragment)getSupportFragmentManager().findFragmentById(R.id.right_drawer);
+        notifFragment = (NotificationFragment) getSupportFragmentManager().findFragmentById(R.id.right_drawer);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-        if(getIntent().getExtras()!=null) {
+        if (getIntent().getExtras() != null) {
 
-            Log.i("REACHED HERE ","INSIDE PART ONE ");
+            Log.i("REACHED HERE ", "INSIDE PART ONE ");
 
             data = getIntent().getExtras().getString("data");
-            Log.d("VALUE OF DATA ", data +"---==>>");
-            if(data!=null) {
+            Log.d("VALUE OF DATA ", data + "---==>>");
+            if (data != null) {
                 if (data.equals("open")) {
                     Log.d("Reached here ", "inside data== open ");
                     notifFragment.getNotifications("1");
@@ -139,19 +152,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             data = getIntent().getExtras().getString("data_splash");
-            Log.d("VALUE OF DATA ", data +"---==>>");
-            if (data!=null && data.equals("open_drawer")) {
+            Log.d("VALUE OF DATA ", data + "---==>>");
+            if (data != null && data.equals("open_drawer")) {
                 Log.d("Reached here ", "inside data  SPLASH  == open ");
                 notifFragment.getNotifications("1");
                 drawerLayout.openDrawer(GravityCompat.END);
             }
 
             data = getIntent().getExtras().getString("data_login");
-            Log.d("VALUE OF DATA ", data +"---==>>");
-            if (data!=null && data.equals("update")) {
+            Log.d("VALUE OF DATA ", data + "---==>>");
+            if (data != null && data.equals("update")) {
                 Log.d("Reached here ", "inside data  SPLASH  == open ");
 
-                String token = "Token "+preferences.getString("token",null);
+                String token = "Token " + preferences.getString("token", null);
 
                 String refreshedToken = FirebaseInstanceId.getInstance().getToken();
                 Log.i("Token ", token + "---> This the token");
@@ -181,25 +194,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
 
 
-
             }
 
         }
         localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         localBooksList.setLayoutManager(layoutManager);
-        booksList = new ArrayList<>();
+
+        //Show what's available offline first
+        RealmResults<Book> realmBooksList = realm.where(Book.class).findAll();
+        booksList = realm.copyFromRealm(realmBooksList);
+
+        //If the app is opened for the first time
+
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
 
-                if(isOnline()){
-                Intent intent = new Intent(MainActivity.this,BookDetailsActivity.class);
-                intent.putExtra("id", book.getId());
-                startActivity(intent);
-                }
-                else {
-                    Toast.makeText(getApplicationContext(),"Not connected to Internet", Toast.LENGTH_SHORT).show();
+                if (isOnline()) {
+                    Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
+                    intent.putExtra("id", book.getId());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getApplicationContext(), "Not connected to Internet", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -226,10 +243,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView _email = (TextView) header.findViewById(R.id.nav_email);
         ImageView _profilePicture = (ImageView) header.findViewById(R.id.nav_profile_picture);
         this._profilePicture = _profilePicture;
-        String url = CommonUtilities.local_books_api_url+"image/"+Helper.getUserId()+"/";
+        String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
         this.url = url;
         Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_account_circle_black_24dp).into(_profilePicture);
-
 
 
         if (_name != null) {
@@ -272,6 +288,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         });
+
     }
 
     public void searchClicked(View view) {
@@ -286,18 +303,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             do {
                 try {
                     Thread.sleep(1000);
-                    if (getResp() != null || getResplocal()!=null) {
+                    if (getResp() != null || getResplocal() != null) {
                         break;
                     }
                     publishProgress(count);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (getResp() != null || getResplocal()!=null){
+                if (getResp() != null || getResplocal() != null) {
                     break;
                 }
                 count++;
-            }while (getResp()==null || getResplocal()!=null);
+            } while (getResp() == null || getResplocal() != null);
 
 
             return "Task Completed.";
@@ -307,18 +324,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         protected void onPreExecute() {
             super.onPreExecute();
             noBookstextview.setVisibility(View.GONE);
-            progress_isVisible= true;
+            progress_isVisible = true;
             customProgressDialog.show();
         }
 
         @Override
         protected void onPostExecute(String result) {
-            if (getResp() == "null" || getResplocal()=="null") {
+            if (getResp() == "null" || getResplocal() == "null") {
 //                if(getResp() == "null"){
 //                    Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
 //                }
                 customProgressDialog.dismiss();
-                progress_isVisible= false;
+                progress_isVisible = false;
 
 
             } else {
@@ -327,13 +344,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void run() {
                         customProgressDialog.dismiss();
-                        progress_isVisible= false;
+                        progress_isVisible = false;
                     }
                 }, 1000);
 
             }
-            Resp=null;
-            resplocal=null;
+            Resp = null;
+            resplocal = null;
 
         }
 
@@ -359,11 +376,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.body().size() != 0) {
                     resplocal = response.toString();
                     List<Book> localBooksList = response.body();
+
                     booksList.addAll(localBooksList);
                     refreshLayout.setRefreshing(false);
-                }
-                else {
-                    resplocal="null";
+                } else {
+                    resplocal = "null";
                     noBookstextview.setVisibility(View.VISIBLE);
                 }
                 adapter.notifyDataSetChanged();
@@ -448,20 +465,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 
         } else if (id == R.id.nav_grlogin) {
-            SharedPreferences preff = getSharedPreferences("UserId",MODE_PRIVATE);
-            if(preff.getString("userGrId",null)==null){
+            SharedPreferences preff = getSharedPreferences("UserId", MODE_PRIVATE);
+            if (preff.getString("userGrId", null) == null) {
                 Intent in = new Intent(this, GRLoginActivity.class);
                 startActivity(in);
-            }else {
+            } else {
                 Intent i = new Intent(this, ToReadActivity.class);
                 startActivity(i);
             }
 
 
-        }else if (id == R.id.nav_logout) {
+        } else if (id == R.id.nav_logout) {
             final SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
             final boolean logout = false;
-            String token = "Token "+prefs.getString("token",null);
+            String token = "Token " + prefs.getString("token", null);
             Log.i("Token ", token + "---> This the token");
             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
             Call<Detail> call2 = usersAPI.update_fcm_id(
@@ -497,8 +514,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             });
 
 
-
-
         } else if (id == R.id.nav_share) {
 
             PackageManager pm = getPackageManager();
@@ -520,7 +535,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 //who cares
             }
 
-        } else if(id == R.id.nav_usersearch) {
+        } else if (id == R.id.nav_usersearch) {
             Intent i = new Intent(this, UserSearchActivity.class);
             startActivity(i);
         }
@@ -532,7 +547,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void getLocalBooks(final String page) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<BookList> call = api.getBList(page,"Token "+prefs.getString("token",null));
+        Call<BookList> call = api.getBList(page, "Token " + prefs.getString("token", null));
         call.enqueue(new Callback<BookList>() {
             @Override
             public void onResponse(Call<BookList> call, Response<BookList> response) {
@@ -540,13 +555,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Resp = response.toString();
                     List<Book> localBooksList = response.body().getResults();
                     if (page.equals("1")) {
+                        //Save the first page to the offline database
+                        realm.beginTransaction();
+                        realm.copyToRealmOrUpdate(localBooksList);
+                        realm.commitTransaction();
+
                         booksList.clear();
                         adapter.notifyDataSetChanged();
                     }
                     booksList.addAll(localBooksList);
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
-                }else {
+                } else {
                     Resp = "null";
                 }
 
@@ -581,8 +601,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             this.drawerLayout.closeDrawer(GravityCompat.START);
 
-        }else{
-            if(!progress_isVisible) {
+        } else {
+            if (!progress_isVisible) {
 
 
                 if (backCounter >= 1) {
@@ -612,7 +632,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onResume() {
         super.onResume();
-        if(Helper.imageChanged){
+        if (Helper.imageChanged) {
             Picasso.with(this).load(url).into(_profilePicture);
             Helper.imageChanged = false;
         }
@@ -622,12 +642,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
-            if(result.getContents() == null) {
+        if (result != null) {
+            if (result.getContents() == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
-                Intent i = new Intent(MainActivity.this,SearchResultsActivity.class);
-                i.putExtra("isbn",result.getContents());
+                Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
+                i.putExtra("isbn", result.getContents());
                 startActivity(i);
 
 
@@ -640,5 +660,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        realm.close();
     }
 }
