@@ -149,6 +149,7 @@ public class NotificationFragment extends Fragment {
             public void onFailure(Call<Notification_Model> call, Throwable t) {
                 noNotificationTextView.setVisibility(View.VISIBLE);
                 noNotificationTextView.setText("You are offline");
+                refreshLayout.setRefreshing(false);
             }
         });
     }

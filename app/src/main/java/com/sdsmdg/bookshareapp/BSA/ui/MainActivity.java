@@ -198,6 +198,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 visibleSnackbars.add(snackbar);
                                 super.onShown(snackbar);
                             }
+                        }).setAction("RETRY", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                refresh();
+                            }
                         }).show();
                     }
                 });
@@ -340,6 +345,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         visibleSnackbars.add(snackbar);
                         super.onShown(snackbar);
                     }
+                }).setAction("RETRY", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        refresh();
+                    }
                 }).show();
                 refreshLayout.setRefreshing(false);
 
@@ -469,6 +479,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             visibleSnackbars.add(snackbar);
                             super.onShown(snackbar);
                         }
+                    }).setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            refresh();
+                        }
                     }).show();
                 }
             });
@@ -551,6 +566,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         visibleSnackbars.add(snackbar);
                         super.onShown(snackbar);
                     }
+                }).setAction("RETRY", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        refresh();
+                    }
                 }).show();
                 refreshLayout.setRefreshing(false);
             }
@@ -610,6 +630,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                     public void onShown(Snackbar snackbar) {
                                         super.onShown(snackbar);
                                         visibleSnackbars.add(snackbar);
+                                    }
+                                }).setAction("RETRY", new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        refresh();
                                     }
                                 }).show();
                             }
@@ -679,5 +704,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             visibleSnackbars.get(0).dismiss();
             visibleSnackbars.clear();
         }
+    }
+
+    private void refresh() {
+        getLocalBooks("1");
     }
 }
