@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //CustomProgressDialog customProgressDialog;
     public static Context contextOfApplication;
 
-    //Create a list of visible snackbars
+    //Creates a list of visible snackbars
     List<Snackbar> visibleSnackbars = new ArrayList<>();
 
     public String getResplocal() {
@@ -129,9 +129,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         noBookstextview.setVisibility(View.GONE);
 
         progress_isVisible = false;
-
-
-//        new ProgressLoader().execute();
 
         notifFragment = (NotificationFragment) getSupportFragmentManager().findFragmentById(R.id.right_drawer);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -202,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 super.onShown(snackbar);
                             }
                         }).show();
-//                        Toast.makeText(getApplicationContext(), "Check internet connectivity and try again", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -217,9 +213,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Show what's available offline first
         RealmResults<Book> realmBooksList = realm.where(Book.class).findAll();
         booksList = realm.copyFromRealm(realmBooksList);
-        Log.i(TAG, realm.where(Book.class).count() + " " + booksList.size());
-
-        //If the app is opened for the first time
 
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
@@ -229,8 +222,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
                     intent.putExtra("id", book.getId());
                     startActivity(intent);
-                } else {
-                    Toast.makeText(getApplicationContext(), "Not connected to Internet", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -243,8 +234,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onLoadMore(int page, int totalItemsCount) {
                 getLocalBooks(String.valueOf(page + 1));
-//                Toast.makeText(getBaseContext(),"Loading page"+page,Toast.LENGTH_SHORT).show();
-
             }
         };
 
@@ -310,69 +299,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivity(i);
     }
 
-//    class ProgressLoader extends AsyncTask<Integer, Integer, String> {
-//        @Override
-//        protected String doInBackground(Integer... params) {
-//
-//            do {
-//                try {
-//                    Thread.sleep(1000);
-//                    if (getResp() != null || getResplocal() != null) {
-//                        break;
-//                    }
-//                    publishProgress(count);
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                if (getResp() != null || getResplocal() != null) {
-//                    break;
-//                }
-//                count++;
-//            } while (getResp() == null || getResplocal() != null);
-//
-//
-//            return "Task Completed.";
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            noBookstextview.setVisibility(View.GONE);
-//            progress_isVisible = true;
-//            customProgressDialog.show();
-//        }
-//
-//        @Override
-//        protected void onPostExecute(String result) {
-//            if (getResp() == "null" || getResplocal() == "null") {
-////                if(getResp() == "null"){
-////                    Toast.makeText(MainActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
-////                }
-//                customProgressDialog.dismiss();
-//                progress_isVisible = false;
-//
-//
-//            } else {
-//                final Handler handler = new Handler();
-//                handler.postDelayed(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        customProgressDialog.dismiss();
-//                        progress_isVisible = false;
-//                    }
-//                }, 1000);
-//
-//            }
-//            Resp = null;
-//            resplocal = null;
-//
-//        }
-//
-//        @Override
-//        protected void onProgressUpdate(Integer... values) {
-//        }
-//    }
-
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
@@ -380,7 +306,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-//        new ProgressLoader().execute();
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<List<Book>> call = api.search(query);
         call.enqueue(new Callback<List<Book>>() {
@@ -416,7 +341,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         super.onShown(snackbar);
                     }
                 }).show();
-//                Toast.makeText(getApplicationContext(), "Check your internet connectivity and try again!", Toast.LENGTH_SHORT).show();
                 refreshLayout.setRefreshing(false);
 
             }
@@ -485,7 +409,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(i);
 
         } else if (id == R.id.nav_barcode) {
-//            new IntentIntegrator(MainActivity.this).initiateScan();
             Intent i = new Intent(this, fcm_test.class);
             startActivity(i);
 
@@ -505,7 +428,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             final SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
             final boolean logout = false;
             String token = "Token " + prefs.getString("token", null);
-            Log.i("Token ", token + "---> This the token");
             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
             Call<Detail> call2 = usersAPI.update_fcm_id(
                     token,
@@ -548,7 +470,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             super.onShown(snackbar);
                         }
                     }).show();
-//                    Toast.makeText(getApplicationContext(), "Check internet connectivity and try again", Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -659,7 +580,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             if (!progress_isVisible) {
 
-
                 if (backCounter >= 1) {
                     Intent intent = new Intent(Intent.ACTION_MAIN);
                     intent.addCategory(Intent.CATEGORY_HOME);
@@ -679,7 +599,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             again, if user choses not to close the app
                              */
                             if(!isOnline()) {
-                                Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).show();
+                                Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
+                                    @Override
+                                    public void onDismissed(Snackbar snackbar, int event) {
+                                        super.onDismissed(snackbar, event);
+                                        visibleSnackbars.remove(snackbar);
+                                    }
+
+                                    @Override
+                                    public void onShown(Snackbar snackbar) {
+                                        super.onShown(snackbar);
+                                        visibleSnackbars.add(snackbar);
+                                    }
+                                }).show();
                             }
                         }
 
