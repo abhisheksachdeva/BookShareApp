@@ -18,22 +18,13 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
 import com.example.abhishek.bookshareapp.api.models.Login;
 import com.example.abhishek.bookshareapp.api.models.UserInfo;
-import com.example.abhishek.bookshareapp.api.models.VerifyToken.UserEmail;
-import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 import com.example.abhishek.bookshareapp.utils.Helper;
-
-import java.io.IOException;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -63,8 +54,6 @@ public class LoginActivity extends AppCompatActivity {
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
         token = pref.getString("token", "");
         Log.i("harshit", token + "  adf");
-
-
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -198,11 +187,12 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("last_name", userInfo.getLastName());
         editor.putString("hostel", userInfo.getHostel());
         editor.putString("room_no", userInfo.getRoomNo());
+        editor.putString("contact_no", userInfo.getContactNo());
+        editor.putString("enr_no", userInfo.getEnrNo());
+        editor.putString("college", userInfo.getCollege());
+
+        Log.i("room_no", userInfo.getRoomNo());
         editor.apply();
 
-
     }
-
-
-
 }

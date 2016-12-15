@@ -26,11 +26,21 @@
         </activity>
         <activity
             android:name=".ui.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="Campus Books"/>
         <activity android:name=".ui.SignupActivity" />
-        <activity android:name=".ui.MyBooks" />
-        <activity android:name=".ui.BookDetailsActivity" />
-        <activity android:name=".ui.UserProfile" />
+        <activity android:name=".ui.MyBooks"
+            android:label="My Books"
+            android:parentActivityName=".ui.MainActivity"/>
+        <activity android:name=".ui.BookDetailsActivity"
+            android:label="Book Details"
+            android:parentActivityName=".ui.MainActivity"/>
+        <activity android:name=".ui.UserProfile"
+            android:label="User Details"
+            android:parentActivityName=".ui.MainActivity"/>
+        <activity android:name=".ui.MyProfile"
+            android:label="My Profile"
+            android:parentActivityName=".ui.MainActivity"/>
         <activity android:name=".ui.SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,7 +48,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.NotificationActivity"></activity>
+        <activity android:name=".ui.NotificationActivity"
+            android:label="Notifications"
+            android:parentActivityName=".ui.MainActivity"/>
+        <activity android:name=".ui.EditProfileActivity"
+            android:label="Edit your details"
+            android:parentActivityName=".ui.MyProfile"/>
+        <activity android:name=".ui.ChangePasswordActivity"
+            android:label="Change Password"
+            android:parentActivityName=".ui.MyProfile"/>
     </application>
 
 </manifest>

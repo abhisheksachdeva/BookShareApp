@@ -1,4 +1,4 @@
-package com.example.abhishek.bookshareapp.ui.adapter;
+package com.example.abhishek.bookshareapp.ui.adapter.Local;
 
 import android.content.Context;
 import android.content.DialogInterface;

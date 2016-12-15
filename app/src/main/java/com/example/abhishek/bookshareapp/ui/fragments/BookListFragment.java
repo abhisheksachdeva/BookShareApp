@@ -18,7 +18,7 @@ import com.example.abhishek.bookshareapp.api.NetworkingFactory;
 import com.example.abhishek.bookshareapp.api.models.Book;
 import com.example.abhishek.bookshareapp.api.models.GoodreadsResponse;
 import com.example.abhishek.bookshareapp.api.models.Search;
-import com.example.abhishek.bookshareapp.ui.adapter.BooksAdapter;
+import com.example.abhishek.bookshareapp.ui.adapter.GR.BooksAdapterGR;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public class BookListFragment extends Fragment {
 
     private RecyclerView resultsList;
     List<Book> bookList = new ArrayList<>();
-    BooksAdapter adapter;
+    BooksAdapterGR adapter;
     private RecyclerView.LayoutManager mLayoutManager;
     Search sr;
     Context context;
@@ -46,7 +46,7 @@ public class BookListFragment extends Fragment {
         resultsList.setLayoutManager(mLayoutManager);
         context = getActivity();
 
-        adapter = new BooksAdapter(getActivity(), bookList, new BooksAdapter.OnItemClickListener() {
+        adapter = new BooksAdapterGR(getActivity(), bookList, new BooksAdapterGR.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
                 Toast.makeText(context, book.getBookDetails().getTitle(), Toast.LENGTH_SHORT).show();

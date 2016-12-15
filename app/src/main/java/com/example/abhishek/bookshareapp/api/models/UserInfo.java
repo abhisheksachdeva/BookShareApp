@@ -56,4 +56,56 @@ public class UserInfo {
     public List<Book> getUserBookList() {
         return userBookList;
     }
+
+    public String getCollege() {
+        return college;
+    }
+
+    public String getContactNo() {
+        return contactNo;
+    }
+
+    public String getEnrNo() {
+        return enrNo;
+    }
+
+    public void setCollege(String college) {
+        this.college = college;
+    }
+
+    public void setContactNo(String contactNo) {
+        this.contactNo = contactNo;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setEnrNo(String enrNo) {
+        this.enrNo = enrNo;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public void setHostel(String hostel) {
+        this.hostel = hostel;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public void setRoomNo(String roomNo) {
+        this.roomNo = roomNo;
+    }
+
+    public void setUserBookList(List<Book> userBookList) {
+        this.userBookList = userBookList;
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.abhishek.bookshareapp.ui.adapter;
+package com.example.abhishek.bookshareapp.ui.adapter.Local;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +15,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
-public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.ViewHolder> {
+public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.ViewHolder> {
 
     private Context context;
     private List<Book> bookList;
@@ -46,7 +46,7 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
 
     }
 
-    public LocalBooksAdapter(Context context, List<Book> bookList, OnItemClickListener listener) {
+    public BooksAdapterSimple(Context context, List<Book> bookList, OnItemClickListener listener) {
         this.bookList = bookList;
         this.context = context;
         this.listener = listener;
@@ -55,7 +55,7 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_books_mainscreen, parent, false);
+                .inflate(R.layout.row_books_simple, parent, false);
         ViewHolder vh = new ViewHolder(v, context);
         return vh;
     }
@@ -78,6 +78,7 @@ public class LocalBooksAdapter extends RecyclerView.Adapter<LocalBooksAdapter.Vi
                 listener.onItemClick(bookList.get(position));
             }
         });
+
     }
 
     @Override

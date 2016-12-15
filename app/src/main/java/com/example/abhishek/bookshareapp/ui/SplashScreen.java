@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.example.abhishek.bookshareapp.R;
 import com.example.abhishek.bookshareapp.api.UsersAPI;
-import com.example.abhishek.bookshareapp.api.models.VerifyToken.UserEmail;
+import com.example.abhishek.bookshareapp.api.models.VerifyToken.Detail;
 import com.example.abhishek.bookshareapp.utils.CommonUtilities;
 import com.example.abhishek.bookshareapp.utils.Helper;
 
@@ -20,9 +20,9 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.GsonConverterFactory;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class SplashScreen extends Activity {
     String token;
@@ -35,32 +35,16 @@ public class SplashScreen extends Activity {
         setContentView(R.layout.activity_splash_screen);
 
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
-        token = pref.getString("token", "");
-        Log.i("SS", token + "  added");
+        token = pref.getString("token", null);
 
-        Thread timer= new Thread(){
+        verifyToken();
 
-            public void run(){
-
-                try{
-                    sleep(5000);
-                }
-                catch(InterruptedException e){
-                    e.printStackTrace();
-                }
-                finally{
-                    verifyToken();
-                    Intent opensp = new Intent(SplashScreen.this,LoginActivity.class);
-                    startActivity(opensp);
-                }
-            }
-        };
-        timer.start();
     }
 
     public void verifyToken() {
 
-        if (token != null && !token.equals("")) {
+        if (token != null) {
+
             OkHttpClient httpClient = new OkHttpClient.Builder()
                     .addInterceptor(new Interceptor() {
                         @Override
@@ -78,16 +62,16 @@ public class SplashScreen extends Activity {
                     build();
 
             UsersAPI usersAPI = retrofit.create(UsersAPI.class);
-            Call<UserEmail> call = usersAPI.getUserEmail();
-            call.enqueue(new Callback<UserEmail>() {
+            Call<Detail> call = usersAPI.getUserEmail();
+            call.enqueue(new Callback<Detail>() {
                 @Override
-                public void onResponse(Call<UserEmail> call, Response<UserEmail> response) {
+                public void onResponse(Call<Detail> call, Response<Detail> response) {
 
-                    if(response.body() != null) {
-                        if (response.body().getEmail() != null) {
-                            if (!response.body().getEmail().equals("")) {
+                    if (response.body() != null) {
+                        if (response.body().getDetail() != null) {
+                            if (!response.body().getDetail().equals("")) {
 
-                                Helper.setUserEmail(response.body().getEmail());
+                                Helper.setUserEmail(response.body().getDetail());
                                 Intent intent = new Intent(SplashScreen.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
@@ -95,26 +79,33 @@ public class SplashScreen extends Activity {
                             } else {
 
                                 Toast.makeText(SplashScreen.this, "Failed to log in due to internal error!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
+                                startActivity(intent);
+                                finish();
 
                             }
                         }
                     } else {
                         Log.i("harshit", "response.body() is null");
+                        Toast.makeText(SplashScreen.this, "Failed to log in due to internal error!", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
                 }
+
                 @Override
-                public void onFailure(Call<UserEmail> call, Throwable t) {
+                public void onFailure(Call<Detail> call, Throwable t) {
                     Toast.makeText(SplashScreen.this, "Check network connectivity and try again", Toast.LENGTH_SHORT).show();
+                    finish();
                 }
             });
+        }
+        else {
+            Intent i = new Intent(this, LoginActivity.class);
+            startActivity(i);
         }
 
     }
 
-    @Override
-    protected void onPause() {
-        // TODO Auto-generated method stub
-        super.onPause();
-        finish();
-    }
 }
