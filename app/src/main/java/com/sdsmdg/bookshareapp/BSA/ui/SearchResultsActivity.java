@@ -90,9 +90,9 @@ public class SearchResultsActivity extends ActionBarActivity {
         bookListFragment = new BookListFragment();
 
         if (getIntent().getExtras() != null) {
-
             isbn = getIntent().getExtras().getString("isbn");
             bookListFragment.getBooks(isbn, "all", API_KEY);
+
         }
 
         search_open();

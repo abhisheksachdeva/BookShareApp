@@ -18,7 +18,7 @@
         android:layout_height="50dp"
         android:layout_gravity="bottom"
         android:drawableLeft="@drawable/search_icon"
-        android:hint="Search by "
+        android:hint="Search by                   "
         android:imeOptions="actionSearch"
         android:inputType="text" />
 

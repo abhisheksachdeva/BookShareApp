@@ -19,8 +19,8 @@
         android:text="No Books Found"
         android:textSize="24dp"
         android:visibility="visible"
-        android:layout_gravity="center"
-        android:gravity="center"
+        android:layout_gravity="center_vertical|center"
+        android:gravity="center_vertical|center"
         />
 
 
