@@ -19,7 +19,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
@@ -273,7 +272,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void searchClicked(View view) {
-        Intent i = new Intent(this, SearchResultsActivity2.class);
+        Intent i = new Intent(this, SearchResultsActivity.class);
         startActivity(i);
     }
 
@@ -621,7 +620,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (result.getContents() == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
-                Intent i = new Intent(MainActivity.this, SearchResultsActivity2.class);
+                Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
                 i.putExtra("isbn", result.getContents());
                 startActivity(i);
 

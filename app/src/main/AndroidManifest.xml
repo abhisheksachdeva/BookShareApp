@@ -23,16 +23,6 @@
         <activity
             android:name=".ui.SearchResultsActivity"
             android:label="Search"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCHRESULTS" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".ui.SearchResultsActivity2"
-            android:label="Search"
             android:theme="@style/AppTheme.UserSearch"
             android:screenOrientation="portrait">
             <intent-filter>
