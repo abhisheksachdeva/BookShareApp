@@ -102,6 +102,7 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
                     .setContentText(body);
         } else {
              size = notifications.size()+1;
+            notificationBuilder.setContentTitle(title);
             inboxStyle.setBigContentTitle("You have " + size+ " Notifications.");
         }
 
