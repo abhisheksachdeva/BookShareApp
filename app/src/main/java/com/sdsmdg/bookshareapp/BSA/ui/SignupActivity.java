@@ -206,7 +206,13 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void onSignupFailed(String toast) {
-        Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
+        String password = _passwordText.getText().toString();
+        if(password.length()<6 || password.length()>15 ){
+            Toast.makeText(getBaseContext(), "Password length between 6 and 15 characters", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
+        }
 
         _signupButton.setEnabled(true);
     }

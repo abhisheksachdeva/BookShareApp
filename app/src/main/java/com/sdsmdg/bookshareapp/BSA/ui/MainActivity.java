@@ -273,7 +273,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void searchClicked(View view) {
-        Intent i = new Intent(this, SearchResultsActivity.class);
+        Intent i = new Intent(this, SearchResultsActivity2.class);
         startActivity(i);
     }
 
@@ -439,8 +439,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(i);
 
         } else if (id == R.id.nav_barcode) {
-//            new IntentIntegrator(MainActivity.this).initiateScan();
-            Intent i = new Intent(this, fcm_test.class);
+            new IntentIntegrator(MainActivity.this).initiateScan();
+            Intent i = new Intent(this, BarcodeActivity.class);
             startActivity(i);
 
 
@@ -621,7 +621,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (result.getContents() == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
-                Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
+                Intent i = new Intent(MainActivity.this, SearchResultsActivity2.class);
                 i.putExtra("isbn", result.getContents());
                 startActivity(i);
 

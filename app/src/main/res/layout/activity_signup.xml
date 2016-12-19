@@ -104,11 +104,11 @@
 
             <ImageButton
                 android:id="@+id/_btn_show_password"
-                android:layout_width="30dp"
-                android:layout_height="20dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:background="#00ffffff"
-                android:src="@drawable/ic_visibility_off"
+                android:src="@drawable/ic_visibility_off_128px"
                 android:tint="@color/Black" />
 
         </FrameLayout>

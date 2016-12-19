@@ -31,6 +31,17 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.SearchResultsActivity2"
+            android:label="Search"
+            android:theme="@style/AppTheme.UserSearch"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCHRESULTS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.MainActivity"
             android:label="Campus Books"
             android:screenOrientation="portrait"
@@ -97,7 +108,6 @@
             android:name=".ui.ToReadActivity"
             android:label="To-Read" />
         <activity android:name=".ui.BarcodeActivity" />
-        <activity android:name=".ui.fcm_test"></activity>
 
         <service android:name=".firebase_classes.MyFirebaseMessagingService">
             <intent-filter>
