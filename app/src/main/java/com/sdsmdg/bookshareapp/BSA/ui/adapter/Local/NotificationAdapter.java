@@ -96,7 +96,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         notifications = notificationList.get(position);
-        Log.i("NotifAdap", notificationList.get(position).getMessage());
 
         int senderNameLength = notifications.getSenderName().length();
         int bookNameLength = notifications.getBookTitle().length();
@@ -211,7 +210,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.timeTextView.setText(time);
 
         } else {
-            Log.i("Notif_Adapter", "content == null");
+
         }
 
     }
@@ -241,7 +240,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onClick(View widget) {
                 Intent i = new Intent(context, BookDetailsActivity.class);
                 i.putExtra("id", id);
-                Log.i(TAG, "Book Id : " + id);
                 context.startActivity(i);
             }
 
@@ -267,12 +265,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     @Override
                     public void onResponse(Call<Notifications> call, Response<Notifications> response) {
                         if (response.body() != null) {
-                            Log.i("AcceptNotif", "Success");
                             Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                             Log.i("response", response.body().getDetail());
                             holder.buttonLayout.setVisibility(View.GONE);
                         } else {
-                            Log.i("AccpetNotif", "Response Null");
                             Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                         }
                     }

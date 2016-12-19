@@ -42,11 +42,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * Created by ajayrahul on 27/9/16.
- */
-
-
 public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
     private static final int PENDING_REMOVAL_TIMEOUT = 5000;
     Book tempValues = null;

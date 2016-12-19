@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
 
 android {
     compileSdkVersion 25
@@ -12,12 +13,21 @@ android {
         versionCode 1
         versionName "0.7.0"
     }
-    buildTypes {            
+    buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+        jumboMode true
+    }
+}
+
+configurations {
+    compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
 }
 
 dependencies {
@@ -45,10 +55,8 @@ dependencies {
     compile 'com.android.support:support-v4:25.0.1'
     compile 'jp.wasabeef:blurry:2.0.2'
     compile 'com.google.api-client:google-api-client:1.20.0'
-    compile 'org.apache.httpcomponents:httpclient:4.5'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
 
 }
 
 apply plugin: 'com.google.gms.google-services'
-

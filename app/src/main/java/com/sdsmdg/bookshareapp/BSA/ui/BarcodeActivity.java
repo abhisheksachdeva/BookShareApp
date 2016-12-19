@@ -12,7 +12,8 @@ import com.google.zxing.integration.android.IntentResult;
 import com.sdsmdg.bookshareapp.BSA.R;
 
 public class BarcodeActivity extends AppCompatActivity {
- Button scan;
+    Button scan;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,15 +28,14 @@ public class BarcodeActivity extends AppCompatActivity {
         });
 
 
-
     }
 
     // Get the results:
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if(result != null) {
-            if(result.getContents() == null) {
+        if (result != null) {
+            if (result.getContents() == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
                 Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
