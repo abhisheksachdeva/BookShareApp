@@ -8,12 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
 import com.sdsmdg.bookshareapp.BSA.R;
@@ -129,6 +127,7 @@ public class NotificationFragment extends Fragment {
 
                     List<Notifications> notifList = response.body().getNotificationsList();
                     if(notifList.size() == 0) {
+                        noNotificationTextView.setText("No new notifications");
                         noNotificationTextView.setVisibility(View.VISIBLE);
                     } else {
                         noNotificationTextView.setVisibility(View.GONE);
@@ -148,8 +147,9 @@ public class NotificationFragment extends Fragment {
 
             @Override
             public void onFailure(Call<Notification_Model> call, Throwable t) {
-                Toast.makeText(getActivity(), "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
-
+                noNotificationTextView.setVisibility(View.VISIBLE);
+                noNotificationTextView.setText("You are offline");
+                refreshLayout.setRefreshing(false);
             }
         });
     }

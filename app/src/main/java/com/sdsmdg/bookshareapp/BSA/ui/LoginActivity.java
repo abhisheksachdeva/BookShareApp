@@ -17,13 +17,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Login;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
-import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import butterknife.ButterKnife;
@@ -174,6 +172,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
                 onLoginFailed("Check your network connectivity and try again!");
+                t.printStackTrace();
                 customProgressDialog.dismiss();
             }
         });

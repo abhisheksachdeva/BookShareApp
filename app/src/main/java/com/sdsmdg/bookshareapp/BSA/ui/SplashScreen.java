@@ -50,16 +50,11 @@ public class SplashScreen extends Activity {
 
         if(isOnline()) {
             verifyToken();
-        } else {
-            Toast.makeText(SplashScreen.this, "Check network connectivity and try again", Toast.LENGTH_SHORT).show();
-            Handler h = new Handler();
-            Runnable r = new Runnable() {
-                @Override
-                public void run() {
-                    finish();
-                }
-            };
-            h.postDelayed(r, 1500);
+        } else if(token != null){
+            Intent intent = new Intent(SplashScreen.this, MainActivity.class);
+            intent.putExtra("data_splash",extra_data);
+            startActivity(intent);
+            finish();
         }
 
     }
