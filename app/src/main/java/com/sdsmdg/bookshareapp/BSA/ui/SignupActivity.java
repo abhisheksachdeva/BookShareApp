@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -17,6 +18,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
@@ -170,7 +172,8 @@ public class SignupActivity extends AppCompatActivity {
 
         Helper.setUserEmail(email);
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Signup> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact, password);
+        Call<Signup> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact,FirebaseInstanceId.getInstance().getToken(),password);
+        Log.i("FCM_token ", FirebaseInstanceId.getInstance().getToken()+" <-");
         userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
 
             @Override
@@ -184,7 +187,7 @@ public class SignupActivity extends AppCompatActivity {
                     String detail = response.body().getDetail();
 
                     if (detail.equals("Fill required details or Email id already registered.")) {
-                        onSignupFailed("Email already registered");
+                        onSignupFailed("Email already registered"+FirebaseInstanceId.getInstance().getToken());
                     } else {
                         onSignupSuccess();
                     }
@@ -203,7 +206,13 @@ public class SignupActivity extends AppCompatActivity {
     }
 
     public void onSignupFailed(String toast) {
-        Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
+        String password = _passwordText.getText().toString();
+        if(password.length()<6 || password.length()>15 ){
+            Toast.makeText(getBaseContext(), "Password length between 6 and 15 characters", Toast.LENGTH_LONG).show();
+        }
+        else {
+            Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
+        }
 
         _signupButton.setEnabled(true);
     }

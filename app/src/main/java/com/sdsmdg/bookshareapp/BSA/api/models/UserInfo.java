@@ -1,11 +1,14 @@
 package com.sdsmdg.bookshareapp.BSA.api.models;
 
-import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.google.gson.annotations.SerializedName;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 
 import java.util.List;
 
-public class UserInfo {
+import io.realm.RealmList;
+import io.realm.RealmObject;
+
+public class UserInfo extends RealmObject {
 
     String id;
     String email;
@@ -22,8 +25,19 @@ public class UserInfo {
     @SerializedName("contact_no")
     String contactNo;
 
+    public String getFcm_id() {
+        return fcm_id;
+    }
+
+    public void setFcm_id(String fcm_id) {
+        this.fcm_id = fcm_id;
+    }
+
+    @SerializedName("fcm_id")
+    String fcm_id;
+
     @SerializedName("books")
-    List<Book> userBookList;
+    RealmList<Book> userBookList;
 
     public String getEmail() {
         return email;
@@ -105,7 +119,7 @@ public class UserInfo {
         this.roomNo = roomNo;
     }
 
-    public void setUserBookList(List<Book> userBookList) {
+    public void setUserBookList(RealmList<Book> userBookList) {
         this.userBookList = userBookList;
     }
 }

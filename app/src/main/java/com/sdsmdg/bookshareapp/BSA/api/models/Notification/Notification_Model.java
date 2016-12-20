@@ -11,21 +11,28 @@ import java.util.List;
 public class Notification_Model {
 
     @SerializedName("count")
-    int count;
+    String count;
 
     @SerializedName("next")
-    int next;
+    String next;
 
     @SerializedName("previous")
-    int previous;
+    String previous;
+
+    @SerializedName("page")
+    String page;
+
+    public String getPage() {
+        return page;
+    }
 
     @SerializedName("results")
     List<Notifications> notificationsList;
-    public int getPrevious() {
+    public String getPrevious() {
         return previous;
     }
 
-    public int getNext() {
+    public String getNext() {
         return next;
     }
 
@@ -33,7 +40,7 @@ public class Notification_Model {
         return notificationsList;
     }
 
-    public int getCount() {
+    public String getCount() {
         return count;
     }
 }

@@ -22,12 +22,13 @@
         <item name="color">@color/colorAccent</item>
     </style>
 
-    <!-- Base application theme. -->
     <style name="AppTheme.UserSearch" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
-    </style>
+        <item name="android:textColorPrimary">@color/White</item>
+        <item name="colorControlNormal">@color/White</item>
 
+
+    </style>
 </resources>

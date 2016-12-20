@@ -172,10 +172,38 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
                 onLoginFailed("Check your network connectivity and try again!");
+                t.printStackTrace();
                 customProgressDialog.dismiss();
             }
         });
 
+
+//        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+//        Log.i("Token ", token+"---> This the token");
+//        Call<Detail> call2 = usersAPI.update_fcm_id(
+//                token,
+//                refreshedToken
+//        );
+//        call2.enqueue(new Callback<Detail>() {
+//            @Override
+//            public void onResponse(Call<Detail> call2, Response<Detail> response) {
+//                if (response.body() != null) {
+//                    if (response.body().getDetail().equals("FCM_ID changed")) {
+//                        Toast.makeText(getApplicationContext(), "FCM_ID changed", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(getApplicationContext(), "Request not valid", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Log.i("CPA", "request body is null");
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Detail> call, Throwable t) {
+//                Toast.makeText(getApplicationContext(), "Check internet connectivity and try again", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//
     }
 
     public void setNewEmail(String email) {
@@ -216,6 +244,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         Intent i = new Intent(this, MainActivity.class);
+        i.putExtra("data_login","update");
         startActivity(i);
         finish();
     }

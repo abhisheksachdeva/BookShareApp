@@ -40,6 +40,7 @@ public interface UsersAPI {
             @Field("first_name") String firstName,
             @Field("last_name") String lastName,
             @Field("contact_no") String contactNo,
+            @Field("fcm_id") String fcm_id,
             @Field("password") String password
     );
 
@@ -96,6 +97,7 @@ public interface UsersAPI {
 
     @GET("notifications/")
     Call<Notification_Model> getNotifs(
+            @Query("page") String count,
             @Header("Authorization") String token
     );
 
@@ -148,6 +150,14 @@ public interface UsersAPI {
             @Field("token") String token,
             @Field("password") String password
     );
+
+    @FormUrlEncoded
+    @POST("fcmid/change/")
+    Call<Detail> update_fcm_id(
+            @Header("Authorization") String token,
+            @Field("fcm_id") String fcm_id
+    );
+
 
     @PUT("books/")
     Call<Detail> removeBook(

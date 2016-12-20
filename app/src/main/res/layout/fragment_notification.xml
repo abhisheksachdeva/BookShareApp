@@ -13,7 +13,6 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="no new notifications"
             android:gravity="center"
             android:id="@+id/no_notification_text"
             android:textSize="18sp"
