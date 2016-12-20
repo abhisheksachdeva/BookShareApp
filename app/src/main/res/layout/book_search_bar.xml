@@ -21,8 +21,8 @@
         android:hint="Search by                   "
         android:textColorHint="@color/White"
         android:imeOptions="actionSearch"
-        android:background="#0000"
-        android:inputType="text" />
+        android:background="@null"
+        android:inputType="textNoSuggestions" />
 
 
 

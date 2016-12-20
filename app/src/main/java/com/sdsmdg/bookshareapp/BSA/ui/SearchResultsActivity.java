@@ -9,6 +9,7 @@ import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -215,6 +216,7 @@ public class SearchResultsActivity extends ActionBarActivity {
             action.setDisplayShowTitleEnabled(false); //hide the title
 
             edtSeach = (EditText) action.getCustomView().findViewById(R.id.searchEditText); //the text editor
+            edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
             edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
@@ -260,6 +262,7 @@ public class SearchResultsActivity extends ActionBarActivity {
         action.setDisplayShowTitleEnabled(false); //hide the title
 
         edtSeach = (EditText) action.getCustomView().findViewById(R.id.searchEditText); //the text editor
+        edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         spinner = (Spinner) action.getCustomView().findViewById(R.id.spinner);
         searchModeList.add("Author");
         searchModeList.add("Title");
