@@ -97,7 +97,6 @@
         <activity
             android:name=".ui.ToReadActivity"
             android:label="To-Read" />
-        <activity android:name=".ui.BarcodeActivity" />
 
         <service android:name=".firebase_classes.MyFirebaseMessagingService">
             <intent-filter>

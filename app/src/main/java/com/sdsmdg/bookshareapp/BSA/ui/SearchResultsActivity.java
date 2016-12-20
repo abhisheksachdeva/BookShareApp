@@ -165,18 +165,6 @@ public class SearchResultsActivity extends ActionBarActivity {
         return (super.onOptionsItemSelected(item));
     }
 
-
-    public void search(View view) {
-
-        hideKeyboard();
-        Log.i("sss", selected.toLowerCase());
-        bookListFragment.getBooks(query, selected.toLowerCase(), API_KEY);
-        new ProgressLoader().execute();
-
-
-    }
-
-
     private void doSearch(String query, String mode) {
         hideKeyboard();
         bookListFragment.getBooks(query, mode, API_KEY);
@@ -192,7 +180,6 @@ public class SearchResultsActivity extends ActionBarActivity {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
-
 
     @Override
     public void onBackPressed() {
