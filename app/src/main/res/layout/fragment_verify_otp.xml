@@ -6,6 +6,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:text="We've sent you a 4-digit OTP code. Enter it here to verify your mobile no."/>
 
     <EditText

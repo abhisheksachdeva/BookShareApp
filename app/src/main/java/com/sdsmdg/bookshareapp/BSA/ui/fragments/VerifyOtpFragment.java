@@ -1,5 +1,6 @@
 package com.sdsmdg.bookshareapp.BSA.ui.fragments;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
@@ -9,25 +10,32 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
 
 public class VerifyOtpFragment extends DialogFragment {
 
-    VerifyOtp verifyOtpInstance;
+    Activity activity;
+    String generatedOTP;
 
-    public interface VerifyOtp {
-        public void verify(String receivedOTP);
+    public interface OnOTPVerifyListener {
+        public void onOTPVerified();
     }
 
-    //This method should be called every time an object of this class is created
-    public VerifyOtpFragment setVerifyOtpInstance(VerifyOtp verifyOtpInstance) {
-        this.verifyOtpInstance = verifyOtpInstance;
-        return this;
+    public VerifyOtpFragment() {
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.activity = (Activity)context;
     }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
+
+        generatedOTP = getArguments().getString("generated_otp");
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -42,7 +50,12 @@ public class VerifyOtpFragment extends DialogFragment {
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                verifyOtpInstance.verify(editText.getText().toString());
+                if(editText.getText().toString().equals(generatedOTP)) {
+                    Toast.makeText(activity, "Otp verified", Toast.LENGTH_SHORT).show();
+                    ((OnOTPVerifyListener)activity).onOTPVerified();
+                } else {
+                    Toast.makeText(activity, "Please try again!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
         builder.setNegativeButton("Start Over", new DialogInterface.OnClickListener() {

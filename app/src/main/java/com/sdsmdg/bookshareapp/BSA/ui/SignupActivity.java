@@ -39,7 +39,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class SignupActivity extends AppCompatActivity implements VerifyOtpFragment.VerifyOtp{
+public class SignupActivity extends AppCompatActivity implements VerifyOtpFragment.OnOTPVerifyListener {
     private static final String TAG = "SignupActivity";
 
     @InjectView(R.id.input_Fname)
@@ -119,13 +119,13 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         _showPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!showPassword){
+                if (!showPassword) {
                     _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    showPassword=true;
+                    showPassword = true;
                     _showPassword.setImageResource(R.drawable.ic_visibility_off);
                 } else {
                     _passwordText.setInputType(129); //input type = password
-                    showPassword=false;
+                    showPassword = false;
                     _showPassword.setImageResource(R.drawable.ic_visibility);
                 }
             }
@@ -134,13 +134,13 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         _showCnfPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!showCnfPassword){
+                if (!showCnfPassword) {
                     _cnf_passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    showCnfPassword=true;
+                    showCnfPassword = true;
                     _showCnfPassword.setImageResource(R.drawable.ic_visibility_off);
                 } else {
                     _cnf_passwordText.setInputType(129); //input type = password
-                    showCnfPassword=false;
+                    showCnfPassword = false;
                     _showCnfPassword.setImageResource(R.drawable.ic_visibility);
                 }
             }
@@ -151,7 +151,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
@@ -180,15 +180,21 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         String college = _collegeText.getText().toString();
         final String contact = _contactText.getText().toString();
 
-        //Verify OTP
-        if(!contact.equals("")) {
+        //If the contact no. is empty, sign up directly, else, open the otp dialog to verify the entered contact no.
+        if (!contact.equals("")) {
             sendOTP(contact);
+        } else {
+            requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
         }
 
+        progressDialog.dismiss();
+    }
+
+    private void requestSignUp(String fname, String lname, String email, String password, String room_no, String roll_no, String college, String contact) {
         Helper.setUserEmail(email);
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Signup> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact,FirebaseInstanceId.getInstance().getToken(),password);
-        Log.i("FCM_token ", FirebaseInstanceId.getInstance().getToken()+" <-");
+        Call<Signup> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact, FirebaseInstanceId.getInstance().getToken(), password);
+        Log.i("FCM_token ", FirebaseInstanceId.getInstance().getToken() + " <-");
         userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
 
             @Override
@@ -198,38 +204,39 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
             @Override
             public void onResponse(Call<Signup> call, Response<Signup> response) {
-                if(response.body() != null) {
+                if (response.body() != null) {
                     String detail = response.body().getDetail();
 
                     if (detail.equals("Fill required details or Email id already registered.")) {
-                        onSignupFailed("Email already registered"+FirebaseInstanceId.getInstance().getToken());
+                        onSignupFailed("Email already registered" + FirebaseInstanceId.getInstance().getToken());
                     } else {
                         //If the user has not entered his phone no. complete the signup, else show enter otp dialog
-                        if(!contact.equals("")) {
-                            sendOTP(contact);
-                        } else {
-                            onSignupSuccess();
-                        }
+                        onSignupSuccess();
                     }
                 }
             }
         });
-
-        progressDialog.dismiss();
     }
 
     public void sendOTP(String contact) {
 
-        sendMessage("Your OTP for citadel is " + generateOTP(), contact);
+        String generatedOTP = generateOTP();
+        sendMessage("Your OTP for citadel is " + generatedOTP, contact);
 
-        DialogFragment dialog = new VerifyOtpFragment()
-                .setVerifyOtpInstance(this);
+        Bundle bundle = new Bundle();
+        bundle.putString("generated_otp", generatedOTP);
+
+        DialogFragment dialog = new VerifyOtpFragment();
+        dialog.setArguments(bundle);
 
         dialog.show(getSupportFragmentManager(), "tagOTP");
-
     }
 
     public void sendMessage(String message, String contactNo) {
+
+        //Change the contact no. according to the need of otp api
+        contactNo = "91" + contactNo;
+
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
@@ -257,7 +264,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         call.enqueue(new Callback<com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response>() {
             @Override
             public void onResponse(Call<com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response> call, Response<com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response> response) {
-                if(response.body().getType().equals("success")) {
+                if (response.body().getType().equals("success")) {
                     Toast.makeText(getApplicationContext(), "OTP sent", Toast.LENGTH_SHORT).show();
                 } else {
                     Log.i(TAG, response.body().getType());
@@ -275,7 +282,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
     }
 
     public String generateOTP() {
-        generatedOTP = String.valueOf((int)(1000 + Math.random() * 8999));
+        generatedOTP = String.valueOf((int) (1000 + Math.random() * 8999));
         return generatedOTP;
     }
 
@@ -348,7 +355,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
             _contactText.setError(null);
         }
 
-        if (email.isEmpty() ) {
+        if (email.isEmpty()) {
             _emailText.setError("enter a valid email address");
             valid = false;
         } else {
@@ -376,9 +383,18 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
     }
 
     @Override
-    public void verify(String receivedOTP) {
-        if(generatedOTP.equals(receivedOTP)) {
-            onSignupSuccess();
-        }
+    public void onOTPVerified() {
+
+        String fname = _FnameText.getText().toString();
+        String lname = _LnameText.getText().toString();
+        String email = _emailText.getText().toString() + "@iitr.ac.in";
+        String password = _passwordText.getText().toString();
+        String room_no = _roomText.getText().toString();
+        String roll_no = _rollText.getText().toString();
+        String college = _collegeText.getText().toString();
+        String contact = _contactText.getText().toString();
+
+        //As the otp is verified now, the user signs up with his correct no. in the database
+        requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
     }
 }
