@@ -227,6 +227,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         bundle.putString("generated_otp", generatedOTP);
 
         DialogFragment dialog = new VerifyOtpFragment();
+        dialog.setCancelable(false);
         dialog.setArguments(bundle);
 
         dialog.show(getSupportFragmentManager(), "tagOTP");
