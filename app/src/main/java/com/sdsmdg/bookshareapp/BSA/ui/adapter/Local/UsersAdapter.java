@@ -131,6 +131,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                 holder.request.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
                         showAlertDialog(holder, id);
                     }
                 });
@@ -144,7 +145,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
         try {
             String url = CommonUtilities.local_books_api_url + "image/" + id + "/";
-            Picasso.with(this.context).load(url).placeholder(R.drawable.ic_account_circle_black_24dp).into(holder.imageUser);
+            Picasso.with(this.context).load(url).placeholder(R.drawable.ic_profile).into(holder.imageUser);
         } catch (Exception e) {
             Toast.makeText(this.context, e.toString(), Toast.LENGTH_SHORT).show();
 
@@ -155,6 +156,36 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     public void showAlertDialog(final ViewHolder holder, final String id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
+        if(holder.request.getText()=="Request"){
+            builder.setTitle("Send request?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String process = "request";
+                    UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                    Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, id, "request for","Token "+prefs.getString("token",null));
+                    sendNotif.enqueue(new Callback<Notifications>() {
+                        @Override
+                        public void onResponse(Call<Notifications> call, Response<Notifications> response) {
+                            if (response.body() != null) {
+                                Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+//                                holder.request.setText("Cancel");
+
+                            } else {
+                                Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Notifications> call, Throwable t) {
+                            Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+
+        }
         builder.setTitle("Send request?");
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override

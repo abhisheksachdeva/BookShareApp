@@ -17,11 +17,13 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Login;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import butterknife.ButterKnife;
@@ -91,11 +93,11 @@ public class LoginActivity extends AppCompatActivity {
                 if(!showPassword){
                 _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     showPassword=true;
-                    _showPassword.setImageResource(R.drawable.ic_visibility_off);
+                    _showPassword.setImageResource(R.drawable.ic_visible_off);
                 } else {
                     _passwordText.setInputType(129); //input type = password
                     showPassword=false;
-                    _showPassword.setImageResource(R.drawable.ic_visibility);
+                    _showPassword.setImageResource(R.drawable.ic_visible_on);
                 }
                 }
 
@@ -159,11 +161,14 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.body() != null) {
                     if(response.body().getDetail() != null) {
                         onLoginFailed(response.body().getDetail());
+                        Log.i(TAG,"RESPONSE ERROR ");
                     }
                     if(response.body().getToken() != null) {
                         setNewEmail(_emailText.getText().toString());//This function sets the new entered email into the shared prefs for suggestions
                         onLoginSuccess();
                         saveinSP(response.body().getToken(), response.body().getUserInfo());
+                        Log.i(TAG,"RESPONSE SUCCESS ");
+
                     }
                 }
                 customProgressDialog.dismiss();
@@ -177,7 +182,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-
+//
 //        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
 //        Log.i("Token ", token+"---> This the token");
 //        Call<Detail> call2 = usersAPI.update_fcm_id(

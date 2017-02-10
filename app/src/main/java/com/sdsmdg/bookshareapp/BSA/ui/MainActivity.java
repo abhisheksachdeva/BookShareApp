@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SearchView searchView;
     Integer count = 1;
     String Resp;
-    CustomProgressDialog customProgressDialog;
     public static Context contextOfApplication;
 
 
@@ -260,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this._profilePicture = _profilePicture;
         String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
         this.url = url;
-        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_account_circle_black_24dp).into(_profilePicture);
+        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_person_filled).into(_profilePicture);
 
 
         if (_name != null) {
@@ -272,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorAccent));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.White));
         setSupportActionBar(toolbar);
 
 
@@ -394,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
 
-        notifItem.setIcon(R.drawable.ic_notifications_none_white_24dp);
+        notifItem.setIcon(R.drawable.ic_notif_small);
 
         return true;
     }
@@ -403,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_notifs) {
+
             notifFragment.getNotifications("1");
             Helper.setOld_total(Helper.getNew_total());
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
@@ -469,6 +469,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         finish();
                     } else {
                         Log.i("CPA", "request body is null");
+                        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(i);
+                        finish();
+
                     }
                 }
 

@@ -92,6 +92,8 @@ public class BookDetailsActivity extends AppCompatActivity {
         bookDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Toast.makeText(BookDetailsActivity.this, description+"----", Toast.LENGTH_SHORT).show();
+
                 showMore=!showMore;
 
                 if(showMore) {
@@ -131,6 +133,8 @@ public class BookDetailsActivity extends AppCompatActivity {
                         bookDescription.setText(book.getDescription());
                     }
                     description=book.getDescription();
+                    Toast.makeText(getApplicationContext(), description+"----", Toast.LENGTH_SHORT).show();
+
                     authorBook.setText("by  "+book.getAuthor()); author = book.getAuthor();
                     DecimalFormat formatter = new DecimalFormat("##,##,###");
                     rating_count = formatter.format(book.getRatingsCount());

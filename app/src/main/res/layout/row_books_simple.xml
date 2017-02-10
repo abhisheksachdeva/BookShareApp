@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="16dp">
 
         <ImageView
             android:id="@+id/row_books_imageView"
@@ -32,10 +32,10 @@
                 android:id="@+id/row_books_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
                 android:maxLines="2"
                 android:text="Title"
-                android:textSize="20sp"
-                android:layout_marginBottom="6dp"/>
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/row_books_author"
@@ -44,17 +44,27 @@
                 android:text="Author"
                 android:textSize="14sp" />
 
-            <RatingBar
-                android:id="@+id/row_books_rating"
-                style="?android:attr/ratingBarStyleSmall"
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/row_books_ratings_count"
-                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"/>
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <RatingBar
+                    android:id="@+id/row_books_rating"
+                    style="?attr/ratingBarStyleSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/row_books_ratings_count"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="20dp"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
 
         </LinearLayout>
 

@@ -30,7 +30,7 @@ import butterknife.InjectView;
 import retrofit2.Call;
 import retrofit2.Response;
 
-public class SignupActivity extends AppCompatActivity {
+public class    SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
 
     @InjectView(R.id.input_Fname)
@@ -109,14 +109,14 @@ public class SignupActivity extends AppCompatActivity {
         _showPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!showPassword){
+                if (!showPassword) {
                     _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    showPassword=true;
-                    _showPassword.setImageResource(R.drawable.ic_visibility_off);
+                    showPassword = true;
+                    _showPassword.setImageResource(R.drawable.ic_visible_off);
                 } else {
                     _passwordText.setInputType(129); //input type = password
-                    showPassword=false;
-                    _showPassword.setImageResource(R.drawable.ic_visibility);
+                    showPassword = false;
+                    _showPassword.setImageResource(R.drawable.ic_visible_on);
                 }
             }
 
@@ -124,14 +124,14 @@ public class SignupActivity extends AppCompatActivity {
         _showCnfPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!showCnfPassword){
+                if (!showCnfPassword) {
                     _cnf_passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    showCnfPassword=true;
-                    _showCnfPassword.setImageResource(R.drawable.ic_visibility_off);
+                    showCnfPassword = true;
+                    _showCnfPassword.setImageResource(R.drawable.ic_visible_off);
                 } else {
                     _cnf_passwordText.setInputType(129); //input type = password
-                    showCnfPassword=false;
-                    _showCnfPassword.setImageResource(R.drawable.ic_visibility);
+                    showCnfPassword = false;
+                    _showCnfPassword.setImageResource(R.drawable.ic_visible_on);
                 }
             }
 
@@ -141,7 +141,7 @@ public class SignupActivity extends AppCompatActivity {
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }
@@ -172,8 +172,8 @@ public class SignupActivity extends AppCompatActivity {
 
         Helper.setUserEmail(email);
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Signup> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact,FirebaseInstanceId.getInstance().getToken(),password);
-        Log.i("FCM_token ", FirebaseInstanceId.getInstance().getToken()+" <-");
+        Call<Signup> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact, FirebaseInstanceId.getInstance().getToken(), password);
+        Log.i("FCM_token ", FirebaseInstanceId.getInstance().getToken() + " <-");
         userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
 
             @Override
@@ -183,11 +183,11 @@ public class SignupActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<Signup> call, Response<Signup> response) {
-                if(response.body() != null) {
+                if (response.body() != null) {
                     String detail = response.body().getDetail();
 
                     if (detail.equals("Fill required details or Email id already registered.")) {
-                        onSignupFailed("Email already registered"+FirebaseInstanceId.getInstance().getToken());
+                        onSignupFailed("Email already registered" + FirebaseInstanceId.getInstance().getToken());
                     } else {
                         onSignupSuccess();
                     }
@@ -207,10 +207,9 @@ public class SignupActivity extends AppCompatActivity {
 
     public void onSignupFailed(String toast) {
         String password = _passwordText.getText().toString();
-        if(password.length()<6 || password.length()>15 ){
+        if (password.length() < 6 || password.length() > 15) {
             Toast.makeText(getBaseContext(), "Password length between 6 and 15 characters", Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
         }
 
@@ -274,7 +273,7 @@ public class SignupActivity extends AppCompatActivity {
             _contactText.setError(null);
         }
 
-        if (email.isEmpty() ) {
+        if (email.isEmpty()) {
             _emailText.setError("enter a valid email address");
             valid = false;
         } else {

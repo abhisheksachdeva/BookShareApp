@@ -74,7 +74,8 @@ public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.
         holder.ratingBook.setRating(tempValues.getRating());
         DecimalFormat formatter = new DecimalFormat("#,###,###");
         String rating_count = formatter.format(tempValues.getRatingsCount());
-        holder.ratingCount.setText(rating_count + " votes");        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        holder.ratingCount.setText("("+rating_count + ")");
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onItemClick(bookList.get(position));

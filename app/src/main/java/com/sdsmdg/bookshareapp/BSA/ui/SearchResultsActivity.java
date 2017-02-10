@@ -1,6 +1,7 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,7 +59,6 @@ public class SearchResultsActivity extends ActionBarActivity {
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
-
         mToolbar.setClickable(true);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -264,9 +264,9 @@ public class SearchResultsActivity extends ActionBarActivity {
         edtSeach = (EditText) action.getCustomView().findViewById(R.id.searchEditText); //the text editor
         edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
         spinner = (Spinner) action.getCustomView().findViewById(R.id.spinner);
+        searchModeList.add("All");
         searchModeList.add("Author");
         searchModeList.add("Title");
-        searchModeList.add("All");
 
         // Creating adapter for spinner
         dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, searchModeList);

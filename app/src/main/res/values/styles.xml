@@ -8,12 +8,15 @@
         <item name="drawerArrowStyle">@style/DrawerIcon</item>
         <item name="android:listDivider">@color/colorPrimaryDark</item>
     </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" >
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:color">@android:color/white</item>
     </style>
@@ -28,7 +31,9 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:textColorPrimary">@color/White</item>
         <item name="colorControlNormal">@color/White</item>
-
+    </style>
+    <style name="AppTheme.Dialog" parent="@android:style/Theme.Material.Light.Dialog">
+        <item name="android:textColorPrimary">@android:color/black</item>
 
     </style>
 </resources>

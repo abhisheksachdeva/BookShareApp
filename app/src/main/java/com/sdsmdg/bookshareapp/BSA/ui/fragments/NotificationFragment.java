@@ -71,8 +71,7 @@ public class NotificationFragment extends Fragment {
         noNotificationTextView = (TextView)v.findViewById(R.id.no_notification_text);
 
         nLinearLayoutManager = new LinearLayoutManager(getActivity());
-        nLinearLayoutManager.setReverseLayout(true);
-        nLinearLayoutManager.setStackFromEnd(true);
+
 
         notificationsListView = (RecyclerView) v.findViewById(R.id.notifications_list);
         notificationsListView.setLayoutManager(nLinearLayoutManager);

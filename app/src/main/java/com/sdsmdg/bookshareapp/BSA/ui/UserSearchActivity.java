@@ -226,7 +226,7 @@ public class UserSearchActivity extends ActionBarActivity {
 
 
             //add the close icon
-            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_clear_24dp));
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_cross_green));
 
             isSearchOpened = true;
         }

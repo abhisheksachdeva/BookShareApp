@@ -92,6 +92,15 @@ public interface UsersAPI {
             @Path("id") String id
     );
 
+    @GET("user/{id}/?format=json")
+    Call<UserInfo> getUserandBookDetails(
+            @Path("id") String id,
+            @Query("user_id")String id_same,
+            @Header("Authorization") String token
+
+    );
+
+
     @POST("token/")
     Call<Detail> getUserEmail(@Header("Authorization") String token);
 
@@ -137,11 +146,22 @@ public interface UsersAPI {
             @Header("Authorization") String token
     );
 
+    @FormUrlEncoded
+    @POST("notifications/")
+    Call<Notifications> cancelNotif(
+            @Field("book_id") String  bookId,
+            @Field("sender_id")String sender_id,
+            @Field("process") String process,
+            @Header("Authorization") String token
+    );
+
     @PUT("user/{id}/")
     Call<UserInfo> editUserDetails(
             @Path("id") String id,
             @Body UserInfo userInfo
     );
+
+
 
     @FormUrlEncoded
     @POST("password/change/")
