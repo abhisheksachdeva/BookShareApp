@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -194,7 +195,7 @@ public class UserSearchActivity extends ActionBarActivity {
             action.setDisplayShowTitleEnabled(false); //hide the title
 
             edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
-
+            edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             //this is a listener to do a search when the user clicks on search button
             edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
                 @Override
@@ -225,7 +226,7 @@ public class UserSearchActivity extends ActionBarActivity {
 
 
             //add the close icon
-            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_clear_24dp));
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_cross_green));
 
             isSearchOpened = true;
         }
@@ -240,6 +241,7 @@ public class UserSearchActivity extends ActionBarActivity {
         action.setDisplayShowTitleEnabled(false); //hide the title
         
         edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
+        edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
         //this is a listener to do a search when the user clicks on search button
         edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {

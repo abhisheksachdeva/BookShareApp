@@ -1,13 +1,16 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -28,10 +31,17 @@ import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchResultsActivity extends AppCompatActivity {
+public class SearchResultsActivity extends ActionBarActivity {
+
+    private MenuItem mSearchAction;
+    private boolean isSearchOpened = false;
+    private EditText edtSeach;
+    private Toolbar mToolbar;
+    final List<String> searchModeList = new ArrayList<>();
+
+
     String query;
     String API_KEY = CommonUtilities.API_KEY;
-    EditText searchEditText;
     BookListFragment bookListFragment;
     NestedScrollView scrollingView;
     FloatingActionButton button;
@@ -40,47 +50,24 @@ public class SearchResultsActivity extends AppCompatActivity {
     CustomProgressDialog customProgressDialog;
     String selected = null;
     String isbn;
+    ArrayAdapter<String> dataAdapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.search_results);
 
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        mToolbar.setClickable(true);
+
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         customProgressDialog = new CustomProgressDialog(SearchResultsActivity.this);
         customProgressDialog.setCancelable(false);
         scrollingView = (NestedScrollView) findViewById(R.id.scrollView);
         button = (FloatingActionButton) findViewById(R.id.scroll);
-        final List<String> searchModeList = new ArrayList<>();
-        searchModeList.add("Author");
-        searchModeList.add("Title");
-        searchModeList.add("All");
 
-
-        spinner = (Spinner) findViewById(R.id.spinner);
-
-        // Creating adapter for spinner
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, searchModeList);
-
-        // Drop down layout style - list view with radio button
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        // attaching data adapter to spinner
-        spinner.setAdapter(dataAdapter);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                selected = searchModeList.get(position);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spinner.setSelection(2);//Setting the default vaule of spinner to "All"
 
         scrollingView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
@@ -101,44 +88,20 @@ public class SearchResultsActivity extends AppCompatActivity {
             }
         });
 
-        searchEditText = (EditText) findViewById(R.id.searchEditText);
         bookListFragment = new BookListFragment();
 
-        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    search(v);
-                    return false;
-                }
-                return false;
-            }
-        });
-
-        if(getIntent().getExtras()!=null){
-
-        isbn = getIntent().getExtras().getString("isbn");
-        searchEditText.setText(isbn.toString());
-        bookListFragment.getBooks(isbn, "all", API_KEY);
-
+        if (getIntent().getExtras() != null) {
+            isbn = getIntent().getExtras().getString("isbn");
+            bookListFragment.getBooks(isbn, "all", API_KEY);
 
         }
+
+        search_open();
+
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, bookListFragment)
                 .commit();
-
-        searchEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    search(v);
-                    return true;
-                }
-                return false;
-            }
-        });
-
     }
 
     class ProgressLoader extends AsyncTask<Integer, Integer, String> {
@@ -160,7 +123,7 @@ public class SearchResultsActivity extends AppCompatActivity {
                     break;
                 }
                 count++;
-            }while (bookListFragment.getResp()==null);
+            } while (bookListFragment.getResp() == null);
 
 
             return "Task Completed.";
@@ -203,28 +166,13 @@ public class SearchResultsActivity extends AppCompatActivity {
         return (super.onOptionsItemSelected(item));
     }
 
-
-
-    public void search(View view) {
-
+    private void doSearch(String query, String mode) {
         hideKeyboard();
-        query = searchEditText.getText().toString();
-        Log.i("sss",selected.toLowerCase());
-        bookListFragment.getBooks(query, selected.toLowerCase(), API_KEY);
+        bookListFragment.getBooks(query, mode, API_KEY);
         new ProgressLoader().execute();
-
 
     }
 
-//    public void searchbyscan(String query_isbn) {
-//
-//        query = query_isbn;
-//        Log.i("sss",selected.toLowerCase());
-//        bookListFragment.getBooks(query, "all", API_KEY);
-//        new ProgressLoader().execute();
-//
-//
-//    }
 
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
@@ -234,20 +182,149 @@ public class SearchResultsActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-//        if(result != null) {
-//            if(result.getContents() == null) {
-//                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
-//            } else {
-//                Toast.makeText(this, "Scanned: " + result.getContents(), Toast.LENGTH_LONG).show();
-//                searchEditText.setText(result.getContents());
-//                searchbyscan(result.getContents());
-//
-//            }
-//        } else {
-//            super.onActivityResult(requestCode, resultCode, data);
-//        }
-//    }
+    @Override
+    public void onBackPressed() {
+        if (isSearchOpened) {
+            handleMenuSearch();
+            return;
+        }
+        super.onBackPressed();
+    }
+
+    protected void handleMenuSearch() {
+        ActionBar action = getSupportActionBar(); //get the actionbar
+
+
+        if (isSearchOpened) { //test if the search is open
+
+            action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
+            action.setDisplayShowTitleEnabled(true); //show the title in the action bar
+
+            //hides the keyboard
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
+
+            //add the search icon in the action bar
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.search_icon));
+
+            isSearchOpened = false;
+        } else { //open the search entry
+
+            action.setDisplayShowCustomEnabled(true); //enable it to display a
+            // custom view in the action bar.
+            action.setCustomView(R.layout.book_search_bar);//add the custom view
+            action.setDisplayShowTitleEnabled(false); //hide the title
+
+            edtSeach = (EditText) action.getCustomView().findViewById(R.id.searchEditText); //the text editor
+            edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+
+            edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        doSearch(edtSeach.getText().toString(), selected.toLowerCase());
+                        return true;
+                    }
+                    return false;
+                }
+            });
+            edtSeach.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    edtSeach.requestFocus();
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+
+                }
+            });
+
+
+            edtSeach.requestFocus();
+
+            //open the keyboard focused in the edtSearch
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+
+
+            //add the close icon
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_clear_24dp));
+
+            isSearchOpened = true;
+        }
+    }
+
+    private void search_open() {
+        ActionBar action = getSupportActionBar(); //get the actionbar
+
+        action.setDisplayShowCustomEnabled(true); //enable it to display a
+        // custom view in the action bar.
+        action.setCustomView(R.layout.book_search_bar);//add the custom view
+        action.setDisplayShowTitleEnabled(false); //hide the title
+
+        edtSeach = (EditText) action.getCustomView().findViewById(R.id.searchEditText); //the text editor
+        edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
+        spinner = (Spinner) action.getCustomView().findViewById(R.id.spinner);
+        searchModeList.add("All");
+        searchModeList.add("Author");
+        searchModeList.add("Title");
+
+        // Creating adapter for spinner
+        dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, searchModeList);
+        Log.i("SA2 :", "adapter created ---- >");
+
+        // Drop down layout style - list view with radio button
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+        // attaching data adapter to spinner
+
+        spinner.setAdapter(dataAdapter);
+        Log.i("SA2 :", "adapter attached ---- >");
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selected = searchModeList.get(position);
+                Log.i("SA2 :", "item selected ---- >");
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.i("SA2 :", "nothing selected ---- >");
+
+
+            }
+        });
+
+        spinner.setSelection(2);//Setting the default vaule of spinner to "All"
+        //this is a listener to do a search when the user clicks on search button
+        edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    doSearch(edtSeach.getText().toString(), "all");
+                    return true;
+                }
+                return false;
+            }
+        });
+        edtSeach.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edtSeach.requestFocus();
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+
+            }
+        });
+
+        edtSeach.requestFocus();
+
+        //open the keyboard focused in the edtSearch
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
+        //add the close icon
+    }
+
+
 }

@@ -1,9 +1,14 @@
 package com.sdsmdg.bookshareapp.BSA.ui.adapter.GR;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
@@ -116,7 +121,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
 
         String rating_count = formatter.format(tempValues.getRatingCount());
 
-        holder.ratingCount.setText(rating_count + " votes");
+        holder.ratingCount.setText("("+rating_count + ")");
         title = tempValues.getBookDetails().getTitle();
         email= Helper.getUserEmail();
         author=tempValues.getBookDetails().getAuthor().getAuthor_name();
@@ -162,7 +167,8 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                 });
 
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context,R.style.AppTheme_Dialog)) ;
+                builder.setInverseBackgroundForced(true);
                 builder.setTitle("Do you want to add this Book?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

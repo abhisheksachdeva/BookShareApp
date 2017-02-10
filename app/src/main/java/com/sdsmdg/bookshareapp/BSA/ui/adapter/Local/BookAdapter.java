@@ -164,7 +164,7 @@ public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
                 Picasso.with(context).load(tempValues.getGrImgUrl()).placeholder(R.drawable.default_book_image).into(viewHolder.imageBook);
             }
             viewHolder.ratingBook.setRating(tempValues.getRating());
-            viewHolder.ratingCount.setText(tempValues.getRatingsCount() + " votes");
+            viewHolder.ratingCount.setText("("+tempValues.getRatingsCount() + ")");
             viewHolder.itemView.setBackgroundColor(Color.WHITE);
             //if the book is selected, change it's color to holo blue light
             if(selected.get(position)) {

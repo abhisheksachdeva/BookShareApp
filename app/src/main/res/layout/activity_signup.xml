@@ -19,34 +19,46 @@
         <!--android:layout_marginBottom="24dp"-->
         <!--android:layout_gravity="center_horizontal" />-->
 
-        <!--  Name Label -->
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
 
-            <EditText
-                android:id="@+id/input_Fname"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <!--  Name Label -->
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="First Name"
-                android:inputType="textCapWords" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1">
 
-        <android.support.design.widget.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
+                <EditText
+                    android:id="@+id/input_Fname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="First Name"
+                    android:drawableStart="@drawable/star"
+                    android:inputType="textCapWords"
+                   />
+            </android.support.design.widget.TextInputLayout>
 
-            <EditText
-                android:id="@+id/input_Lname"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Last Name"
-                android:inputType="textCapWords" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_weight="1">
+
+                <EditText
+                    android:id="@+id/input_Lname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Last Name"
+                    android:drawableStart="@drawable/star"
+                    android:inputType="textCapWords" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -69,6 +81,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:hint="Email"
+                        android:drawableStart="@drawable/star"
                         android:inputType="textEmailAddress"
                         android:maxLength="19" />
 
@@ -102,6 +115,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Password"
+                    android:drawableLeft="@drawable/star"
                     android:inputType="textPassword"
                     android:maxLength="20" />
             </android.support.design.widget.TextInputLayout>
@@ -111,8 +125,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
-                android:background="#ffffff"
-                android:src="@drawable/ic_visibility_off"
+                android:background="#00ffffff"
+                android:src="@drawable/ic_visibility_off_96px"
                 android:tint="@color/Black" />
 
         </FrameLayout>
@@ -132,6 +146,7 @@
                     android:id="@+id/input_cnf_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/star"
                     android:hint="Confirm Password"
                     android:inputType="textPassword"
                     android:maxLength="20" />
@@ -143,7 +158,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:background="#00FFFFFF"
-                android:src="@drawable/ic_visibility_off"
+                android:src="@drawable/ic_visibility_off_96px"
                 android:tint="@color/Black" />
 
         </FrameLayout>
@@ -163,34 +178,51 @@
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginTop="8dp">
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/input_room_no"
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:paddingLeft="4dp"
+                    android:text="Hostel"
+                    android:textSize="12dp" />
+
+                <Spinner
+                    android:id="@+id/hostel_spinner"
+                    style="@style/Base.Widget.AppCompat.Spinner.Underlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"></Spinner>
+            </LinearLayout>
+
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Room No."
-                android:inputType="textCapWords" />
-        </android.support.design.widget.TextInputLayout>
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="1">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:paddingLeft="4dp"
-            android:text="Hostel"
-            android:textSize="12dp" />
+                <EditText
+                    android:id="@+id/input_room_no"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Room No."
+                    android:inputType="textCapWords" />
+            </android.support.design.widget.TextInputLayout>
+        </LinearLayout>
 
-        <Spinner
-            android:id="@+id/hostel_spinner"
-            style="@style/Base.Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"></Spinner>
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -221,9 +253,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Contact No."
-                android:inputType="number" />
 
+                android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
+
 
         <!-- Signup Button -->
         <android.support.v7.widget.AppCompatButton

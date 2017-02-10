@@ -8,6 +8,7 @@ import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -40,6 +41,7 @@ import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
+import com.sdsmdg.bookshareapp.BSA.firebase_classes.MyFirebaseMessagingService;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterSimple;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.NotificationFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
@@ -68,8 +70,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SearchView searchView;
     Integer count = 1;
     String Resp;
-    //CustomProgressDialog customProgressDialog;
     public static Context contextOfApplication;
+
 
     //Creates a list of visible snackbars
     List<Snackbar> visibleSnackbars = new ArrayList<>();
@@ -130,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         progress_isVisible = false;
 
+
         notifFragment = (NotificationFragment) getSupportFragmentManager().findFragmentById(R.id.right_drawer);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
@@ -143,6 +146,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (data.equals("open")) {
                     Log.d("Reached here ", "inside data== open ");
                     notifFragment.getNotifications("1");
+                    MyFirebaseMessagingService.notifications.clear();
                     drawerLayout.openDrawer(GravityCompat.END);
                 }
             }
@@ -152,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (data != null && data.equals("open_drawer")) {
                 Log.d("Reached here ", "inside data  SPLASH  == open ");
                 notifFragment.getNotifications("1");
+                MyFirebaseMessagingService.notifications.clear();
                 drawerLayout.openDrawer(GravityCompat.END);
             }
 
@@ -227,6 +232,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
                     intent.putExtra("id", book.getId());
                     startActivity(intent);
+
                 }
 
             }
@@ -253,7 +259,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this._profilePicture = _profilePicture;
         String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
         this.url = url;
-        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_account_circle_black_24dp).into(_profilePicture);
+        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_person_filled).into(_profilePicture);
 
 
         if (_name != null) {
@@ -265,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitleTextColor(getResources().getColor(R.color.colorAccent));
+        toolbar.setTitleTextColor(getResources().getColor(R.color.White));
         setSupportActionBar(toolbar);
 
 
@@ -303,6 +309,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent i = new Intent(this, SearchResultsActivity.class);
         startActivity(i);
     }
+
 
     @Override
     public boolean onQueryTextChange(String newText) {
@@ -386,7 +393,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         searchView.setOnQueryTextListener(this);
 
-        notifItem.setIcon(R.drawable.ic_notifications_none_white_24dp);
+        notifItem.setIcon(R.drawable.ic_notif_small);
 
         return true;
     }
@@ -395,6 +402,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_notifs) {
+
             notifFragment.getNotifications("1");
             Helper.setOld_total(Helper.getNew_total());
             if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
@@ -419,9 +427,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             startActivity(i);
 
         } else if (id == R.id.nav_barcode) {
-            Intent i = new Intent(this, fcm_test.class);
-            startActivity(i);
-
+            new IntentIntegrator(MainActivity.this).initiateScan();
 
         } else if (id == R.id.nav_grlogin) {
             SharedPreferences preff = getSharedPreferences("UserId", MODE_PRIVATE);
@@ -438,6 +444,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             final SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
             final boolean logout = false;
             String token = "Token " + prefs.getString("token", null);
+
             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
             Call<Detail> call2 = usersAPI.update_fcm_id(
                     token,
@@ -462,6 +469,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         finish();
                     } else {
                         Log.i("CPA", "request body is null");
+                        Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(i);
+                        finish();
+
                     }
                 }
 
@@ -619,7 +630,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             comes in offline mode, the "You are offline" Snackbar should appear
                             again, if user choses not to close the app
                              */
-                            if(!isOnline()) {
+                            if (!isOnline()) {
                                 Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
                                     @Override
                                     public void onDismissed(Snackbar snackbar, int event) {
@@ -677,7 +688,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
-            if (result.getContents() == null) {
+            if (result.getContents() ==  null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
                 Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
@@ -701,7 +712,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void removeAnyVisibleSnackbars() {
-        if(visibleSnackbars.size() != 0) {
+        if (visibleSnackbars.size() != 0) {
             visibleSnackbars.get(0).dismiss();
             visibleSnackbars.clear();
         }

@@ -62,7 +62,6 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="end|bottom"
                         android:layout_margin="16dp"
-
                         android:onClick="searchClicked"
                         android:src="@drawable/plus" />
                 </android.support.design.widget.CoordinatorLayout>
@@ -82,7 +81,7 @@
         android:background="@color/colorPrimaryDark"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_main"
-        app:itemIconTint="@color/White"
+        app:itemIconTint="@color/colorAccent"
         app:itemTextColor="@color/White"
         app:menu="@menu/activity_main_drawer" />
 

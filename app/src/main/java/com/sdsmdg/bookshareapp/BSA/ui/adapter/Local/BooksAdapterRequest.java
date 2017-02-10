@@ -61,7 +61,7 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
             imageBook = (ImageView) v.findViewById(R.id.row_books_imageView);
             ratingBook = (RatingBar) v.findViewById(R.id.row_books_rating);
             ratingCount = (TextView) v.findViewById(R.id.row_books_ratings_count);
-            request =(Button) v.findViewById(R.id.requestButton);
+            request = (Button) v.findViewById(R.id.requestButton);
             this.context = context;
         }
 
@@ -71,8 +71,8 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
         this.bookList = bookList;
         this.context = context;
         this.listener = listener;
-        this.userId=userId;
-        prefs = context.getSharedPreferences("Token",Context.MODE_PRIVATE);
+        this.userId = userId;
+        prefs = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
 
     }
 
@@ -86,72 +86,129 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, final int position) {
-        final String bookTitle,bookId;
+        final String bookTitle, bookId;
         tempValues = bookList.get(position);
         bookId = tempValues.getId();
         bookTitle = tempValues.getTitle();
         holder.titleBook.setText(tempValues.getTitle());
         holder.authorBook.setText(tempValues.getAuthor());
-        if(!tempValues.getGrImgUrl().isEmpty()) {
+
+        if (tempValues.getCancel()) {
+            holder.request.setText("Cancel");
+        } else {
+            holder.request.setText("Request");
+        }
+
+        if (!tempValues.getGrImgUrl().isEmpty()) {
             Picasso.with(this.context).load(tempValues.getGrImgUrl()).placeholder(R.drawable.default_book_image).into(holder.imageBook);
         }
+
         holder.ratingBook.setRating(tempValues.getRating());
         DecimalFormat formatter = new DecimalFormat("#,###,###");
         String rating_count = formatter.format(tempValues.getRatingsCount());
-        holder.ratingCount.setText(rating_count + " votes");
+        holder.ratingCount.setText("(" + rating_count + ")");
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listener.onItemClick(bookList.get(position));
             }
         });
+
         holder.request.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Do you want to send a request?");
-                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String process = "request";
-                        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                        Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(),Helper.getUserName(), bookId,bookTitle,process,userId,"request for","Token "+prefs
-                                .getString("token",null));
-                        sendNotif.enqueue(new Callback<Notifications>() {
-                            @Override
-                            public void onResponse(Call<Notifications> call, Response<Notifications> response) {
-                                Log.i("Email iD ", Helper.getUserEmail());
-                                if (response.body() != null) {
-                                    Log.i("SendNotif", "Success");
-                                    Log.d("SendNotif", Helper.getUserId()+" ID"+userId);
-                                    Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                    Log.i("response", response.body().getDetail());
-                                    holder.request.setEnabled(false);
+                if (!bookList.get(position).getCancel()) {
+                    builder.setTitle("Do you want to send a request?");
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String process = "request";
+                            UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                            Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, userId, "request for", "Token " + prefs
+                                    .getString("token", null));
+                            sendNotif.enqueue(new Callback<Notifications>() {
+                                @Override
+                                public void onResponse(Call<Notifications> call, Response<Notifications> response) {
+                                    Log.i("Email iD ", Helper.getUserEmail());
+                                    if (response.body() != null) {
+                                        Log.i("SendNotif", "Success");
+                                        Log.d("SendNotif", Helper.getUserId() + " ID" + userId);
+                                        Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                        Log.i("response", response.body().getDetail());
+                                        holder.request.setText("Cancel");
 
-                                } else {
-                                    Log.i("SendNotif", "Response Null");
-                                    Toast.makeText(context, response.body().getDetail() , Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        Log.i("SendNotif", "Response Null");
+                                        Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
-                            }
-                            @Override
-                            public void onFailure(Call<Notifications> call, Throwable t) {
-                                Log.i("SendNotif","Failed!!");
-                                Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                    }
-                });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+
+                                @Override
+                                public void onFailure(Call<Notifications> call, Throwable t) {
+                                    Log.i("SendNotif", "Failed!!");
+                                    Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                } else {
+                    builder.setTitle("Do you want to cancel this request?");
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String process = "cancel";
+                            UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                            Call<Notifications> cancelNotif = usersAPI.cancelNotif(bookId, userId, process, "Token " + prefs
+                                    .getString("token", null));
+                            cancelNotif.enqueue(new Callback<Notifications>() {
+                                @Override
+                                public void onResponse(Call<Notifications> call, Response<Notifications> response) {
+                                    if (response.body() != null) {
+                                        Log.i("CancelNotif", "Success");
+                                        Log.d("CancelNotif", Helper.getUserId() + " ID" + userId);
+                                        Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                        Log.i("response", response.body().getDetail());
+                                        holder.request.setText("Request");
+
+
+                                    } else {
+                                        Log.i("CancelNotif", "Response Null");
+                                        Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<Notifications> call, Throwable t) {
+                                    Log.i("CancelNotif", "Failed!!");
+                                    Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                                }
+                            });
+                        }
+                    });
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    });
+
+                }
+
 
                 builder.show();
 
             }
         });
+
 
     }
 

@@ -2,8 +2,10 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -55,6 +57,8 @@ public class UserProfile extends AppCompatActivity {
     String email;
     NestedScrollView scrollView;
     CustomProgressDialog customProgressDialog;
+    SharedPreferences prefs;
+
 
 
 
@@ -67,6 +71,7 @@ public class UserProfile extends AppCompatActivity {
         customProgressDialog = new CustomProgressDialog(UserProfile.this);
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
+        prefs = getApplicationContext().getSharedPreferences("Token", Context.MODE_PRIVATE);
 
         name = (TextView)findViewById(R.id.user_name);
         emailTextView = (TextView)findViewById(R.id.user_email);
@@ -108,11 +113,14 @@ public class UserProfile extends AppCompatActivity {
     }
 
     public void getUserInfoDetails(final String id){
+        Log.i("INSIDE ONCLICK " ,id+"fklksmlsn");
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<UserInfo> call = api.getUserDetails(id);
+        Call<UserInfo> call = api.getUserandBookDetails(id,id,"Token " + prefs
+                .getString("token", null));
         call.enqueue(new Callback<UserInfo>() {
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+                Log.i("INSIDE ONCLICK " ,id+"fklksmlsn");
                 if(response.body()!=null) {
                     Log.d("UserProfile Response:", response.toString());
                     user = response.body();

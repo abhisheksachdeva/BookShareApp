@@ -11,7 +11,8 @@ android {
         minSdkVersion 19
         targetSdkVersion 25
         versionCode 1
-        versionName "0.7.0"
+        versionName "0.8.0"
+
     }
     buildTypes {
         release {
@@ -56,6 +57,10 @@ dependencies {
     compile 'jp.wasabeef:blurry:2.0.2'
     compile 'com.google.api-client:google-api-client:1.20.0'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.3'
+
+
+
 
 }
 

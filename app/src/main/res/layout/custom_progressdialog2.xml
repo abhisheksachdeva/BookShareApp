@@ -1,26 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layoutp1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:background="#0000"
+    android:layout_gravity="center"
     android:orientation="vertical">
-    <LinearLayout
-        android:id="@+id/layoutp1"
-        android:layout_width="200dp"
-        android:layout_height="70dp"
-        android:layout_gravity="center"
-        android:background="@drawable/border_progress"
+
+    <pl.droidsonroids.gif.GifTextView
+        android:layout_width="500dp"
+        android:layout_height="500dp"
         android:gravity="center"
-        android:orientation="vertical">
+        android:background="@drawable/pbar"
+        />
 
-        <ProgressBar
-            android:id="@+id/progress"
-            android:layout_width="313dp"
-            android:layout_height="164dp"
-            android:indeterminate="true"
-            android:indeterminateDrawable="@drawable/progress_indeterminate_horizontal"
-            android:scaleX="0.4"
-            android:scaleY="0.4" />
+</RelativeLayout>
 
-    </LinearLayout>
-
-</LinearLayout>

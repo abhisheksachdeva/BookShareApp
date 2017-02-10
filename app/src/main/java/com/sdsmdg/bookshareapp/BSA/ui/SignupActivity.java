@@ -39,6 +39,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+
 public class SignupActivity extends AppCompatActivity implements VerifyOtpFragment.OnOTPVerifyListener {
     private static final String TAG = "SignupActivity";
 
@@ -122,11 +123,11 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                 if (!showPassword) {
                     _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     showPassword = true;
-                    _showPassword.setImageResource(R.drawable.ic_visibility_off);
+                    _showPassword.setImageResource(R.drawable.ic_visible_off);
                 } else {
                     _passwordText.setInputType(129); //input type = password
                     showPassword = false;
-                    _showPassword.setImageResource(R.drawable.ic_visibility);
+                    _showPassword.setImageResource(R.drawable.ic_visible_on);
                 }
             }
 
@@ -137,11 +138,12 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                 if (!showCnfPassword) {
                     _cnf_passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     showCnfPassword = true;
-                    _showCnfPassword.setImageResource(R.drawable.ic_visibility_off);
+                    _showCnfPassword.setImageResource(R.drawable.ic_visible_off);
                 } else {
                     _cnf_passwordText.setInputType(129); //input type = password
                     showCnfPassword = false;
-                    _showCnfPassword.setImageResource(R.drawable.ic_visibility);
+                    _showCnfPassword.setImageResource(R.drawable.ic_visible_on);
+
                 }
             }
 
@@ -294,7 +296,12 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
     }
 
     public void onSignupFailed(String toast) {
-        Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
+        String password = _passwordText.getText().toString();
+        if (password.length() < 6 || password.length() > 15) {
+            Toast.makeText(getBaseContext(), "Password length between 6 and 15 characters", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
+        }
 
         _signupButton.setEnabled(true);
     }
