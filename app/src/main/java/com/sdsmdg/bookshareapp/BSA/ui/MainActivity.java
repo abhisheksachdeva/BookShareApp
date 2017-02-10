@@ -540,6 +540,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.body() != null) {
                     Resp = response.toString();
                     List<Book> localBooksList = response.body().getResults();
+                    Log.d(TAG, response.body().getCount() + "");
                     if (page.equals("1")) {
                         //Save the first page to the offline database
                         realm.beginTransaction();

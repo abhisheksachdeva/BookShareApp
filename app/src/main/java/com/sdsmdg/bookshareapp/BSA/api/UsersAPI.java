@@ -86,7 +86,7 @@ public interface UsersAPI {
             @Path("id") String id,
             @Header("Authorization") String token
     );
-    
+
     @GET("user/{id}/?format=json")
     Call<UserInfo> getUserandBookDetails(
             @Path("id") String id,
