@@ -3,6 +3,7 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -81,6 +82,7 @@ public class MyProfile extends AppCompatActivity {
     ImageView backgroundImageView;
     NestedScrollView scrollView;
     SPDataLoader loader = new SPDataLoader();
+    SharedPreferences prefs;
 
 
     List<Book> booksList;
@@ -102,6 +104,7 @@ public class MyProfile extends AppCompatActivity {
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
         customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
+        prefs = getApplicationContext().getSharedPreferences("Token", Context.MODE_PRIVATE);
 
         noItemsTextView = (TextView) findViewById(R.id.no_items_text);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
@@ -145,7 +148,8 @@ public class MyProfile extends AppCompatActivity {
 
     public void getUserInfoDetails(String id) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<UserInfo> call = api.getUserDetails(id);
+        Call<UserInfo> call = api.getUserandBookDetails(id,id,"Token " + prefs
+                .getString("token", null));
         call.enqueue(new Callback<UserInfo>() {
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
