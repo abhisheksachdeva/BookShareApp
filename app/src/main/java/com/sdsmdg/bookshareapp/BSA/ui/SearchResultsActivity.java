@@ -1,7 +1,6 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;

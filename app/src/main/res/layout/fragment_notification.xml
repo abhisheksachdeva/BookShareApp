@@ -11,13 +11,13 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/no_notification_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:id="@+id/no_notification_text"
-            android:textSize="18sp"
             android:textColorLink="@color/colorAccent"
-            android:visibility="gone"/>
+            android:textSize="18sp"
+            android:visibility="gone" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/notifications_list"

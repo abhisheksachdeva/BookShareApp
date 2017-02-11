@@ -37,10 +37,9 @@
                     android:id="@+id/input_Fname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="First Name"
                     android:drawableStart="@drawable/star"
-                    android:inputType="textCapWords"
-                   />
+                    android:hint="First Name"
+                    android:inputType="textCapWords" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -54,8 +53,8 @@
                     android:id="@+id/input_Lname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Last Name"
                     android:drawableStart="@drawable/star"
+                    android:hint="Last Name"
                     android:inputType="textCapWords" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
@@ -80,8 +79,8 @@
                         android:id="@+id/input_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Email"
                         android:drawableStart="@drawable/star"
+                        android:hint="Email"
                         android:inputType="textEmailAddress"
                         android:maxLength="19" />
 
@@ -114,8 +113,8 @@
                     android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
                     android:drawableLeft="@drawable/star"
+                    android:hint="Password"
                     android:inputType="textPassword"
                     android:maxLength="20" />
             </android.support.design.widget.TextInputLayout>
@@ -209,9 +208,9 @@
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_gravity="bottom"
                 android:layout_weight="1">
 
                 <EditText

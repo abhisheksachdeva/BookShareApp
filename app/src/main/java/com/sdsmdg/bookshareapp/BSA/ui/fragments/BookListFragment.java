@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.BooksAPI;
@@ -78,9 +77,9 @@ public class BookListFragment extends Fragment {
                     bookList.clear();
                     bookList.addAll(sr.getBooks());
                     adapter.notifyDataSetChanged();
-                    if(bookList.size()==0){
+                    if (bookList.size() == 0) {
                         no_books.setVisibility(View.VISIBLE);
-                    }else {
+                    } else {
                         no_books.setVisibility(View.GONE);
 
                     }

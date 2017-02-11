@@ -3,65 +3,65 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
     android:orientation="vertical"
     android:paddingLeft="16dp"
-    android:paddingRight="16dp"
-    android:layout_marginTop="16dp">
+    android:paddingRight="16dp">
 
     <TextView
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
         android:alpha="0.7"
         android:lineSpacingExtra="4sp"
-        android:textSize="16sp"/>
+        android:textColor="@android:color/black"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@android:color/black"
-        android:textAlignment="viewEnd"
         android:alpha="0.7"
         android:lineSpacingExtra="4sp"
-        android:textSize="12sp"/>
+        android:textAlignment="viewEnd"
+        android:textColor="@android:color/black"
+        android:textSize="12sp" />
 
     <LinearLayout
-        android:layout_gravity="center"
-        android:layout_marginTop="10dp"
+        android:id="@+id/button_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:id="@+id/button_layout">
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/accept"
-            android:background="@drawable/button_shape_other"
-            android:typeface="sans"
-            android:text="Accept"
-            android:textAllCaps="false"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
             android:layout_marginRight="10dp"
-            android:textColor="@color/app_theme_button_other"/>
+            android:background="@drawable/button_shape_other"
+            android:text="Accept"
+            android:textAllCaps="false"
+            android:textColor="@color/app_theme_button_other"
+            android:typeface="sans" />
 
         <Button
             android:id="@+id/reject"
             android:layout_width="wrap_content"
-            android:background="@drawable/button_shape"
-            android:textAllCaps="false"
-            android:typeface="sans"
-            android:text="Reject"
             android:layout_height="30dp"
-            android:textColor="@color/White"/>
+            android:background="@drawable/button_shape"
+            android:text="Reject"
+            android:textAllCaps="false"
+            android:textColor="@color/White"
+            android:typeface="sans" />
 
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_marginTop="16dp"
         android:layout_height="1dp"
+        android:layout_marginTop="16dp"
         android:background="@android:color/darker_gray" />
 
 </LinearLayout>

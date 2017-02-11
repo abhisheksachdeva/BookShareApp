@@ -1,5 +1,4 @@
 package com.sdsmdg.bookshareapp.BSA.api.models.Notification;
-import android.app.Notification;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -28,6 +27,7 @@ public class Notification_Model {
 
     @SerializedName("results")
     List<Notifications> notificationsList;
+
     public String getPrevious() {
         return previous;
     }

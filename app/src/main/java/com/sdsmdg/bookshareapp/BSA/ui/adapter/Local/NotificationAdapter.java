@@ -46,7 +46,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView content,timeTextView;
+        public TextView content, timeTextView;
         View accept, reject, buttonLayout;
 
         Context context;
@@ -57,11 +57,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             timeTextView = (TextView) v.findViewById(R.id.time);
             buttonLayout = v.findViewById(R.id.button_layout);
 
-            if(viewType == 1) {
+            if (viewType == 1) {
                 accept = v.findViewById(R.id.accept);
                 reject = v.findViewById(R.id.reject);
-            }
-            else if (viewType == 2){
+            } else if (viewType == 2) {
                 buttonLayout.setVisibility(View.GONE);
             }
 
@@ -80,13 +79,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_notification, parent, false);
-                return new ViewHolder(v, context, viewType);
+        return new ViewHolder(v, context, viewType);
     }
 
     @Override
     public int getItemViewType(int position) {
         Notifications notifications = notificationList.get(position);
-        if(notifications.getMessage().equals("requested for")) {
+        if (notifications.getMessage().equals("requested for")) {
             return 1;
         }
         return 2;
@@ -101,53 +100,52 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         int bookNameLength = notifications.getBookTitle().length();
 
         SpannableString content = null;
-        final String bookId, notifId, targetId, bookTitle,time;
-        Long timeDiff,minutes;
-        Integer days , hours;
+        final String bookId, notifId, targetId, bookTitle, time;
+        Long timeDiff, minutes;
+        Integer days, hours;
 
-        timeDiff = System.currentTimeMillis()/1000-notifications.getUnix_time();
-        minutes = timeDiff/60;
-        hours = minutes.intValue()/60;
-        days = hours/24;
+        timeDiff = System.currentTimeMillis() / 1000 - notifications.getUnix_time();
+        minutes = timeDiff / 60;
+        hours = minutes.intValue() / 60;
+        days = hours / 24;
 
-        if(timeDiff<60){
-            if(timeDiff==1){
-                time = " "+timeDiff.toString() + " second ago";
+        if (timeDiff < 60) {
+            if (timeDiff == 1) {
+                time = " " + timeDiff.toString() + " second ago";
             } else {
-                time = " "+timeDiff.toString() + " seconds ago";
+                time = " " + timeDiff.toString() + " seconds ago";
             }
-        }else {
+        } else {
             if (minutes < 60) {
-                if(minutes==1){
-                    time = " "+minutes.toString() + " minute ago";
+                if (minutes == 1) {
+                    time = " " + minutes.toString() + " minute ago";
                 } else {
-                    time = " "+minutes.toString() + " minutes ago";
+                    time = " " + minutes.toString() + " minutes ago";
                 }
 
 
             } else {
                 if (hours < 25) {
-                    if(hours==1){
-                        time = " "+hours.toString() + " hour ago";
+                    if (hours == 1) {
+                        time = " " + hours.toString() + " hour ago";
 
-                    }else {
-                        time = " "+hours.toString() + " hours ago";
+                    } else {
+                        time = " " + hours.toString() + " hours ago";
 
                     }
 
                 } else {
-                    if(days==1){
-                        time = " "+days.toString() + " day ago";
+                    if (days == 1) {
+                        time = " " + days.toString() + " day ago";
 
-                    }else {
-                        time = " "+days.toString() + " days ago";
+                    } else {
+                        time = " " + days.toString() + " days ago";
 
                     }
                 }
             }
 
         }
-
 
 
         String message = notifications.getMessage();
@@ -158,7 +156,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             targetId = notifications.getSenderId();
             notifId = notifications.getId();
 
-            content = new SpannableString(notifications.getSenderName() + " " + message + " " + notifications.getBookTitle()) ;
+            content = new SpannableString(notifications.getSenderName() + " " + message + " " + notifications.getBookTitle());
             content.setSpan(getClickableSpanNameInstance(notifications.getSenderId()), 0, senderNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             content.setSpan(getClickableSpanBookInstance(notifications.getBookId()), senderNameLength + message.length() + 2, senderNameLength + message.length() + 2 + bookNameLength, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             holder.timeTextView.setText(time);
@@ -167,14 +165,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             holder.accept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    acceptRequest( holder, notifId, bookId, bookTitle, Helper.getUserId(), Helper.getUserName(), targetId, v);
+                    acceptRequest(holder, notifId, bookId, bookTitle, Helper.getUserId(), Helper.getUserName(), targetId, v);
                 }
             });
 
             holder.reject.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    rejectRequest( holder, notifId);
+                    rejectRequest(holder, notifId);
                 }
             });
 
@@ -260,7 +258,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                Call<Notifications> sendNotif = usersAPI.acceptNotif(nId, senderId, senderName, bookId, bookTitle, "accept", targetId, "accepted request","Token "+prefs.getString("token",null));
+                Call<Notifications> sendNotif = usersAPI.acceptNotif(nId, senderId, senderName, bookId, bookTitle, "accept", targetId, "accepted request", "Token " + prefs.getString("token", null));
                 sendNotif.enqueue(new Callback<Notifications>() {
                     @Override
                     public void onResponse(Call<Notifications> call, Response<Notifications> response) {
@@ -298,7 +296,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             public void onClick(DialogInterface dialog, int which) {
                 String process = "request";
                 UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                Call<Notifications> sendNotif = usersAPI.rejectNotif(nId, "reject", "rejected request","Token "+prefs.getString("token",null));
+                Call<Notifications> sendNotif = usersAPI.rejectNotif(nId, "reject", "rejected request", "Token " + prefs.getString("token", null));
                 sendNotif.enqueue(new Callback<Notifications>() {
                     @Override
                     public void onResponse(Call<Notifications> call, Response<Notifications> response) {

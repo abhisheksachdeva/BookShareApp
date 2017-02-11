@@ -1,9 +1,5 @@
 package com.sdsmdg.bookshareapp.BSA.firebase_classes;
 
-import android.app.Application;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -12,7 +8,6 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
-import com.sdsmdg.bookshareapp.BSA.ui.MainActivity;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import retrofit2.Call;
@@ -26,7 +21,6 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
     private static final String TAG = "MyFirebaseInsIDService";
     String token = Helper.getToken();
     String id = Helper.getId();
-
 
 
     @Override

@@ -5,25 +5,26 @@
     android:orientation="vertical">
 
     <WebView
+        android:id="@+id/webview"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/webview">
+        android:layout_height="fill_parent">
 
     </WebView>
-        <Button
-            android:id="@+id/gr_login"
-            android:layout_width="150dp"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp"
-            android:background="@drawable/button_shape"
-            android:textColor="@color/White"
-            android:textAllCaps="false"
-            android:text="Login to Goodreads"
-            android:textSize="20sp"
-            android:layout_gravity="center"/>
+
+    <Button
+        android:id="@+id/gr_login"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/button_shape"
+        android:gravity="center"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:text="Login to Goodreads"
+        android:textAllCaps="false"
+        android:textColor="@color/White"
+        android:textSize="20sp" />
 
 </FrameLayout>

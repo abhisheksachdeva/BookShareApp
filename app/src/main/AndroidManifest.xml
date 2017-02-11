@@ -23,8 +23,8 @@
         <activity
             android:name=".ui.SearchResultsActivity"
             android:label="Search"
-            android:theme="@style/AppTheme.UserSearch"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.UserSearch">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCHRESULTS" />
 

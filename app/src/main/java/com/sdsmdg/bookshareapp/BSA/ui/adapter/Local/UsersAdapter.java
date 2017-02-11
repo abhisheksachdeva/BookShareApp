@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -40,7 +39,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     String bookId, bookTitle;
     String userId;
     boolean withRequestButton;
-    SharedPreferences prefs ;
+    SharedPreferences prefs;
+
     public interface OnItemClickListener {
         void onItemClick(UserInfo userInfo);
     }
@@ -83,7 +83,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         this.bookId = bookId;
         this.userId = userId;
         this.withRequestButton = withRequestButton;
-        prefs = context.getSharedPreferences("Token",Context.MODE_PRIVATE);
+        prefs = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
 
     }
 
@@ -136,8 +136,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                     }
                 });
             }
-        }else {
-            if(withRequestButton){
+        } else {
+            if (withRequestButton) {
                 holder.request.setVisibility(View.GONE);
 
             }
@@ -157,14 +157,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     public void showAlertDialog(final ViewHolder holder, final String id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        if(holder.request.getText()=="Request"){
+        if (holder.request.getText() == "Request") {
             builder.setTitle("Send request?");
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     String process = "request";
                     UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                    Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, id, "request for","Token "+prefs.getString("token",null));
+                    Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, id, "request for", "Token " + prefs.getString("token", null));
                     sendNotif.enqueue(new Callback<Notifications>() {
                         @Override
                         public void onResponse(Call<Notifications> call, Response<Notifications> response) {
@@ -192,7 +192,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             public void onClick(DialogInterface dialog, int which) {
                 String process = "request";
                 UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, id, "request for","Token "+prefs.getString("token",null));
+                Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, id, "request for", "Token " + prefs.getString("token", null));
                 sendNotif.enqueue(new Callback<Notifications>() {
                     @Override
                     public void onResponse(Call<Notifications> call, Response<Notifications> response) {

@@ -17,13 +17,11 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Login;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
-import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import butterknife.ButterKnife;
@@ -63,16 +61,16 @@ public class LoginActivity extends AppCompatActivity {
 
         context = this;
 
-        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(_emailText.getWindowToken(), 0);
 
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
         prevEmail = getApplicationContext().getSharedPreferences("Previous Email", MODE_PRIVATE);
         String emails[];
-        if(prevEmail.getString("email1", null) == null) {
+        if (prevEmail.getString("email1", null) == null) {
             emails = new String[1];
             emails[0] = prevEmail.getString("email2", null);
-        } else if(prevEmail.getString("email2", null) == null) {
+        } else if (prevEmail.getString("email2", null) == null) {
             emails = new String[1];
             emails[0] = prevEmail.getString("email1", null);
         } else {
@@ -90,16 +88,16 @@ public class LoginActivity extends AppCompatActivity {
         _showPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!showPassword){
-                _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    showPassword=true;
+                if (!showPassword) {
+                    _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    showPassword = true;
                     _showPassword.setImageResource(R.drawable.ic_visible_off);
                 } else {
                     _passwordText.setInputType(129); //input type = password
-                    showPassword=false;
+                    showPassword = false;
                     _showPassword.setImageResource(R.drawable.ic_visible_on);
                 }
-                }
+            }
 
         });
 
@@ -107,7 +105,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
                 login();
             }
@@ -159,15 +157,15 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<Login> call, Response<Login> response) {
                 if (response.body() != null) {
-                    if(response.body().getDetail() != null) {
+                    if (response.body().getDetail() != null) {
                         onLoginFailed(response.body().getDetail());
-                        Log.i(TAG,"RESPONSE ERROR ");
+                        Log.i(TAG, "RESPONSE ERROR ");
                     }
-                    if(response.body().getToken() != null) {
+                    if (response.body().getToken() != null) {
                         setNewEmail(_emailText.getText().toString());//This function sets the new entered email into the shared prefs for suggestions
                         onLoginSuccess();
                         saveinSP(response.body().getToken(), response.body().getUserInfo());
-                        Log.i(TAG,"RESPONSE SUCCESS ");
+                        Log.i(TAG, "RESPONSE SUCCESS ");
 
                     }
                 }
@@ -216,7 +214,7 @@ public class LoginActivity extends AppCompatActivity {
         String email2 = prevEmail.getString("email2", null);
 
         String email1 = email2;
-        if(!email.equals(email1)) {
+        if (!email.equals(email1)) {
             email2 = email;
         } else {
             email2 = null;
@@ -249,7 +247,7 @@ public class LoginActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
         Intent i = new Intent(this, MainActivity.class);
-        i.putExtra("data_login","update");
+        i.putExtra("data_login", "update");
         startActivity(i);
         finish();
     }

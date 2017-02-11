@@ -19,7 +19,6 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -90,7 +89,7 @@ public interface UsersAPI {
     @GET("user/{id}/?format=json")
     Call<UserInfo> getUserandBookDetails(
             @Path("id") String id,
-            @Query("user_id")String id_same,
+            @Query("user_id") String id_same,
             @Header("Authorization") String token
 
     );
@@ -121,7 +120,7 @@ public interface UsersAPI {
     @FormUrlEncoded
     @POST("notifications/")
     Call<Notifications> acceptNotif(
-            @Field("notif_id") String  notifId,
+            @Field("notif_id") String notifId,
             @Field("sender_id") String senderId,
             @Field("sender_name") String senderName,
             @Field("book_id") String bookId,
@@ -135,7 +134,7 @@ public interface UsersAPI {
     @FormUrlEncoded
     @POST("notifications/")
     Call<Notifications> rejectNotif(
-            @Field("notif_id") String  notifId,
+            @Field("notif_id") String notifId,
             @Field("process") String process,
             @Field("message") String message,
             @Header("Authorization") String token
@@ -144,8 +143,8 @@ public interface UsersAPI {
     @FormUrlEncoded
     @POST("notifications/")
     Call<Notifications> cancelNotif(
-            @Field("book_id") String  bookId,
-            @Field("sender_id")String sender_id,
+            @Field("book_id") String bookId,
+            @Field("sender_id") String sender_id,
             @Field("process") String process,
             @Header("Authorization") String token
     );
@@ -155,7 +154,6 @@ public interface UsersAPI {
             @Path("id") String id,
             @Body UserInfo userInfo
     );
-
 
 
     @FormUrlEncoded
@@ -192,7 +190,7 @@ public interface UsersAPI {
 
     @Multipart
     @POST("/image/{id}/")
-    Call<Signup> uploadImage(@Part MultipartBody.Part file ,
+    Call<Signup> uploadImage(@Part MultipartBody.Part file,
                              @Path("id") String id);
 
 }

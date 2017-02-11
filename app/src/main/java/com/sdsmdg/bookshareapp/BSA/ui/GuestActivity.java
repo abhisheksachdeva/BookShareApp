@@ -6,17 +6,11 @@ import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
 import com.sdsmdg.bookshareapp.BSA.R;
@@ -60,22 +54,21 @@ public class GuestActivity extends AppCompatActivity {
         adapter = new BooksAdapterSimple(this, booksList, new BooksAdapterSimple.OnItemClickListener() {
             @Override
             public void onItemClick(Book book) {
-                Snackbar snbar= Snackbar.make(findViewById(R.id.frameLayout),"Create a new account ! ",Snackbar.LENGTH_SHORT)
+                Snackbar snbar = Snackbar.make(findViewById(R.id.frameLayout), "Create a new account ! ", Snackbar.LENGTH_SHORT)
                         .setAction("Sign Up", signupclicklistener);
                 snbar.setActionTextColor(getResources().getColor(R.color.colorAccent));
                 snbar.show();
                 snbar.show();
 
 
-
             }
         });
 
 
-        signupclicklistener = new View.OnClickListener(){
+        signupclicklistener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(GuestActivity.this,SignupActivity.class);
+                Intent i = new Intent(GuestActivity.this, SignupActivity.class);
                 startActivity(i);
             }
         };

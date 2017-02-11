@@ -13,17 +13,12 @@ import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,11 +26,9 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
-import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterRequest;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
-import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -48,7 +41,7 @@ import retrofit2.Response;
 
 
 public class UserProfile extends AppCompatActivity {
-    TextView name,emailTextView,address, booksCount;
+    TextView name, emailTextView, address, booksCount;
     UserInfo user;
     List<Book> booksList;
     BooksAdapterRequest adapter;
@@ -58,8 +51,6 @@ public class UserProfile extends AppCompatActivity {
     NestedScrollView scrollView;
     CustomProgressDialog customProgressDialog;
     SharedPreferences prefs;
-
-
 
 
     @Override
@@ -73,9 +64,9 @@ public class UserProfile extends AppCompatActivity {
         customProgressDialog.show();
         prefs = getApplicationContext().getSharedPreferences("Token", Context.MODE_PRIVATE);
 
-        name = (TextView)findViewById(R.id.user_name);
-        emailTextView = (TextView)findViewById(R.id.user_email);
-        address = (TextView)findViewById(R.id.address);
+        name = (TextView) findViewById(R.id.user_name);
+        emailTextView = (TextView) findViewById(R.id.user_email);
+        address = (TextView) findViewById(R.id.address);
         profile_picture = (ImageView) findViewById(R.id.profile_picture);
         background_image = (ImageView) findViewById(R.id.background_image);
         booksCount = (TextView) findViewById(R.id.books_count);
@@ -93,7 +84,7 @@ public class UserProfile extends AppCompatActivity {
             public void onItemClick(Book book) {
                 Log.i("Click", "onItemClick");
             }
-        },id);
+        }, id);
 
         userBooksList.setAdapter(adapter);
         userBooksList.setNestedScrollingEnabled(false);
@@ -106,22 +97,22 @@ public class UserProfile extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                return(true);
+                return (true);
         }
 
-        return(super.onOptionsItemSelected(item));
+        return (super.onOptionsItemSelected(item));
     }
 
-    public void getUserInfoDetails(final String id){
-        Log.i("INSIDE ONCLICK " ,id+"fklksmlsn");
+    public void getUserInfoDetails(final String id) {
+        Log.i("INSIDE ONCLICK ", id + "fklksmlsn");
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<UserInfo> call = api.getUserandBookDetails(id,id,"Token " + prefs
+        Call<UserInfo> call = api.getUserandBookDetails(id, id, "Token " + prefs
                 .getString("token", null));
         call.enqueue(new Callback<UserInfo>() {
             @Override
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
-                Log.i("INSIDE ONCLICK " ,id+"fklksmlsn");
-                if(response.body()!=null) {
+                Log.i("INSIDE ONCLICK ", id + "fklksmlsn");
+                if (response.body() != null) {
                     Log.d("UserProfile Response:", response.toString());
                     user = response.body();
                     name.setText(user.getName());
@@ -129,9 +120,9 @@ public class UserProfile extends AppCompatActivity {
                     email = user.getEmail();
                     emailTextView.setText(email);
                     contactNo = user.getContactNo();
-                    String ad = user.getRoomNo()+", "+user.getHostel();
+                    String ad = user.getRoomNo() + ", " + user.getHostel();
                     address.setText(ad);
-                    String url = CommonUtilities.local_books_api_url + "image/"+id+"/";
+                    String url = CommonUtilities.local_books_api_url + "image/" + id + "/";
                     Picasso.with(UserProfile.this).load(url).into(profile_picture);
                     Picasso.with(UserProfile.this).load(url).into(background_image);
                     Blurry.with(UserProfile.this)
@@ -142,7 +133,7 @@ public class UserProfile extends AppCompatActivity {
                             .capture(findViewById(R.id.background_image))
                             .into((ImageView) findViewById(R.id.background_image));
                     List<Book> booksTempInfoList = user.getUserBookList();
-                    String bookCount= "Books("+booksTempInfoList.size()+")";
+                    String bookCount = "Books(" + booksTempInfoList.size() + ")";
                     booksCount.setText(bookCount);
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);
@@ -168,27 +159,25 @@ public class UserProfile extends AppCompatActivity {
     }
 
     public void callClicked(View view) {
-        final CharSequence[] items = { "Call", "Copy Contact Number","Cancel"};
+        final CharSequence[] items = {"Call", "Copy Contact Number", "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(UserProfile.this);
         builder.setTitle("Do you want to :");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if (items[which].equals("Call")){
+                if (items[which].equals("Call")) {
 
                     String uri = "tel:" + contactNo.trim();
 
                     Intent i = new Intent(Intent.ACTION_DIAL);
                     i.setData(Uri.parse(uri));
                     startActivity(i);
-                }
-                else if(items[which].equals("Copy Contact Number")) {
+                } else if (items[which].equals("Copy Contact Number")) {
                     ClipboardManager clipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
-                    ClipData clip = ClipData.newPlainText("Contact No.",contactNo.trim());
+                    ClipData clip = ClipData.newPlainText("Contact No.", contactNo.trim());
                     clipboard.setPrimaryClip(clip);
-                    Toast.makeText(UserProfile.this,"Contact Number Copied",Toast.LENGTH_SHORT).show();
-                }
-                else{
+                    Toast.makeText(UserProfile.this, "Contact Number Copied", Toast.LENGTH_SHORT).show();
+                } else {
                     dialog.dismiss();
 
                 }

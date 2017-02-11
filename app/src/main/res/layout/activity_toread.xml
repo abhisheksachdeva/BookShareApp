@@ -9,12 +9,10 @@
     tools:context="com.sdsmdg.bookshareapp.BSA.ui.GuestActivity">
 
 
-
     <FrameLayout
         android:id="@+id/frameLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_to_refresh_layout"

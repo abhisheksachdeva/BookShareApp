@@ -42,7 +42,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
+public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     private static final int PENDING_REMOVAL_TIMEOUT = 5000;
     Book tempValues = null;
     List<Book> itemsPendingRemoval;
@@ -53,24 +53,24 @@ public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
     SharedPreferences prefs;
     boolean undoOn = true;
     /**
-    // is undo on, you can turn it on from the toolbar menu
-    //this array stores whether the current book is selected or not
+     * // is undo on, you can turn it on from the toolbar menu
+     * //this array stores whether the current book is selected or not
      */
     SparseBooleanArray selected;
     //This activity reference is required to activate the contextual action bar
-    Activity activity ;
+    Activity activity;
 
     private Handler handler = new Handler(); // handler for running delayed runnables
     HashMap<Book, Runnable> pendingRunnables = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
 
-    public BookAdapter(Context context, String userId, List<Book> bookList,Activity activity) {
+    public BookAdapter(Context context, String userId, List<Book> bookList, Activity activity) {
         itemsPendingRemoval = new ArrayList<>();
         this.bookList = bookList;
         selected = new SparseBooleanArray();
         this.userId = userId;
         this.context = context;
         this.activity = activity;
-        prefs = context.getSharedPreferences("Token",Context.MODE_PRIVATE);
+        prefs = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
@@ -98,7 +98,7 @@ public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
     //This function is used to delete the selected items
     public void deleteSelectedItem() {
         for (int i = 0; i < bookList.size(); i++) {
-            if(selected.get(i)) {
+            if (selected.get(i)) {
                 remove(i);
             }
         }
@@ -117,7 +117,7 @@ public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        final ViewHolder viewHolder =  holder;
+        final ViewHolder viewHolder = holder;
         final Book rbook = bookList.get(position);
 
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -164,10 +164,10 @@ public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
                 Picasso.with(context).load(tempValues.getGrImgUrl()).placeholder(R.drawable.default_book_image).into(viewHolder.imageBook);
             }
             viewHolder.ratingBook.setRating(tempValues.getRating());
-            viewHolder.ratingCount.setText("("+tempValues.getRatingsCount() + ")");
+            viewHolder.ratingCount.setText("(" + tempValues.getRatingsCount() + ")");
             viewHolder.itemView.setBackgroundColor(Color.WHITE);
             //if the book is selected, change it's color to holo blue light
-            if(selected.get(position)) {
+            if (selected.get(position)) {
                 viewHolder.itemView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_blue_light));
             }
             viewHolder.titleBook.setVisibility(View.VISIBLE);
@@ -223,7 +223,7 @@ public  class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder>{
         removeBook.setUserId(userId);
 
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Detail> call = usersAPI.removeBook(removeBook,"Token "+prefs.getString("token",null));
+        Call<Detail> call = usersAPI.removeBook(removeBook, "Token " + prefs.getString("token", null));
         call.enqueue(new Callback<Detail>() {
             @Override
             public void onResponse(Call<Detail> call, Response<Detail> response) {
