@@ -22,7 +22,7 @@ public class CustomProgressDialog extends ProgressDialog {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.custom_progressdialog2);
+        setContentView(R.layout.custom_progressdialog);
 
 
     }

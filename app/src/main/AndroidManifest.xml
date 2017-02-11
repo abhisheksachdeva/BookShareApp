@@ -39,7 +39,10 @@
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".ui.SignupActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:label="Sign Up"
+            android:parentActivityName=".ui.MyProfile"
+            />
         <activity
             android:name=".ui.MyProfile"
             android:label="My Profile"

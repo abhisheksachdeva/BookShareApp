@@ -365,9 +365,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    /* When an item in the toolbar is clicked, the following
+    /** When an item in the toolbar is clicked, the following
      * method is called.
-     */
+     **/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
