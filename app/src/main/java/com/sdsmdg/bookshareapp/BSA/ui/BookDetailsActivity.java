@@ -90,8 +90,6 @@ public class BookDetailsActivity extends AppCompatActivity {
         bookDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BookDetailsActivity.this, description + "----", Toast.LENGTH_SHORT).show();
-
                 showMore = !showMore;
 
                 if (showMore) {

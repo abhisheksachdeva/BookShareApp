@@ -8,12 +8,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
+import android.widget.AbsoluteLayout;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -91,10 +95,12 @@ public class LoginActivity extends AppCompatActivity {
                 if (!showPassword) {
                     _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     showPassword = true;
+                    _passwordText.setSelection(_passwordText.getText().length());
                     _showPassword.setImageResource(R.drawable.ic_visible_off);
                 } else {
                     _passwordText.setInputType(129); //input type = password
                     showPassword = false;
+                    _passwordText.setSelection(_passwordText.getText().length());
                     _showPassword.setImageResource(R.drawable.ic_visible_on);
                 }
             }

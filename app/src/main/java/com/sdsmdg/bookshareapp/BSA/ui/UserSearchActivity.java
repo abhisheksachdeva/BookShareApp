@@ -90,7 +90,7 @@ public class UserSearchActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_user_search, menu);
+//        getMenuInflater().inflate(R.menu.menu_user_search, menu);
         return true;
     }
 
@@ -110,7 +110,7 @@ public class UserSearchActivity extends ActionBarActivity {
             case R.id.action_settings:
                 return true;
             case R.id.action_search:
-                handleMenuSearch();
+//                handleMenuSearch();
                 return true;
 
 
@@ -183,7 +183,7 @@ public class UserSearchActivity extends ActionBarActivity {
             imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
 
             //add the search icon in the action bar
-            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_search));
+//            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_search));
 
             isSearchOpened = false;
         } else { //open the search entry

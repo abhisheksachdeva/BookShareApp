@@ -260,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this._profilePicture = _profilePicture;
         String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
         this.url = url;
-        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_person_filled).into(_profilePicture);
+        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_profile_pic).into(_profilePicture);
 
 
         if (_name != null) {

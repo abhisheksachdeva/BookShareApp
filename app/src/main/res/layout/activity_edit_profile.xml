@@ -90,8 +90,8 @@
         android:onClick="saveClicked"
         android:paddingLeft="50dp"
         android:paddingRight="50dp"
+        android:layout_marginTop="16dp"
         android:text="Save"
-
         android:textColor="@color/White"
         android:textSize="16sp" />
 

@@ -127,14 +127,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
                 //This line activates the contextual action bar
                 mActionMode = activity.startActionMode(mActionModeCallback);
                 selected.put(position, true);
-                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_blue_light));
+                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.delete_gray));
                 return false;
             }
         });
 
         if (itemsPendingRemoval.contains(rbook)) {
             // we need to show the "undo" state of the row
-            viewHolder.itemView.setBackgroundColor(Color.RED);
+            viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.delete2));
             viewHolder.titleBook.setVisibility(View.INVISIBLE);
             viewHolder.authorBook.setText("Delete Book ?");
             viewHolder.ratingCount.setVisibility(View.INVISIBLE);
@@ -168,7 +168,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             viewHolder.itemView.setBackgroundColor(Color.WHITE);
             //if the book is selected, change it's color to holo blue light
             if (selected.get(position)) {
-                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(android.R.color.holo_blue_light));
+                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.delete_gray));
             }
             viewHolder.titleBook.setVisibility(View.VISIBLE);
             viewHolder.authorBook.setVisibility(View.VISIBLE);
@@ -308,7 +308,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.RED);
+                background = new ColorDrawable(context.getResources().getColor(R.color.delete2));
                 xMark = ContextCompat.getDrawable(context, R.drawable.ic_clear_24dp);
                 xMark.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_ATOP);
                 xMarkMargin = (int) context.getResources().getDimension(R.dimen.ic_clear_margin);
@@ -389,7 +389,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             boolean initiated;
 
             private void init() {
-                background = new ColorDrawable(Color.RED);
+                background = new ColorDrawable(context.getResources().getColor(R.color.delete2));
                 initiated = true;
             }
 

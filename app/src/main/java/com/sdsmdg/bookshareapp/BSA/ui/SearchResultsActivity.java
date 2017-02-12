@@ -295,7 +295,7 @@ public class SearchResultsActivity extends ActionBarActivity {
             }
         });
 
-        spinner.setSelection(2);//Setting the default vaule of spinner to "All"
+        spinner.setSelection(0);//Setting the default vaule of spinner to "All"
         //this is a listener to do a search when the user clicks on search button
         edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

@@ -6,12 +6,12 @@
 
     <EditText
         android:id="@+id/edtSearch"
-        android:layout_width="wrap_content"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:background="@null"
         android:imeOptions="actionSearch"
         android:hint="Search User"
-        android:textColorHint="@color/White"
+        android:textColorHint="@color/Grey"
         android:inputType="textNoSuggestions"
         android:textColor="@color/White" />
 
