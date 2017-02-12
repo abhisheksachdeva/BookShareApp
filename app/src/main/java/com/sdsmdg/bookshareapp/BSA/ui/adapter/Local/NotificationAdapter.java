@@ -102,12 +102,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         SpannableString content = null;
         final String bookId, notifId, targetId, bookTitle, time;
         Long timeDiff, minutes;
-        Integer days, hours;
+        Integer days, hours, weeks, months;
 
         timeDiff = System.currentTimeMillis() / 1000 - notifications.getUnix_time();
         minutes = timeDiff / 60;
         hours = minutes.intValue() / 60;
         days = hours / 24;
+        weeks = days / 7;
+        months = weeks / 4;
+
+        if(timeDiff<0){
+            timeDiff = Long.parseLong("0");
+        }
 
         if (timeDiff < 60) {
             if (timeDiff == 1) {
@@ -139,7 +145,28 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                         time = " " + days.toString() + " day ago";
 
                     } else {
-                        time = " " + days.toString() + " days ago";
+                        if (days < 7) {
+                            time = " " + days.toString() + " days ago";
+                        } else {
+                            if (weeks == 1) {
+                                time = " " + weeks.toString() + " week ago";
+
+                            } else {
+                                if (months < 1) {
+                                    time = " " + weeks.toString() + " weeks ago";
+
+                                } else {
+                                    if (months == 1) {
+                                        time = " " + months.toString() + " month ago";
+
+                                    } else {
+                                        time = " " + months.toString() + " months ago";
+
+                                    }
+                                }
+
+                            }
+                        }
 
                     }
                 }
