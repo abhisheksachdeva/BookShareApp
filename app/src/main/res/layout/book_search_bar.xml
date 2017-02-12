@@ -10,19 +10,21 @@
         style="@style/Widget.AppCompat.Spinner.DropDown.ActionBar"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_marginTop="4dp" />
+        android:layout_marginTop="4dp"
+        />
 
     <EditText
         android:id="@+id/searchEditText"
-        android:layout_width="match_parent"
+        android:layout_width="328dp"
         android:layout_height="50dp"
         android:layout_gravity="bottom"
+        android:layout_marginLeft="4dp"
         android:background="@null"
-        android:drawableLeft="@drawable/search_icon"
-        android:hint="Search by                   "
+        android:hint=" Search by                   "
         android:imeOptions="actionSearch"
         android:inputType="textNoSuggestions"
-        android:textColorHint="@color/White" />
+        android:textSize="16dp"
+        android:textColorHint="@color/Grey" />
 
 
 </LinearLayout>

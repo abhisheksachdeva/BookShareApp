@@ -176,7 +176,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginRight="16dp"
             android:background="@color/Red"
-            android:src="@drawable/plus" />
+            android:src="@drawable/plus3" />
 
     </FrameLayout>
 

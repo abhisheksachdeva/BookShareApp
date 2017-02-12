@@ -183,7 +183,7 @@ public class UserSearchActivity extends ActionBarActivity {
             imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
 
             //add the search icon in the action bar
-            mSearchAction.setIcon(getResources().getDrawable(R.drawable.search_icon));
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_search));
 
             isSearchOpened = false;
         } else { //open the search entry
@@ -225,7 +225,8 @@ public class UserSearchActivity extends ActionBarActivity {
 
 
             //add the close icon
-            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_cross_green));
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_cross));
+
 
             isSearchOpened = true;
         }

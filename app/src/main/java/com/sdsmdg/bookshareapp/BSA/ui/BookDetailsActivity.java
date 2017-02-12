@@ -124,14 +124,13 @@ public class BookDetailsActivity extends AppCompatActivity {
                     bookTitleText = book.getTitle();
                     bookTitle.setText(book.getTitle());
                     title = book.getTitle();
-                    Log.i("bsssgsgs", book.getDescription().trim() + "a");
+                    Log.e("DESCRIPTION bda ", book.getDescription().trim() + "a");
                     if (book.getDescription().trim() == "") {
                         bookDescription.setText("No Description Available");
                     } else {
                         bookDescription.setText(book.getDescription());
                     }
                     description = book.getDescription();
-                    Toast.makeText(getApplicationContext(), description + "----", Toast.LENGTH_SHORT).show();
 
                     authorBook.setText("by  " + book.getAuthor());
                     author = book.getAuthor();

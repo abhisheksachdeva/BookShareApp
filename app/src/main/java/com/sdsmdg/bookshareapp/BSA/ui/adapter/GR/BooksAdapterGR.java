@@ -138,6 +138,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
             public void onClick(View v) {
 
                 BooksAPI api = NetworkingFactory.getGRInstance().getBooksApi();
+                Log.e("BAGR","reached here!!");
                 Call<GoodreadsResponse2> call = api.getBookDescription(search_id, CommonUtilities.API_KEY);
                 call.enqueue(new Callback<GoodreadsResponse2>() {
                     @Override
@@ -145,12 +146,15 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                         if (response != null) {
                             tempDescp = response.body().getbDesc();
                             description = tempDescp.getBDescription();
+
                             description = Html.fromHtml(description).toString();
                             if (description.length() > 1000) {
                                 description = description.substring(0, 990) + "...";
                             }
+                            Log.e("DES",description+" length");
                         } else {
                             description = "No Description Available";
+                            Log.e("faile","response null");
                         }
 
                     }
@@ -158,6 +162,8 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                     @Override
                     public void onFailure(Call<GoodreadsResponse2> call, Throwable t) {
                         description = "No Description Available";
+                        Log.e("FAILURE","onfailure");
+                        Log.e("FAIL",t.getMessage());
                     }
                 });
 

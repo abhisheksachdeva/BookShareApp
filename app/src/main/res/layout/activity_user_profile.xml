@@ -159,6 +159,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="5dp"
                     android:text="Books"
+                    android:gravity="center"
                     android:textColor="@color/Black"
                     android:textSize="20sp" />
 

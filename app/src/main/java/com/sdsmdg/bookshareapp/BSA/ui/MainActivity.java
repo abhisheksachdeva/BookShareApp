@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -365,7 +367,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    /** When an item in the toolbar is clicked, the following
+    /**
+     * When an item in the toolbar is clicked, the following
      * method is called.
      **/
     @Override
@@ -390,6 +393,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText.setTextColor(getResources().getColor(R.color.White));
+        searchEditText.setHintTextColor(getResources().getColor(R.color.White));
         searchView.setOnQueryTextListener(this);
 
         notifItem.setIcon(R.drawable.ic_notif_small);
