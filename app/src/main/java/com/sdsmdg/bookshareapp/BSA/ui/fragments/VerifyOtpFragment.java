@@ -23,9 +23,6 @@ public class VerifyOtpFragment extends DialogFragment {
         public void onOTPVerified();
     }
 
-    public VerifyOtpFragment() {
-    }
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
