@@ -6,6 +6,12 @@ import java.util.List;
 public class BookList {
 
     List<Book> results;
+    List<Boolean> cancels;
+
+    public List<Boolean> getCancels() {
+        return cancels;
+    }
+
 
     int count;
 

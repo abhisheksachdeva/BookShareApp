@@ -1,6 +1,7 @@
 package com.sdsmdg.bookshareapp.BSA.api;
 
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookDetailWithCancel;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.RemoveBook;
 import com.sdsmdg.bookshareapp.BSA.api.models.Login;
@@ -81,8 +82,9 @@ public interface UsersAPI {
     );
 
     @GET("book/{id}/?format=json")
-    Call<Book> getBookDetails(
+    Call<BookDetailWithCancel> getBookDetails(
             @Path("id") String id,
+            @Query("book_id") String id_same,
             @Header("Authorization") String token
     );
 

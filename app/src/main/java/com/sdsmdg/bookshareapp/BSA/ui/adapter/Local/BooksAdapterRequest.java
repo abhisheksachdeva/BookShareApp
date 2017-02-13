@@ -178,7 +178,6 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
                                         Log.i("response", response.body().getDetail());
                                         holder.request.setText("Request");
 
-
                                     } else {
                                         Log.i("CancelNotif", "Response Null");
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();

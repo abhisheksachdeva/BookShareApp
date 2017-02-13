@@ -24,8 +24,10 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookDetailWithCancel;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.UsersAdapter;
+import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.squareup.picasso.Picasso;
 
@@ -34,9 +36,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.blurry.Blurry;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BookDetailsActivity extends AppCompatActivity {
 
@@ -107,13 +113,28 @@ public class BookDetailsActivity extends AppCompatActivity {
         String id = getIntent().getExtras().getString("id");
         String idd = prefs.getString("id", "");
 
-        UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Book> call = api.getBookDetails(id, token);
-        call.enqueue(new Callback<Book>() {
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
+        OkHttpClient.Builder httpclient = new OkHttpClient.Builder().addInterceptor(interceptor);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(CommonUtilities.local_books_api_url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpclient.build())
+                .build();
+
+        UsersAPI api = retrofit.create(UsersAPI.class);
+
+        Call<BookDetailWithCancel> call = api.getBookDetails(id,id, "Token " + prefs
+                .getString("token", null));
+        call.enqueue(new Callback<BookDetailWithCancel>() {
             @Override
-            public void onResponse(Call<Book> call, Response<Book> response) {
-                if (response.body() != null && response.body().getDetail() == null) {
-                    book = response.body();
+            public void onResponse(Call<BookDetailWithCancel> call, Response<BookDetailWithCancel> response) {
+                if (response.body() != null && response.body().getBook().getDetail() == null) {
+                    book = response.body().getBook();
                     Response = response.toString();
                     Helper.setBookId(book.getId());
                     Helper.setBookTitle(book.getTitle());
@@ -122,7 +143,8 @@ public class BookDetailsActivity extends AppCompatActivity {
                     bookTitleText = book.getTitle();
                     bookTitle.setText(book.getTitle());
                     title = book.getTitle();
-                    Log.e("DESCRIPTION bda ", book.getDescription().trim() + "a");
+                    //This stores whether the request sent by the user is cancelled or not
+                    List<Boolean> cancels =  response.body().getCancels();
                     if (book.getDescription().trim() == "") {
                         bookDescription.setText("No Description Available");
                     } else {
@@ -152,6 +174,7 @@ public class BookDetailsActivity extends AppCompatActivity {
                     checkIfOwner(userTempInfoList);
                     userInfoList.clear();
                     userInfoList.addAll(userTempInfoList);
+                    usersAdapter.setCancels(cancels);
                     usersAdapter.setBookId(book.getId());
                     usersAdapter.setBookTitle(book.getTitle());
                     usersAdapter.notifyDataSetChanged();
@@ -171,7 +194,7 @@ public class BookDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<Book> call, Throwable t) {
+            public void onFailure(Call<BookDetailWithCancel> call, Throwable t) {
                 Log.d("BDA fail", t.toString());
                 TransitionManager.beginDelayedTransition(rootView);
                 customProgressDialog.dismiss();
