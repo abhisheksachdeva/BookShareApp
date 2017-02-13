@@ -96,7 +96,6 @@ public interface UsersAPI {
 
     );
 
-
     @POST("token/")
     Call<Detail> getUserEmail(@Header("Authorization") String token);
 
@@ -146,7 +145,7 @@ public interface UsersAPI {
     @POST("notifications/")
     Call<Notifications> cancelNotif(
             @Field("book_id") String bookId,
-            @Field("sender_id") String sender_id,
+            @Field("receiver_id") String targetId,
             @Field("process") String process,
             @Header("Authorization") String token
     );

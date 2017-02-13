@@ -183,7 +183,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                         public void onResponse(Call<Notifications> call, Response<Notifications> response) {
                             if (response.body() != null) {
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                holder.request.setEnabled(false);
+                                holder.request.setText("Cancel");
 
                             } else {
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
@@ -204,7 +204,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                         public void onResponse(Call<Notifications> call, Response<Notifications> response) {
                             if (response.body() != null) {
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                holder.request.setEnabled(false);
+                                holder.request.setText("Request");
 
                             } else {
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
