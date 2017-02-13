@@ -35,8 +35,9 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserDetailWithCancel;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
-import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BookAdapter;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.FileUtils;
@@ -82,7 +83,6 @@ public class MyProfile extends AppCompatActivity {
     SPDataLoader loader = new SPDataLoader();
     SharedPreferences prefs;
 
-
     List<Book> booksList;
     BookAdapter adapter;
     RecyclerView mRecyclerView;
@@ -90,7 +90,6 @@ public class MyProfile extends AppCompatActivity {
     CustomProgressDialog customProgressDialog;
     FloatingActionButton button;
     TextView noItemsTextView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,17 +145,17 @@ public class MyProfile extends AppCompatActivity {
 
     public void getUserInfoDetails(String id) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<UserInfo> call = api.getUserandBookDetails(id, id, "Token " + prefs
+        Call<UserDetailWithCancel> call = api.getUserDetails(id, id, "Token " + prefs
                 .getString("token", null));
-        call.enqueue(new Callback<UserInfo>() {
+        call.enqueue(new Callback<UserDetailWithCancel>() {
             @Override
-            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+            public void onResponse(Call<UserDetailWithCancel> call, Response<UserDetailWithCancel> response) {
                 if (response.body() != null) {
                     Log.d("UserProfile Response:", response.toString());
                     Resp = response.toString();
-                    user = response.body();
+                    user = response.body().getUserInfo();
 
-                    List<Book> booksTempInfoList = response.body().getUserBookList();
+                    List<Book> booksTempInfoList = user.getUserBookList();
                     if (booksTempInfoList.size() == 0) {
                         noItemsTextView.setVisibility(View.VISIBLE);
                     }
@@ -198,7 +197,7 @@ public class MyProfile extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<UserInfo> call, Throwable t) {
+            public void onFailure(Call<UserDetailWithCancel> call, Throwable t) {
                 Log.d("BookDetails fail", t.toString());
                 customProgressDialog.dismiss();
             }

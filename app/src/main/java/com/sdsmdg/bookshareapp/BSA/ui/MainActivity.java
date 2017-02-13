@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -126,13 +125,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
 
-
         setContentView(R.layout.activity_main);
         noBookstextview = (TextView) findViewById(R.id.no_books_textView);
         noBookstextview.setVisibility(View.GONE);
 
         progress_isVisible = false;
-
 
         notifFragment = (NotificationFragment) getSupportFragmentManager().findFragmentById(R.id.right_drawer);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);

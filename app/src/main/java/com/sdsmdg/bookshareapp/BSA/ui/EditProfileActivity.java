@@ -15,7 +15,7 @@ import android.widget.Toast;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
-import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import retrofit2.Call;

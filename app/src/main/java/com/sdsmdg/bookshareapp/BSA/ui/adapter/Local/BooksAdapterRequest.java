@@ -40,6 +40,8 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
     String userId;
     private final OnItemClickListener listener;
 
+    List<Boolean> cancels;
+
     public interface OnItemClickListener {
         public void onItemClick(Book book);
     }
@@ -92,7 +94,7 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
         holder.titleBook.setText(tempValues.getTitle());
         holder.authorBook.setText(tempValues.getAuthor());
 
-        if (tempValues.getCancel()) {
+        if (cancels.get(position)) {
             holder.request.setText("Cancel");
         } else {
             holder.request.setText("Request");
@@ -118,11 +120,15 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                if (!bookList.get(position).getCancel()) {
+                if (!cancels.get(position)) {
                     builder.setTitle("Do you want to send a request?");
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
+                } else {
+                    builder.setTitle("Do you want to cancel the request?");
+                }
+                builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(holder.request.getText().equals("Request")) {
                             String process = "request";
                             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
                             Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, userId, "request for", "Token " + prefs
@@ -150,20 +156,8 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
                                     Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                        }
-                    });
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                        } else {
 
-                } else {
-                    builder.setTitle("Do you want to cancel this request?");
-                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
                             String process = "cancel";
                             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
                             Call<Notifications> cancelNotif = usersAPI.cancelNotif(bookId, userId, process, "Token " + prefs
@@ -191,15 +185,15 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
                                 }
                             });
                         }
-                    });
-                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.dismiss();
-                        }
-                    });
+                    }
+                });
 
-                }
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
 
 
                 builder.show();
@@ -208,6 +202,10 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
         });
 
 
+    }
+
+    public void setCancels(List<Boolean> cancels) {
+        this.cancels = cancels;
     }
 
     @Override

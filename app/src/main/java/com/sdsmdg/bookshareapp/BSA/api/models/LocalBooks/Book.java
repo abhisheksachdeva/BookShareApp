@@ -1,7 +1,7 @@
 package com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks;
 
 import com.google.gson.annotations.SerializedName;
-import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 
 import java.util.List;
 
@@ -27,12 +27,6 @@ public class Book extends RealmObject {
     RealmList<UserInfo> userInfoList;
     @SerializedName("description")
     String description;
-    @SerializedName("cancel")
-    Boolean cancel;
-
-    public Boolean getCancel() {
-        return cancel;
-    }
 
     public String getAuthor() {
         return author;

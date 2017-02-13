@@ -18,7 +18,7 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
-import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.MyProfile;
 import com.sdsmdg.bookshareapp.BSA.ui.UserProfile;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;

@@ -23,10 +23,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
-import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
-import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserDetailWithCancel;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterRequest;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.squareup.picasso.Picasso;
@@ -35,9 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.blurry.Blurry;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class UserProfile extends AppCompatActivity {
@@ -105,18 +109,30 @@ public class UserProfile extends AppCompatActivity {
 
     public void getUserInfoDetails(final String id) {
         Log.i("INSIDE ONCLICK ", id + "fklksmlsn");
-        UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<UserInfo> call = api.getUserandBookDetails(id, id, "Token " + prefs
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+        OkHttpClient.Builder httpclient = new OkHttpClient.Builder().addInterceptor(interceptor);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(CommonUtilities.local_books_api_url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpclient.build())
+                .build();
+
+
+        UsersAPI api = retrofit.create(UsersAPI.class);
+        Call<UserDetailWithCancel> call = api.getUserDetails(id, id, "Token " + prefs
                 .getString("token", null));
-        call.enqueue(new Callback<UserInfo>() {
+        call.enqueue(new Callback<UserDetailWithCancel>() {
             @Override
-            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+            public void onResponse(Call<UserDetailWithCancel> call, Response<UserDetailWithCancel> response) {
                 Log.i("INSIDE ONCLICK ", id + "fklksmlsn");
                 if (response.body() != null) {
                     Log.d("UserProfile Response:", response.toString());
-                    user = response.body();
+                    user = response.body().getUserInfo();
                     name.setText(user.getName());
-
                     email = user.getEmail();
                     emailTextView.setText(email);
                     contactNo = user.getContactNo();
@@ -132,11 +148,13 @@ public class UserProfile extends AppCompatActivity {
                             .async()
                             .capture(findViewById(R.id.background_image))
                             .into((ImageView) findViewById(R.id.background_image));
+
                     List<Book> booksTempInfoList = user.getUserBookList();
                     String bookCount = "Books(" + booksTempInfoList.size() + ")";
                     booksCount.setText(bookCount);
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);
+                    adapter.setCancels(response.body().getCancels());
                     adapter.notifyDataSetChanged();
                 }
 
@@ -150,7 +168,7 @@ public class UserProfile extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<UserInfo> call, Throwable t) {
+            public void onFailure(Call<UserDetailWithCancel> call, Throwable t) {
                 Log.d("BookDetails fail", t.toString());
                 customProgressDialog.dismiss();
 

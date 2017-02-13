@@ -4,11 +4,12 @@ import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookDetailWithCancel;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.RemoveBook;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserDetailWithCancel;
 import com.sdsmdg.bookshareapp.BSA.api.models.Login;
 import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notification_Model;
 import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
-import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 
 import java.util.List;
@@ -89,7 +90,7 @@ public interface UsersAPI {
     );
 
     @GET("user/{id}/?format=json")
-    Call<UserInfo> getUserandBookDetails(
+    Call<UserDetailWithCancel> getUserDetails(
             @Path("id") String id,
             @Query("user_id") String id_same,
             @Header("Authorization") String token
