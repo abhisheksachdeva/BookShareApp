@@ -82,7 +82,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         setContentView(R.layout.activity_signup);
         ButterKnife.inject(this);
 
-        //////////////// Setting spinner for hostels \\\\\\\\\\\\\\\\\
+        //Setting spinner for hostels
         ArrayAdapter<CharSequence> hostelAdapter = ArrayAdapter.createFromResource(this, R.array.hostel_list, android.R.layout.simple_spinner_item);
 
         hostelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -100,7 +100,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                 hostel = "Azad";
             }
         });
-        /////////////////////////// Spinner complete \\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        //Spinner complete
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
