@@ -13,11 +13,11 @@
         android:paddingRight="24dp"
         android:paddingTop="56dp">
 
-        <!--<ImageView android:src="@drawable/books"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="72dp"-->
-        <!--android:layout_marginBottom="24dp"-->
-        <!--android:layout_gravity="center_horizontal" />-->
+        <ImageView android:src="@drawable/logo3"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_marginBottom="24dp"
+        android:layout_gravity="center_horizontal" />
 
 
         <LinearLayout
@@ -37,10 +37,9 @@
                     android:id="@+id/input_Fname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="First Name"
                     android:drawableStart="@drawable/star"
-                    android:inputType="textCapWords"
-                   />
+                    android:hint="First Name"
+                    android:inputType="textCapWords" />
             </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -54,8 +53,8 @@
                     android:id="@+id/input_Lname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Last Name"
                     android:drawableStart="@drawable/star"
+                    android:hint="Last Name"
                     android:inputType="textCapWords" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
@@ -80,8 +79,8 @@
                         android:id="@+id/input_email"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Email"
                         android:drawableStart="@drawable/star"
+                        android:hint="Email"
                         android:inputType="textEmailAddress"
                         android:maxLength="19" />
 
@@ -114,8 +113,8 @@
                     android:id="@+id/input_password"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
                     android:drawableLeft="@drawable/star"
+                    android:hint="Password"
                     android:inputType="textPassword"
                     android:maxLength="20" />
             </android.support.design.widget.TextInputLayout>
@@ -187,7 +186,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="0.5"
                 android:orientation="vertical">
 
                 <TextView
@@ -203,15 +202,15 @@
                     style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"></Spinner>
+                    android:layout_marginTop="3dp"></Spinner>
             </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
-                android:layout_gravity="bottom"
                 android:layout_weight="1">
 
                 <EditText

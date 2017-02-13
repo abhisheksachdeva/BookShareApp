@@ -1,7 +1,6 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -205,7 +204,7 @@ public class SearchResultsActivity extends ActionBarActivity {
             imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
 
             //add the search icon in the action bar
-            mSearchAction.setIcon(getResources().getDrawable(R.drawable.search_icon));
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_search));
 
             isSearchOpened = false;
         } else { //open the search entry
@@ -296,7 +295,7 @@ public class SearchResultsActivity extends ActionBarActivity {
             }
         });
 
-        spinner.setSelection(2);//Setting the default vaule of spinner to "All"
+        spinner.setSelection(0);//Setting the default vaule of spinner to "All"
         //this is a listener to do a search when the user clicks on search button
         edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

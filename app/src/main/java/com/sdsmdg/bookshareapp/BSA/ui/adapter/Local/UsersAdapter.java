@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,6 +25,7 @@ import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -40,7 +40,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     String bookId, bookTitle;
     String userId;
     boolean withRequestButton;
-    SharedPreferences prefs ;
+    SharedPreferences prefs;
+    List<Boolean> cancels = new ArrayList<>();
+
     public interface OnItemClickListener {
         void onItemClick(UserInfo userInfo);
     }
@@ -83,7 +85,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         this.bookId = bookId;
         this.userId = userId;
         this.withRequestButton = withRequestButton;
-        prefs = context.getSharedPreferences("Token",Context.MODE_PRIVATE);
+        prefs = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
 
     }
 
@@ -126,6 +128,12 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         holder.emailUser.setText(tempValues.getEmail());
         holder.hostelUser.setText(tempValues.getHostel());
 
+        if (cancels.get(position)) {
+            holder.request.setText("Cancel");
+        } else {
+            holder.request.setText("Request");
+        }
+
         if (!id.equals(userId)) {
             if (withRequestButton) {
                 holder.request.setOnClickListener(new View.OnClickListener() {
@@ -136,10 +144,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                     }
                 });
             }
-        }else {
-            if(withRequestButton){
+        } else {
+            if (withRequestButton) {
                 holder.request.setVisibility(View.GONE);
-
             }
         }
 
@@ -157,20 +164,50 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
     public void showAlertDialog(final ViewHolder holder, final String id) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
-        if(holder.request.getText()=="Request"){
+        if (holder.request.getText() == "Request") {
+
             builder.setTitle("Send request?");
             builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     String process = "request";
                     UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                    Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, id, "request for","Token "+prefs.getString("token",null));
+                    Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, id, "request for", "Token " + prefs.getString("token", null));
                     sendNotif.enqueue(new Callback<Notifications>() {
                         @Override
                         public void onResponse(Call<Notifications> call, Response<Notifications> response) {
                             if (response.body() != null) {
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-//                                holder.request.setText("Cancel");
+                                holder.request.setEnabled(false);
+
+                            } else {
+                                Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Notifications> call, Throwable t) {
+                            Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+        }
+        else {
+
+            builder.setTitle("Cancel request?");
+            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    String process = "cancel";
+                    UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                    Call<Notifications> cancelNotif = usersAPI.cancelNotif(bookId, Helper.getUserId(), process, "Token " + prefs.getString("token", null));
+                    cancelNotif.enqueue(new Callback<Notifications>() {
+                        @Override
+                        public void onResponse(Call<Notifications> call, Response<Notifications> response) {
+                            if (response.body() != null) {
+                                Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                                holder.request.setEnabled(false);
 
                             } else {
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
@@ -186,32 +223,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             });
 
         }
-        builder.setTitle("Send request?");
-        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String process = "request";
-                UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, id, "request for","Token "+prefs.getString("token",null));
-                sendNotif.enqueue(new Callback<Notifications>() {
-                    @Override
-                    public void onResponse(Call<Notifications> call, Response<Notifications> response) {
-                        if (response.body() != null) {
-                            Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                            holder.request.setEnabled(false);
 
-                        } else {
-                            Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<Notifications> call, Throwable t) {
-                        Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
-                    }
-                });
-            }
-        });
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -223,6 +235,10 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     public void setBookId(String bookId) {
         this.bookId = bookId;
+    }
+
+    public void setCancels(List<Boolean> cancels) {
+        this.cancels = cancels;
     }
 
     public void setBookTitle(String bookTitle) {

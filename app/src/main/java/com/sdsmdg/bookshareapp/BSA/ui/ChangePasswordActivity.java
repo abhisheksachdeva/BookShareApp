@@ -45,10 +45,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                return(true);
+                return (true);
         }
 
-        return(super.onOptionsItemSelected(item));
+        return (super.onOptionsItemSelected(item));
     }
 
     public void onSaveClicked(View view) {
@@ -87,7 +87,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i= new Intent(this,MyProfile.class);
+        Intent i = new Intent(this, MyProfile.class);
         i.putExtra("id", prefs.getString("id", prefs.getString("id", "")));
         startActivity(i);
     }

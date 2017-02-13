@@ -2,7 +2,7 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +18,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
-
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -26,7 +25,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
-
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
@@ -118,17 +116,17 @@ public class MyProfile extends AppCompatActivity {
         getUserInfoDetails(id);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        profilePicture = (CircleImageView)findViewById(R.id.profile_picture);
+        profilePicture = (CircleImageView) findViewById(R.id.profile_picture);
         userName = (TextView) findViewById(R.id.user_name);
-        userEmail = (TextView)findViewById(R.id.user_email);
-        address = (TextView)findViewById(R.id.address);
-        backgroundImageView = (ImageView)findViewById(R.id.background_image);
+        userEmail = (TextView) findViewById(R.id.user_email);
+        address = (TextView) findViewById(R.id.address);
+        backgroundImageView = (ImageView) findViewById(R.id.background_image);
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
         scrollView.setSmoothScrollingEnabled(true);
         mRecyclerView.setNestedScrollingEnabled(false);
 
 
-        button= (FloatingActionButton) findViewById(R.id.button);
+        button = (FloatingActionButton) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -148,7 +146,7 @@ public class MyProfile extends AppCompatActivity {
 
     public void getUserInfoDetails(String id) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<UserInfo> call = api.getUserandBookDetails(id,id,"Token " + prefs
+        Call<UserInfo> call = api.getUserandBookDetails(id, id, "Token " + prefs
                 .getString("token", null));
         call.enqueue(new Callback<UserInfo>() {
             @Override
@@ -213,7 +211,7 @@ public class MyProfile extends AppCompatActivity {
     private void setUpRecyclerView(String id) {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MyProfile.this));
         booksList = new ArrayList<>();
-        adapter = new BookAdapter(this ,id, booksList,this);
+        adapter = new BookAdapter(this, id, booksList, this);
         mRecyclerView.setAdapter(adapter);
         adapter.setUpItemTouchHelper(mRecyclerView);
         adapter.setUpAnimationDecoratorHelper(mRecyclerView);
@@ -235,12 +233,11 @@ public class MyProfile extends AppCompatActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                return(true);
+                return (true);
         }
 
-        return(super.onOptionsItemSelected(item));
+        return (super.onOptionsItemSelected(item));
     }
-
 
 
     public void editProfileClicked(View view) {
@@ -248,9 +245,9 @@ public class MyProfile extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void  changeImageClicked(View view){
-        final CharSequence[] items = { "Take Photo", "Choose from Library",
-                "Cancel" };
+    public void changeImageClicked(View view) {
+        final CharSequence[] items = {"Take Photo", "Choose from Library",
+                "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(MyProfile.this);
         builder.setTitle("Add Photo!");
         builder.setItems(items, new DialogInterface.OnClickListener() {
@@ -258,12 +255,12 @@ public class MyProfile extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int item) {
                 boolean result = PermissionUtils.checkPermission(MyProfile.this);
                 if (items[item].equals("Take Photo")) {
-                    userChoosenTask="Take Photo";
-                    if(result)
+                    userChoosenTask = "Take Photo";
+                    if (result)
                         cameraIntent();
                 } else if (items[item].equals("Choose from Library")) {
-                    userChoosenTask="Choose from Library";
-                    if(result)
+                    userChoosenTask = "Choose from Library";
+                    if (result)
                         galleryIntent();
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
@@ -277,8 +274,9 @@ public class MyProfile extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         startActivityForResult(intent, REQUEST_CAMERA);
     }
+
     private void galleryIntent() {
-        Intent intent = new Intent(Intent.ACTION_PICK,MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent, "Select File"), SELECT_FILE);
     }
@@ -288,9 +286,9 @@ public class MyProfile extends AppCompatActivity {
         switch (requestCode) {
             case PermissionUtils.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    if(userChoosenTask.equals("Take Photo"))
+                    if (userChoosenTask.equals("Take Photo"))
                         cameraIntent();
-                    else if(userChoosenTask.equals("Choose from Library"))
+                    else if (userChoosenTask.equals("Choose from Library"))
                         galleryIntent();
                 } else {
                     //code for deny
@@ -304,8 +302,7 @@ public class MyProfile extends AppCompatActivity {
         if (resCode == Activity.RESULT_OK && data != null) {
             if (reqCode == SELECT_FILE) {
                 onGalleryImageResult(data);
-            }
-            else if(reqCode == REQUEST_CAMERA){
+            } else if (reqCode == REQUEST_CAMERA) {
                 onCaptureImageResult(data);
             }
         }
@@ -327,22 +324,22 @@ public class MyProfile extends AppCompatActivity {
             sendToServer(file);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
 
         } catch (IOException e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
-        } catch (Exception e){
+        } catch (Exception e) {
             Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
 
-    private void onGalleryImageResult(Intent data){
+    private void onGalleryImageResult(Intent data) {
         Uri uri = data.getData();
         Bitmap bitmap = null;
         try {
@@ -358,10 +355,10 @@ public class MyProfile extends AppCompatActivity {
         }
     }
 
-    public File getFile(Uri uri, Bitmap bitmap){
+    public File getFile(Uri uri, Bitmap bitmap) {
         File file = null;
-        String path = FileUtils.getPath(this,uri);
-        if(path==null){
+        String path = FileUtils.getPath(this, uri);
+        if (path == null) {
             try {
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
@@ -372,32 +369,27 @@ public class MyProfile extends AppCompatActivity {
                 fo = new FileOutputStream(file);
                 fo.write(bytes.toByteArray());
                 fo.close();
-            }
-            catch (FileNotFoundException e) {
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                file = null;
+            } catch (IOException e) {
+                e.printStackTrace();
+                file = null;
+            } catch (java.lang.NullPointerException e) {
                 e.printStackTrace();
                 file = null;
             }
-            catch (IOException e) {
-                e.printStackTrace();
-                file = null;
-            }
-            catch (java.lang.NullPointerException e){
-                e.printStackTrace();
-                file = null;
-            }
-        }
-        else {
+        } else {
             try {
                 file = new File(path);
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
         return file;
     }
 
-    public void sendToServer(File file){
+    public void sendToServer(File file) {
 
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         try {
@@ -456,13 +448,12 @@ public class MyProfile extends AppCompatActivity {
 
                 }
             });
-        }
-        catch (NullPointerException e){
-            Toast.makeText(this,e.toString(), Toast.LENGTH_SHORT).show();
+        } catch (NullPointerException e) {
+            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
         }
     }
 
-    public void editBooksClicked(View view){
+    public void editBooksClicked(View view) {
         Intent i = new Intent(this, MyProfile.class);
         startActivity(i);
     }
@@ -488,7 +479,6 @@ public class MyProfile extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
     }
-
 
 
 }

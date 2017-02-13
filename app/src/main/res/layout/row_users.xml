@@ -1,38 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    cardUseCompatPadding="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardElevation="1dp"
-    cardUseCompatPadding="true"
+    android:layout_marginBottom="2dp"
     card_view:cardCornerRadius="0dp"
-    android:layout_marginBottom="2dp">
+    card_view:cardElevation="1dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingTop="16dp"
-        android:paddingRight="16dp"
+        android:orientation="horizontal"
         android:paddingLeft="16dp"
-        android:orientation="horizontal">
+        android:paddingRight="16dp"
+        android:paddingTop="16dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/row_user_image"
-            android:layout_alignParentLeft="true"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:scaleType="centerCrop"
-            android:layout_marginBottom="16dp"/>
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="16dp"
+            android:scaleType="centerCrop" />
 
         <LinearLayout
-            android:layout_toRightOf="@id/row_user_image"
-            android:layout_alignTop="@id/row_user_image"
             android:id="@+id/linear_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
+            android:layout_alignTop="@id/row_user_image"
             android:layout_marginLeft="16dp"
+            android:layout_marginRight="5dp"
+            android:layout_toRightOf="@id/row_user_image"
             android:orientation="vertical">
 
             <TextView
@@ -40,11 +40,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
+                android:layout_marginBottom="6dp"
                 android:maxLines="2"
                 android:text="Name"
-                android:layout_marginBottom="6dp"
                 android:textAlignment="center"
-                android:textSize="20dp"/>
+                android:textSize="20dp" />
 
             <TextView
                 android:id="@+id/row_user_email"
@@ -60,36 +60,37 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
-                android:text="Hostel"
                 android:layout_marginBottom="8dp"
+                android:text="Hostel"
                 android:textAlignment="center"
                 android:textSize="14dp" />
 
             <View
-                android:layout_width="match_parent"
                 android:id="@+id/divider"
-                android:layout_alignParentRight="true"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_alignParentRight="true"
                 android:background="#D2D5CE" />
 
         </LinearLayout>
 
         <FrameLayout
+            android:id="@+id/frameLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#FFFFFF"
-            android:id="@+id/frameLayout"
-            android:layout_below="@id/linear_layout">
+            android:layout_below="@id/linear_layout"
+            android:background="#FFFFFF">
+
             <Button
                 android:id="@+id/requestButton"
+                style="?android:attr/borderlessButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="34dp"
+                android:layout_gravity="right"
                 android:background="#FFFFFF"
-                style="?android:attr/borderlessButtonStyle"
                 android:text="Request"
-                android:textSize="16sp"
                 android:textColor="@color/colorAccent"
-                android:layout_gravity="right"/>
+                android:textSize="16sp" />
         </FrameLayout>
 
     </RelativeLayout>

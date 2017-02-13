@@ -68,13 +68,13 @@ public class BooksAdapterToRead extends RecyclerView.Adapter<BooksAdapterToRead.
 
         holder.titleBook.setText(tempValues.getTitle());
         holder.authorBook.setText(tempValues.getAuthor().getAuthors().getAuthor_name());
-        if(!tempValues.getImage_url().isEmpty()) {
+        if (!tempValues.getImage_url().isEmpty()) {
             Picasso.with(this.context).load(tempValues.getImage_url()).placeholder(R.drawable.default_book_image).into(holder.imageBook);
         }
         holder.ratingBook.setRating(tempValues.getRating());
         DecimalFormat formatter = new DecimalFormat("#,###,###");
         String rating_count = formatter.format(Long.parseLong(tempValues.getRatingCount().toString()));
-        holder.ratingCount.setText("("+rating_count + ")");
+        holder.ratingCount.setText("(" + rating_count + ")");
 
     }
 

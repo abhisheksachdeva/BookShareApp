@@ -4,25 +4,24 @@
     cardUseCompatPadding="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
     card_view:cardCornerRadius="0dp"
-    card_view:cardElevation="1dp"
-    android:layout_marginBottom="2dp">
+    card_view:cardElevation="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:padding="16dp"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="16dp">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
+        <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/row_user_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            app:civ_border_width="2dp"
+            android:layout_marginRight="16dp"
             app:civ_border_color="#FFFFFF"
-            android:layout_marginRight="16dp"/>
+            app:civ_border_width="2dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -34,17 +33,17 @@
                 android:id="@+id/row_user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
                 android:layout_marginBottom="6dp"
+                android:maxLines="2"
                 android:text="Name"
-                android:textSize="20sp"/>
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/row_user_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Email"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/row_user_hostel"

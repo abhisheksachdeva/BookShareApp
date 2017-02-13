@@ -43,7 +43,7 @@ public class UserInfo extends RealmObject {
         return email;
     }
 
-    public String getFirstName(){
+    public String getFirstName() {
         return firstName;
     }
 
@@ -52,7 +52,7 @@ public class UserInfo extends RealmObject {
     }
 
     public String getName() {
-        return firstName +" "+ lastName;
+        return firstName + " " + lastName;
     }
 
     public String getRoomNo() {

@@ -1,4 +1,5 @@
 package com.sdsmdg.bookshareapp.BSA.api.models.Notification;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
@@ -42,6 +43,7 @@ public class Notifications {
     public String getDetail() {
         return detail;
     }
+
     public String getId() {
         return id;
     }

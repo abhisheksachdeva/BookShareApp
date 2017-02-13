@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:id="@+id/root_view"
     tools:context="com.sdsmdg.bookshareapp.BSA.ui.BookDetailsActivity">
 
     <android.support.v4.widget.NestedScrollView
@@ -26,8 +26,7 @@
                     android:id="@+id/book_image"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    />
+                    android:scaleType="centerCrop" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -38,11 +37,11 @@
 
                     <TextView
                         android:id="@+id/book_title"
-                        android:text="title"
-                        android:gravity="center_horizontal"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
+                        android:gravity="center_horizontal"
+                        android:text="title"
                         android:textColor="@color/White"
                         android:textSize="20sp" />
 
@@ -77,60 +76,59 @@
 
             </FrameLayout>
 
-                <Button
+            <Button
                 android:id="@+id/add_to_my_library"
                 android:layout_width="wrap_content"
                 android:layout_height="40sp"
-                android:layout_marginTop="10dp"
-                android:padding="10dp"
                 android:layout_gravity="center_horizontal"
-                android:onClick="addToMyLibraryClicked"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/button_shape_other"
+                android:onClick="addToMyLibraryClicked"
+                android:padding="10dp"
                 android:text="Add to My Library"
                 android:textAllCaps="false"
                 android:textColor="@color/app_theme_button_other"
                 android:textSize="16sp"
-                android:textStyle="normal"
-                />
+                android:textStyle="normal" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Summary"
-                android:layout_marginTop="16dp"
                 android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Summary"
                 android:textColor="#333333"
-                android:textSize="18sp"/>
+                android:textSize="18sp" />
 
             <TextView
+                android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/description"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:maxLines="3"
                 android:alpha="0.6"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="Book Description"
                 android:ellipsize="end"
+                android:maxLines="3"
+                android:text="Book Description"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="#444444"
                 android:textSize="16sp" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:layout_margin="12dp"
-                android:background="@color/textColorSecondary"
-                />
+                android:background="@color/textColorSecondary" />
 
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Book Owners"
-                android:layout_marginLeft="16dp"
                 android:textColor="#333333"
-                android:layout_marginBottom="8dp"
                 android:textSize="18sp" />
 
             <android.support.v7.widget.RecyclerView

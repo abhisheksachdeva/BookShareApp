@@ -9,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +28,6 @@ import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.logging.Handler;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,7 +44,6 @@ public class ToReadActivity extends AppCompatActivity {
     SharedPreferences pref;
     String userGrId;
     CustomProgressDialog customProgressDialog;
-
 
 
     @Override
@@ -69,12 +66,13 @@ public class ToReadActivity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        pref = getSharedPreferences("UserId",MODE_PRIVATE);
-        userGrId = pref.getString("userGrId",null);
+        pref = getSharedPreferences("UserId", MODE_PRIVATE);
+        userGrId = pref.getString("userGrId", null);
 
         adapter = new BooksAdapterToRead(this, bookDetailsToReads, new BooksAdapterToRead.OnItemClickListener() {
             @Override
-            public void onItemClick(BookDetailsToRead booktoRead) {}
+            public void onItemClick(BookDetailsToRead booktoRead) {
+            }
         });
 
         layoutManager = new LinearLayoutManager(this);
@@ -109,10 +107,10 @@ public class ToReadActivity extends AppCompatActivity {
 
     public void getToReadBooks() {
         BooksAPI api = NetworkingFactory.getGRInstance().getBooksApi();
-        HashMap<String,String> params = new HashMap<>();
-        params.put("key",CommonUtilities.API_KEY);
-        params.put("id",userGrId );
-        params.put("shelf","to-read");
+        HashMap<String, String> params = new HashMap<>();
+        params.put("key", CommonUtilities.API_KEY);
+        params.put("id", userGrId);
+        params.put("shelf", "to-read");
         Call<GoodreadsResponse3> call = api.getToRead(params);
         Log.i("sss", call.request().url().toString());
         call.enqueue(new Callback<GoodreadsResponse3>() {
@@ -120,15 +118,15 @@ public class ToReadActivity extends AppCompatActivity {
             public void onResponse(Call<GoodreadsResponse3> call, Response<GoodreadsResponse3> response) {
                 if (response.body() != null) {
 
-                    Log.i("GRTR",response.toString());
+                    Log.i("GRTR", response.toString());
 
                     bookDetailsToReads.clear();
                     adapter.notifyDataSetChanged();
                     bookDetailsToReads.addAll(response.body().getBookDetailsToReads());
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
-                }else {
-                    Log.i("GRTR","response = null");
+                } else {
+                    Log.i("GRTR", "response = null");
                 }
 
                 final android.os.Handler handler = new android.os.Handler();
@@ -138,7 +136,6 @@ public class ToReadActivity extends AppCompatActivity {
                         customProgressDialog.dismiss();
                     }
                 }, 1000);
-
 
 
             }
@@ -153,7 +150,6 @@ public class ToReadActivity extends AppCompatActivity {
         });
 
     }
-
 
 
     @Override
@@ -171,8 +167,7 @@ public class ToReadActivity extends AppCompatActivity {
                 Helper.setUserGRid(null);
 
 
-
-                Intent i = new Intent(this,MainActivity.class);
+                Intent i = new Intent(this, MainActivity.class);
                 startActivity(i);
                 finish();
                 return true;

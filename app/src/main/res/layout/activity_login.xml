@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_blur"
+    android:background="@drawable/background"
     android:orientation="vertical"
     android:paddingLeft="24dp"
     android:paddingRight="24dp"
@@ -12,18 +11,27 @@
 
     >
 
+    <ImageView android:src="@drawable/logo3"
+        android:layout_width="wrap_content"
+        android:layout_height="110dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center_horizontal" />
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="20dp"
         android:orientation="vertical">
+
 
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal">
+
 
             <!-- Email Label -->
             <android.support.design.widget.TextInputLayout
@@ -46,9 +54,9 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="right|center_vertical"
                 android:layout_marginTop="5dp"
                 android:alpha="0.7"
-                android:layout_gravity="right|center_vertical"
                 android:text="\@iitr.ac.in"
                 android:textColor="@color/White"
                 android:textColorHint="@color/White"
@@ -74,8 +82,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Password"
-                    android:maxLength="20"
                     android:inputType="textPassword"
+                    android:maxLength="20"
                     android:textColor="@color/White" />
             </android.support.design.widget.TextInputLayout>
 
@@ -120,7 +128,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="No account yet? Create one"
+            android:text="@string/signup"
             android:textColor="@color/White"
             android:textSize="18sp" />
 
@@ -140,21 +148,12 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:onClick="guestModeClicked"
             android:text="Try now"
             android:textColor="@color/White"
-            android:textSize="18sp" />
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-        <Button
-            android:layout_width="130dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center"
-            android:background="@drawable/button_shape"
-            android:onClick="guestModeClicked"
-            android:text="Guest"
-            android:textAllCaps="false"
-            android:textColor="@color/White"
-            android:textSize="20sp"
-            android:visibility="visible" />
 
     </LinearLayout>
 

@@ -4,23 +4,23 @@
     cardUseCompatPadding="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    card_view:cardElevation="1dp"
+    android:layout_marginBottom="2dp"
     card_view:cardCornerRadius="0dp"
-    android:layout_marginBottom="2dp">
+    card_view:cardElevation="1dp">
 
     <LinearLayout
-        android:padding="16dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="16dp">
 
         <de.hdodenhof.circleimageview.CircleImageView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/row_user_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
+            android:layout_marginRight="16dp"
             app:civ_border_color="#FFFFFF"
-            app:civ_border_width="2dp"
-            android:layout_marginRight="16dp"/>
+            app:civ_border_width="2dp" />
 
         <TextView
             android:id="@+id/row_user_name"

@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    >
+    android:orientation="horizontal">
 
     <EditText
         android:id="@+id/edtSearch"
-        android:layout_width="wrap_content"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:inputType="textNoSuggestions"
-        android:imeOptions="actionSearch"
         android:background="@null"
-        android:textColor="@color/White"/>
+        android:imeOptions="actionSearch"
+        android:hint="Search User"
+        android:textColorHint="@color/Grey"
+        android:inputType="textNoSuggestions"
+        android:textColor="@color/White" />
 
 </LinearLayout>
