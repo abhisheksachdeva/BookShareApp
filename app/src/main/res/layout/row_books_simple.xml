@@ -44,7 +44,7 @@
                 android:text="Author"
                 android:textSize="14sp" />
 
-            <LinearLayout
+            <RelativeLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
@@ -60,10 +60,12 @@
                     android:id="@+id/row_books_ratings_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/row_books_rating"
+                    android:layout_toRightOf="@+id/row_books_rating"
                     android:layout_marginLeft="20dp"
                     android:textSize="14sp" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
 
         </LinearLayout>

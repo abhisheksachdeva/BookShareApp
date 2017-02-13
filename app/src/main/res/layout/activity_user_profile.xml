@@ -68,7 +68,7 @@
                         android:layout_height="130dp"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="30dp"
-                        android:src="@drawable/ic_account_circle_black_24dp"
+                        android:src="@drawable/ic_profile_pic"
                         app:civ_border_color="@android:color/white"
                         app:civ_border_width="1dp" />
 
@@ -156,9 +156,10 @@
                     android:id="@+id/books_count"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
                     android:layout_marginLeft="20dp"
+                    android:layout_marginTop="5dp"
                     android:text="Books"
+                    android:gravity="center"
                     android:textColor="@color/Black"
                     android:textSize="20sp" />
 
@@ -169,9 +170,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp" />
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp" />
 
             </LinearLayout>
 

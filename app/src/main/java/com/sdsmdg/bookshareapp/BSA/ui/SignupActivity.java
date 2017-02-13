@@ -355,13 +355,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         } else {
             _collegeText.setError(null);
         }
-        if (contact.isEmpty()) {
-            valid = false;
-            _FnameText.setError("Please fill contact Name");
 
-        } else {
-            _contactText.setError(null);
-        }
 
         if (email.isEmpty()) {
             _emailText.setError("enter a valid email address");

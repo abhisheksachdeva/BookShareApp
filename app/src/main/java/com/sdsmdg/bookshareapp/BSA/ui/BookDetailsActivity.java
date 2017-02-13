@@ -1,13 +1,11 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -26,8 +24,10 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookDetailWithCancel;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.UsersAdapter;
+import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.squareup.picasso.Picasso;
 
@@ -36,20 +36,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.blurry.Blurry;
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class BookDetailsActivity extends AppCompatActivity {
 
     public static final String TAG = BookDetailsActivity.class.getSimpleName();
 
     Book book;
-    String title,author,gr_id,gr_img_url,description,rating_count;
+    String title, author, gr_id, gr_img_url, description, rating_count;
     Long ratingsCount;
     Float rating;
     public TextView authorBook;
-    TextView bookTitle,bookDescription;
+    TextView bookTitle, bookDescription;
     public RatingBar ratingBook;
     public TextView ratingCount;
     List<UserInfo> userInfoList;
@@ -59,7 +63,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     public static String Response;
     FrameLayout rootView;
     NestedScrollView scrollView;
-    Boolean showMore=false;
+    Boolean showMore = false;
     CustomProgressDialog customProgressDialog;
     Button addToMyLibraryButton;
     String token;
@@ -92,14 +96,12 @@ public class BookDetailsActivity extends AppCompatActivity {
         bookDescription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BookDetailsActivity.this, description+"----", Toast.LENGTH_SHORT).show();
+                showMore = !showMore;
 
-                showMore=!showMore;
-
-                if(showMore) {
+                if (showMore) {
                     bookDescription.setMaxLines(50);
                     bookDescription.setEllipsize(null);
-                }else {
+                } else {
                     bookDescription.setMaxLines(4);
                     bookDescription.setEllipsize(TextUtils.TruncateAt.END);
                 }
@@ -111,13 +113,28 @@ public class BookDetailsActivity extends AppCompatActivity {
         String id = getIntent().getExtras().getString("id");
         String idd = prefs.getString("id", "");
 
-        UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Book> call = api.getBookDetails(id,token);
-        call.enqueue(new Callback<Book>() {
+
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+
+        OkHttpClient.Builder httpclient = new OkHttpClient.Builder().addInterceptor(interceptor);
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(CommonUtilities.local_books_api_url)
+                .addConverterFactory(GsonConverterFactory.create())
+                .client(httpclient.build())
+                .build();
+
+        UsersAPI api = retrofit.create(UsersAPI.class);
+
+        Call<BookDetailWithCancel> call = api.getBookDetails(id,id, "Token " + prefs
+                .getString("token", null));
+        call.enqueue(new Callback<BookDetailWithCancel>() {
             @Override
-            public void onResponse(Call<Book> call, Response<Book> response) {
-                if (response.body() != null && response.body().getDetail() == null) {
-                    book = response.body();
+            public void onResponse(Call<BookDetailWithCancel> call, Response<BookDetailWithCancel> response) {
+                if (response.body() != null && response.body().getBook().getDetail() == null) {
+                    book = response.body().getBook();
                     Response = response.toString();
                     Helper.setBookId(book.getId());
                     Helper.setBookTitle(book.getTitle());
@@ -126,21 +143,24 @@ public class BookDetailsActivity extends AppCompatActivity {
                     bookTitleText = book.getTitle();
                     bookTitle.setText(book.getTitle());
                     title = book.getTitle();
-                    Log.i("bsssgsgs",book.getDescription().trim()+"a");
-                    if(book.getDescription().trim()==""){
+                    //This stores whether the request sent by the user is cancelled or not
+                    List<Boolean> cancels =  response.body().getCancels();
+                    if (book.getDescription().trim() == "") {
                         bookDescription.setText("No Description Available");
-                    }else{
+                    } else {
                         bookDescription.setText(book.getDescription());
                     }
-                    description=book.getDescription();
-                    Toast.makeText(getApplicationContext(), description+"----", Toast.LENGTH_SHORT).show();
+                    description = book.getDescription();
 
-                    authorBook.setText("by  "+book.getAuthor()); author = book.getAuthor();
+                    authorBook.setText("by  " + book.getAuthor());
+                    author = book.getAuthor();
                     DecimalFormat formatter = new DecimalFormat("##,##,###");
                     rating_count = formatter.format(book.getRatingsCount());
 
-                    ratingCount.setText("(" + rating_count + ")"); ratingsCount=book.getRatingsCount();
-                    ratingBook.setRating(book.getRating());rating = book.getRating();
+                    ratingCount.setText("(" + rating_count + ")");
+                    ratingsCount = book.getRatingsCount();
+                    ratingBook.setRating(book.getRating());
+                    rating = book.getRating();
                     Picasso.with(BookDetailsActivity.this).load(book.getGrImgUrl()).into(image);
                     Blurry.with(BookDetailsActivity.this)
                             .radius(25)
@@ -154,6 +174,7 @@ public class BookDetailsActivity extends AppCompatActivity {
                     checkIfOwner(userTempInfoList);
                     userInfoList.clear();
                     userInfoList.addAll(userTempInfoList);
+                    usersAdapter.setCancels(cancels);
                     usersAdapter.setBookId(book.getId());
                     usersAdapter.setBookTitle(book.getTitle());
                     usersAdapter.notifyDataSetChanged();
@@ -166,18 +187,18 @@ public class BookDetailsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                    customProgressDialog.dismiss();
+                        customProgressDialog.dismiss();
                     }
                 }, 1000);
 
             }
 
             @Override
-            public void onFailure(Call<Book> call, Throwable t) {
+            public void onFailure(Call<BookDetailWithCancel> call, Throwable t) {
                 Log.d("BDA fail", t.toString());
                 TransitionManager.beginDelayedTransition(rootView);
                 customProgressDialog.dismiss();
-                Toast.makeText(BookDetailsActivity.this,"Connection Failed",Toast.LENGTH_SHORT).show();
+                Toast.makeText(BookDetailsActivity.this, "Connection Failed", Toast.LENGTH_SHORT).show();
                 finish();
 
 
@@ -196,8 +217,8 @@ public class BookDetailsActivity extends AppCompatActivity {
     }
 
     public void checkIfOwner(List<UserInfo> userInfoList) {
-        for (UserInfo item:userInfoList) {
-            if(item.getId().equals(Helper.getUserId())) {
+        for (UserInfo item : userInfoList) {
+            if (item.getId().equals(Helper.getUserId())) {
                 addToMyLibraryButton.setVisibility(View.GONE);
             }
         }
@@ -216,7 +237,7 @@ public class BookDetailsActivity extends AppCompatActivity {
 
     public void addToMyLibraryClicked(View view) {
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(),title, author,gr_id,ratingsCount,rating,gr_img_url,description,"Token "+token);
+        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(), title, author, gr_id, ratingsCount, rating, gr_img_url, description, "Token " + token);
         addBookCall.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
@@ -230,7 +251,7 @@ public class BookDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
-                Log.i("BDA AddBook","Failed!!"+t.toString());
+                Log.i("BDA AddBook", "Failed!!" + t.toString());
             }
         });
     }

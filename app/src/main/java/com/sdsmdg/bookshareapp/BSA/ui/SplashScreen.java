@@ -28,6 +28,7 @@ public class SplashScreen extends Activity {
     String token;
     String extra_data = "none";
     SharedPreferences pref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -37,22 +38,22 @@ public class SplashScreen extends Activity {
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
         token = pref.getString("token", null);
 
-        if(getIntent().getExtras()!=null){
-            Log.i("SPLASH ","not------ null"+getIntent().getExtras().toString());
+        if (getIntent().getExtras() != null) {
+            Log.i("SPLASH ", "not------ null" + getIntent().getExtras().toString());
             String data = getIntent().getExtras().getString("google.message_id");
-            Log.i("Data " , data+"----->");
+            Log.i("Data ", data + "----->");
 
-            if(data!=null){
+            if (data != null) {
                 extra_data = "open_drawer";
             }
             dumpIntent(getIntent());
         }
 
-        if(isOnline()) {
+        if (isOnline()) {
             verifyToken();
-        } else if(token != null){
+        } else if (token != null) {
             Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-            intent.putExtra("data_splash",extra_data);
+            intent.putExtra("data_splash", extra_data);
             startActivity(intent);
             finish();
         }
@@ -71,7 +72,7 @@ public class SplashScreen extends Activity {
         if (token != null) {
 
             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-            Call<Detail> call = usersAPI.getUserEmail("Token "+token);
+            Call<Detail> call = usersAPI.getUserEmail("Token " + token);
             call.enqueue(new Callback<Detail>() {
                 @Override
                 public void onResponse(Call<Detail> call, Response<Detail> response) {
@@ -82,7 +83,7 @@ public class SplashScreen extends Activity {
 
                                 Helper.setUserEmail(response.body().getDetail());
                                 Intent intent = new Intent(SplashScreen.this, MainActivity.class);
-                                intent.putExtra("data_splash",extra_data);
+                                intent.putExtra("data_splash", extra_data);
                                 startActivity(intent);
                                 finish();
 
@@ -91,7 +92,7 @@ public class SplashScreen extends Activity {
                                 Toast.makeText(SplashScreen.this, "Failed to log in due to internal error!", Toast.LENGTH_SHORT).show();
                                 try {
                                     Thread.sleep(1000);
-                                } catch(InterruptedException e) {
+                                } catch (InterruptedException e) {
                                     e.printStackTrace();
                                 }
                                 Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
@@ -114,7 +115,7 @@ public class SplashScreen extends Activity {
                     Toast.makeText(SplashScreen.this, "Login failed", Toast.LENGTH_SHORT).show();
                     try {
                         Thread.sleep(1000);
-                    } catch(InterruptedException e) {
+                    } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                     Intent i = new Intent(getApplicationContext(), LoginActivity.class);
@@ -122,8 +123,7 @@ public class SplashScreen extends Activity {
                     finish();
                 }
             });
-        }
-        else {
+        } else {
             Handler h = new Handler();
             Runnable r = new Runnable() {
                 @Override
@@ -139,19 +139,19 @@ public class SplashScreen extends Activity {
 
     }
 
-    public static void dumpIntent(Intent i){
+    public static void dumpIntent(Intent i) {
 
         Bundle bundle = i.getExtras();
         if (bundle != null) {
             Set<String> keys = bundle.keySet();
             Iterator<String> it = keys.iterator();
-            Log.e("DUMENT","Dumping Intent start");
+            Log.e("DUMENT", "Dumping Intent start");
             while (it.hasNext()) {
                 String key = it.next();
-                Log.e("DUMP INTENT","[" + key + "=" + bundle.get(key)+"]");
+                Log.e("DUMP INTENT", "[" + key + "=" + bundle.get(key) + "]");
             }
 
-            Log.e("DUMP INTENT","Dumping Intent end");
+            Log.e("DUMP INTENT", "Dumping Intent end");
         }
     }
 

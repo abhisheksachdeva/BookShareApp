@@ -4,7 +4,7 @@ public class Helper {
 
     public static String accessToken = "";
     public static String accessSecret = "";
-    public static String userGRid =null;
+    public static String userGRid = null;
 
     public static String token, id;
 

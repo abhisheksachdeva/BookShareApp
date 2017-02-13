@@ -4,10 +4,10 @@
     android:layout_height="match_parent"
     android:background="@color/app_theme_background"
     android:orientation="vertical">
+
     <include
         android:id="@+id/toolbar"
-        layout="@layout/toolbar_booksearch">
-    </include>
+        layout="@layout/toolbar_booksearch"></include>
 
 
     <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
@@ -29,7 +29,7 @@
                 android:id="@+id/container"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"/>
+                android:layout_gravity="center" />
 
         </LinearLayout>
 

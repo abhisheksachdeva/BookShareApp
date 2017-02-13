@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -27,6 +27,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -259,7 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         this._profilePicture = _profilePicture;
         String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
         this.url = url;
-        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_person_filled).into(_profilePicture);
+        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_profile_pic).into(_profilePicture);
 
 
         if (_name != null) {
@@ -366,9 +367,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    /* When an item in the toolbar is clicked, the following
+    /**
+     * When an item in the toolbar is clicked, the following
      * method is called.
-     */
+     **/
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -391,6 +393,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText.setTextColor(getResources().getColor(R.color.White));
+        searchEditText.setHintTextColor(getResources().getColor(R.color.White));
         searchView.setOnQueryTextListener(this);
 
         notifItem.setIcon(R.drawable.ic_notif_small);
@@ -688,7 +693,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
-            if (result.getContents() ==  null) {
+            if (result.getContents() == null) {
                 Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
             } else {
                 Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);

@@ -3,17 +3,18 @@ package com.sdsmdg.bookshareapp.BSA.api.models;
 import org.simpleframework.xml.Element;
 import org.simpleframework.xml.Root;
 
-@Root(name="GoodreadsResponse",strict = false)
+@Root(name = "GoodreadsResponse", strict = false)
 public class GoodreadsResponse {
 
 
-    @Element(name="search")
+    @Element(name = "search")
     public Search search;
-    public Search getSearch(){
+
+    public Search getSearch() {
         return search;
     }
 
-    public GoodreadsResponse(){
+    public GoodreadsResponse() {
 
     }
 

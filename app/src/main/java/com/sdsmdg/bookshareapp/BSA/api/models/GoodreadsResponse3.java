@@ -1,16 +1,15 @@
 package com.sdsmdg.bookshareapp.BSA.api.models;
 
-import org.simpleframework.xml.Element;
 import org.simpleframework.xml.ElementList;
 import org.simpleframework.xml.Root;
 
 import java.util.List;
 
-@Root(name="GoodreadsResponse",strict = false)
+@Root(name = "GoodreadsResponse", strict = false)
 public class GoodreadsResponse3 {
 
 
-    @ElementList(name="books")
+    @ElementList(name = "books")
     public List<BookDetailsToRead> bookDetailsToReads;
 
 //    public ToReadModel getToReadModelReviews() {
@@ -22,7 +21,7 @@ public class GoodreadsResponse3 {
         return bookDetailsToReads;
     }
 
-    public GoodreadsResponse3(){
+    public GoodreadsResponse3() {
 
     }
 

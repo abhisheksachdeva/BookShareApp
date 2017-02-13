@@ -53,9 +53,11 @@ public class Book extends RealmObject {
     public String getId() {
         return id;
     }
+
     public String getDetail() {
         return detail;
     }
+
     public float getRating() {
         return rating;
     }
@@ -67,6 +69,7 @@ public class Book extends RealmObject {
     public String getTitle() {
         return title;
     }
+
     public String getDescription() {
         return description;
     }

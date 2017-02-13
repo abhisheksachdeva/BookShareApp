@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -88,10 +86,11 @@ public class UserSearchActivity extends ActionBarActivity {
         usersRecyclerView.setAdapter(adapter);
 
     }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_user_search, menu);
+//        getMenuInflater().inflate(R.menu.menu_user_search, menu);
         return true;
     }
 
@@ -111,7 +110,7 @@ public class UserSearchActivity extends ActionBarActivity {
             case R.id.action_settings:
                 return true;
             case R.id.action_search:
-                handleMenuSearch();
+//                handleMenuSearch();
                 return true;
 
 
@@ -184,7 +183,7 @@ public class UserSearchActivity extends ActionBarActivity {
             imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
 
             //add the search icon in the action bar
-            mSearchAction.setIcon(getResources().getDrawable(R.drawable.search_icon));
+//            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_search));
 
             isSearchOpened = false;
         } else { //open the search entry
@@ -226,20 +225,21 @@ public class UserSearchActivity extends ActionBarActivity {
 
 
             //add the close icon
-            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_cross_green));
+            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_cross));
+
 
             isSearchOpened = true;
         }
     }
 
-    private void search_open(){
+    private void search_open() {
         ActionBar action = getSupportActionBar(); //get the actionbar
 
         action.setDisplayShowCustomEnabled(true); //enable it to display a
         // custom view in the action bar.
         action.setCustomView(R.layout.user_search_bar);//add the custom view
         action.setDisplayShowTitleEnabled(false); //hide the title
-        
+
         edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
         edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 

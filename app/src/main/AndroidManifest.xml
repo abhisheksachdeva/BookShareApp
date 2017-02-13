@@ -23,8 +23,8 @@
         <activity
             android:name=".ui.SearchResultsActivity"
             android:label="Search"
-            android:theme="@style/AppTheme.UserSearch"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.UserSearch">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCHRESULTS" />
 
@@ -39,7 +39,10 @@
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".ui.SignupActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:label="Sign Up"
+            android:parentActivityName=".ui.MyProfile"
+            />
         <activity
             android:name=".ui.MyProfile"
             android:label="My Profile"

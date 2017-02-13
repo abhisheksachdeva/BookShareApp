@@ -1,14 +1,11 @@
 package com.sdsmdg.bookshareapp.BSA.firebase_classes;
 
-import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.media.RingtoneManager;
 import android.net.Uri;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -101,9 +98,9 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
             notificationBuilder.setContentTitle(title)
                     .setContentText(body);
         } else {
-             size = notifications.size()+1;
+            size = notifications.size() + 1;
             notificationBuilder.setContentTitle(title);
-            inboxStyle.setBigContentTitle("You have " + size+ " Notifications.");
+            inboxStyle.setBigContentTitle("You have " + size + " Notifications.");
         }
 
 

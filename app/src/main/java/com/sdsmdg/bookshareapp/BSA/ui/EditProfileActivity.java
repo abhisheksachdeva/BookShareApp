@@ -26,7 +26,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     EditText firstName, lastName, contactNo, roomNo;
     Spinner hostelSpinner;
-    String id ;
+    String id;
     SharedPreferences preferences;
     String hostel;
     UserInfo userInfo;
@@ -43,7 +43,7 @@ public class EditProfileActivity extends AppCompatActivity {
         hostelSpinner = (Spinner) findViewById(R.id.hostel_spinner);
 
         preferences = getSharedPreferences("Token", MODE_PRIVATE);
-        id = preferences.getString("id",null);
+        id = preferences.getString("id", null);
         firstName.setText(preferences.getString("first_name", null));
         lastName.setText(preferences.getString("last_name", null));
         contactNo.setText(preferences.getString("contact_no", null));
@@ -118,7 +118,7 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent i= new Intent(this,MyProfile.class);
+        Intent i = new Intent(this, MyProfile.class);
         i.putExtra("id", preferences.getString("id", preferences.getString("id", "")));
         startActivity(i);
 

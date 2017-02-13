@@ -67,8 +67,8 @@ public class NotificationFragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_notification, container, false);
 
-        prefs = getContext().getSharedPreferences("Token",Context.MODE_PRIVATE);
-        noNotificationTextView = (TextView)v.findViewById(R.id.no_notification_text);
+        prefs = getContext().getSharedPreferences("Token", Context.MODE_PRIVATE);
+        noNotificationTextView = (TextView) v.findViewById(R.id.no_notification_text);
 
         nLinearLayoutManager = new LinearLayoutManager(getActivity());
 
@@ -89,7 +89,7 @@ public class NotificationFragment extends Fragment {
 
         notificationsListView.addOnScrollListener(endlessScrollListener);
 
-        refreshLayout =(SwipeRefreshLayout)v.findViewById(R.id.notif_refresh_layout);
+        refreshLayout = (SwipeRefreshLayout) v.findViewById(R.id.notif_refresh_layout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -117,7 +117,7 @@ public class NotificationFragment extends Fragment {
                 .build();
 
         UsersAPI usersAPI = retrofit.create(UsersAPI.class);
-        Call<Notification_Model> call = usersAPI.getNotifs(page,"Token "+prefs.getString("token",null));
+        Call<Notification_Model> call = usersAPI.getNotifs(page, "Token " + prefs.getString("token", null));
         call.enqueue(new Callback<Notification_Model>() {
 
             @Override
@@ -125,7 +125,7 @@ public class NotificationFragment extends Fragment {
                 if (response.body() != null) {
 
                     List<Notifications> notifList = response.body().getNotificationsList();
-                    if(notifList.size() == 0) {
+                    if (notifList.size() == 0) {
                         noNotificationTextView.setText("No new notifications");
                         noNotificationTextView.setVisibility(View.VISIBLE);
                     } else {
