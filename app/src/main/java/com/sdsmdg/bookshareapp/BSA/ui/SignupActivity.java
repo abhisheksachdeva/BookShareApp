@@ -122,11 +122,13 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
             public void onClick(View v) {
                 if (!showPassword) {
                     _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    _passwordText.setSelection(_passwordText.getText().length());
                     showPassword = true;
                     _showPassword.setImageResource(R.drawable.ic_visible_off);
                 } else {
                     _passwordText.setInputType(129); //input type = password
                     showPassword = false;
+                    _passwordText.setSelection(_passwordText.getText().length());
                     _showPassword.setImageResource(R.drawable.ic_visible_on);
                 }
             }
@@ -138,10 +140,12 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                 if (!showCnfPassword) {
                     _cnf_passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     showCnfPassword = true;
+                    _cnf_passwordText.setSelection(_passwordText.getText().length());
                     _showCnfPassword.setImageResource(R.drawable.ic_visible_off);
                 } else {
                     _cnf_passwordText.setInputType(129); //input type = password
                     showCnfPassword = false;
+                    _cnf_passwordText.setSelection(_passwordText.getText().length());
                     _showCnfPassword.setImageResource(R.drawable.ic_visible_on);
 
                 }
@@ -355,7 +359,6 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         } else {
             _collegeText.setError(null);
         }
-
 
         if (email.isEmpty()) {
             _emailText.setError("enter a valid email address");
