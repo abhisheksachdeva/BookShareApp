@@ -6,9 +6,6 @@ import android.os.Bundle;
 
 import com.sdsmdg.bookshareapp.BSA.R;
 
-/**
- * Created by ajayrahul on 17/8/16.
- */
 public class CustomProgressDialog extends ProgressDialog {
     public CustomProgressDialog(Context context) {
         super(context);
@@ -23,7 +20,5 @@ public class CustomProgressDialog extends ProgressDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.custom_progressdialog);
-
-
     }
 }

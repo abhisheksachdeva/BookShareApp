@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -200,7 +199,6 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         Helper.setUserEmail(email);
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<Signup> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact, FirebaseInstanceId.getInstance().getToken(), password);
-        Log.i("FCM_token ", FirebaseInstanceId.getInstance().getToken() + " <-");
         userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
 
             @Override
@@ -274,8 +272,6 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                 if (response.body().getType().equals("success")) {
                     Toast.makeText(getApplicationContext(), "OTP sent", Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.i(TAG, response.body().getType());
-                    Log.i(TAG, response.body().getMessage());
                     Toast.makeText(getApplicationContext(), "OTP not sent", Toast.LENGTH_SHORT).show();
                 }
             }

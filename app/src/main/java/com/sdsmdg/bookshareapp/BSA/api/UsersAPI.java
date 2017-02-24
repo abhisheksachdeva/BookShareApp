@@ -94,7 +94,6 @@ public interface UsersAPI {
             @Path("id") String id,
             @Query("user_id") String id_same,
             @Header("Authorization") String token
-
     );
 
     @POST("token/")

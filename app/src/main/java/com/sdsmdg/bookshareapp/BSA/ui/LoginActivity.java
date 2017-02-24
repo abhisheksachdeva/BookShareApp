@@ -83,8 +83,6 @@ public class LoginActivity extends AppCompatActivity {
         _emailText.setAdapter(adapter);
 
         token = pref.getString("token", "");
-        Log.i("Login token", token + " n");
-
         _showPassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,8 +133,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void login() {
-        Log.d(TAG, "Login");
-
         if (!validate()) {
             onLoginFailed("Fill complete details!");
             return;
@@ -152,7 +148,6 @@ public class LoginActivity extends AppCompatActivity {
         String password = _passwordText.getText().toString();
         Helper.setUserEmail(email);
 
-
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<Login> call = usersAPI.getToken(email, password);
         call.enqueue(new Callback<Login>() {
@@ -161,19 +156,15 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.body() != null) {
                     if (response.body().getDetail() != null) {
                         onLoginFailed(response.body().getDetail());
-                        Log.i(TAG, "RESPONSE ERROR ");
                     }
                     if (response.body().getToken() != null) {
                         setNewEmail(_emailText.getText().toString());//This function sets the new entered email into the shared prefs for suggestions
                         onLoginSuccess();
                         saveinSP(response.body().getToken(), response.body().getUserInfo());
-                        Log.i(TAG, "RESPONSE SUCCESS ");
-
                     }
                 }
                 customProgressDialog.dismiss();
             }
-
             @Override
             public void onFailure(Call<Login> call, Throwable t) {
                 onLoginFailed("Check your network connectivity and try again!");
@@ -181,34 +172,6 @@ public class LoginActivity extends AppCompatActivity {
                 customProgressDialog.dismiss();
             }
         });
-
-//
-//        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-//        Log.i("Token ", token+"---> This the token");
-//        Call<Detail> call2 = usersAPI.update_fcm_id(
-//                token,
-//                refreshedToken
-//        );
-//        call2.enqueue(new Callback<Detail>() {
-//            @Override
-//            public void onResponse(Call<Detail> call2, Response<Detail> response) {
-//                if (response.body() != null) {
-//                    if (response.body().getDetail().equals("FCM_ID changed")) {
-//                        Toast.makeText(getApplicationContext(), "FCM_ID changed", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(getApplicationContext(), "Request not valid", Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    Log.i("CPA", "request body is null");
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Detail> call, Throwable t) {
-//                Toast.makeText(getApplicationContext(), "Check internet connectivity and try again", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//
     }
 
     public void setNewEmail(String email) {
@@ -235,7 +198,6 @@ public class LoginActivity extends AppCompatActivity {
 
                 // By default we just finish the Activity and log them in automatically
                 Toast.makeText(this, "Signup Successful!", Toast.LENGTH_SHORT).show();
-
             }
         }
     }
@@ -298,8 +260,6 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("contact_no", userInfo.getContactNo());
         editor.putString("enr_no", userInfo.getEnrNo());
         editor.putString("college", userInfo.getCollege());
-
-        Log.i("room_no", userInfo.getRoomNo());
         editor.apply();
 
     }

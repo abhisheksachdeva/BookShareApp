@@ -128,9 +128,7 @@ public class UserProfile extends AppCompatActivity {
         call.enqueue(new Callback<UserDetailWithCancel>() {
             @Override
             public void onResponse(Call<UserDetailWithCancel> call, Response<UserDetailWithCancel> response) {
-                Log.i("INSIDE ONCLICK ", id + "fklksmlsn");
                 if (response.body() != null) {
-                    Log.d("UserProfile Response:", response.toString());
                     user = response.body().getUserInfo();
                     name.setText(user.getName());
                     email = user.getEmail();

@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -69,7 +68,6 @@ public class UserSearchActivity extends ActionBarActivity {
         customProgressDialog.setCancelable(false);
 
         noUsersTextView = (TextView) findViewById(R.id.no_users_textView);
-
         preferences = getSharedPreferences("Token", MODE_PRIVATE);
 
         search_open();
@@ -79,12 +77,9 @@ public class UserSearchActivity extends ActionBarActivity {
         adapter = new UsersAdapter(false, Helper.getUserId(), this, userInfoList, null, null, new UsersAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(UserInfo userInfo) {
-                Log.i(TAG, "onItemClick: " + userInfo.getFirstName());
             }
         });
-
         usersRecyclerView.setAdapter(adapter);
-
     }
 
     @Override
@@ -154,7 +149,7 @@ public class UserSearchActivity extends ActionBarActivity {
 
             @Override
             public void onFailure(Call<List<UserInfo>> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Check your internet connectivity and try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
                 customProgressDialog.dismiss();
             }
         });
@@ -174,7 +169,6 @@ public class UserSearchActivity extends ActionBarActivity {
         ActionBar action = getSupportActionBar(); //get the actionbar
 
         if (isSearchOpened) { //test if the search is open
-
             action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
             action.setDisplayShowTitleEnabled(true); //show the title in the action bar
 
@@ -216,18 +210,14 @@ public class UserSearchActivity extends ActionBarActivity {
                 }
             });
 
-
             edtSeach.requestFocus();
 
             //open the keyboard focused in the edtSearch
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
 
-
             //add the close icon
             mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_cross));
-
-
             isSearchOpened = true;
         }
     }
@@ -239,7 +229,6 @@ public class UserSearchActivity extends ActionBarActivity {
         // custom view in the action bar.
         action.setCustomView(R.layout.user_search_bar);//add the custom view
         action.setDisplayShowTitleEnabled(false); //hide the title
-
         edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
         edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
@@ -264,14 +253,11 @@ public class UserSearchActivity extends ActionBarActivity {
             }
         });
 
-
         edtSeach.requestFocus();
 
         //open the keyboard focused in the edtSearch
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
-
-
         //add the close icon
     }
 }

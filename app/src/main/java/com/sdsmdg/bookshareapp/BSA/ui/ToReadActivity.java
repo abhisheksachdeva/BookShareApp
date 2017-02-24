@@ -9,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
@@ -56,10 +55,6 @@ public class ToReadActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_toread);
-//        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-//        setSupportActionBar(myToolbar);
-
         customProgressDialog = new CustomProgressDialog(ToReadActivity.this);
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
@@ -90,7 +85,6 @@ public class ToReadActivity extends AppCompatActivity {
         };
 
         localBookList.addOnScrollListener(endlessScrollListener);
-
         refreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_to_refresh_layout);
         refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -112,21 +106,16 @@ public class ToReadActivity extends AppCompatActivity {
         params.put("id", userGrId);
         params.put("shelf", "to-read");
         Call<GoodreadsResponse3> call = api.getToRead(params);
-        Log.i("sss", call.request().url().toString());
         call.enqueue(new Callback<GoodreadsResponse3>() {
             @Override
             public void onResponse(Call<GoodreadsResponse3> call, Response<GoodreadsResponse3> response) {
                 if (response.body() != null) {
-
-                    Log.i("GRTR", response.toString());
-
                     bookDetailsToReads.clear();
                     adapter.notifyDataSetChanged();
                     bookDetailsToReads.addAll(response.body().getBookDetailsToReads());
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
                 } else {
-                    Log.i("GRTR", "response = null");
                 }
 
                 final android.os.Handler handler = new android.os.Handler();
@@ -142,7 +131,6 @@ public class ToReadActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<GoodreadsResponse3> call, Throwable t) {
-                Log.d("GRTR", "failedto parse " + t.toString());
                 refreshLayout.setRefreshing(false);
                 customProgressDialog.dismiss();
 
@@ -158,7 +146,6 @@ public class ToReadActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
-
 
             case R.id.action_settings:
                 SharedPreferences.Editor editor = pref.edit();
