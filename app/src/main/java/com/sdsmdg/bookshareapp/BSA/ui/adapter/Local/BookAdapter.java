@@ -123,7 +123,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                Toast.makeText(context, "Selected", Toast.LENGTH_SHORT).show();
                 //This line activates the contextual action bar
                 mActionMode = activity.startActionMode(mActionModeCallback);
                 selected.put(position, true);
@@ -246,7 +245,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
                 itemsPendingRemoval.remove(bookList.get(position));
                 //This line will remove the undo button and show the book row completely
                 notifyItemChanged(position);
-                Toast.makeText(context, "Check your network connectivity and try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }

@@ -150,14 +150,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             }
         }
 
-        try {
-            String url = CommonUtilities.local_books_api_url + "image/" + id + "/";
-            Picasso.with(this.context).load(url).placeholder(R.drawable.ic_profile).into(holder.imageUser);
-        } catch (Exception e) {
-            Toast.makeText(this.context, e.toString(), Toast.LENGTH_SHORT).show();
-
-        }
-
+        String url = CommonUtilities.local_books_api_url + "image/" + id + "/";
+        Picasso.with(this.context).load(url).placeholder(R.drawable.ic_profile).into(holder.imageUser);
 
     }
 
@@ -166,15 +160,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
         if (holder.request.getText() == "Request") {
             builder.setTitle("Send request?");
-        }
-        else {
+        } else {
             builder.setTitle("Cancel request?");
         }
 
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                if(holder.request.getText().equals("Request")) {
+                if (holder.request.getText().equals("Request")) {
                     String process = "request";
                     UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
                     Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, id, "request for", "Token " + prefs.getString("token", null));
@@ -192,7 +185,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
                         @Override
                         public void onFailure(Call<Notifications> call, Throwable t) {
-                            Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {
@@ -213,7 +206,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
                         @Override
                         public void onFailure(Call<Notifications> call, Throwable t) {
-                            Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -243,8 +236,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        if (userList != null)
+        if (userList != null) {
             return userList.size();
+        }
 
         return 0;
     }

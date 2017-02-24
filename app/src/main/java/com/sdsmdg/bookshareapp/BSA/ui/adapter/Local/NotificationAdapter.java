@@ -13,7 +13,6 @@ import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -291,7 +290,6 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     public void onResponse(Call<Notifications> call, Response<Notifications> response) {
                         if (response.body() != null) {
                             Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                            Log.i("response", response.body().getDetail());
                             holder.buttonLayout.setVisibility(View.GONE);
                         } else {
                             Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
@@ -300,8 +298,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
                     @Override
                     public void onFailure(Call<Notifications> call, Throwable t) {
-                        Log.i("AcceptNotif", "Failed!!");
-                        Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -328,21 +325,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     @Override
                     public void onResponse(Call<Notifications> call, Response<Notifications> response) {
                         if (response.body() != null) {
-                            Log.i("RejectNotif", "Success");
                             Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                            Log.i("response", response.body().getDetail());
                             holder.buttonLayout.setVisibility(View.GONE);
 
                         } else {
-                            Log.i("rejectNotif", "Response Null");
                             Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<Notifications> call, Throwable t) {
-                        Log.i("rejectNotif", "Failed!!");
-                        Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                     }
                 });
 

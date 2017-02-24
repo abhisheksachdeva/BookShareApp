@@ -25,8 +25,6 @@ import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -103,17 +101,9 @@ public class NotificationFragment extends Fragment {
     public void getNotifications(final String page) {
         Helper.setOld_total(Helper.getNew_total());
 
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-        logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
-
-        httpclient.addInterceptor(logging);
-
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(CommonUtilities.local_books_api_url)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(httpclient.build())
                 .build();
 
         UsersAPI usersAPI = retrofit.create(UsersAPI.class);

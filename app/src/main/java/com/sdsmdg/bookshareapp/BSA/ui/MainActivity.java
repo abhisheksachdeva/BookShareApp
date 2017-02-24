@@ -70,16 +70,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SearchView searchView;
     Integer count = 1;
     String Resp;
-    public static Context contextOfApplication;
-
 
     //Creates a list of visible snackbars
     List<Snackbar> visibleSnackbars = new ArrayList<>();
-
-    public String getResplocal() {
-        return resplocal;
-    }
-
     String resplocal;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
@@ -136,13 +129,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (getIntent().getExtras() != null) {
 
-            Log.i("REACHED HERE ", "INSIDE PART ONE ");
-
             data = getIntent().getExtras().getString("data");
-            Log.d("VALUE OF DATA ", data + "---==>>");
             if (data != null) {
                 if (data.equals("open")) {
-                    Log.d("Reached here ", "inside data== open ");
                     notifFragment.getNotifications("1");
                     MyFirebaseMessagingService.notifications.clear();
                     drawerLayout.openDrawer(GravityCompat.END);
@@ -150,23 +139,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
             data = getIntent().getExtras().getString("data_splash");
-            Log.d("VALUE OF DATA ", data + "---==>>");
             if (data != null && data.equals("open_drawer")) {
-                Log.d("Reached here ", "inside data  SPLASH  == open ");
                 notifFragment.getNotifications("1");
                 MyFirebaseMessagingService.notifications.clear();
                 drawerLayout.openDrawer(GravityCompat.END);
             }
 
             data = getIntent().getExtras().getString("data_login");
-            Log.d("VALUE OF DATA ", data + "---==>>");
             if (data != null && data.equals("update")) {
-                Log.d("Reached here ", "inside data  SPLASH  == open ");
 
                 String token = "Token " + preferences.getString("token", null);
 
                 String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                Log.i("Token ", token + "---> This the token");
                 UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
                 Call<Detail> call2 = usersAPI.update_fcm_id(
                         token,
@@ -177,12 +161,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     public void onResponse(Call<Detail> call2, Response<Detail> response) {
                         if (response.body() != null) {
                             if (response.body().getDetail().equals("FCM_ID changed")) {
-                                Toast.makeText(getApplicationContext(), "FCM_ID changed", Toast.LENGTH_SHORT).show();
+                                //FCM Id was changed successfully
                             } else {
-                                Toast.makeText(getApplicationContext(), "Request not valid", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
                             }
                         } else {
-                            Log.i("CPA", "request body is null");
+                            //The FCM ID didn't change
                         }
                         removeAnyVisibleSnackbars();
                     }
@@ -444,7 +428,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_logout) {
             final SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
-            final boolean logout = false;
             String token = "Token " + prefs.getString("token", null);
 
             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
@@ -457,10 +440,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 public void onResponse(Call<Detail> call2, Response<Detail> response) {
                     if (response.body() != null) {
                         if (response.body().getDetail().equals("FCM_ID changed")) {
-                            Toast.makeText(getApplicationContext(), "FCM_ID changed", Toast.LENGTH_SHORT).show();
-
+                            //The FCM ID was changed successfully
                         } else {
-                            Toast.makeText(getApplicationContext(), "Request not valid", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
                         }
                         removeAnyVisibleSnackbars();
                         SharedPreferences.Editor editor = prefs.edit();
@@ -470,7 +452,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         startActivity(i);
                         finish();
                     } else {
-                        Log.i("CPA", "request body is null");
+                        Toast.makeText(MainActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                         Intent i = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(i);
                         finish();
@@ -480,7 +462,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 @Override
                 public void onFailure(Call<Detail> call, Throwable t) {
-                    Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
+                    Snackbar.make(findViewById(R.id.coordinatorlayout), R.string.you_are_offline, Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
                         @Override
                         public void onDismissed(Snackbar snackbar, int event) {
                             visibleSnackbars.remove(snackbar);
@@ -542,7 +524,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.body() != null) {
                     Resp = response.toString();
                     List<Book> localBooksList = response.body().getResults();
-                    Log.d(TAG, response.body().getCount() + "");
                     if (page.equals("1")) {
                         //Save the first page to the offline database
                         realm.beginTransaction();
@@ -567,8 +548,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(Call<BookList> call, Throwable t) {
-                Log.d("MA_SearchResponse", "searchOnFail " + t.toString());
-                Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
+                Snackbar.make(findViewById(R.id.coordinatorlayout), R.string.you_are_offline, Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
                     @Override
                     public void onDismissed(Snackbar snackbar, int event) {
                         visibleSnackbars.remove(snackbar);
@@ -691,7 +671,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
         if (result != null) {
             if (result.getContents() == null) {
-                Toast.makeText(this, "Cancelled", Toast.LENGTH_LONG).show();
+                //The operation was cancelled
             } else {
                 Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
                 i.putExtra("isbn", result.getContents());

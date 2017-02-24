@@ -7,7 +7,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +78,6 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
     public BooksAdapterGR(Context context, List<com.sdsmdg.bookshareapp.BSA.api.models.Book> bookList, OnItemClickListener listener) {
         this.bookList = bookList;
         this.context = context;
-        Log.d("BookAdapter", "Constructor");
         this.listener = listener;
         prefs = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
 
@@ -104,7 +102,6 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
         final Long ratingsCount;
         final Float rating;
         token = prefs.getString("token", null);
-        Log.i("token_value", token);
 
         holder.add.setEnabled(true);
         tempValues = bookList.get(position);
@@ -138,7 +135,6 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
             public void onClick(View v) {
 
                 BooksAPI api = NetworkingFactory.getGRInstance().getBooksApi();
-                Log.e("BAGR","reached here!!");
                 Call<GoodreadsResponse2> call = api.getBookDescription(search_id, CommonUtilities.API_KEY);
                 call.enqueue(new Callback<GoodreadsResponse2>() {
                     @Override
@@ -151,10 +147,8 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                             if (description.length() > 1000) {
                                 description = description.substring(0, 990) + "...";
                             }
-                            Log.e("DES",description+" length");
                         } else {
                             description = "No Description Available";
-                            Log.e("faile","response null");
                         }
 
                     }
@@ -162,8 +156,6 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                     @Override
                     public void onFailure(Call<GoodreadsResponse2> call, Throwable t) {
                         description = "No Description Available";
-                        Log.e("FAILURE","onfailure");
-                        Log.e("FAIL",t.getMessage());
                     }
                 });
 
@@ -180,18 +172,14 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
 
                             @Override
                             public void onResponse(Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> call, Response<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> response) {
-                                Log.i("Email iD ", Helper.getUserEmail());
                                 try {
 
 
                                     if (response.body() != null) {
-                                        Log.i("AddBook", "Success");
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                        Log.i("response", response.body().getDetail());
                                         holder.add.setEnabled(false);
 
                                     } else {
-                                        Log.i("AddBook", "Response Null");
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                     }
                                 } catch (NullPointerException n) {
@@ -201,7 +189,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
 
                             @Override
                             public void onFailure(Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> call, Throwable t) {
-                                Log.i("AddBook", "Failed!!");
+                                Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                             }
                         });
                     }

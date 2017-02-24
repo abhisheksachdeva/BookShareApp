@@ -136,24 +136,17 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
                             sendNotif.enqueue(new Callback<Notifications>() {
                                 @Override
                                 public void onResponse(Call<Notifications> call, Response<Notifications> response) {
-                                    Log.i("Email iD ", Helper.getUserEmail());
                                     if (response.body() != null) {
-                                        Log.i("SendNotif", "Success");
-                                        Log.d("SendNotif", Helper.getUserId() + " ID" + userId);
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                        Log.i("response", response.body().getDetail());
                                         holder.request.setText("Cancel");
-
                                     } else {
-                                        Log.i("SendNotif", "Response Null");
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(Call<Notifications> call, Throwable t) {
-                                    Log.i("SendNotif", "Failed!!");
-                                    Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         } else {
@@ -166,22 +159,17 @@ public class BooksAdapterRequest extends RecyclerView.Adapter<BooksAdapterReques
                                 @Override
                                 public void onResponse(Call<Notifications> call, Response<Notifications> response) {
                                     if (response.body() != null) {
-                                        Log.i("CancelNotif", "Success");
-                                        Log.d("CancelNotif", Helper.getUserId() + " ID" + userId);
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                        Log.i("response", response.body().getDetail());
                                         holder.request.setText("Request");
 
                                     } else {
-                                        Log.i("CancelNotif", "Response Null");
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
                                 @Override
                                 public void onFailure(Call<Notifications> call, Throwable t) {
-                                    Log.i("CancelNotif", "Failed!!");
-                                    Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         }
