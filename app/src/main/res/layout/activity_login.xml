@@ -47,8 +47,10 @@
                     android:layout_height="wrap_content"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
-                    android:maxLength="19"
+                    android:maxLength="190"
+                    android:paddingRight="80dp"
                     android:textColor="@color/White" />
+
             </android.support.design.widget.TextInputLayout>
 
             <TextView
@@ -65,13 +67,14 @@
 
 
         <!-- Password Label -->
-        <FrameLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
             <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp"
                 android:layout_marginTop="4dp"
@@ -93,10 +96,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|center_vertical"
                 android:background="#00FFFFFF"
+                android:layout_marginTop="4dp"
                 android:src="@drawable/ic_visible_off"
                 android:tint="@color/White" />
 
-        </FrameLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

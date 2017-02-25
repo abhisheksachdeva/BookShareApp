@@ -18,7 +18,7 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
-import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.MyProfile;
 import com.sdsmdg.bookshareapp.BSA.ui.UserProfile;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
@@ -140,7 +140,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                     @Override
                     public void onClick(View v) {
 
-                        showAlertDialog(holder, id);
+                        showAlertDialog(holder, id, position);
                     }
                 });
             }
@@ -150,26 +150,24 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
             }
         }
 
-        try {
-            String url = CommonUtilities.local_books_api_url + "image/" + id + "/";
-            Picasso.with(this.context).load(url).placeholder(R.drawable.ic_profile).into(holder.imageUser);
-        } catch (Exception e) {
-            Toast.makeText(this.context, e.toString(), Toast.LENGTH_SHORT).show();
-
-        }
-
+        String url = CommonUtilities.local_books_api_url + "image/" + id + "/";
+        Picasso.with(this.context).load(url).placeholder(R.drawable.ic_profile).into(holder.imageUser);
 
     }
 
-    public void showAlertDialog(final ViewHolder holder, final String id) {
+    private void showAlertDialog(final ViewHolder holder, final String id, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         if (holder.request.getText() == "Request") {
-
             builder.setTitle("Send request?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+        } else {
+            builder.setTitle("Cancel request?");
+        }
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (holder.request.getText().equals("Request")) {
                     String process = "request";
                     UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
                     Call<Notifications> sendNotif = usersAPI.sendNotif(Helper.getUserId(), Helper.getUserName(), bookId, bookTitle, process, id, "request for", "Token " + prefs.getString("token", null));
@@ -178,7 +176,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
                         public void onResponse(Call<Notifications> call, Response<Notifications> response) {
                             if (response.body() != null) {
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                holder.request.setEnabled(false);
+                                holder.request.setText("Cancel");
 
                             } else {
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
@@ -187,27 +185,19 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
                         @Override
                         public void onFailure(Call<Notifications> call, Throwable t) {
-                            Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                         }
                     });
-                }
-            });
-        }
-        else {
-
-            builder.setTitle("Cancel request?");
-            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
+                } else {
                     String process = "cancel";
                     UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                    Call<Notifications> cancelNotif = usersAPI.cancelNotif(bookId, Helper.getUserId(), process, "Token " + prefs.getString("token", null));
+                    Call<Notifications> cancelNotif = usersAPI.cancelNotif(bookId, userList.get(position).getId(), process, "Token " + prefs.getString("token", null));
                     cancelNotif.enqueue(new Callback<Notifications>() {
                         @Override
                         public void onResponse(Call<Notifications> call, Response<Notifications> response) {
                             if (response.body() != null) {
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                                holder.request.setEnabled(false);
+                                holder.request.setText("Request");
 
                             } else {
                                 Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
@@ -216,13 +206,12 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
                         @Override
                         public void onFailure(Call<Notifications> call, Throwable t) {
-                            Toast.makeText(context, "Check your internet connection and try again!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
-            });
-
-        }
+            }
+        });
 
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
             @Override
@@ -247,8 +236,9 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        if (userList != null)
+        if (userList != null) {
             return userList.size();
+        }
 
         return 0;
     }

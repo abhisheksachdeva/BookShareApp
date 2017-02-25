@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -82,7 +81,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         setContentView(R.layout.activity_signup);
         ButterKnife.inject(this);
 
-        //////////////// Setting spinner for hostels \\\\\\\\\\\\\\\\\
+        //Setting spinner for hostels
         ArrayAdapter<CharSequence> hostelAdapter = ArrayAdapter.createFromResource(this, R.array.hostel_list, android.R.layout.simple_spinner_item);
 
         hostelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -100,7 +99,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                 hostel = "Azad";
             }
         });
-        /////////////////////////// Spinner complete \\\\\\\\\\\\\\\\\\\\\\\\\\\\
+        //Spinner complete
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -122,11 +121,13 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
             public void onClick(View v) {
                 if (!showPassword) {
                     _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    _passwordText.setSelection(_passwordText.getText().length());
                     showPassword = true;
                     _showPassword.setImageResource(R.drawable.ic_visible_off);
                 } else {
                     _passwordText.setInputType(129); //input type = password
                     showPassword = false;
+                    _passwordText.setSelection(_passwordText.getText().length());
                     _showPassword.setImageResource(R.drawable.ic_visible_on);
                 }
             }
@@ -138,10 +139,12 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                 if (!showCnfPassword) {
                     _cnf_passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     showCnfPassword = true;
+                    _cnf_passwordText.setSelection(_passwordText.getText().length());
                     _showCnfPassword.setImageResource(R.drawable.ic_visible_off);
                 } else {
                     _cnf_passwordText.setInputType(129); //input type = password
                     showCnfPassword = false;
+                    _cnf_passwordText.setSelection(_passwordText.getText().length());
                     _showCnfPassword.setImageResource(R.drawable.ic_visible_on);
 
                 }
@@ -196,7 +199,6 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         Helper.setUserEmail(email);
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<Signup> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact, FirebaseInstanceId.getInstance().getToken(), password);
-        Log.i("FCM_token ", FirebaseInstanceId.getInstance().getToken() + " <-");
         userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
 
             @Override
@@ -270,8 +272,6 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                 if (response.body().getType().equals("success")) {
                     Toast.makeText(getApplicationContext(), "OTP sent", Toast.LENGTH_SHORT).show();
                 } else {
-                    Log.i(TAG, response.body().getType());
-                    Log.i(TAG, response.body().getMessage());
                     Toast.makeText(getApplicationContext(), "OTP not sent", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -355,7 +355,6 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         } else {
             _collegeText.setError(null);
         }
-
 
         if (email.isEmpty()) {
             _emailText.setError("enter a valid email address");

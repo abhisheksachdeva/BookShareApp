@@ -32,57 +32,41 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        Log.d(TAG, "FCMSERVICE DESTROOOOOOYED ");
-
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d(TAG, "FCMSERVICE STARTED ");
-//        sendNotification("Notif created","Yup");
     }
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d(TAG, "FROM : " + remoteMessage.getFrom());
-
         //check if msg contains data..
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data  : " + remoteMessage.getData());
             String name = remoteMessage.getData().get("name");
             String body = remoteMessage.getData().get("body");
             String book = remoteMessage.getData().get("book");
             String title = remoteMessage.getData().get("title");
             String message = name + " " + body + " " + book;
-//            String x = remoteMessage.getNotification().getBody();
-//            Log.i(TAG, x + "-------kkn");
             sendNotification(title, message);
         }
 
-
-        //chck for notifs..
+        //check for notifs..
         if (remoteMessage.getNotification() != null) {
             Log.d(TAG, "Message data  : " + remoteMessage.getNotification().getBody());
-//            sendNotification(remoteMessage.getNotification().getTitle(), remoteMessage.getNotification().getBody(),count++);
         }
-
     }
 
 
     private void sendNotification(String title, String body) {
 
         Log.i("Reached here ", "inside send ----->");
-//        Intent del = new Intent(this, MyBroadcastReceiver.class);
-//        PendingIntent broadcastIntent = PendingIntent.getBroadcast(this, 0, del, 0);
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("data", "open");
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
         pendingIntent = PendingIntent.getActivity(this, 0 /*request code */, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Log.i("NOTIFICATION SIZE : ", notifications.size() + "-->");
         //setting sound :
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder;
@@ -110,7 +94,6 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         }
 
         notificationBuilder.setStyle(inboxStyle);
-//        notificationBuilder.setDeleteIntent(broadcastIntent);
         NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(0, notificationBuilder.build());
 

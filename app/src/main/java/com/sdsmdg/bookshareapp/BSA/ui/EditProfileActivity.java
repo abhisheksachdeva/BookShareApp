@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,7 +14,7 @@ import android.widget.Toast;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
-import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import retrofit2.Call;
@@ -102,14 +101,14 @@ public class EditProfileActivity extends AppCompatActivity {
                     Helper.setUserName(firstName.getText().toString() + " " + lastName.getText().toString());
 
                 } else {
-                    Log.i("EditProfile", "response.body() is null)");
+                    Toast.makeText(EditProfileActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getApplicationContext(), "Check your network connectivity and try again", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
             }
         });
 

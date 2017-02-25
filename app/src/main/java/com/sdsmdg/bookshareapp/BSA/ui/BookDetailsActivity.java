@@ -10,7 +10,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -25,7 +24,7 @@ import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookDetailWithCancel;
-import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.UsersAdapter;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
@@ -195,10 +194,9 @@ public class BookDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<BookDetailWithCancel> call, Throwable t) {
-                Log.d("BDA fail", t.toString());
                 TransitionManager.beginDelayedTransition(rootView);
                 customProgressDialog.dismiss();
-                Toast.makeText(BookDetailsActivity.this, "Connection Failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BookDetailsActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                 finish();
 
 
@@ -241,17 +239,17 @@ public class BookDetailsActivity extends AppCompatActivity {
         addBookCall.enqueue(new Callback<Book>() {
             @Override
             public void onResponse(Call<Book> call, Response<Book> response) {
+                //getDetail() returns whether the book has been added or not
                 if (response.body() != null) {
                     Toast.makeText(BookDetailsActivity.this, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-
                 } else {
-                    Toast.makeText(BookDetailsActivity.this, response.body().getDetail() + "ssss", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BookDetailsActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Book> call, Throwable t) {
-                Log.i("BDA AddBook", "Failed!!" + t.toString());
+                Toast.makeText(BookDetailsActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }

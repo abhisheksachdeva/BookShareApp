@@ -5,6 +5,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="signup">No account yet? <b>Create one</b></string>
     <string name="action_logout">LOGOUT</string>
+    <string name="connection_failed">Connection Failed</string>
+    <string name="file_not_found">File Not Found</string>
+    <string name="you_are_offline">You are offline</string>
     <string-array name="hostel_list">
         <item>Azad</item>
         <item>Cautley</item>

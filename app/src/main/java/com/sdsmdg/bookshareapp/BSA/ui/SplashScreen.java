@@ -8,7 +8,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
@@ -39,10 +38,7 @@ public class SplashScreen extends Activity {
         token = pref.getString("token", null);
 
         if (getIntent().getExtras() != null) {
-            Log.i("SPLASH ", "not------ null" + getIntent().getExtras().toString());
             String data = getIntent().getExtras().getString("google.message_id");
-            Log.i("Data ", data + "----->");
-
             if (data != null) {
                 extra_data = "open_drawer";
             }
@@ -89,7 +85,7 @@ public class SplashScreen extends Activity {
 
                             } else {
 
-                                Toast.makeText(SplashScreen.this, "Failed to log in due to internal error!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SplashScreen.this, "Failed to Log in", Toast.LENGTH_SHORT).show();
                                 try {
                                     Thread.sleep(1000);
                                 } catch (InterruptedException e) {
@@ -102,8 +98,7 @@ public class SplashScreen extends Activity {
                             }
                         }
                     } else {
-                        Log.i("harshit", "response.body() is null");
-                        Toast.makeText(SplashScreen.this, "Failed to log in due to internal error!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SplashScreen.this, "Failed to Log in", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
@@ -112,7 +107,7 @@ public class SplashScreen extends Activity {
 
                 @Override
                 public void onFailure(Call<Detail> call, Throwable t) {
-                    Toast.makeText(SplashScreen.this, "Login failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SplashScreen.this, "Failed to Login", Toast.LENGTH_SHORT).show();
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -145,13 +140,11 @@ public class SplashScreen extends Activity {
         if (bundle != null) {
             Set<String> keys = bundle.keySet();
             Iterator<String> it = keys.iterator();
-            Log.e("DUMENT", "Dumping Intent start");
             while (it.hasNext()) {
                 String key = it.next();
-                Log.e("DUMP INTENT", "[" + key + "=" + bundle.get(key) + "]");
+               // Log.e("DUMP INTENT", "[" + key + "=" + bundle.get(key) + "]");
             }
 
-            Log.e("DUMP INTENT", "Dumping Intent end");
         }
     }
 

@@ -1,4 +1,4 @@
-package com.sdsmdg.bookshareapp.BSA.api.models;
+package com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers;
 
 import com.google.gson.annotations.SerializedName;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;

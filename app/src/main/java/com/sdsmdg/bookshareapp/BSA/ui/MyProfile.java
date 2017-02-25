@@ -2,7 +2,6 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.app.Activity;
-import android.support.v7.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,11 +18,11 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -35,8 +34,9 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserDetailWithCancel;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
-import com.sdsmdg.bookshareapp.BSA.api.models.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BookAdapter;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.FileUtils;
@@ -82,7 +82,6 @@ public class MyProfile extends AppCompatActivity {
     SPDataLoader loader = new SPDataLoader();
     SharedPreferences prefs;
 
-
     List<Book> booksList;
     BookAdapter adapter;
     RecyclerView mRecyclerView;
@@ -90,7 +89,6 @@ public class MyProfile extends AppCompatActivity {
     CustomProgressDialog customProgressDialog;
     FloatingActionButton button;
     TextView noItemsTextView;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,17 +144,16 @@ public class MyProfile extends AppCompatActivity {
 
     public void getUserInfoDetails(String id) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<UserInfo> call = api.getUserandBookDetails(id, id, "Token " + prefs
+        Call<UserDetailWithCancel> call = api.getUserDetails(id, id, "Token " + prefs
                 .getString("token", null));
-        call.enqueue(new Callback<UserInfo>() {
+        call.enqueue(new Callback<UserDetailWithCancel>() {
             @Override
-            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+            public void onResponse(Call<UserDetailWithCancel> call, Response<UserDetailWithCancel> response) {
                 if (response.body() != null) {
-                    Log.d("UserProfile Response:", response.toString());
                     Resp = response.toString();
-                    user = response.body();
+                    user = response.body().getUserInfo();
 
-                    List<Book> booksTempInfoList = response.body().getUserBookList();
+                    List<Book> booksTempInfoList = user.getUserBookList();
                     if (booksTempInfoList.size() == 0) {
                         noItemsTextView.setVisibility(View.VISIBLE);
                     }
@@ -171,7 +168,6 @@ public class MyProfile extends AppCompatActivity {
                     Picasso.with(getApplicationContext()).load(url).into(backgroundImageView, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
-                            Log.i(TAG, "onSuccess: called");
                             Blurry.with(getApplicationContext())
                                     .radius(40)
                                     .sampling(1)
@@ -198,15 +194,11 @@ public class MyProfile extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<UserInfo> call, Throwable t) {
-                Log.d("BookDetails fail", t.toString());
+            public void onFailure(Call<UserDetailWithCancel> call, Throwable t) {
                 customProgressDialog.dismiss();
             }
         });
-
-
     }
-
 
     private void setUpRecyclerView(String id) {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(MyProfile.this));
@@ -217,7 +209,6 @@ public class MyProfile extends AppCompatActivity {
         adapter.setUpAnimationDecoratorHelper(mRecyclerView);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -227,7 +218,6 @@ public class MyProfile extends AppCompatActivity {
         address.setText(loader.getRoomNo(this) + ", " + loader.getHostel(this));
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -235,7 +225,6 @@ public class MyProfile extends AppCompatActivity {
                 onBackPressed();
                 return (true);
         }
-
         return (super.onOptionsItemSelected(item));
     }
 
@@ -249,18 +238,18 @@ public class MyProfile extends AppCompatActivity {
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
         AlertDialog.Builder builder = new AlertDialog.Builder(MyProfile.this);
-        builder.setTitle("Add Photo!");
+        builder.setTitle("Add Photo");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int item) {
-                boolean result = PermissionUtils.checkPermission(MyProfile.this);
                 if (items[item].equals("Take Photo")) {
                     userChoosenTask = "Take Photo";
-                    if (result)
+                    if (PermissionUtils.checkCameraPermission(MyProfile.this)) {
                         cameraIntent();
+                    }
                 } else if (items[item].equals("Choose from Library")) {
                     userChoosenTask = "Choose from Library";
-                    if (result)
+                    if (PermissionUtils.checkStoragePermission(MyProfile.this))
                         galleryIntent();
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
@@ -324,17 +313,17 @@ public class MyProfile extends AppCompatActivity {
             sendToServer(file);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
 
         } catch (IOException e) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unable to read the file", Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
         } catch (NullPointerException e) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         } catch (Exception e) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unable to read the file", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
     }
@@ -351,7 +340,7 @@ public class MyProfile extends AppCompatActivity {
         if (file != null) {
             sendToServer(file);
         } else {
-            Toast.makeText(this, "Can't upload image", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Unable to upload image", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -431,7 +420,7 @@ public class MyProfile extends AppCompatActivity {
 
                                     @Override
                                     public void onBitmapFailed(Drawable errorDrawable) {
-                                        Toast.makeText(getApplicationContext(), "failed to load image", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(getApplicationContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
                                     }
 
                                     @Override
@@ -443,13 +432,12 @@ public class MyProfile extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<Signup> call, Throwable t) {
-                    Log.d("BookDetails fail", t.toString());
-                    Toast.makeText(getApplicationContext(), "fail", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "Faile to load image", Toast.LENGTH_SHORT).show();
 
                 }
             });
         } catch (NullPointerException e) {
-            Toast.makeText(this, e.toString(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
         }
     }
 

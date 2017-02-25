@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -68,17 +67,19 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     if (response.body() != null) {
                         if (response.body().getDetail().equals("Password changed")) {
                             Toast.makeText(getApplicationContext(), "Password changed", Toast.LENGTH_SHORT).show();
-                        } else {
+                        }
+                        //The request is not valid when the token provided by the user is not correct
+                        else {
                             Toast.makeText(getApplicationContext(), "Request not valid", Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        Log.i("CPA", "request body is null");
+                        Toast.makeText(ChangePasswordActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                     }
                 }
 
                 @Override
                 public void onFailure(Call<Detail> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "Check internet connectivity and try again", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
                 }
             });
         }

@@ -10,7 +10,6 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -237,7 +236,6 @@ public class SearchResultsActivity extends ActionBarActivity {
                 }
             });
 
-
             edtSeach.requestFocus();
 
             //open the keyboard focused in the edtSearch
@@ -269,7 +267,6 @@ public class SearchResultsActivity extends ActionBarActivity {
 
         // Creating adapter for spinner
         dataAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, searchModeList);
-        Log.i("SA2 :", "adapter created ---- >");
 
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -277,21 +274,16 @@ public class SearchResultsActivity extends ActionBarActivity {
         // attaching data adapter to spinner
 
         spinner.setAdapter(dataAdapter);
-        Log.i("SA2 :", "adapter attached ---- >");
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 selected = searchModeList.get(position);
-                Log.i("SA2 :", "item selected ---- >");
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Log.i("SA2 :", "nothing selected ---- >");
-
-
+            //Nothing is selected
             }
         });
 
@@ -324,6 +316,4 @@ public class SearchResultsActivity extends ActionBarActivity {
         imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
         //add the close icon
     }
-
-
 }

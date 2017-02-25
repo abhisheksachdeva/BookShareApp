@@ -8,7 +8,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 
@@ -60,10 +59,8 @@ public class GuestActivity extends AppCompatActivity {
                 snbar.show();
                 snbar.show();
 
-
             }
         });
-
 
         signupclicklistener = new View.OnClickListener() {
             @Override
@@ -74,7 +71,6 @@ public class GuestActivity extends AppCompatActivity {
         };
 
         layoutManager = new LinearLayoutManager(this);
-
         localBookList = (RecyclerView) findViewById(R.id.local_books_list);
         localBookList.setLayoutManager(layoutManager);
         localBookList.setAdapter(adapter);
@@ -130,7 +126,6 @@ public class GuestActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<BookList> call, Throwable t) {
-                Log.d("GA_search", "searchOnFail " + t.toString());
                 refreshLayout.setRefreshing(false);
                 customProgressDialog.dismiss();
 
@@ -138,5 +133,4 @@ public class GuestActivity extends AppCompatActivity {
         });
 
     }
-
 }
