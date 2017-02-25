@@ -186,7 +186,7 @@ public class BookDetailsActivity extends AppCompatActivity {
                     @Override
                     public void run() {
 
-                        customProgressDialog.dismiss();
+//                        customProgressDialog.dismiss();
                     }
                 }, 1000);
 
