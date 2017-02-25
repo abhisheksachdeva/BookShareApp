@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +18,8 @@ import android.widget.Toast;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
-import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
 import com.sdsmdg.bookshareapp.BSA.ui.MyProfile;
 import com.sdsmdg.bookshareapp.BSA.ui.UserProfile;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
@@ -127,11 +128,14 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         holder.nameUser.setText(tempValues.getName());
         holder.emailUser.setText(tempValues.getEmail());
         holder.hostelUser.setText(tempValues.getHostel());
+        //check if it is simple userlist or userlist with request..if yes the display request button..
+        if (cancels.size() != 0) {
 
-        if (cancels.get(position)) {
-            holder.request.setText("Cancel");
-        } else {
-            holder.request.setText("Request");
+            if (cancels.get(position)) {
+                holder.request.setText("Cancel");
+            } else {
+                holder.request.setText("Request");
+            }
         }
 
         if (!id.equals(userId)) {
