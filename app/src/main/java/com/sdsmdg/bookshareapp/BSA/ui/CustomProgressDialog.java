@@ -23,7 +23,7 @@ public class CustomProgressDialog extends ProgressDialog {
         setContentView(R.layout.custom_progressdialog2);
         LottieAnimationView animationView = (LottieAnimationView) findViewById(R.id.animation_view);
         animationView.setImageAssetsFolder("images");
-        animationView.setAnimation("pbar.json");
+        animationView.setAnimation("PinJump.json", LottieAnimationView.CacheStrategy.Strong);
         animationView.playAnimation();
         animationView.loop(true);
     }

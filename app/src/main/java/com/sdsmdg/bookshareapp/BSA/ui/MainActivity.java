@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             if (response.body().getDetail().equals("FCM_ID changed")) {
                                 //FCM Id was changed successfully
                             } else {
-                                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
+//                                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
                             }
                         } else {
                             //The FCM ID didn't change

@@ -1,6 +1,8 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.http.SslError;
@@ -15,7 +17,7 @@ import android.webkit.SslErrorHandler;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.google.api.client.auth.oauth.OAuthAuthorizeTemporaryTokenUrl;
 import com.google.api.client.auth.oauth.OAuthCredentialsResponse;
@@ -31,7 +33,6 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -50,9 +51,11 @@ import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
+
 public class GRLoginActivity extends AppCompatActivity {
 
     Button login;
+    TextView textView;
     //url tags
     public static final String BASE_GOODREADS_URL = "https://www.goodreads.com";
     public static final String TOKEN_SERVER_URL = BASE_GOODREADS_URL + "/oauth/request_token";
@@ -78,13 +81,29 @@ public class GRLoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grlogin);
         login = (Button) findViewById(R.id.gr_login);
+        textView = (TextView) findViewById(R.id.info_text);
         pref = getApplicationContext().getSharedPreferences("UserId", MODE_PRIVATE);
         webView = (WebView) findViewById(R.id.webview);
         webView.setWebViewClient(new WebViewClient() {
 
             @Override
-            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-                handler.proceed();
+            public void onReceivedSslError(WebView view, final SslErrorHandler handler, SslError error) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(GRLoginActivity.this);
+                builder.setMessage("Continue without SSL certificate?");
+                builder.setPositiveButton("Proceed", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.proceed();
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        handler.cancel();
+                    }
+                });
+                final AlertDialog dialog = builder.create();
+                dialog.show();
             }
         });
         /** webview settings */
@@ -94,6 +113,7 @@ public class GRLoginActivity extends AppCompatActivity {
         webView.clearCache(true);
         clearCookies(webView.getContext());
 
+
         //Here we are generating a temporary token
         signer = new OAuthHmacSigner();
         // Get Temporary Token
@@ -102,6 +122,7 @@ public class GRLoginActivity extends AppCompatActivity {
         getTemporaryToken.signer = signer;
         getTemporaryToken.consumerKey = GOODREADS_KEY;
         getTemporaryToken.transport = new NetHttpTransport();
+
 
         /**Everything is inside this thread,
          the webview is updated using runOnUiThread
@@ -130,6 +151,7 @@ public class GRLoginActivity extends AppCompatActivity {
                     /** we are obtaining the access token ...*/
 
                     OAuthGetAccessToken getAccessToken = new OAuthGetAccessToken(ACCESS_TOKEN_URL);
+
                     getAccessToken.signer = signer;
 
                     signer.tokenSharedSecret = temporaryTokenResponse.tokenSecret;
@@ -140,6 +162,7 @@ public class GRLoginActivity extends AppCompatActivity {
                         throw new InterruptedException();
 
                     }
+
                     OAuthCredentialsResponse accessTokenResponse = null;
                     final Long start = System.currentTimeMillis();
                     Long s;
@@ -148,7 +171,12 @@ public class GRLoginActivity extends AppCompatActivity {
                             throw new InterruptedException();
 
                         }
+
                         s = System.currentTimeMillis() - start;
+                        /**if at all timer is required
+                         // we've put up a timeout of s seconds..
+                         */
+
                         try {
 
                             accessTokenResponse = getAccessToken.execute();
@@ -156,9 +184,10 @@ public class GRLoginActivity extends AppCompatActivity {
                                 break;
                             }
                         } catch (IOException e) {
-                            Toast.makeText(GRLoginActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT);
                         }
+
                     }
+
 
                     if (accessTokenResponse == null) {
                         success = false;
@@ -168,6 +197,7 @@ public class GRLoginActivity extends AppCompatActivity {
 
                     OAuthParameters oauthParameters = new OAuthParameters();
                     signer.tokenSharedSecret = accessTokenResponse.tokenSecret;
+
                     oauthParameters.signer = signer;
                     oauthParameters.consumerKey = GOODREADS_KEY;
                     oauthParameters.token = accessTokenResponse.token;
@@ -238,24 +268,29 @@ public class GRLoginActivity extends AppCompatActivity {
 
                     }
                 }
+
+
             }
 
 
         };
-
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 login.setVisibility(View.GONE);
+                textView.setVisibility(View.GONE);
                 thread.start();
 
             }
         });
+
+
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
 
     }
 
@@ -264,6 +299,7 @@ public class GRLoginActivity extends AppCompatActivity {
         thread.interrupt();
         finish();
         super.onBackPressed();
+
     }
 
 
