@@ -99,7 +99,6 @@ public class MyProfile extends AppCompatActivity {
         customProgressDialog = new CustomProgressDialog(MyProfile.this);
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
-        customProgressDialog.getWindow().setLayout(464, LinearLayoutCompat.LayoutParams.WRAP_CONTENT);
         prefs = getApplicationContext().getSharedPreferences("Token", Context.MODE_PRIVATE);
 
         noItemsTextView = (TextView) findViewById(R.id.no_items_text);

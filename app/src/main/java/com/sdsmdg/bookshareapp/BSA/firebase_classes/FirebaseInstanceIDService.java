@@ -48,7 +48,7 @@ public class FirebaseInstanceIDService extends FirebaseInstanceIdService {
 
             @Override
             public void onFailure(Call<Detail> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
             }
         });
 
