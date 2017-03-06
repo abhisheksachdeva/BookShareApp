@@ -39,6 +39,7 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/star"
                     android:hint="First Name"
+                    android:nextFocusDown="@+id/input_Lname"
                     android:inputType="textCapWords" />
             </android.support.design.widget.TextInputLayout>
 
@@ -50,7 +51,7 @@
                 android:layout_weight="1">
 
                 <EditText
-                    android:id="@+id/input_Lname"
+                    android:id="@id/input_Lname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/star"
