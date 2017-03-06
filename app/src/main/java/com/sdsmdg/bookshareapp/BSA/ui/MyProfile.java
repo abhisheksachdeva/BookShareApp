@@ -20,9 +20,9 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -81,7 +81,6 @@ public class MyProfile extends AppCompatActivity {
     NestedScrollView scrollView;
     SPDataLoader loader = new SPDataLoader();
     SharedPreferences prefs;
-
     List<Book> booksList;
     BookAdapter adapter;
     RecyclerView mRecyclerView;
@@ -89,6 +88,8 @@ public class MyProfile extends AppCompatActivity {
     CustomProgressDialog customProgressDialog;
     FloatingActionButton button;
     TextView noItemsTextView;
+
+    private int noOfBooks = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +123,6 @@ public class MyProfile extends AppCompatActivity {
         scrollView.setSmoothScrollingEnabled(true);
         mRecyclerView.setNestedScrollingEnabled(false);
 
-
         button = (FloatingActionButton) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +134,12 @@ public class MyProfile extends AppCompatActivity {
 
     }
 
+    //This function is called from BookAdapter, when a book is sucessfully removed
+    public void onBookRemoved() {
+        noOfBooks -= 1;
+        Log.i(TAG, "onBookRemoved: 1");
+        titleBooksCount.setText("Books" + "(" + String.valueOf(noOfBooks) + ")");
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -158,7 +164,8 @@ public class MyProfile extends AppCompatActivity {
                     }
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);
-                    titleBooksCount.setText("Books" + "(" + booksList.size() + ")");
+                    noOfBooks = booksList.size();
+                    titleBooksCount.setText("Books" + "(" + noOfBooks + ")");
                     adapter.notifyDataSetChanged();
 
 
@@ -226,7 +233,6 @@ public class MyProfile extends AppCompatActivity {
         }
         return (super.onOptionsItemSelected(item));
     }
-
 
     public void editProfileClicked(View view) {
         Intent i = new Intent(this, EditProfileActivity.class);
