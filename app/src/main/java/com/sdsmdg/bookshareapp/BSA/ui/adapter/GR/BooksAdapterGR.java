@@ -3,6 +3,7 @@ package com.sdsmdg.bookshareapp.BSA.ui.adapter.GR;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
@@ -178,7 +179,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                                     if (response.body() != null) {
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                         holder.add.setEnabled(false);
-
+                                        holder.add.setTextColor(Color.argb(255, 179, 179, 179));
                                     } else {
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                     }
