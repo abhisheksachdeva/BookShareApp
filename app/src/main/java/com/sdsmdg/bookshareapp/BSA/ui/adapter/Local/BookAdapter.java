@@ -48,7 +48,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
     private static final String TAG = BookAdapter.class.getSimpleName();
 
-    private static final int PENDING_REMOVAL_TIMEOUT = 5000;
+    private static final int PENDING_REMOVAL_TIMEOUT = 1500;
     Book tempValues = null;
     List<Book> itemsPendingRemoval;
     String userId;
