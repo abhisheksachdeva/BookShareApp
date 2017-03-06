@@ -22,7 +22,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -214,7 +213,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
                     intent.putExtra("id", book.getId());
                     startActivity(intent);
-
                 }
 
             }
@@ -525,6 +523,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Resp = response.toString();
                     List<Book> localBooksList = response.body().getResults();
                     if (page.equals("1")) {
+
+                        adapter.setTotalCount(response.body().getCount());
+
                         //Save the first page to the offline database
                         realm.beginTransaction();
                         //Remove all previously stored books

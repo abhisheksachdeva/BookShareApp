@@ -18,10 +18,12 @@ import java.util.List;
 
 public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.ViewHolder> {
 
+    private static final int VIEW_TYPE_LOADING = 123;
     private Context context;
     private List<Book> bookList;
     Book tempValues = null;
     private final OnItemClickListener listener;
+    private int totalCount = 0;
 
     public interface OnItemClickListener {
         public void onItemClick(Book book);
@@ -53,43 +55,66 @@ public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.
         this.listener = listener;
     }
 
+    public void setTotalCount(int totalCount) {
+        this.totalCount = totalCount;
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.row_books_simple, parent, false);
-        ViewHolder vh = new ViewHolder(v, context);
+        ViewHolder vh;
+        if(viewType == VIEW_TYPE_LOADING) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.progress_item, parent, false);
+            vh = new ViewHolder(v, context);
+        } else {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.row_books_simple, parent, false);
+            vh = new ViewHolder(v, context);
+        }
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
 
-        tempValues = bookList.get(position);
+        if(position < bookList.size()) {
+            tempValues = bookList.get(position);
 
-        holder.titleBook.setText(tempValues.getTitle());
-        holder.authorBook.setText(tempValues.getAuthor());
-        if (!tempValues.getGrImgUrl().isEmpty()) {
-            Picasso.with(this.context).load(tempValues.getGrImgUrl()).placeholder(R.drawable.default_book_image).into(holder.imageBook);
-        }
-        holder.ratingBook.setRating(tempValues.getRating());
-        DecimalFormat formatter = new DecimalFormat("#,###,###");
-        String rating_count = formatter.format(tempValues.getRatingsCount());
-        holder.ratingCount.setText("(" + rating_count + ")");
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onItemClick(bookList.get(position));
+            holder.titleBook.setText(tempValues.getTitle());
+            holder.authorBook.setText(tempValues.getAuthor());
+            if (!tempValues.getGrImgUrl().isEmpty()) {
+                Picasso.with(this.context).load(tempValues.getGrImgUrl()).placeholder(R.drawable.default_book_image).into(holder.imageBook);
             }
-        });
+            holder.ratingBook.setRating(tempValues.getRating());
+            DecimalFormat formatter = new DecimalFormat("#,###,###");
+            String rating_count = formatter.format(tempValues.getRatingsCount());
+            holder.ratingCount.setText("(" + rating_count + ")");
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClick(bookList.get(position));
+                }
+            });
+        } else {
+            //It means the progress bar is shown on screen
+        }
 
     }
 
     @Override
     public int getItemCount() {
         if (bookList != null)
-            return bookList.size();
+            return bookList.size() + 1;
 
         return 0;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(position >= bookList.size() && totalCount > bookList.size()) {
+            return VIEW_TYPE_LOADING;
+        }
+        return super.getItemViewType(position);
     }
 
     @Override
