@@ -71,7 +71,7 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
         Uri notificationSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder;
         notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.mipmap.logo1)
                 .setAutoCancel(true)
                 .setSound(notificationSound)
                 .setContentIntent(pendingIntent);

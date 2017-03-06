@@ -146,7 +146,6 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                     showCnfPassword = false;
                     _cnf_passwordText.setSelection(_passwordText.getText().length());
                     _showCnfPassword.setImageResource(R.drawable.ic_visible_on);
-
                 }
             }
 
