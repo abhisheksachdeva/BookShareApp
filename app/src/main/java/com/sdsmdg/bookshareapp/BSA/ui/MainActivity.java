@@ -3,8 +3,6 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -484,24 +482,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         } else if (id == R.id.nav_share) {
 
-            PackageManager pm = getPackageManager();
-            try {
+            Intent waIntent = new Intent(Intent.ACTION_SEND);
+            waIntent.setType("text/plain");
+            String text = "BookShare App !! .You can download the app from here...!";
 
-                Intent waIntent = new Intent(Intent.ACTION_SEND);
-                waIntent.setType("text/plain");
-                String text = "BookShare App !! .You can download the app from here...!";
-
-                PackageInfo info = pm.getPackageInfo("com.whatsapp", PackageManager.GET_META_DATA);
-                //Check if package exists or not. If not then code
-                //in catch block will be called
-                waIntent.setPackage("com.whatsapp");
-
-                waIntent.putExtra(Intent.EXTRA_TEXT, text);
-                startActivity(Intent.createChooser(waIntent, "Share with"));
-
-            } catch (PackageManager.NameNotFoundException e) {
-                //who cares
-            }
+            waIntent.putExtra(Intent.EXTRA_TEXT, text);
+            startActivity(Intent.createChooser(waIntent, "Share with"));
 
         } else if (id == R.id.nav_usersearch) {
             Intent i = new Intent(this, UserSearchActivity.class);
