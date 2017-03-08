@@ -12,7 +12,6 @@ public class BookList {
         return cancels;
     }
 
-
     int count;
 
     public int getCount() {

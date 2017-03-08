@@ -12,6 +12,7 @@ import android.os.Handler;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.ActionMode;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.RemoveBook;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
+import com.sdsmdg.bookshareapp.BSA.ui.MyProfile;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -43,7 +45,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
-    private static final int PENDING_REMOVAL_TIMEOUT = 5000;
+
+    private static final String TAG = BookAdapter.class.getSimpleName();
+
+    private static final int PENDING_REMOVAL_TIMEOUT = 1500;
     Book tempValues = null;
     List<Book> itemsPendingRemoval;
     String userId;
@@ -228,6 +233,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             public void onResponse(Call<Detail> call, Response<Detail> response) {
                 if (response.body() != null) {
                     notifyDataSetChanged();
+                    //Make corresponding changes in MyProfile activity when a book is removed
+                    Log.i(TAG, "onResponse: 0");
+                    ((MyProfile)context).onBookRemoved();
+                    Log.i(TAG, "onResponse: 1");
                     Toast.makeText(context, "Successfully removed", Toast.LENGTH_SHORT).show();
                     Book rbook = bookList.get(position);
                     if (itemsPendingRemoval.contains(rbook)) {

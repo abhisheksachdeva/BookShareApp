@@ -293,7 +293,11 @@ public class SearchResultsActivity extends ActionBarActivity {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    doSearch(edtSeach.getText().toString(), "all");
+                    if(edtSeach.getText().toString().length() != 0) {
+                        doSearch(edtSeach.getText().toString(), "all");
+                    } else {
+                        Toast.makeText(SearchResultsActivity.this, "Please enter a search query", Toast.LENGTH_SHORT).show();
+                    }
                     return true;
                 }
                 return false;
