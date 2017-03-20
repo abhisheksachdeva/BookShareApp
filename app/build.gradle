@@ -1,15 +1,19 @@
 apply plugin: 'com.android.application'
+apply plugin: 'realm-android'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "19.1.0"
+    compileSdkVersion 25
+    buildToolsVersion "23.0.3"
+    useLibrary 'org.apache.http.legacy'
 
     defaultConfig {
-        applicationId "com.example.abhishek.bookshareapp"
-        minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 1
-        versionName "1.0"
+        applicationId "com.sdsmdg.bookshareapp.BSA"
+        minSdkVersion 19
+        targetSdkVersion 25
+        versionCode 2
+        versionName "0.8.0"
+
+
     }
     buildTypes {
         release {
@@ -17,12 +21,48 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    dexOptions {
+        javaMaxHeapSize "4g"
+        jumboMode true
+    }
+}
+
+configurations {
+    compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.1'
-    compile 'com.android.support:design:23.1.1'
-    compile 'com.squareup.retrofit2:retrofit:2.0.0-beta3'
-    compile 'com.squareup.retrofit2:converter-gson:2.0.0-beta3'}
+    compile('com.squareup.retrofit2:converter-simplexml:2.1.0') {
+        exclude module: 'stax'
+        exclude module: 'stax-api'
+        exclude module: 'xpp3'
+    }
+    compile 'com.journeyapps:zxing-android-embedded:3.3.0'
+    compile 'com.android.support:appcompat-v7:25.0.1'
+    compile 'com.android.support:design:25.0.1'
+    compile 'com.android.support:cardview-v7:25.0.1'
+    compile 'com.android.support:palette-v7:25.0.1'
+    compile 'id.zelory:compressor:1.0.2'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
+    compile 'com.android.support:recyclerview-v7:25.0.1'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.jakewharton:butterknife:6.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'com.android.support:support-v4:25.0.1'
+    compile 'jp.wasabeef:blurry:2.0.2'
+    compile 'com.google.api-client:google-api-client:1.20.0'
+    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.airbnb.android:lottie:1.5.1'
+
+
+
+
+
+}
+
+apply plugin: 'com.google.gms.google-services'

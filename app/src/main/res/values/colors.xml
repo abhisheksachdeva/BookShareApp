@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">#2e2b2b</color>
+    <color name="colorPrimaryDark">#2a2828</color>
+    <color name="colorAccent">#15a015</color>
+    <color name="textColorSecondary">#15a015</color>
+    <color name="Red">#ef020e</color>
+    <color name="Black">#3b3838</color>
+    <color name="White">#ffffff</color>
+    <color name="Green">#19FF10</color>
+    <color name="Peach">#FFDAB9</color>
+    <color name="Grey">#DDDDDD</color>
+    <color name="Yellow">#FFFF00</color>
+    <color name="app_theme_background">#EEEEEE</color>
+    <color name="app_theme_button_other">#15a015</color>
+    <color name="app_theme_toolbar">#2e2b2b</color>
+    <color name="app_theme_navigation_bar">#2e2b2b</color>
+    <color name="app_theme_button_start">#f50057</color>
+    <color name="app_theme_button_center">#ff4081</color>
+    <color name="app_theme_button_end">#ff80ab</color>
+    <color name="delete_gray">#D0D0D0 </color>
+    <color name="delete2">#AE3030</color>
+    <color name="app_theme_fab">#e91e63</color>
+
 </resources>

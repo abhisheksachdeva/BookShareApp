@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_myprofile"
+            android:icon="@drawable/ic_profile"
+            android:title="My Profile" />
+
+        <item
+            android:id="@+id/nav_barcode"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Barcode Scan" />
+
+        <item
+            android:id="@+id/nav_usersearch"
+            android:icon="@drawable/ic_person_filled"
+            android:title="User Search" />
+        <item
+            android:id="@+id/nav_grlogin"
+            android:icon="@drawable/ic_to_read"
+            android:title="To-Read" />
+
+
+        <item
+            android:id="@+id/nav_logout"
+            android:icon="@drawable/ic_logout"
+            android:title="Logout" />
+
+        <!-- This is used to unselect items in nav view-->
+        <item
+            android:id="@+id/menu_none"
+            android:title=""
+            android:visible="false" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_share"
+                android:title="Share" />
+        </menu>
+    </item>
+
+</menu>

@@ -1,19 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.abhishek.bookshareapp" >
+    package="com.sdsmdg.bookshareapp.BSA">
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/logo1"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:hardwareAccelerated="false">
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".ui.LoginActivity"
+            android:label="Login"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.SearchResultsActivity"
+            android:label="Search"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.UserSearch">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCHRESULTS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".ui.MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:label="Campus Books"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
+            android:name=".ui.SignupActivity"
+            android:screenOrientation="portrait"
+            android:label="Sign Up"
+            android:parentActivityName=".ui.MyProfile"
+            />
+        <activity
+            android:name=".ui.MyProfile"
+            android:label="My Profile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.BookDetailsActivity"
+            android:label="Book Details"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserProfile"
+            android:label="User Details"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,16 +65,58 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.SearchResultsActivity"
-            android:label="search"
-            >
+            android:name=".ui.EditProfileActivity"
+            android:label="Edit your details"
+            android:parentActivityName=".ui.MyProfile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ChangePasswordActivity"
+            android:label="Change Password"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.GuestActivity"
+            android:label="Campus Books"
+            android:parentActivityName=".ui.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserSearchActivity"
+            android:label="Search User"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.UserSearch" />
+        <activity
+            android:name=".ui.GRLoginActivity"
+            android:label="To-Read"
+            android:parentActivityName=".ui.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCHRESULTS" />
-
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
+                <data
+                    android:host="www.goodreads.com"
+                    android:scheme="your" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.ToReadActivity"
+            android:label="To-Read"
+            android:parentActivityName=".ui.MainActivity"/>
+
+        <service android:name=".firebase_classes.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"></action>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name=".firebase_classes.FirebaseInstanceIDService"
+            android:exported="false">
+
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
