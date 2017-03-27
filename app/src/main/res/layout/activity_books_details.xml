@@ -120,6 +120,34 @@
                 android:layout_margin="12dp"
                 android:background="@color/textColorSecondary" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:textColor="#333333"
+                android:textSize="18sp"
+                android:text="Know more at GoodReads " />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="40sp"
+                android:text="Open goodreads.com"
+                android:textAllCaps="false"
+                android:textColor="@color/app_theme_button_other"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_shape_other"
+                android:padding="10dp"
+                android:id="@+id/chrome_good" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_margin="12dp"
+                android:background="@color/textColorSecondary" />
 
             <TextView
                 android:layout_width="match_parent"
