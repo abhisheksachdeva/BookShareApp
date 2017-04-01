@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 
-import com.airbnb.lottie.LottieAnimationView;
 import com.sdsmdg.bookshareapp.BSA.R;
 
 public class CustomProgressDialog extends ProgressDialog {
@@ -21,10 +20,14 @@ public class CustomProgressDialog extends ProgressDialog {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.custom_progressdialog2);
-        LottieAnimationView animationView = (LottieAnimationView) findViewById(R.id.animation_view);
-        animationView.setImageAssetsFolder("images");
-        animationView.setAnimation("PinJump.json", LottieAnimationView.CacheStrategy.Strong);
-        animationView.playAnimation();
-        animationView.loop(true);
+
+        //TODO:Fix the lottie animation
+//        LottieAnimationView animationView = (LottieAnimationView) findViewById(R.id.animation_view);
+//        animationView.setImageAssetsFolder("images");
+//        animationView.setAnimation("PinJump.json", LottieAnimationView.CacheStrategy.Strong);
+//        animationView.playAnimation();
+//        animationView.loop(true);
+
+
     }
 }

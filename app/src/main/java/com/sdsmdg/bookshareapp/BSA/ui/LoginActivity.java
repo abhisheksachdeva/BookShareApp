@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
@@ -20,8 +19,8 @@ import android.widget.Toast;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
-import com.sdsmdg.bookshareapp.BSA.api.models.Login;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.Login;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import butterknife.ButterKnife;
@@ -50,7 +49,6 @@ public class LoginActivity extends AppCompatActivity {
     boolean showPassword = false;
 
     CustomProgressDialog customProgressDialog;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
