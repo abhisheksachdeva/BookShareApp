@@ -1,13 +1,17 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.customtabs.CustomTabsIntent;
 import android.text.TextUtils;
 import android.transition.TransitionManager;
 import android.view.MenuItem;
@@ -67,6 +71,10 @@ public class BookDetailsActivity extends AppCompatActivity {
     Button addToMyLibraryButton;
     String token;
     SharedPreferences prefs;
+
+    //for chrome custom tabs
+    CustomTabsIntent customTabsIntent;
+    CustomTabsIntent.Builder intentBuilder;
 
     public static String getResponse() {
         return Response;
@@ -212,6 +220,24 @@ public class BookDetailsActivity extends AppCompatActivity {
             }
         });
         usersList.setAdapter(usersAdapter);
+
+
+
+        //regarding chrome custom tab
+        // Initialize intentBuilder
+        intentBuilder = new CustomTabsIntent.Builder();
+
+        // Set toolbar(tab) color of your chrome browser
+        intentBuilder.setToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
+        // Define entry and exit animation
+        intentBuilder.setExitAnimations(this, R.anim.right_to_left_end, R.anim.left_to_right_end);
+        intentBuilder.setStartAnimations(this, R.anim.left_to_right_start, R.anim.right_to_left_start);
+        intentBuilder.setSecondaryToolbarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+
+        // build it by setting up all
+        customTabsIntent = intentBuilder.build();
+
     }
 
     public void checkIfOwner(List<UserInfo> userInfoList) {
@@ -252,6 +278,13 @@ public class BookDetailsActivity extends AppCompatActivity {
                 Toast.makeText(BookDetailsActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    public void goodreads(View view) {
+
+        // go to website goodreads
+        customTabsIntent.launchUrl(this, Uri.parse("http://goodreads.com/book/show/"+bookId));
+
     }
 
 }
