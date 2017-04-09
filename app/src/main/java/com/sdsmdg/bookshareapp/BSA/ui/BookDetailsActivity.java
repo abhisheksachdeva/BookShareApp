@@ -283,8 +283,7 @@ public class BookDetailsActivity extends AppCompatActivity {
     public void goodreads(View view) {
 
         // go to website goodreads
-        customTabsIntent.launchUrl(this, Uri.parse("http://goodreads.com/book/show/"+bookId));
-
+        customTabsIntent.launchUrl(this, Uri.parse("http://www.goodreads.com/work/best_book/"+bookId));
     }
 
 }
