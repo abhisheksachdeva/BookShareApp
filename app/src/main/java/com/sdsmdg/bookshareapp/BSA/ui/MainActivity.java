@@ -37,6 +37,7 @@ import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
+import com.sdsmdg.bookshareapp.BSA.api.models.Search;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.firebase_classes.MyFirebaseMessagingService;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterSimple;
@@ -124,75 +125,77 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         notifFragment = (NotificationFragment) getSupportFragmentManager().findFragmentById(R.id.right_drawer);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+
         if (getIntent().getExtras() != null) {
 
-            data = getIntent().getExtras().getString("data");
-            if (data != null) {
-                if (data.equals("open")) {
+                data = getIntent().getExtras().getString("data");
+                if (data != null) {
+                    if (data.equals("open")) {
+                        notifFragment.getNotifications("1");
+                        MyFirebaseMessagingService.notifications.clear();
+                        drawerLayout.openDrawer(GravityCompat.END);
+                    }
+                }
+
+
+                data = getIntent().getExtras().getString("data_splash");
+                if (data != null && data.equals("open_drawer")) {
                     notifFragment.getNotifications("1");
                     MyFirebaseMessagingService.notifications.clear();
                     drawerLayout.openDrawer(GravityCompat.END);
                 }
-            }
 
-            data = getIntent().getExtras().getString("data_splash");
-            if (data != null && data.equals("open_drawer")) {
-                notifFragment.getNotifications("1");
-                MyFirebaseMessagingService.notifications.clear();
-                drawerLayout.openDrawer(GravityCompat.END);
-            }
+                data = getIntent().getExtras().getString("data_login");
+                if (data != null && data.equals("update")) {
 
-            data = getIntent().getExtras().getString("data_login");
-            if (data != null && data.equals("update")) {
+                    String token = "Token " + preferences.getString("token", null);
 
-                String token = "Token " + preferences.getString("token", null);
-
-                String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                Call<Detail> call2 = usersAPI.update_fcm_id(
-                        token,
-                        refreshedToken
-                );
-                call2.enqueue(new Callback<Detail>() {
-                    @Override
-                    public void onResponse(Call<Detail> call2, Response<Detail> response) {
-                        if (response.body() != null) {
-                            if (response.body().getDetail().equals("FCM_ID changed")) {
-                                //FCM Id was changed successfully
-                            } else {
+                    String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                    UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                    Call<Detail> call2 = usersAPI.update_fcm_id(
+                            token,
+                            refreshedToken
+                    );
+                    call2.enqueue(new Callback<Detail>() {
+                        @Override
+                        public void onResponse(Call<Detail> call2, Response<Detail> response) {
+                            if (response.body() != null) {
+                                if (response.body().getDetail().equals("FCM_ID changed")) {
+                                    //FCM Id was changed successfully
+                                } else {
 //                                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                //The FCM ID didn't change
                             }
-                        } else {
-                            //The FCM ID didn't change
+                            removeAnyVisibleSnackbars();
                         }
-                        removeAnyVisibleSnackbars();
-                    }
 
-                    @Override
-                    public void onFailure(Call<Detail> call, Throwable t) {
-                        Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
-                            @Override
-                            public void onDismissed(Snackbar snackbar, int event) {
-                                visibleSnackbars.remove(snackbar);
-                                super.onDismissed(snackbar, event);
-                            }
+                        @Override
+                        public void onFailure(Call<Detail> call, Throwable t) {
+                            Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
+                                @Override
+                                public void onDismissed(Snackbar snackbar, int event) {
+                                    visibleSnackbars.remove(snackbar);
+                                    super.onDismissed(snackbar, event);
+                                }
 
-                            @Override
-                            public void onShown(Snackbar snackbar) {
-                                visibleSnackbars.add(snackbar);
-                                super.onShown(snackbar);
-                            }
-                        }).setAction("RETRY", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                refresh();
-                            }
-                        }).show();
-                    }
-                });
+                                @Override
+                                public void onShown(Snackbar snackbar) {
+                                    visibleSnackbars.add(snackbar);
+                                    super.onShown(snackbar);
+                                }
+                            }).setAction("RETRY", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    refresh();
+                                }
+                            }).show();
+                        }
+                    });
 
 
-            }
+                }
 
         }
         localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
@@ -279,6 +282,56 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
 
         });
+
+        data = getIntent().getStringExtra("pass_it_on");
+        if(data != null) {
+
+            UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
+            Call<List<Book>> call = api.search(data);
+            call.enqueue(new Callback<List<Book>>() {
+                @Override
+                public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
+                    booksList.clear();
+                    if (response.body().size() != 0) {
+                        resplocal = response.toString();
+                        List<Book> localBooksList = response.body();
+
+                        booksList.addAll(localBooksList);
+                        refreshLayout.setRefreshing(false);
+                    } else {
+                        resplocal = "null";
+                        noBookstextview.setVisibility(View.VISIBLE);
+                    }
+                    adapter.notifyDataSetChanged();
+                    removeAnyVisibleSnackbars();
+                }
+
+                @Override
+                public void onFailure(Call<List<Book>> call, Throwable t) {
+                    Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
+                        @Override
+                        public void onDismissed(Snackbar snackbar, int event) {
+                            visibleSnackbars.remove(snackbar);
+                            super.onDismissed(snackbar, event);
+                        }
+
+                        @Override
+                        public void onShown(Snackbar snackbar) {
+                            visibleSnackbars.add(snackbar);
+                            super.onShown(snackbar);
+                        }
+                    }).setAction("RETRY", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            refresh();
+                        }
+                    }).show();
+                    refreshLayout.setRefreshing(false);
+
+                }
+            });
+
+        }
 
     }
 
