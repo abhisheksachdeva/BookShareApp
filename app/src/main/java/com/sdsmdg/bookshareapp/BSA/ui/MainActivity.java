@@ -69,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     Integer count = 1;
     String Resp;
 
+    CustomProgressDialog customProgressDialog;
+
     //Creates a list of visible snackbars
     List<Snackbar> visibleSnackbars = new ArrayList<>();
     String resplocal;
@@ -286,12 +288,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         data = getIntent().getStringExtra("pass_it_on");
         if(data != null) {
 
+            customProgressDialog = new CustomProgressDialog(MainActivity.this);
+            customProgressDialog.setCancelable(false);
+            customProgressDialog.show();
+
             UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
             Call<List<Book>> call = api.search(data);
             call.enqueue(new Callback<List<Book>>() {
                 @Override
                 public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
                     booksList.clear();
+
+                    customProgressDialog.dismiss();
+
                     if (response.body().size() != 0) {
                         resplocal = response.toString();
                         List<Book> localBooksList = response.body();
@@ -308,6 +317,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 @Override
                 public void onFailure(Call<List<Book>> call, Throwable t) {
+
+                    customProgressDialog.dismiss();
                     Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
                         @Override
                         public void onDismissed(Snackbar snackbar, int event) {
