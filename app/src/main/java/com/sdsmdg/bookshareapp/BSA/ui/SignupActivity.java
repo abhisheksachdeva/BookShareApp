@@ -24,9 +24,12 @@ import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
 import com.sdsmdg.bookshareapp.BSA.api.otp.MSGApi;
+import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.CollegeAdapter;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.VerifyOtpFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
+
+import java.util.ArrayList;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -71,8 +74,13 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
     ImageButton _showPassword;
     @InjectView(R.id._btn_show_cnf_password)
     ImageButton _showCnfPassword;
+    @InjectView(R.id.domain_spinner)
+    Spinner _domainSpinner;
+    @InjectView(R.id.text_college_domain)
+    TextView domainTextView;
+    String domain;
+    ArrayList<College> colleges;
     boolean showPassword = false, showCnfPassword = false;
-
     String generatedOTP;
 
     @Override
@@ -80,6 +88,29 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.inject(this);
+
+        colleges = new ArrayList<College>();
+        addColleges();
+
+        CollegeAdapter collegeAdapter = new CollegeAdapter(getApplicationContext(),colleges);
+        _domainSpinner.setAdapter(collegeAdapter);
+
+        _domainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                College college = (College) parent.getItemAtPosition(position);
+                domain = college.getCollegeDomain();
+                _collegeText.setText(college.getCollegeName());
+                domainTextView.setText(college.getCollegeDomain());
+                _collegeText.setEnabled(false);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                domain = "@iitr.ac.in";
+                _collegeText.setText("IIT Roorkee");
+            }
+        });
 
         //Setting spinner for hostels
         ArrayAdapter<CharSequence> hostelAdapter = ArrayAdapter.createFromResource(this, R.array.hostel_list, android.R.layout.simple_spinner_item);
@@ -396,5 +427,17 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         //As the otp is verified now, the user signs up with his correct no. in the database
         requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
+    }
+
+    private void addColleges() {
+        colleges.add(new College("IIT Roorkee", "@iitr.ac.in"));
+        colleges.add(new College("IIT Delhi", "@iitd.ac.in"));
+        colleges.add(new College("IIT Bombay", "@iitb.ac.in"));
+        colleges.add(new College("IIT Madras", "@iitm.ac.in"));
+        colleges.add(new College("IIT Kanpur", "@iitk.ac.in"));
+        colleges.add(new College("IIT Kharagpur", "@iitkgp.ac.in"));
+        colleges.add(new College("IIT Guwahati", "@iitg.ac.in"));
+        colleges.add(new College("IIT Ropar", "@iitrp.ac.in"));
+        colleges.add(new College("IIT Indore", "@iiti.ac.in"));
     }
 }
