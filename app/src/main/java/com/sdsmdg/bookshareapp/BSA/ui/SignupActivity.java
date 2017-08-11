@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -30,6 +31,7 @@ import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -208,29 +210,73 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         String fname = _FnameText.getText().toString();
         String lname = _LnameText.getText().toString();
-        String email = _emailText.getText().toString() + "@iitr.ac.in";
+        String email = _emailText.getText().toString() + domain;
         String password = _passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();
         String college = _collegeText.getText().toString();
-        final String contact = _contactText.getText().toString();
+        String contact = _contactText.getText().toString();
 
         //If the contact no. is empty, sign up directly, else, open the otp dialog to verify the entered contact no.
+        requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
+        /*
         if (!contact.equals("")) {
             sendOTP(contact);
         } else {
             requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
         }
-
+        */
         progressDialog.dismiss();
     }
 
-    private void requestSignUp(String fname, String lname, String email, String password, String room_no, String roll_no, String college, String contact) {
+    private void requestSignUp(final String fname, final String lname, final String email, final String password,
+                               final String room_no, final String roll_no, final String college, final String contact) {
         Helper.setUserEmail(email);
-        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Signup> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact, FirebaseInstanceId.getInstance().getToken(), password);
-        userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
+        final UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
 
+        Call<List<College>> collegeListCall = usersAPI.searchCollege(college);
+        collegeListCall.enqueue(new Callback<List<College>>() {
+            @Override
+            public void onResponse(Call<List<College>> call, Response<List<College>> response) {
+                if(response.body() == null || response.body().size() == 0){
+                    Call<College> addCollegeCall = usersAPI.addCollege(college, domain);
+                    addCollegeCall.enqueue(new Callback<College>() {
+                        @Override
+                        public void onResponse(Call<College> call, Response<College> response) {
+                            if(response.body() != null) {
+                                Log.i(TAG, "College Made" + response.toString());
+                                createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact,
+                                        password);
+                            }
+                            else{
+                                Log.i(TAG, "College Not Made"+response.toString());
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<College> call, Throwable t) {
+                            Log.i(TAG, "College Not Made"+t.toString());
+                        }
+                    });
+                }
+                else{
+                    createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact, password);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<College>> call, Throwable t) {
+                Log.i(TAG, "College Not Made"+t.toString());
+            }
+        });
+    }
+
+    public void createAccount(UsersAPI usersAPI, String fname, String lname, String email, String college,
+                              String room_no, String roll_no, String contact, String password){
+
+        Call<Signup> userInfoCall = usersAPI.getUserInfo(email, hostel, room_no, roll_no, fname, lname, contact,
+                FirebaseInstanceId.getInstance().getToken(),password, college);
+        userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
             @Override
             public void onFailure(Call<Signup> call, Throwable t) {
                 onSignupFailed("Check your network connection properly");

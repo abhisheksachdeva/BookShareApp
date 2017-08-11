@@ -144,7 +144,7 @@ public class LoginActivity extends AppCompatActivity {
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
 
-        String email = _emailText.getText().toString() + "@iitr.ac.in";
+        String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
         Helper.setUserEmail(email);
 
