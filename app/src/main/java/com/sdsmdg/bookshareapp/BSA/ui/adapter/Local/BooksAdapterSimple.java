@@ -104,7 +104,7 @@ public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.
     @Override
     public int getItemCount() {
         if (bookList != null)
-            return bookList.size() + 1;
+            return bookList.size();
 
         return 0;
     }

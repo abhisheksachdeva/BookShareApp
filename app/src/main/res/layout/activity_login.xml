@@ -109,7 +109,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="4dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/button_shape"
         android:gravity="center"
@@ -119,6 +119,15 @@
         android:textAllCaps="false"
         android:textColor="@color/White"
         android:textSize="20sp" />
+
+    <TextView
+        android:id="@+id/link_forgot_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/forgot_password"
+        android:textColor="@color/White"
+        android:textSize="18sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"

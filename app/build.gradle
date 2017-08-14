@@ -58,11 +58,7 @@ dependencies {
     compile 'com.google.api-client:google-api-client:1.20.0'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
     compile 'com.airbnb.android:lottie:1.5.1'
-
-
-
-
-
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
 }
 
 apply plugin: 'com.google.gms.google-services'
