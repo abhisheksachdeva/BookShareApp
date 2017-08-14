@@ -200,4 +200,13 @@ public interface UsersAPI {
     Call<ResponseBody> sendMail(
             @Field("email") String email
     );
+
+    @FormUrlEncoded
+    @POST("/me/password/reset/confirm/")
+    Call<ResponseBody> confirmPassword(
+            @Field("uidb64") String uidb64,
+            @Field("token") String token,
+            @Field("new_password") String newPassword,
+            @Field("confirm_password") String confirmPassword
+    );
 }
