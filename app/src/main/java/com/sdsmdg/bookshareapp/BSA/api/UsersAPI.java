@@ -15,6 +15,7 @@ import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -194,4 +195,18 @@ public interface UsersAPI {
     Call<Signup> uploadImage(@Part MultipartBody.Part file,
                              @Path("id") String id);
 
+    @FormUrlEncoded
+    @POST("/me/password/reset/")
+    Call<ResponseBody> sendMail(
+            @Field("email") String email
+    );
+
+    @FormUrlEncoded
+    @POST("/me/password/reset/confirm/")
+    Call<ResponseBody> confirmPassword(
+            @Field("uidb64") String uidb64,
+            @Field("token") String token,
+            @Field("new_password") String newPassword,
+            @Field("confirm_password") String confirmPassword
+    );
 }

@@ -14,7 +14,6 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
             android:name=".ui.LoginActivity"
             android:label="Login"
@@ -39,10 +38,9 @@
             android:windowSoftInputMode="adjustPan|adjustResize" />
         <activity
             android:name=".ui.SignupActivity"
-            android:screenOrientation="portrait"
             android:label="Sign Up"
             android:parentActivityName=".ui.MyProfile"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".ui.MyProfile"
             android:label="My Profile"
@@ -89,6 +87,7 @@
             android:parentActivityName=".ui.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -97,26 +96,38 @@
                     android:scheme="your" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.ToReadActivity"
             android:label="To-Read"
-            android:parentActivityName=".ui.MainActivity"/>
+            android:parentActivityName=".ui.MainActivity" />
 
         <service android:name=".firebase_classes.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"></action>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
         <service
             android:name=".firebase_classes.FirebaseInstanceIDService"
             android:exported="false">
-
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-    </application>
 
+        <activity android:name=".ui.ForgotPasswordActivity"/>
+
+        <activity android:name=".ui.PasswordConfirmActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data
+                    android:scheme="http"
+                    android:host="192.168.43.50"
+                    android:port="8000"
+                    android:pathPrefix="/reset" />
+            </intent-filter>
+        </activity>
+
+    </application>
 </manifest>
