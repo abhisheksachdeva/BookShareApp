@@ -3,7 +3,6 @@
     <string name="action_settings">Settings</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="forgot_password">Forgot password?</string>
     <string name="signup">No account yet? <b>Create one</b></string>
     <string name="action_logout">LOGOUT</string>
     <string name="connection_failed">Connection Failed</string>
@@ -29,6 +28,7 @@
         <item>Author</item>
     </string-array>
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"http://192.168.43.50\",\n  }\n}]</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="forgot_password_email_hint">Email</string>
     <string name="forgot_password_submit_button">Submit</string>
     <string name="new_pwd">New Password</string>

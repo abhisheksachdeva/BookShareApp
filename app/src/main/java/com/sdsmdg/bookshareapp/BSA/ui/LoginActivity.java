@@ -3,6 +3,7 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -62,6 +63,8 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.inject(this);
 
         context = this;
+        // underline the forget password text view
+        forgotPasswordLink.setPaintFlags(forgotPasswordLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(_emailText.getWindowToken(), 0);

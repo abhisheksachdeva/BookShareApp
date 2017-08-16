@@ -126,8 +126,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/forgot_password"
-        android:textColor="@color/White"
-        android:textSize="18sp" />
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp" />
 
     <LinearLayout
         android:layout_width="wrap_content"
