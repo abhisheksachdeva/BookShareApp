@@ -28,10 +28,13 @@
         <item>Author</item>
     </string-array>
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"http://192.168.43.50\",\n  }\n}]</string>
-    <string name="forgot_password">Forgot password?</string>
     <string name="forgot_password_email_hint">Email</string>
     <string name="forgot_password_submit_button">Submit</string>
     <string name="new_pwd">New Password</string>
     <string name="cnf_pwd">Confirm Password</string>
     <string name="reset_password_submit_button">Reset Password</string>
+    <string name="forgot_password">Forgot Your Password?</string>
+    <string name="forgot_password_message">Enter your email below to receive your password reset instructions</string>
+    <string name="reset_password">Reset Your Password</string>
+    <string name="reset_password_message">Password should be of atleast 8 characters</string>
 </resources>
