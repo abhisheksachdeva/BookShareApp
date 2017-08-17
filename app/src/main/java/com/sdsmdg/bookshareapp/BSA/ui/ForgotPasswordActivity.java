@@ -26,33 +26,18 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     private TextInputLayout emailInputLayout;
     private TextInputEditText emailInputEditText;
     private Button submitButton;
+    private CustomProgressDialog customProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forgot_password);
         initViews();
-        emailInputEditText.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if (emailInputEditText.getText().toString().trim().length() != 0){
-                    emailInputEditText.setError("");
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-            }
-        });
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (emailInputEditText.getText().toString().trim().length() != 0){
-                    emailInputLayout.setEnabled(false);
+                    emailInputLayout.setErrorEnabled(false);
                     sendEmail(emailInputEditText.getText().toString());
                 } else{
                     emailInputLayout.setErrorEnabled(true);
@@ -63,14 +48,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
 
     private void sendEmail(String email) {
+        customProgressDialog.show();
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<ResponseBody> sendEmailResponse = usersAPI.sendMail(email);
         sendEmailResponse.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                Toast.makeText(ForgotPasswordActivity.this, "An E-mail has been sent to you", Toast.LENGTH_SHORT).show();
-                /*
+                customProgressDialog.dismiss();
                 if (response.isSuccessful()){
                     emailInputLayout.setEnabled(false);
                     Toast.makeText(ForgotPasswordActivity.this, "An E-mail has been sent to you", Toast.LENGTH_SHORT).show();
@@ -82,15 +66,16 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                         }
                     }, 500);
                 } else{
-                    Toast.makeText(ForgotPasswordActivity.this, "Please try again!", Toast.LENGTH_SHORT).show();
+                    emailInputLayout.setEnabled(true);
+                    Toast.makeText(ForgotPasswordActivity.this, "Invalid email address!", Toast.LENGTH_LONG).show();
                 }
-                */
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                customProgressDialog.dismiss();
                 emailInputLayout.setEnabled(true);
-                Toast.makeText(ForgotPasswordActivity.this, "Please try again!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(ForgotPasswordActivity.this, "Please check your internet connection!", Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -99,5 +84,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         emailInputLayout = (TextInputLayout) findViewById(R.id.email_edit_text);
         emailInputEditText = (TextInputEditText) findViewById(R.id.txt_email_address);
         submitButton = (Button) findViewById(R.id.submit_email_button);
+        customProgressDialog = new CustomProgressDialog(this);
+        customProgressDialog.setCancelable(false);
     }
 }
