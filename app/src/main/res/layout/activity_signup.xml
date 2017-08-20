@@ -211,6 +211,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Enroll No."
+                android:drawableStart="@drawable/star"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -239,7 +240,7 @@
                     style="@style/Base.Widget.AppCompat.Spinner.Underlined"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="3dp"></Spinner>
+                    android:layout_marginTop="3dp"/>
             </LinearLayout>
 
             <android.support.design.widget.TextInputLayout
@@ -255,6 +256,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Room No."
+                    android:drawableStart="@drawable/star"
                     android:inputType="textCapWords" />
             </android.support.design.widget.TextInputLayout>
         </LinearLayout>
@@ -270,7 +272,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Contact No."
-
+                android:drawableStart="@drawable/star"
                 android:inputType="number" />
         </android.support.design.widget.TextInputLayout>
 
@@ -294,7 +296,7 @@
             android:layout_marginBottom="24dp"
             android:gravity="center"
             android:text="Already a member? Login"
-            android:textSize="16dip" />
-
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp" />
     </LinearLayout>
 </ScrollView>
