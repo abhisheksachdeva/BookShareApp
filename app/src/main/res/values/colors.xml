@@ -21,5 +21,5 @@
     <color name="delete_gray">#D0D0D0 </color>
     <color name="delete2">#AE3030</color>
     <color name="app_theme_fab">#e91e63</color>
-
+    <color name="black">#000000</color>
 </resources>

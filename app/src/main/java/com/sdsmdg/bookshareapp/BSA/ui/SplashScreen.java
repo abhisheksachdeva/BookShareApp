@@ -52,6 +52,11 @@ public class SplashScreen extends Activity {
             intent.putExtra("data_splash", extra_data);
             startActivity(intent);
             finish();
+        } else{
+            Toast.makeText(SplashScreen.this, "There is no internet connection!", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
         }
 
     }
@@ -85,7 +90,7 @@ public class SplashScreen extends Activity {
 
                             } else {
 
-                                Toast.makeText(SplashScreen.this, "Failed to Log in", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(SplashScreen.this, "Failed to Log in", Toast.LENGTH_LONG).show();
                                 try {
                                     Thread.sleep(1000);
                                 } catch (InterruptedException e) {
@@ -98,7 +103,7 @@ public class SplashScreen extends Activity {
                             }
                         }
                     } else {
-                        Toast.makeText(SplashScreen.this, "Failed to Log in", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SplashScreen.this, "Failed to Log in", Toast.LENGTH_LONG).show();
                         Intent intent = new Intent(SplashScreen.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
