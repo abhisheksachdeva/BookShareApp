@@ -89,7 +89,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_gravity="end"
-        android:paddingTop="?attr/actionBarSize">
+        android:paddingTop="?attr/actionBarSize"
+        android:fitsSystemWindows="true">
 
         <fragment
             android:id="@+id/right_drawer"
@@ -97,8 +98,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:layout="@layout/fragment_notification" />
-
     </FrameLayout>
-
-
 </android.support.v4.widget.DrawerLayout>

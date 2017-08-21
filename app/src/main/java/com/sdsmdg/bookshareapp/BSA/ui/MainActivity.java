@@ -60,6 +60,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, NotificationFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+    private static final int REQUEST_CODE = 1000;
     List<Book> booksList;
     BooksAdapterSimple adapter;
     SharedPreferences prefs;
@@ -284,7 +285,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void searchClicked(View view) {
         Intent i = new Intent(this, SearchResultsActivity.class);
-        startActivity(i);
+        startActivityForResult(i, REQUEST_CODE);
     }
 
 
@@ -296,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onQueryTextSubmit(String query) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<List<Book>> call = api.search(query);
+        Call<List<Book>> call = api.search(query, "Token " + prefs.getString("token", null));
         call.enqueue(new Callback<List<Book>>() {
             @Override
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
@@ -419,8 +420,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent i = new Intent(this, ToReadActivity.class);
                 startActivity(i);
             }
-
-
         } else if (id == R.id.nav_logout) {
             final SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
             String token = "Token " + prefs.getString("token", null);
@@ -500,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void getLocalBooks(final String page) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<BookList> call = api.getBList(page, "Token " + prefs.getString("token", null));
+        Call<BookList> call = api.getLocalBList(page, "Token " + prefs.getString("token", null));
         call.enqueue(new Callback<BookList>() {
             @Override
             public void onResponse(Call<BookList> call, Response<BookList> response) {
@@ -654,17 +653,22 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() == null) {
-                //The operation was cancelled
+
+        if (requestCode == REQUEST_CODE){
+            getLocalBooks("1");
+        }else {
+            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+            if (result != null) {
+                if (result.getContents() == null) {
+                    //The operation was cancelled
+                } else {
+                    Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
+                    i.putExtra("isbn", result.getContents());
+                    startActivity(i);
+                }
             } else {
-                Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
-                i.putExtra("isbn", result.getContents());
-                startActivity(i);
+                super.onActivityResult(requestCode, resultCode, data);
             }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
@@ -684,6 +688,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             visibleSnackbars.get(0).dismiss();
             visibleSnackbars.clear();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private void refresh() {
