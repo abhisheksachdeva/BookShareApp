@@ -1,13 +1,10 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.SharedPreferencesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.util.Log;
@@ -17,9 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +29,6 @@ import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.CollegeAdapter;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.VerifyOtpFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
-import com.sdsmdg.bookshareapp.BSA.utils.TextDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
