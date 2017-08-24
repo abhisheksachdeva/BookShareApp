@@ -114,7 +114,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ui.ForgotPasswordActivity"/>
+        <activity android:name=".ui.ForgotPasswordActivity"
+            android:parentActivityName=".ui.LoginActivity"/>
 
         <activity android:name=".ui.PasswordConfirmActivity">
             <intent-filter>

@@ -3,13 +3,81 @@
     <string name="action_settings">Settings</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="forgot_password">Forgot password?</string>
     <string name="signup">No account yet? <b>Create one</b></string>
     <string name="action_logout">LOGOUT</string>
     <string name="connection_failed">Connection Failed</string>
     <string name="file_not_found">File Not Found</string>
     <string name="you_are_offline">You are offline</string>
-    <string-array name="hostel_list">
+    <string name="iitr">IIT Roorkee</string>
+    <string name="iitd">IIT Delhi</string>
+    <string name="iitb">IIT Bombay</string>
+    <string name="iitm">IIT Madras</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="domain">Domain</string>
+    <string name="college">College</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="already_string">Already a member? Login</string>
+    <string name="create_account">Create Account</string>
+    <string name="contact">Contact No.</string>
+    <string name="room">Room</string>
+    <string name="hostel">Hostel</string>
+    <string name="enroll">Enroll No.</string>
+    <string name="search_by">Search by</string>
+    <string-array name="iitb_hostel_list">
+        <item>Hostel 1</item>
+        <item>Hostel 2</item>
+        <item>Hostel 3</item>
+        <item>Hostel 4</item>
+        <item>Hostel 5</item>
+        <item>Hostel 6</item>
+        <item>Hostel 7</item>
+        <item>Hostel 8</item>
+        <item>Hostel 9</item>
+        <item>Hostel 10</item>
+        <item>Hostel 11</item>
+        <item>Hostel 12</item>
+        <item>Hostel 13</item>
+        <item>Hostel 14</item>
+        <item>Tansa</item>
+    </string-array>
+    <string-array name="iitd_hostel_list">
+        <item>Aravali</item>
+        <item>Girnar</item>
+        <item>Himadri</item>
+        <item>Jwalamukhi</item>
+        <item>Kailash</item>
+        <item>Karakoram</item>
+        <item>Kumaon</item>
+        <item>Nilgiri</item>
+        <item>Satpura</item>
+        <item>Shivalik</item>
+        <item>Udaigiri</item>
+        <item>Vindhyachal</item>
+        <item>Zanskar</item>
+    </string-array>
+    <string-array name="iitm_hostel_list">
+        <item>Alaknanda</item>
+        <item>Brahmaputra</item>
+        <item>Cauvery</item>
+        <item>Ganga</item>
+        <item>Godavari</item>
+        <item>Jamuna</item>
+        <item>Krishna</item>
+        <item>Mahanadhi</item>
+        <item>Mandakini</item>
+        <item>Narmada</item>
+        <item>Pampa</item>
+        <item>Saraswathi</item>
+        <item>Sarayu</item>
+        <item>Sharavati</item>
+        <item>Sindhu</item>
+        <item>Tamraparani</item>
+        <item>Tapni</item>
+        <item>Bhatra</item>
+        <item>Tunga</item>
+    </string-array>
+    <string-array name="iitr_hostel_list">
         <item>Azad</item>
         <item>Cautley</item>
         <item>Ganga</item>
@@ -28,10 +96,19 @@
         <item>Title</item>
         <item>Author</item>
     </string-array>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="try_now">Try Now</string>
+    <string name="or">Or</string>
+    <string name="login">Login</string>
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"http://192.168.43.50\",\n  }\n}]</string>
     <string name="forgot_password_email_hint">Email</string>
     <string name="forgot_password_submit_button">Submit</string>
     <string name="new_pwd">New Password</string>
     <string name="cnf_pwd">Confirm Password</string>
     <string name="reset_password_submit_button">Reset Password</string>
+    <string name="forgot_password">forgot your password?</string>
+    <string name="forgot_password_message">Enter your email below to receive your password reset instructions</string>
+    <string name="reset_password">Reset Your Password</string>
+    <string name="reset_password_message">Password should be of atleast 8 characters</string>
 </resources>
