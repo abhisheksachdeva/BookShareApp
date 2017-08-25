@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/welcome_background"
+    tools:context="com.sdsmdg.bookshareapp.BSA.ui.WelcomeActivity">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/button_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9439124"
+        tools:layout_editor_absoluteY="483dp"
+        tools:layout_editor_absoluteX="0dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/button_left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.2287104"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="88dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/button_right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.7712895"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="296dp" />
+    <android.support.v4.view.ViewPager
+        android:id="@+id/tutorial_pager"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/button_top_guideline" />
+    <TextView
+        android:id="@+id/skip_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/button_left_guideline"
+        android:gravity="center"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:textSize="16sp"
+        android:textColor="@color/White"
+        android:text="SKIP"
+        app:layout_constraintTop_toTopOf="@+id/button_top_guideline" />
+    <TextView
+        android:id="@+id/next_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/button_right_guideline"
+        android:gravity="center"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:textSize="16sp"
+        android:textColor="@color/White"
+        android:text="NEXT"
+        app:layout_constraintTop_toTopOf="@+id/button_top_guideline" />
+</android.support.constraint.ConstraintLayout>
