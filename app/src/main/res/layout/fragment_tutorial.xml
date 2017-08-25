@@ -42,12 +42,6 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.6949384" />
-    <android.support.constraint.Guideline
-        android:id="@+id/dots_top_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.8891928" />
     <TextView
         android:id="@+id/text_title"
         android:layout_width="wrap_content"
@@ -78,12 +72,4 @@
         android:textColor="@color/White"
         android:textSize="18sp"
         tools:text="Easily search and add a book to your collection" />
-    <ImageView
-        android:id="@+id/image_dots"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/left_guideline"
-        app:layout_constraintEnd_toEndOf="@id/right_guideline"
-        app:layout_constraintTop_toBottomOf="@id/dots_top_guideline"
-        tools:src="@drawable/loading_add_books"/>
 </android.support.constraint.ConstraintLayout>

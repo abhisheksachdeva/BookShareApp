@@ -20,17 +20,39 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.2287104"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="88dp" />
+        app:layout_constraintGuide_percent="0.0778588" />
     <android.support.constraint.Guideline
         android:id="@+id/button_right_guideline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.7712895"
+        app:layout_constraintGuide_percent="0.9221411"
         tools:layout_editor_absoluteY="0dp"
         tools:layout_editor_absoluteX="296dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/dots_left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.4160583" />
+    <android.support.constraint.Guideline
+        android:id="@+id/dots_right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5815085" />
+    <android.support.constraint.Guideline
+        android:id="@+id/dots_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.8891928" />
+    <android.support.constraint.Guideline
+        android:id="@+id/dots_bottom_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.9056087" />
     <android.support.v4.view.ViewPager
         android:id="@+id/tutorial_pager"
         android:layout_width="0dp"
@@ -38,29 +60,65 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/button_top_guideline" />
+        app:layout_constraintBottom_toTopOf="@id/dots_top_guideline" />
+    <ImageView
+        android:id="@+id/image_dot_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/dots_left_guideline"
+        app:layout_constraintEnd_toStartOf="@+id/image_dot_2"
+        app:layout_constraintTop_toBottomOf="@id/dots_top_guideline"
+        app:layout_constraintBottom_toTopOf="@id/dots_bottom_guideline"
+        tools:src="@drawable/current_page_dot"/>
+    <ImageView
+        android:id="@+id/image_dot_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/image_dot_1"
+        app:layout_constraintEnd_toStartOf="@+id/image_dot_3"
+        app:layout_constraintTop_toBottomOf="@id/dots_top_guideline"
+        app:layout_constraintBottom_toTopOf="@id/dots_bottom_guideline"
+        tools:src="@drawable/normal_dot"/>
+    <ImageView
+        android:id="@+id/image_dot_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/image_dot_2"
+        app:layout_constraintEnd_toStartOf="@+id/image_dot_4"
+        app:layout_constraintTop_toBottomOf="@id/dots_top_guideline"
+        app:layout_constraintBottom_toTopOf="@id/dots_bottom_guideline"
+        tools:src="@drawable/normal_dot"/>
+    <ImageView
+        android:id="@+id/image_dot_4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/image_dot_3"
+        app:layout_constraintEnd_toEndOf="@id/dots_right_guideline"
+        app:layout_constraintTop_toBottomOf="@id/dots_top_guideline"
+        app:layout_constraintBottom_toTopOf="@id/dots_bottom_guideline"
+        tools:src="@drawable/normal_dot"/>
     <TextView
         android:id="@+id/skip_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toStartOf="@id/button_left_guideline"
+        app:layout_constraintStart_toStartOf="@id/button_left_guideline"
+        app:layout_constraintEnd_toStartOf="@+id/next_button"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         android:gravity="center"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp"
         android:textSize="16sp"
         android:textColor="@color/White"
-        android:text="SKIP"
+        android:text="@string/skip"
         app:layout_constraintTop_toTopOf="@+id/button_top_guideline" />
     <TextView
         android:id="@+id/next_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="@id/button_right_guideline"
+        app:layout_constraintEnd_toStartOf="@id/button_right_guideline"
+        app:layout_constraintStart_toEndOf="@id/skip_button"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         android:gravity="center"
-        android:paddingStart="32dp"
-        android:paddingEnd="32dp"
         android:textSize="16sp"
         android:textColor="@color/White"
-        android:text="NEXT"
+        android:text="@string/next"
         app:layout_constraintTop_toTopOf="@+id/button_top_guideline" />
 </android.support.constraint.ConstraintLayout>

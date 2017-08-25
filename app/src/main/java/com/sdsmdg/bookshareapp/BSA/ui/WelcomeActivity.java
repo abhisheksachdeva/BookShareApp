@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +15,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.TutorialFragment;
@@ -25,27 +28,17 @@ import java.util.List;
 
 public class WelcomeActivity extends FragmentActivity {
 
-    private SharedPreferences preferences;
-    private static final String PREF_NAME = "is_first_launch";
-    private static final String IS_FIRST_TIME_LAUNCH = "is_first_time_launch";
     private ViewPager pager;
     private TextView skipTextView, nextTextView;
+    private ImageView dot1, dot2, dot3, dot4;
+    private ImageView[] dots;
     private TutorialPagerAdapter tutorialPagerAdapter;
     private List<String> titleList, descriptionList;
-    private List<Integer> logoIdList, dotsIdList;
+    private List<Integer> logoIdList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        preferences = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        if (!isFirstTimeLaunch()){
-            launchHomeScreen();
-            finish();
-        }
-        editor.putBoolean(IS_FIRST_TIME_LAUNCH, false);
-        editor.apply();
 
         // Making display screen full window
         if (Build.VERSION.SDK_INT >= 21) {
@@ -57,8 +50,20 @@ public class WelcomeActivity extends FragmentActivity {
         initViews();
         regListeners();
         formLists();
+        setBottomDots(0);
         pager.setAdapter(tutorialPagerAdapter);
         pager.addOnPageChangeListener(viewPagerPageChangeListener);
+    }
+
+    /**
+     * to change the color of dots appropriately
+     * @param i the current position of the viewpager
+     */
+    private void setBottomDots(int i) {
+        for (int j = 0; j < 4; j++){
+            dots[j].setImageResource(R.drawable.normal_dot);
+        }
+        dots[i].setImageResource(R.drawable.current_page_dot);
     }
 
     /**
@@ -79,11 +84,19 @@ public class WelcomeActivity extends FragmentActivity {
         pager = (ViewPager) findViewById(R.id.tutorial_pager);
         skipTextView = (TextView) findViewById(R.id.skip_button);
         nextTextView = (TextView) findViewById(R.id.next_button);
+        dot1 = (ImageView) findViewById(R.id.image_dot_1);
+        dot2 = (ImageView) findViewById(R.id.image_dot_2);
+        dot3 = (ImageView) findViewById(R.id.image_dot_3);
+        dot4 = (ImageView) findViewById(R.id.image_dot_4);
+        dots = new ImageView[4];
+        dots[0] = dot1;
+        dots[1] = dot2;
+        dots[2] = dot3;
+        dots[3] = dot4;
         tutorialPagerAdapter = new TutorialPagerAdapter(getSupportFragmentManager());
         titleList = new ArrayList<>();
         descriptionList = new ArrayList<>();
         logoIdList = new ArrayList<>();
-        dotsIdList = new ArrayList<>();
     }
 
     /**
@@ -107,6 +120,15 @@ public class WelcomeActivity extends FragmentActivity {
                 }
             }
         });
+        for (int i = 0; i < 4; i++) {
+            final int finalI = i;
+            dots[i].setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    pager.setCurrentItem(finalI);
+                }
+            });
+        }
     }
 
     /**
@@ -122,11 +144,6 @@ public class WelcomeActivity extends FragmentActivity {
         logoIdList.add(R.drawable.add_books_group);
         logoIdList.add(R.drawable.notification_group);
         logoIdList.add(R.drawable.user_search_group);
-        // form the list containing all the dots.
-        dotsIdList.add(R.drawable.loading_campus_books);
-        dotsIdList.add(R.drawable.loading_add_books);
-        dotsIdList.add(R.drawable.loading_notifications);
-        dotsIdList.add(R.drawable.loading_user_search);
     }
 
     /**
@@ -135,6 +152,7 @@ public class WelcomeActivity extends FragmentActivity {
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener() {
         @Override
         public void onPageSelected(int position) {
+            setBottomDots(position);
             // changing the next button text 'NEXT' / 'LET'S BEGIN'
             if (position == 3) {
                 // last page. make button text to LET'S BEGIN
@@ -158,8 +176,27 @@ public class WelcomeActivity extends FragmentActivity {
      * method to launch home screen
      */
     private void launchHomeScreen() {
-        startActivity(new Intent(this, SplashScreen.class));
-        finish();
+        if (getIntent().getExtras() != null) {
+            String intentData = (String) getIntent().getExtras().get("data_splash");
+            if (intentData != null){
+                Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                intent.putExtra("data_splash", intentData);
+                startActivity(intent);
+                finish();
+            }else {
+                intentData = (String) getIntent().getExtras().get("toast_message");
+                if (intentData != null) {
+                    Toast.makeText(WelcomeActivity.this, intentData, Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(WelcomeActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+            }
+        }else {
+            Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+            startActivity(i);
+            finish();
+        }
     }
 
     /**
@@ -168,14 +205,6 @@ public class WelcomeActivity extends FragmentActivity {
      */
     private int getItem() {
         return pager.getCurrentItem();
-    }
-
-    /**
-     * to check whether the app is opened for the first time
-     * @return boolean telling whether the app is opened first
-     */
-    public boolean isFirstTimeLaunch() {
-        return preferences.getBoolean(IS_FIRST_TIME_LAUNCH, true);
     }
 
     private class TutorialPagerAdapter extends FragmentPagerAdapter{
@@ -187,7 +216,7 @@ public class WelcomeActivity extends FragmentActivity {
         @Override
         public Fragment getItem(int position) {
             return TutorialFragment.newInstance(titleList.get(position), descriptionList.get(position),
-                    logoIdList.get(position), dotsIdList.get(position));
+                    logoIdList.get(position));
         }
 
         @Override

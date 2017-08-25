@@ -15,12 +15,10 @@ public class TutorialFragment extends Fragment {
     public static final String TITLE = "title";
     public static final String DESCRIPTION = "description";
     public static final String LOGO_ID = "logoId";
-    public static final String DOTS_ID = "dotsId";
 
     private String title;
     private String description;
     private int logoId;
-    private int dotsId;
 
     public TutorialFragment() {
     }
@@ -32,16 +30,14 @@ public class TutorialFragment extends Fragment {
      * @param title Title.
      * @param description Description.
      * @param logoId logoId
-     * @param dotsId dotsId
      * @return A new instance of fragment TutorialFragment.
      */
-    public static TutorialFragment newInstance(String title, String description, int logoId, int dotsId) {
+    public static TutorialFragment newInstance(String title, String description, int logoId) {
         TutorialFragment fragment = new TutorialFragment();
         Bundle args = new Bundle();
         args.putString(TITLE, title);
         args.putString(DESCRIPTION, description);
         args.putInt(LOGO_ID, logoId);
-        args.putInt(DOTS_ID, dotsId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -53,7 +49,6 @@ public class TutorialFragment extends Fragment {
             title = getArguments().getString(TITLE);
             description = getArguments().getString(DESCRIPTION);
             logoId = getArguments().getInt(LOGO_ID);
-            dotsId = getArguments().getInt(DOTS_ID);
         }
     }
 
@@ -65,11 +60,9 @@ public class TutorialFragment extends Fragment {
         TextView titleTextView = (TextView) view.findViewById(R.id.text_title);
         TextView descriptionTextView = (TextView) view.findViewById(R.id.text_description);
         ImageView logoImageView = (ImageView) view.findViewById(R.id.image_logo);
-        ImageView dotsImageView = (ImageView) view.findViewById(R.id.image_dots);
         titleTextView.setText(title);
         descriptionTextView.setText(description);
         logoImageView.setImageResource(logoId);
-        dotsImageView.setImageResource(dotsId);
         return view;
     }
 }
