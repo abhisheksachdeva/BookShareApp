@@ -65,6 +65,16 @@
                     android:layout_marginLeft="20dp"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Click here to check availability in campus"
+                    android:textSize="11sp"
+                    android:layout_below="@id/row_books_rating"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@color/app_theme_button_other"
+                    android:id="@+id/directSearch" />
+
             </RelativeLayout>
 
 

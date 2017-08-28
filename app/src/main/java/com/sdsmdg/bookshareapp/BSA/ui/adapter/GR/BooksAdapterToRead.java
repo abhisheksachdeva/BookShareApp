@@ -1,6 +1,7 @@
 package com.sdsmdg.bookshareapp.BSA.ui.adapter.GR;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.models.BookDetailsToRead;
+import com.sdsmdg.bookshareapp.BSA.ui.MainActivity;
+import com.sdsmdg.bookshareapp.BSA.ui.SearchResultsActivity;
 import com.squareup.picasso.Picasso;
 
 import java.text.DecimalFormat;
@@ -33,6 +37,7 @@ public class BooksAdapterToRead extends RecyclerView.Adapter<BooksAdapterToRead.
         public ImageView imageBook;
         public RatingBar ratingBook;
         public TextView ratingCount;
+        public TextView link;
         Context context;
 
         public ViewHolder(View v, Context context) {
@@ -42,6 +47,7 @@ public class BooksAdapterToRead extends RecyclerView.Adapter<BooksAdapterToRead.
             imageBook = (ImageView) v.findViewById(R.id.row_books_imageView);
             ratingBook = (RatingBar) v.findViewById(R.id.row_books_rating);
             ratingCount = (TextView) v.findViewById(R.id.row_books_ratings_count);
+            link = (TextView) v.findViewById(R.id.directSearch);
             this.context = context;
         }
 
@@ -62,7 +68,7 @@ public class BooksAdapterToRead extends RecyclerView.Adapter<BooksAdapterToRead.
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(final ViewHolder holder, final int position) {
 
         tempValues = bookDetailsToReads.get(position);
 
@@ -75,6 +81,21 @@ public class BooksAdapterToRead extends RecyclerView.Adapter<BooksAdapterToRead.
         DecimalFormat formatter = new DecimalFormat("#,###,###");
         String rating_count = formatter.format(Long.parseLong(tempValues.getRatingCount().toString()));
         holder.ratingCount.setText("(" + rating_count + ")");
+
+        holder.link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                String searchItem = holder.titleBook.getText().toString();
+
+                //Toast.makeText(context, searchItem, Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(context, MainActivity.class);
+                intent.putExtra("pass_it_on", searchItem);
+                context.startActivity(intent);
+
+            }
+        });
 
     }
 
