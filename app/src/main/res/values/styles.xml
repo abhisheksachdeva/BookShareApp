@@ -32,8 +32,9 @@
         <item name="android:textColorPrimary">@color/White</item>
         <item name="colorControlNormal">@color/White</item>
     </style>
+
     <style name="AppTheme.Dialog" parent="@android:style/Theme.Material.Light.Dialog">
         <item name="android:textColorPrimary">@android:color/black</item>
-
     </style>
+
 </resources>

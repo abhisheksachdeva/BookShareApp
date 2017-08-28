@@ -11,10 +11,12 @@ import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
+import com.sdsmdg.bookshareapp.BSA.ui.College;
 
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -34,7 +36,6 @@ public interface UsersAPI {
     @POST("users/reg/?format=json")
     Call<Signup> getUserInfo(
             @Field("email") String email,
-            @Field("college") String college,
             @Field("hostel") String hostel,
             @Field("room_no") String roomNo,
             @Field("enr_no") String enrNo,
@@ -42,7 +43,8 @@ public interface UsersAPI {
             @Field("last_name") String lastName,
             @Field("contact_no") String contactNo,
             @Field("fcm_id") String fcm_id,
-            @Field("password") String password
+            @Field("password") String password,
+            @Query("college_name") String college
     );
 
     @FormUrlEncoded
@@ -57,6 +59,12 @@ public interface UsersAPI {
             @Header("Authorization") String token
     );
 
+    @GET("local-books/")
+    Call<BookList> getLocalBList(
+            @Query("page") String page,
+            @Header("Authorization") String token
+   );
+
     @GET("books/?format=json")
     Call<BookList> getBList(
             @Query("page") String page,
@@ -66,6 +74,13 @@ public interface UsersAPI {
     @GET("guest/?format=json")
     Call<BookList> getGuestBList(
             @Query("page") String page
+    );
+
+    @FormUrlEncoded
+    @POST("college/")
+    Call<College> addCollege(
+                @Field("name") String college,
+                @Field("domain") String domain
     );
 
     @FormUrlEncoded
@@ -181,12 +196,19 @@ public interface UsersAPI {
 
     @GET("search/")
     Call<List<Book>> search(
-            @Query("search") String searchQuery
+            @Query("search") String searchQuery,
+            @Header("Authorization") String token
     );
 
     @GET("search-user/")
     Call<List<UserInfo>> searchUser(
-            @Query("search") String searchQuery
+            @Query("search") String searchQuery,
+            @Header("Authorization") String token
+    );
+
+    @GET("search-college/")
+    Call<List<College>> searchCollege(
+            @Query("search") String college
     );
 
     @Multipart
@@ -194,4 +216,18 @@ public interface UsersAPI {
     Call<Signup> uploadImage(@Part MultipartBody.Part file,
                              @Path("id") String id);
 
+    @FormUrlEncoded
+    @POST("/me/password/reset/")
+    Call<ResponseBody> sendMail(
+            @Field("email") String email
+    );
+
+    @FormUrlEncoded
+    @POST("/me/password/reset/confirm/")
+    Call<ResponseBody> confirmPassword(
+            @Field("uidb64") String uidb64,
+            @Field("token") String token,
+            @Field("new_password") String newPassword,
+            @Field("confirm_password") String confirmPassword
+    );
 }

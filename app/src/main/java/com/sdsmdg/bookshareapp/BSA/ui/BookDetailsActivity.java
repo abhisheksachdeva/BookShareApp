@@ -177,7 +177,7 @@ public class BookDetailsActivity extends AppCompatActivity {
                             .capture(findViewById(R.id.book_image))
                             .into((ImageView) findViewById(R.id.book_image));
                     gr_img_url = book.getGrImgUrl();
-                    List<UserInfo> userTempInfoList = book.getUserInfoList();
+                    List<UserInfo> userTempInfoList = response.body().getUserInfoList();
                     checkIfOwner(userTempInfoList);
                     userInfoList.clear();
                     userInfoList.addAll(userTempInfoList);

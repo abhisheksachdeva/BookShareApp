@@ -1,6 +1,7 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.BookListFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
@@ -88,11 +91,12 @@ public class SearchResultsActivity extends ActionBarActivity {
 
         bookListFragment = new BookListFragment();
 
-        if (getIntent().getExtras() != null) {
 
-            isbn = getIntent().getExtras().getString("isbn");
-            bookListFragment.getBooks(isbn, "all", API_KEY);
-        }
+//        if (getIntent().getExtras() != null) {
+//            isbn = getIntent().getExtras().getString("isbn");
+//            bookListFragment.getBooks(isbn, "all", API_KEY);
+//
+//        }
 
         search_open();
 
@@ -101,6 +105,24 @@ public class SearchResultsActivity extends ActionBarActivity {
                 .replace(R.id.container, bookListFragment)
                 .commit();
 
+    }
+
+    public void barcodeScan(View view) {
+        new IntentIntegrator(SearchResultsActivity.this).initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (result != null) {
+            if (result.getContents() == null) {
+                //The operation was cancelled
+            } else {
+                isbn = result.getContents();
+                bookListFragment.getBooks(isbn, "all", API_KEY);
+            }
+        }
     }
 
     class ProgressLoader extends AsyncTask<Integer, Integer, String> {
