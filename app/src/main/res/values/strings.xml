@@ -111,4 +111,20 @@
     <string name="forgot_password_message">Enter your email below to receive your password reset instructions</string>
     <string name="reset_password">Reset Your Password</string>
     <string name="reset_password_message">Password should be of atleast 8 characters</string>
+    <string name="skip">SKIP</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="next">NEXT</string>
+    <string name="lets_begin">LET\'S BEGIN</string>
+    <string-array name="title_list">
+        <item>CAMPUS BOOKS</item>
+        <item>ADD BOOKS</item>
+        <item>NOTIFICATION</item>
+        <item>USER SEARCH</item>
+    </string-array>
+    <string-array name="description_list">
+        <item>Browse through the collection of books owned by different students of your campus</item>
+        <item>Easily search and add a book to your collection</item>
+        <item>Get notified when someone sends a request for a book, or accepts your book request</item>
+        <item>Search for other book-worms in your campus</item>
+    </string-array>
 </resources>

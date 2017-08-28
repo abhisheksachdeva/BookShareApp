@@ -22,4 +22,5 @@
     <color name="delete2">#AE3030</color>
     <color name="app_theme_fab">#e91e63</color>
     <color name="black">#000000</color>
+    <color name="welcome_background">#2E2B2B</color>
 </resources>
