@@ -26,7 +26,7 @@ public class EditProfileActivity extends AppCompatActivity {
     EditText firstName, lastName, contactNo, roomNo;
     Spinner hostelSpinner;
     String id;
-    SharedPreferences preferences;
+    SharedPreferences preferences, hostelPref;
     String hostel;
     UserInfo userInfo;
 
@@ -42,6 +42,10 @@ public class EditProfileActivity extends AppCompatActivity {
         hostelSpinner = (Spinner) findViewById(R.id.hostel_spinner);
 
         preferences = getSharedPreferences("Token", MODE_PRIVATE);
+
+        hostelPref = getSharedPreferences("hostel_res_id", MODE_PRIVATE);
+        int hostelResId = hostelPref.getInt("hostel_id", R.array.iitr_hostel_list);
+
         id = preferences.getString("id", null);
         firstName.setText(preferences.getString("first_name", null));
         lastName.setText(preferences.getString("last_name", null));
@@ -49,7 +53,7 @@ public class EditProfileActivity extends AppCompatActivity {
         roomNo.setText(preferences.getString("room_no", null));
         hostel = preferences.getString("hostel", null);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.hostel_list, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, hostelResId, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         hostelSpinner.setAdapter(adapter);
         if (!hostel.equals(null)) {

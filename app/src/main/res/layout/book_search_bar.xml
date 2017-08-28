@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
@@ -10,21 +10,32 @@
         style="@style/Widget.AppCompat.Spinner.DropDown.ActionBar"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
-        android:layout_marginTop="4dp"
-        />
+        android:layout_marginTop="4dp" />
 
     <EditText
         android:id="@+id/searchEditText"
-        android:layout_width="328dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_gravity="bottom"
-        android:layout_marginLeft="4dp"
+        android:layout_toEndOf="@id/spinner"
+        android:layout_toStartOf="@+id/barcode_icon"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="4dp"
         android:background="@null"
-        android:hint=" Search by                   "
+        android:hint="@string/search_by"
         android:imeOptions="actionSearch"
         android:inputType="textNoSuggestions"
-        android:textSize="16dp"
+        android:textSize="16sp"
         android:textColorHint="@color/Grey" />
 
-
-</LinearLayout>
+    <!-- credits to flaticon.com !-->
+    <ImageView
+        android:id="@+id/barcode_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:src="@drawable/ic_barcode"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="4dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="barcodeScan"/>
+</RelativeLayout>

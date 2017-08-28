@@ -239,7 +239,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
         this.url = url;
         Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_profile_pic).into(_profilePicture);
-
+        _profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent profileIntent = new Intent(MainActivity.this, MyProfile.class);
+                startActivity(profileIntent);
+            }
+        });
 
         if (_name != null) {
             _name.setText(preferences.getString("first_name", "") + " " + preferences.getString("last_name", ""));
@@ -407,9 +413,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (id == R.id.nav_myprofile) {
             Intent i = new Intent(this, MyProfile.class);
             startActivity(i);
-
-        } else if (id == R.id.nav_barcode) {
-            new IntentIntegrator(MainActivity.this).initiateScan();
 
         } else if (id == R.id.nav_grlogin) {
             SharedPreferences preff = getSharedPreferences("UserId", MODE_PRIVATE);
@@ -653,22 +656,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        if (requestCode == REQUEST_CODE){
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
             getLocalBooks("1");
-        }else {
-            IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-            if (result != null) {
-                if (result.getContents() == null) {
-                    //The operation was cancelled
-                } else {
-                    Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
-                    i.putExtra("isbn", result.getContents());
-                    startActivity(i);
-                }
-            } else {
-                super.onActivityResult(requestCode, resultCode, data);
-            }
         }
     }
 
