@@ -29,15 +29,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
-import com.sdsmdg.bookshareapp.BSA.api.models.Search;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.firebase_classes.MyFirebaseMessagingService;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterSimple;
@@ -300,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             customProgressDialog.show();
 
             UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-            Call<List<Book>> call = api.search(data);
+            Call<List<Book>> call = api.search(data, "Token " + prefs.getString("token", null));
             call.enqueue(new Callback<List<Book>>() {
                 @Override
                 public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
@@ -375,7 +372,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.body().size() != 0) {
                     resplocal = response.toString();
                     List<Book> localBooksList = response.body();
-
+                    noBookstextview.setVisibility(View.GONE);
                     booksList.addAll(localBooksList);
                     refreshLayout.setRefreshing(false);
                 } else {
