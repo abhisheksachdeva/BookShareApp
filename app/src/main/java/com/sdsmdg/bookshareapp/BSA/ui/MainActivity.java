@@ -84,7 +84,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Search Menu item reference in the toolbar
     MenuItem searchItem;
     TextView noBookstextview;
-    String data = "none";
+
+    //toReadName for to-read search
+    String toReadName = null;
 
     //Create a realm object to handle our local database
     Realm realm;
@@ -128,9 +130,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (getIntent().getExtras() != null) {
 
-                data = getIntent().getExtras().getString("data");
-                if (data != null) {
-                    if (data.equals("open")) {
+                toReadName = getIntent().getExtras().getString("toReadName");
+                if (toReadName != null) {
+                    if (toReadName.equals("open")) {
                         notifFragment.getNotifications("1");
                         MyFirebaseMessagingService.notifications.clear();
                         drawerLayout.openDrawer(GravityCompat.END);
@@ -138,15 +140,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
 
 
-                data = getIntent().getExtras().getString("data_splash");
-                if (data != null && data.equals("open_drawer")) {
+                toReadName = getIntent().getExtras().getString("data_splash");
+                if (toReadName != null && toReadName.equals("open_drawer")) {
                     notifFragment.getNotifications("1");
                     MyFirebaseMessagingService.notifications.clear();
                     drawerLayout.openDrawer(GravityCompat.END);
                 }
 
-                data = getIntent().getExtras().getString("data_login");
-                if (data != null && data.equals("update")) {
+                toReadName = getIntent().getExtras().getString("data_login");
+                if (toReadName != null && toReadName.equals("update")) {
 
                     String token = "Token " + preferences.getString("token", null);
 
@@ -289,64 +291,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         });
 
-        data = getIntent().getStringExtra("pass_it_on");
-        if(data != null) {
-
-            customProgressDialog = new CustomProgressDialog(MainActivity.this);
-            customProgressDialog.setCancelable(false);
-            customProgressDialog.show();
-
-            UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-            Call<List<Book>> call = api.search(data, "Token " + prefs.getString("token", null));
-            call.enqueue(new Callback<List<Book>>() {
-                @Override
-                public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
-                    booksList.clear();
-
-                    customProgressDialog.dismiss();
-
-                    if (response.body().size() != 0) {
-                        resplocal = response.toString();
-                        List<Book> localBooksList = response.body();
-
-                        booksList.addAll(localBooksList);
-                        refreshLayout.setRefreshing(false);
-                    } else {
-                        resplocal = "null";
-                        noBookstextview.setVisibility(View.VISIBLE);
-                    }
-                    adapter.notifyDataSetChanged();
-                    removeAnyVisibleSnackbars();
-                }
-
-                @Override
-                public void onFailure(Call<List<Book>> call, Throwable t) {
-
-                    customProgressDialog.dismiss();
-                    Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
-                        @Override
-                        public void onDismissed(Snackbar snackbar, int event) {
-                            visibleSnackbars.remove(snackbar);
-                            super.onDismissed(snackbar, event);
-                        }
-
-                        @Override
-                        public void onShown(Snackbar snackbar) {
-                            visibleSnackbars.add(snackbar);
-                            super.onShown(snackbar);
-                        }
-                    }).setAction("RETRY", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            refresh();
-                        }
-                    }).show();
-                    refreshLayout.setRefreshing(false);
-
-                }
-            });
-
-        }
+        //When a to read book is to be checked if it exists in campus
+        toReadName = getIntent().getStringExtra("pass_it_on");
 
     }
 
@@ -441,6 +387,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchEditText.setTextColor(getResources().getColor(R.color.White));
         searchEditText.setHintTextColor(getResources().getColor(R.color.White));
         searchView.setOnQueryTextListener(this);
+
+        //If toReadName received from to-read is not null, search it first
+        if(toReadName != null) {
+            searchItem.expandActionView();
+            searchView.requestFocus();
+            searchView.setQuery(toReadName, true);
+        }
 
         notifItem.setIcon(R.drawable.ic_notif_small);
 

@@ -294,7 +294,7 @@ public class SearchResultsActivity extends ActionBarActivity {
         // Drop down layout style - list view with radio button
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        // attaching data adapter to spinner
+        // attaching toReadName adapter to spinner
 
         spinner.setAdapter(dataAdapter);
 

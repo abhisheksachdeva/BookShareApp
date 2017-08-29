@@ -78,7 +78,7 @@ public class SplashScreen extends Activity {
     /**
      * Method to launch the welcome activity
      * @param intentTag the tag associated with the intent
-     * @param intentData the data associated with the intent
+     * @param intentData the toReadName associated with the intent
      */
     private void launchFirstTime(String intentTag, String intentData) {
         editor = firstLaunchSharedPreferences.edit();
