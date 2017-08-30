@@ -305,7 +305,7 @@ public class MyProfile extends AppCompatActivity {
     private void onCaptureImageResult(Intent data) {
 
         try {
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+            Bitmap thumbnail = (Bitmap) data.getExtras().get("toReadName");
             ByteArrayOutputStream bytes = new ByteArrayOutputStream();
             thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
             File file = new File(Environment.getExternalStorageDirectory(),

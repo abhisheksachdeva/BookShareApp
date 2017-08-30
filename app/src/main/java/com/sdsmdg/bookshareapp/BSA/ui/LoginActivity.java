@@ -3,6 +3,8 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -44,10 +46,11 @@ public class LoginActivity extends AppCompatActivity {
     Button _loginButton;
     @InjectView(R.id.link_signup)
     TextView _signupLink;
+    @InjectView(R.id.link_forgot_password)
+    TextView forgotPasswordLink;
     String token;
     Context context;
     boolean showPassword = false;
-
     CustomProgressDialog customProgressDialog;
 
     @Override
@@ -58,6 +61,8 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.inject(this);
 
         context = this;
+        // underline the forget password text view
+        forgotPasswordLink.setPaintFlags(forgotPasswordLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(_emailText.getWindowToken(), 0);
@@ -118,6 +123,14 @@ public class LoginActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_SIGNUP);
             }
         });
+
+        forgotPasswordLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void guestModeClicked(View view) {
@@ -136,13 +149,13 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        _loginButton.setEnabled(false);
+        //_loginButton.setEnabled(false);
 
         customProgressDialog = new CustomProgressDialog(LoginActivity.this);
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
 
-        String email = _emailText.getText().toString() + "@iitr.ac.in";
+        String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
         Helper.setUserEmail(email);
 

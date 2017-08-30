@@ -47,18 +47,26 @@ public class VerifyOtpFragment extends DialogFragment {
         builder.setPositiveButton("Done", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (editText.getText().toString().equals(generatedOTP)) {
-                    Toast.makeText(activity, "Otp verified", Toast.LENGTH_SHORT).show();
-                    ((OnOTPVerifyListener) activity).onOTPVerified();
-                } else {
-                    Toast.makeText(activity, "Please try again!", Toast.LENGTH_SHORT).show();
-                }
             }
         });
         builder.setNegativeButton("Start Over", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-
+                getDialog().dismiss();
+            }
+        });
+        final AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (editText.getText().toString().equals(generatedOTP)) {
+                    Toast.makeText(activity, "Otp verified", Toast.LENGTH_SHORT).show();
+                    ((OnOTPVerifyListener) activity).onOTPVerified();
+                    dialog.dismiss();
+                } else {
+                    Toast.makeText(activity, "Incorrect Otp, Please try again!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

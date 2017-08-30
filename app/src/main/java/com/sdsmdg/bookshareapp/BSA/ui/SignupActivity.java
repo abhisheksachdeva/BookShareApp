@@ -1,12 +1,13 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -24,9 +25,13 @@ import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
 import com.sdsmdg.bookshareapp.BSA.api.otp.MSGApi;
+import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.CollegeAdapter;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.VerifyOtpFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -71,9 +76,17 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
     ImageButton _showPassword;
     @InjectView(R.id._btn_show_cnf_password)
     ImageButton _showCnfPassword;
+    @InjectView(R.id.domain_spinner)
+    Spinner _domainSpinner;
+    @InjectView(R.id.text_college_domain)
+    TextView domainTextView;
+    ArrayAdapter<CharSequence> hostelAdapter;
+    String domain = "@iitr.ac.in";
+    ArrayList<College> colleges;
+    int hostelResId = R.array.iitr_hostel_list;
     boolean showPassword = false, showCnfPassword = false;
-
     String generatedOTP;
+    CustomProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,25 +94,39 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         setContentView(R.layout.activity_signup);
         ButterKnife.inject(this);
 
-        //Setting spinner for hostels
-        ArrayAdapter<CharSequence> hostelAdapter = ArrayAdapter.createFromResource(this, R.array.hostel_list, android.R.layout.simple_spinner_item);
+//        _emailText.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null,
+//                new TextDrawable("hello", 0), null);
 
-        hostelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        _hostelSpinner.setAdapter(hostelAdapter);
+        colleges = new ArrayList<>();
+        addColleges();
+        CollegeAdapter collegeAdapter = new CollegeAdapter(getApplicationContext(),colleges);
+        _domainSpinner.setAdapter(collegeAdapter);
 
-        _hostelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        _domainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                hostel = parent.getItemAtPosition(position).toString();
-//                hideKeyboard();
+                College college = (College) parent.getItemAtPosition(position);
+                domain = college.getCollegeDomain();
+                _collegeText.setText(college.getCollegeName());
+                domainTextView.setText(college.getCollegeDomain());
+                getHostels(college.getCollegeName());
+                setHostelSpinner();
+                writeSharedPreferences();
+                hostelAdapter.notifyDataSetChanged();
+                _collegeText.setEnabled(false);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                hostel = "Azad";
+                domain = "@iitr.ac.in";
+                _collegeText.setText(getResources().getString(R.string.iitr));
+                hostelResId = R.array.iitr_hostel_list;
             }
         });
-        //Spinner complete
+
+        //Setting spinner for hostels
+        setHostelSpinner();
+        writeSharedPreferences();
 
         _signupButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -152,6 +179,48 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         });
     }
 
+    private void writeSharedPreferences() {
+        SharedPreferences preferences = getSharedPreferences("hostel_res_id", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt("hostel_id", hostelResId);
+        editor.apply();
+    }
+
+    private void getHostels(String collegeName) {
+        switch (collegeName){
+            case "IIT Roorkee":
+                hostelResId = R.array.iitr_hostel_list;
+                break;
+            case "IIT Delhi":
+                hostelResId = R.array.iitd_hostel_list;
+                break;
+            case "IIT Bombay":
+                hostelResId = R.array.iitb_hostel_list;
+                break;
+            case "IIT Madras":
+                hostelResId = R.array.iitm_hostel_list;
+                break;
+            default:
+                hostelResId = R.array.iitr_hostel_list;
+        }
+    }
+
+    private void setHostelSpinner(){
+        hostelAdapter = ArrayAdapter.createFromResource(this, hostelResId, android.R.layout.simple_spinner_item);
+        hostelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        _hostelSpinner.setAdapter(hostelAdapter);
+        _hostelSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                hostel = parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                hostel = (String) parent.getItemAtPosition(0);
+            }
+        });
+    }
+
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
         if (view != null) {
@@ -169,20 +238,17 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         _signupButton.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(SignupActivity.this,
-                R.style.AppTheme);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Creating Account...");
-        progressDialog.show();
+        progressDialog = new CustomProgressDialog(SignupActivity.this);
+        progressDialog.setCancelable(false);
 
         String fname = _FnameText.getText().toString();
         String lname = _LnameText.getText().toString();
-        String email = _emailText.getText().toString() + "@iitr.ac.in";
+        String email = _emailText.getText().toString();// + domain;
         String password = _passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();
         String college = _collegeText.getText().toString();
-        final String contact = _contactText.getText().toString();
+        String contact = _contactText.getText().toString();
 
         //If the contact no. is empty, sign up directly, else, open the otp dialog to verify the entered contact no.
         if (!contact.equals("")) {
@@ -190,19 +256,64 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         } else {
             requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
         }
-
-        progressDialog.dismiss();
     }
 
-    private void requestSignUp(String fname, String lname, String email, String password, String room_no, String roll_no, String college, String contact) {
+    private void requestSignUp(final String fname, final String lname, final String email, final String password,
+                               final String room_no, final String roll_no, final String college, final String contact) {
+        progressDialog.show();
         Helper.setUserEmail(email);
-        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Signup> userInfoCall = usersAPI.getUserInfo(email, college, hostel, room_no, roll_no, fname, lname, contact, FirebaseInstanceId.getInstance().getToken(), password);
-        userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
+        final UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
 
+        Call<List<College>> collegeListCall = usersAPI.searchCollege(college);
+        collegeListCall.enqueue(new Callback<List<College>>() {
+            @Override
+            public void onResponse(Call<List<College>> call, Response<List<College>> response) {
+                if(response.body() == null || response.body().size() == 0){
+                    Call<College> addCollegeCall = usersAPI.addCollege(college, domain);
+                    addCollegeCall.enqueue(new Callback<College>() {
+                        @Override
+                        public void onResponse(Call<College> call, Response<College> response) {
+                            if(response.body() != null) {
+                                Log.i(TAG, "College Made" + response.toString());
+                                createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact,
+                                        password);
+                            }
+                            else{
+                                Log.i(TAG, "College Not Made"+response.toString());
+                                progressDialog.dismiss();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<College> call, Throwable t) {
+                            Log.i(TAG, "College Not Made"+t.toString());
+                            progressDialog.dismiss();
+                        }
+                    });
+                }
+                else{
+                    createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact, password);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<College>> call, Throwable t) {
+                Log.i(TAG, "College Not Made"+t.toString());
+                progressDialog.dismiss();
+            }
+        });
+    }
+
+    public void createAccount(UsersAPI usersAPI, String fname, String lname, String email, String college,
+                              String room_no, String roll_no, String contact, String password){
+
+        Call<Signup> userInfoCall = usersAPI.getUserInfo(email, hostel, room_no, roll_no, fname, lname, contact,
+                FirebaseInstanceId.getInstance().getToken(),password, college);
+        userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
             @Override
             public void onFailure(Call<Signup> call, Throwable t) {
                 onSignupFailed("Check your network connection properly");
+                progressDialog.dismiss();
             }
 
             @Override
@@ -212,6 +323,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
                     if (detail.equals("Fill required details or Email id already registered.")) {
                         onSignupFailed("Email already registered" + FirebaseInstanceId.getInstance().getToken());
+                        progressDialog.dismiss();
                     } else {
                         //If the user has not entered his phone no. complete the signup, else show enter otp dialog
                         onSignupSuccess();
@@ -290,6 +402,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
+        progressDialog.dismiss();
         setResult(RESULT_OK, null);
         finish();
     }
@@ -396,5 +509,17 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         //As the otp is verified now, the user signs up with his correct no. in the database
         requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
+    }
+
+    private void addColleges() {
+        colleges.add(new College(getResources().getString(R.string.iitr), "@iitr.ac.in"));
+        colleges.add(new College(getResources().getString(R.string.iitd), "@iitd.ac.in"));
+        colleges.add(new College(getResources().getString(R.string.iitb), "@iitb.ac.in"));
+        colleges.add(new College(getResources().getString(R.string.iitm), "@iitm.ac.in"));
+//        colleges.add(new College("IIT Kanpur", "@iitk.ac.in"));
+//        colleges.add(new College("IIT Kharagpur", "@iitkgp.ac.in"));
+//        colleges.add(new College("IIT Guwahati", "@iitg.ac.in"));
+//        colleges.add(new College("IIT Ropar", "@iitrp.ac.in"));
+//        colleges.add(new College("IIT Indore", "@iiti.ac.in"));
     }
 }

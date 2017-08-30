@@ -126,7 +126,9 @@ public class UserSearchActivity extends ActionBarActivity {
         noUsersTextView.setVisibility(View.GONE);
         customProgressDialog.show();
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<List<UserInfo>> call = api.searchUser(query);
+        SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
+
+        Call<List<UserInfo>> call = api.searchUser(query, "Token " + preferences.getString("token", null));
         call.enqueue(new Callback<List<UserInfo>>() {
             @Override
             public void onResponse(Call<List<UserInfo>> call, Response<List<UserInfo>> response) {

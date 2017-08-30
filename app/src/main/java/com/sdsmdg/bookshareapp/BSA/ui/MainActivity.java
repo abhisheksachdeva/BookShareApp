@@ -29,8 +29,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
@@ -60,6 +58,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, NotificationFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
+    private static final int REQUEST_CODE = 1000;
     List<Book> booksList;
     BooksAdapterSimple adapter;
     SharedPreferences prefs;
@@ -67,6 +66,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     SearchView searchView;
     Integer count = 1;
     String Resp;
+
+    CustomProgressDialog customProgressDialog;
 
     //Creates a list of visible snackbars
     List<Snackbar> visibleSnackbars = new ArrayList<>();
@@ -83,7 +84,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Search Menu item reference in the toolbar
     MenuItem searchItem;
     TextView noBookstextview;
-    String data = "none";
+
+    //toReadName for to-read search
+    String toReadName = null;
 
     //Create a realm object to handle our local database
     Realm realm;
@@ -124,75 +127,77 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         notifFragment = (NotificationFragment) getSupportFragmentManager().findFragmentById(R.id.right_drawer);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
+
         if (getIntent().getExtras() != null) {
 
-            data = getIntent().getExtras().getString("data");
-            if (data != null) {
-                if (data.equals("open")) {
+                toReadName = getIntent().getExtras().getString("toReadName");
+                if (toReadName != null) {
+                    if (toReadName.equals("open")) {
+                        notifFragment.getNotifications("1");
+                        MyFirebaseMessagingService.notifications.clear();
+                        drawerLayout.openDrawer(GravityCompat.END);
+                    }
+                }
+
+
+                toReadName = getIntent().getExtras().getString("data_splash");
+                if (toReadName != null && toReadName.equals("open_drawer")) {
                     notifFragment.getNotifications("1");
                     MyFirebaseMessagingService.notifications.clear();
                     drawerLayout.openDrawer(GravityCompat.END);
                 }
-            }
 
-            data = getIntent().getExtras().getString("data_splash");
-            if (data != null && data.equals("open_drawer")) {
-                notifFragment.getNotifications("1");
-                MyFirebaseMessagingService.notifications.clear();
-                drawerLayout.openDrawer(GravityCompat.END);
-            }
+                toReadName = getIntent().getExtras().getString("data_login");
+                if (toReadName != null && toReadName.equals("update")) {
 
-            data = getIntent().getExtras().getString("data_login");
-            if (data != null && data.equals("update")) {
+                    String token = "Token " + preferences.getString("token", null);
 
-                String token = "Token " + preferences.getString("token", null);
-
-                String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                Call<Detail> call2 = usersAPI.update_fcm_id(
-                        token,
-                        refreshedToken
-                );
-                call2.enqueue(new Callback<Detail>() {
-                    @Override
-                    public void onResponse(Call<Detail> call2, Response<Detail> response) {
-                        if (response.body() != null) {
-                            if (response.body().getDetail().equals("FCM_ID changed")) {
-                                //FCM Id was changed successfully
-                            } else {
+                    String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                    UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                    Call<Detail> call2 = usersAPI.update_fcm_id(
+                            token,
+                            refreshedToken
+                    );
+                    call2.enqueue(new Callback<Detail>() {
+                        @Override
+                        public void onResponse(Call<Detail> call2, Response<Detail> response) {
+                            if (response.body() != null) {
+                                if (response.body().getDetail().equals("FCM_ID changed")) {
+                                    //FCM Id was changed successfully
+                                } else {
 //                                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                //The FCM ID didn't change
                             }
-                        } else {
-                            //The FCM ID didn't change
+                            removeAnyVisibleSnackbars();
                         }
-                        removeAnyVisibleSnackbars();
-                    }
 
-                    @Override
-                    public void onFailure(Call<Detail> call, Throwable t) {
-                        Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
-                            @Override
-                            public void onDismissed(Snackbar snackbar, int event) {
-                                visibleSnackbars.remove(snackbar);
-                                super.onDismissed(snackbar, event);
-                            }
+                        @Override
+                        public void onFailure(Call<Detail> call, Throwable t) {
+                            Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
+                                @Override
+                                public void onDismissed(Snackbar snackbar, int event) {
+                                    visibleSnackbars.remove(snackbar);
+                                    super.onDismissed(snackbar, event);
+                                }
 
-                            @Override
-                            public void onShown(Snackbar snackbar) {
-                                visibleSnackbars.add(snackbar);
-                                super.onShown(snackbar);
-                            }
-                        }).setAction("RETRY", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                refresh();
-                            }
-                        }).show();
-                    }
-                });
+                                @Override
+                                public void onShown(Snackbar snackbar) {
+                                    visibleSnackbars.add(snackbar);
+                                    super.onShown(snackbar);
+                                }
+                            }).setAction("RETRY", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    refresh();
+                                }
+                            }).show();
+                        }
+                    });
 
 
-            }
+                }
 
         }
         localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
@@ -238,7 +243,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
         this.url = url;
         Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_profile_pic).into(_profilePicture);
-
+        _profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent profileIntent = new Intent(MainActivity.this, MyProfile.class);
+                startActivity(profileIntent);
+            }
+        });
 
         if (_name != null) {
             _name.setText(preferences.getString("first_name", "") + " " + preferences.getString("last_name", ""));
@@ -280,11 +291,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         });
 
+        //When a to read book is to be checked if it exists in campus
+        toReadName = getIntent().getStringExtra("pass_it_on");
+
     }
 
     public void searchClicked(View view) {
         Intent i = new Intent(this, SearchResultsActivity.class);
-        startActivity(i);
+        startActivityForResult(i, REQUEST_CODE);
     }
 
 
@@ -296,7 +310,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onQueryTextSubmit(String query) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<List<Book>> call = api.search(query);
+        Call<List<Book>> call = api.search(query, "Token " + prefs.getString("token", null));
         call.enqueue(new Callback<List<Book>>() {
             @Override
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
@@ -304,7 +318,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (response.body().size() != 0) {
                     resplocal = response.toString();
                     List<Book> localBooksList = response.body();
-
+                    noBookstextview.setVisibility(View.GONE);
                     booksList.addAll(localBooksList);
                     refreshLayout.setRefreshing(false);
                 } else {
@@ -374,6 +388,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchEditText.setHintTextColor(getResources().getColor(R.color.White));
         searchView.setOnQueryTextListener(this);
 
+        //If toReadName received from to-read is not null, search it first
+        if(toReadName != null) {
+            searchItem.expandActionView();
+            searchView.requestFocus();
+            searchView.setQuery(toReadName, true);
+        }
+
         notifItem.setIcon(R.drawable.ic_notif_small);
 
         return true;
@@ -407,9 +428,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             Intent i = new Intent(this, MyProfile.class);
             startActivity(i);
 
-        } else if (id == R.id.nav_barcode) {
-            new IntentIntegrator(MainActivity.this).initiateScan();
-
         } else if (id == R.id.nav_grlogin) {
             SharedPreferences preff = getSharedPreferences("UserId", MODE_PRIVATE);
             if (preff.getString("userGrId", null) == null) {
@@ -419,8 +437,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Intent i = new Intent(this, ToReadActivity.class);
                 startActivity(i);
             }
-
-
         } else if (id == R.id.nav_logout) {
             final SharedPreferences prefs = getSharedPreferences("Token", MODE_PRIVATE);
             String token = "Token " + prefs.getString("token", null);
@@ -500,7 +516,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void getLocalBooks(final String page) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<BookList> call = api.getBList(page, "Token " + prefs.getString("token", null));
+        Call<BookList> call = api.getLocalBList(page, "Token " + prefs.getString("token", null));
         call.enqueue(new Callback<BookList>() {
             @Override
             public void onResponse(Call<BookList> call, Response<BookList> response) {
@@ -654,17 +670,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
-        if (result != null) {
-            if (result.getContents() == null) {
-                //The operation was cancelled
-            } else {
-                Intent i = new Intent(MainActivity.this, SearchResultsActivity.class);
-                i.putExtra("isbn", result.getContents());
-                startActivity(i);
-            }
-        } else {
-            super.onActivityResult(requestCode, resultCode, data);
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE) {
+            getLocalBooks("1");
         }
     }
 
@@ -684,6 +692,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             visibleSnackbars.get(0).dismiss();
             visibleSnackbars.clear();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
     }
 
     private void refresh() {

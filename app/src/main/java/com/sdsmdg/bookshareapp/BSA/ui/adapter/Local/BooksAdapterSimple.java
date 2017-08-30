@@ -35,6 +35,7 @@ public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.
         public ImageView imageBook;
         public RatingBar ratingBook;
         public TextView ratingCount;
+        public TextView link;
         Context context;
 
         public ViewHolder(View v, Context context) {
@@ -44,6 +45,7 @@ public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.
             imageBook = (ImageView) v.findViewById(R.id.row_books_imageView);
             ratingBook = (RatingBar) v.findViewById(R.id.row_books_rating);
             ratingCount = (TextView) v.findViewById(R.id.row_books_ratings_count);
+            link = (TextView) v.findViewById(R.id.directSearch);
             this.context = context;
         }
 
@@ -89,6 +91,9 @@ public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.
             DecimalFormat formatter = new DecimalFormat("#,###,###");
             String rating_count = formatter.format(tempValues.getRatingsCount());
             holder.ratingCount.setText("(" + rating_count + ")");
+
+            holder.link.setVisibility(View.GONE);
+
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -104,7 +109,7 @@ public class BooksAdapterSimple extends RecyclerView.Adapter<BooksAdapterSimple.
     @Override
     public int getItemCount() {
         if (bookList != null)
-            return bookList.size() + 1;
+            return bookList.size();
 
         return 0;
     }

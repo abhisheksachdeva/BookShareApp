@@ -1,0 +1,75 @@
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/welcome_background"
+    tools:context="com.sdsmdg.bookshareapp.BSA.ui.fragments.TutorialFragment">
+
+    <android.support.constraint.Guideline
+        android:id="@+id/left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.0778588" />
+    <android.support.constraint.Guideline
+        android:id="@+id/right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9221411" />
+    <android.support.constraint.Guideline
+        android:id="@+id/title_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.0807113" />
+    <android.support.constraint.Guideline
+        android:id="@+id/image_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2134062" />
+    <android.support.constraint.Guideline
+        android:id="@+id/image_bottom_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6032831" />
+    <android.support.constraint.Guideline
+        android:id="@+id/description_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6949384" />
+    <TextView
+        android:id="@+id/text_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/left_guideline"
+        app:layout_constraintEnd_toEndOf="@id/right_guideline"
+        app:layout_constraintTop_toBottomOf="@id/title_top_guideline"
+        android:textColor="@color/White"
+        android:textSize="24sp"
+        tools:text="ADD BOOKS" />
+    <ImageView
+        android:id="@+id/image_logo"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/left_guideline"
+        app:layout_constraintEnd_toEndOf="@id/right_guideline"
+        app:layout_constraintTop_toBottomOf="@id/image_top_guideline"
+        app:layout_constraintBottom_toTopOf="@id/image_bottom_guideline"
+        tools:src="@drawable/add_books_group"/>
+    <TextView
+        android:id="@+id/text_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="@id/left_guideline"
+        app:layout_constraintEnd_toEndOf="@id/right_guideline"
+        app:layout_constraintTop_toBottomOf="@id/description_top_guideline"
+        android:gravity="center"
+        android:textColor="@color/White"
+        android:textSize="18sp"
+        tools:text="Easily search and add a book to your collection" />
+</android.support.constraint.ConstraintLayout>
