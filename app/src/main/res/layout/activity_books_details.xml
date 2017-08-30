@@ -123,8 +123,29 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
                 android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
+                android:text="Book Owners"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reader_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_margin="12dp"
+                android:background="@color/textColorSecondary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
                 android:textColor="#333333"
                 android:textSize="18sp"
                 android:text="Know more at GoodReads " />
@@ -143,27 +164,6 @@
                 android:padding="10dp"
                 android:onClick="goodreads"
                 android:id="@+id/chrome_good" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2dp"
-                android:layout_margin="12dp"
-                android:background="@color/textColorSecondary" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:text="Book Owners"
-                android:textColor="#333333"
-                android:textSize="18sp" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/reader_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
 
             <View
                 android:layout_width="match_parent"
