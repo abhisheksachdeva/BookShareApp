@@ -151,7 +151,6 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                         } else {
                             description = "No Description Available";
                         }
-
                     }
 
                     @Override
@@ -159,7 +158,6 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                         description = "No Description Available";
                     }
                 });
-
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AppTheme_Dialog));
                 builder.setInverseBackgroundForced(true);
@@ -174,7 +172,6 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                             @Override
                             public void onResponse(Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> call, Response<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> response) {
                                 try {
-
 
                                     if (response.body() != null) {
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();

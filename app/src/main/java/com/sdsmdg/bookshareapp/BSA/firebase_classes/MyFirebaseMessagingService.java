@@ -41,6 +41,17 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
+
+        //check for notifs..
+        if (remoteMessage.getNotification() != null) {
+            Log.d(TAG, "Message data  : " + remoteMessage.getNotification().getBody());
+            String title = remoteMessage.getNotification().getTitle();
+            String message = remoteMessage.getNotification().getBody();
+            sendNotification(title,message);
+            return;
+        }
+
+
         //check if msg contains data..
         if (remoteMessage.getData().size() > 0) {
             String name = remoteMessage.getData().get("name");
@@ -51,10 +62,7 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
             sendNotification(title, message);
         }
 
-        //check for notifs..
-        if (remoteMessage.getNotification() != null) {
-            Log.d(TAG, "Message data  : " + remoteMessage.getNotification().getBody());
-        }
+
     }
 
 
@@ -64,7 +72,8 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
 
         Intent intent = new Intent(this, MainActivity.class);
         intent.putExtra("data", "open");
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
+
         pendingIntent = PendingIntent.getActivity(this, 0 /*request code */, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         //setting sound :
