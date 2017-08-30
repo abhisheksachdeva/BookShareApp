@@ -251,11 +251,11 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         String contact = _contactText.getText().toString();
 
         //If the contact no. is empty, sign up directly, else, open the otp dialog to verify the entered contact no.
-//        if (!contact.equals("")) {
-//            sendOTP(contact);
-//        } else {
+        if (!contact.equals("")) {
+            sendOTP(contact);
+        } else {
             requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
-//        }
+        }
     }
 
     private void requestSignUp(final String fname, final String lname, final String email, final String password,

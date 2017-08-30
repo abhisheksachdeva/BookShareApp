@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -50,7 +51,6 @@ public class LoginActivity extends AppCompatActivity {
     String token;
     Context context;
     boolean showPassword = false;
-
     CustomProgressDialog customProgressDialog;
 
     @Override
@@ -149,7 +149,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        _loginButton.setEnabled(false);
+        //_loginButton.setEnabled(false);
 
         customProgressDialog = new CustomProgressDialog(LoginActivity.this);
         customProgressDialog.setCancelable(false);

@@ -18,7 +18,7 @@
             android:name=".ui.LoginActivity"
             android:label="Login"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".ui.SearchResultsActivity"
             android:label="Search"
@@ -112,8 +112,7 @@
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
-      
-        <activity android:name=".ChromeGoodReads"></activity>
+
 
         <activity
             android:name=".ui.ForgotPasswordActivity"
@@ -126,13 +125,14 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="192.168.43.50"
+                    android:host="172.25.30.213"
                     android:pathPrefix="/reset"
                     android:port="8000"
                     android:scheme="http" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.WelcomeActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ui.WelcomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
     </application>
 </manifest>
