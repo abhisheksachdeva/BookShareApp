@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
@@ -23,10 +24,12 @@ import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.api.models.Login;
+import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
     TextView _signupLink;
     @InjectView(R.id.link_forgot_password)
     TextView forgotPasswordLink;
+    @InjectView(R.id.new_activation)
+    TextView newActivation;
     String token;
     Context context;
     boolean showPassword = false;
@@ -61,12 +66,18 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.inject(this);
 
         context = this;
-        // underline the forget password text view
+        // underline the forget password and new activation text view
         forgotPasswordLink.setPaintFlags(forgotPasswordLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        newActivation.setPaintFlags(newActivation.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(_emailText.getWindowToken(), 0);
 
+        if (getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_VIEW)){
+            if (getIntent().getData() != null){
+                checkActivation(getIntent().getData());
+            }
+        }
         pref = getApplicationContext().getSharedPreferences("Token", MODE_PRIVATE);
         prevEmail = getApplicationContext().getSharedPreferences("Previous Email", MODE_PRIVATE);
         String emails[];
@@ -127,8 +138,45 @@ public class LoginActivity extends AppCompatActivity {
         forgotPasswordLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SendEmailActivity.class);
+                intent.putExtra("email_type", "forgot_password_email");
                 startActivity(intent);
+            }
+        });
+
+        newActivation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), SendEmailActivity.class);
+                intent.putExtra("email_type", "new_activation_email");
+                startActivity(intent);
+            }
+        });
+    }
+
+    private void checkActivation(Uri data) {
+        final CustomProgressDialog progressDialog = new CustomProgressDialog(this);
+        progressDialog.show();
+        String[] segments = data.getPath().split("/");
+        UsersAPI usersApi = NetworkingFactory.getLocalInstance().getUsersAPI();
+        Call<Detail> checkActivationCall = usersApi.checkActivation(
+                segments[2]);
+        checkActivationCall.enqueue(new Callback<Detail>() {
+            @Override
+            public void onResponse(Call<Detail> call, Response<Detail> response) {
+                progressDialog.dismiss();
+                if (response.body().getDetail() != null){
+                    Toast.makeText(LoginActivity.this, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                } else{
+                    Toast.makeText(LoginActivity.this, "Please Try Again!", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Detail> call, Throwable t) {
+                progressDialog.dismiss();
+                t.printStackTrace();
+                Toast.makeText(LoginActivity.this, "Please Try Again!", Toast.LENGTH_SHORT).show();
             }
         });
     }

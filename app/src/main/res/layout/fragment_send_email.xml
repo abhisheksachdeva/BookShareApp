@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -16,20 +18,20 @@
         app:layout_constraintTop_toTopOf="@+id/logo_top_guideline"
         app:layout_constraintBottom_toBottomOf="@+id/logo_bottom__guideline"/>
     <TextView
-        android:id="@+id/txt_forgot_password_heading"
+        android:id="@+id/txt_send_email_heading"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/forgot_password"
+        tools:text="@string/forgot_password"
         android:textColor="@color/White"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="@+id/left_guideline"
         app:layout_constraintEnd_toEndOf="@+id/right_guideline"
         app:layout_constraintTop_toTopOf="@+id/forgot_top_guideline"/>
     <TextView
-        android:id="@+id/txt_forgot_password_message1"
+        android:id="@+id/txt_send_email_message"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="@string/forgot_password_message"
+        tools:text="@string/forgot_password_message"
         android:textColor="@color/White"
         android:textSize="16sp"
         android:minLines="2"
@@ -57,7 +59,7 @@
             android:textColor="@color/White"/>
     </android.support.design.widget.TextInputLayout>
     <Button
-        android:id="@+id/submit_email_button"
+        android:id="@+id/submit_email_button1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="@string/forgot_password_submit_button"
@@ -65,7 +67,7 @@
         android:background="@drawable/button_shape"
         app:layout_constraintStart_toStartOf="@+id/left_guideline"
         app:layout_constraintEnd_toEndOf="@+id/right_guideline"
-        app:layout_constraintTop_toTopOf="@+id/submit_button_top_guideline"/>
+        app:layout_constraintTop_toTopOf="@+id/submit_button_top_guideline" />
     <android.support.constraint.Guideline
         android:id="@+id/left_guideline"
         android:layout_width="wrap_content"

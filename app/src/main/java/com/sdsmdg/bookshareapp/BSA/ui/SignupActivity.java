@@ -1,7 +1,9 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -20,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.gson.JsonObject;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
@@ -29,6 +32,9 @@ import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.CollegeAdapter;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.VerifyOtpFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -93,9 +99,6 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         ButterKnife.inject(this);
-
-//        _emailText.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null,
-//                new TextDrawable("hello", 0), null);
 
         colleges = new ArrayList<>();
         addColleges();
@@ -243,7 +246,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         String fname = _FnameText.getText().toString();
         String lname = _LnameText.getText().toString();
-        String email = _emailText.getText().toString();// + domain;
+        String email = _emailText.getText().toString() + domain;
         String password = _passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();
@@ -251,6 +254,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         String contact = _contactText.getText().toString();
 
         //If the contact no. is empty, sign up directly, else, open the otp dialog to verify the entered contact no.
+
         if (!contact.equals("")) {
             sendOTP(contact);
         } else {
@@ -321,12 +325,12 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                 if (response.body() != null) {
                     String detail = response.body().getDetail();
 
-                    if (detail.equals("Fill required details or Email id already registered.")) {
-                        onSignupFailed("Email already registered" + FirebaseInstanceId.getInstance().getToken());
-                        progressDialog.dismiss();
-                    } else {
+                    if (detail.equals("Successfully registered.")) {
                         //If the user has not entered his phone no. complete the signup, else show enter otp dialog
                         onSignupSuccess();
+                    } else {
+                        onSignupFailed("Email address already registered.");
+                        progressDialog.dismiss();
                     }
                 }
             }
@@ -404,7 +408,22 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         _signupButton.setEnabled(true);
         progressDialog.dismiss();
         setResult(RESULT_OK, null);
-        finish();
+        showAlertDialog();
+    }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Success!!");
+        builder.setMessage("An activation link has been sent to your email. Click it to activate your citadel account.");
+        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
     public void onSignupFailed(String toast) {
@@ -500,7 +519,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         String fname = _FnameText.getText().toString();
         String lname = _LnameText.getText().toString();
-        String email = _emailText.getText().toString() + "@iitr.ac.in";
+        String email = _emailText.getText().toString() + domain;
         String password = _passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();

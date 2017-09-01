@@ -143,4 +143,17 @@
             android:textSize="18sp"
             android:textStyle="bold" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/new_activation"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center_horizontal|bottom"
+        android:gravity="bottom"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="10dp"
+        android:text="@string/send_link"
+        android:textColor="@color/colorAccent"
+        android:textSize="16sp" />
 </LinearLayout>
