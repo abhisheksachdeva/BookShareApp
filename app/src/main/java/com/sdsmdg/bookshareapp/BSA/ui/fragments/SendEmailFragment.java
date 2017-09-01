@@ -1,5 +1,6 @@
 package com.sdsmdg.bookshareapp.BSA.ui.fragments;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
@@ -9,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,8 +88,8 @@ public class SendEmailFragment extends Fragment {
 
     private void initViews(View view) {
         customProgressDialog = new CustomProgressDialog(getActivity());
-        emailInputLayout = (TextInputLayout) view.findViewById(R.id.email_edit_text1);
-        emailInputEditText = (TextInputEditText) view.findViewById(R.id.txt_email_address1);
+        emailInputLayout = (TextInputLayout) view.findViewById(R.id.email_edit_text);
+        emailInputEditText = (TextInputEditText) view.findViewById(R.id.txt_email_address);
         titleTextView = (TextView) view.findViewById(R.id.txt_send_email_heading);
         descriptionTextView = (TextView) view.findViewById(R.id.txt_send_email_message);
         submitEmailButton = (Button) view.findViewById(R.id.submit_email_button1);
@@ -97,8 +99,6 @@ public class SendEmailFragment extends Fragment {
         submitEmailButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Log.i("email",emailInputEditText.getText().toString());
-                Toast.makeText(getActivity(), "email is "+emailInputEditText.getText().toString(), Toast.LENGTH_SHORT).show();
                 if (emailInputEditText.getText().toString().trim().length() != 0){
                     emailInputLayout.setErrorEnabled(false);
                     sendEmail(emailInputEditText.getText().toString());
@@ -148,6 +148,17 @@ public class SendEmailFragment extends Fragment {
     }
 
     @Override
+    public void onAttach(Activity context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
@@ -175,7 +186,6 @@ public class SendEmailFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
         void onFragmentInteraction(String status);
     }
 }

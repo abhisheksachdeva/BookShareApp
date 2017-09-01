@@ -63,8 +63,9 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.inject(this);
 
         context = this;
-        // underline the forget password text view
+        // underline the forget password and new activation text view
         forgotPasswordLink.setPaintFlags(forgotPasswordLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        newActivation.setPaintFlags(newActivation.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(_emailText.getWindowToken(), 0);

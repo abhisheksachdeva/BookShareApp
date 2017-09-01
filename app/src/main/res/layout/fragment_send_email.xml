@@ -40,7 +40,7 @@
         app:layout_constraintEnd_toEndOf="@+id/right_guideline"
         app:layout_constraintTop_toTopOf="@+id/forgot_message_top_guideline"/>
     <android.support.design.widget.TextInputLayout
-        android:id="@+id/email_edit_text1"
+        android:id="@+id/email_edit_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@+id/email_top_guideline"
@@ -49,7 +49,7 @@
         android:hint="@string/forgot_password_email_hint"
         android:textColorHint="@color/White">
         <android.support.design.widget.TextInputEditText
-            android:id="@+id/txt_email_address1"
+            android:id="@+id/txt_email_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:alpha="0.87"

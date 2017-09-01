@@ -49,6 +49,6 @@ public class SendEmailActivity extends AppCompatActivity implements SendEmailFra
             public void run() {
                 finish();
             }
-        }, 500);
+        }, 1000);
     }
 }
