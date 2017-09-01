@@ -11,6 +11,7 @@ import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
+import com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response;
 import com.sdsmdg.bookshareapp.BSA.ui.College;
 
 import java.util.List;
@@ -236,4 +237,9 @@ public interface UsersAPI {
             @Field("new_password") String newPassword,
             @Field("confirm_password") String confirmPassword
     );
+
+     @GET("/phone-activation/{key}")
+     Call<Detail> checkActivation(
+             @Path("key") String key
+     );
 }
