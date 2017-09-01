@@ -18,7 +18,7 @@
             android:name=".ui.LoginActivity"
             android:label="Login"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.SearchResultsActivity"
             android:label="Search"
@@ -58,6 +58,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -113,10 +114,6 @@
             </intent-filter>
         </service>
 
-
-        <activity
-            android:name=".ui.ForgotPasswordActivity"
-            android:parentActivityName=".ui.LoginActivity" />
         <activity android:name=".ui.PasswordConfirmActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -134,5 +131,8 @@
         <activity
             android:name=".ui.WelcomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".ui.SendEmailActivity"
+            android:parentActivityName=".ui.LoginActivity" />
     </application>
+
 </manifest>

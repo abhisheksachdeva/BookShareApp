@@ -48,6 +48,8 @@ public class LoginActivity extends AppCompatActivity {
     TextView _signupLink;
     @InjectView(R.id.link_forgot_password)
     TextView forgotPasswordLink;
+    @InjectView(R.id.new_activation)
+    TextView newActivation;
     String token;
     Context context;
     boolean showPassword = false;
@@ -127,7 +129,17 @@ public class LoginActivity extends AppCompatActivity {
         forgotPasswordLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getApplicationContext(), ForgotPasswordActivity.class);
+                Intent intent = new Intent(getApplicationContext(), SendEmailActivity.class);
+                intent.putExtra("email_type", "forgot_password_email");
+                startActivity(intent);
+            }
+        });
+
+        newActivation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), SendEmailActivity.class);
+                intent.putExtra("email_type", "new_activation_email");
                 startActivity(intent);
             }
         });
