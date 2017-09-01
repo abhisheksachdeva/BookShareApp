@@ -218,8 +218,14 @@ public interface UsersAPI {
 
     @FormUrlEncoded
     @POST("/me/password/reset/")
-    Call<ResponseBody> sendMail(
+    Call<ResponseBody> sendForgotPasswordMail(
             @Field("email") String email
+    );
+
+    @FormUrlEncoded
+    @POST("/new_activation/")
+    Call<ResponseBody> sendNewActivationMail(
+             @Field("email") String email
     );
 
     @FormUrlEncoded
