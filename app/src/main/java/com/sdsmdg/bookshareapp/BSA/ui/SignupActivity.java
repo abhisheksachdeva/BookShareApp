@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -86,6 +87,18 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
     Spinner _domainSpinner;
     @InjectView(R.id.text_college_domain)
     TextView domainTextView;
+    @InjectView(R.id.fname_input_layout)
+    TextInputLayout fnameInputLayout;
+    @InjectView(R.id.lname_input_layout)
+    TextInputLayout lnameInputLayout;
+    @InjectView(R.id.email_input_layout)
+    TextInputLayout emailInputLayout;
+    @InjectView(R.id.password_input_layout)
+    TextInputLayout passwordInputLayout;
+    @InjectView(R.id.confirm_password_input_layout)
+    TextInputLayout confirmPasswordInputLayout;
+    @InjectView(R.id.enroll_input_layout)
+    TextInputLayout enrollInputLayout;
     ArrayAdapter<CharSequence> hostelAdapter;
     String domain = "@iitr.ac.in";
     ArrayList<College> colleges;
@@ -153,12 +166,12 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                     _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     _passwordText.setSelection(_passwordText.getText().length());
                     showPassword = true;
-                    _showPassword.setImageResource(R.drawable.ic_visible_off);
+                    _showPassword.setImageResource(R.drawable.ic_visible_on);
                 } else {
                     _passwordText.setInputType(129); //input type = password
                     showPassword = false;
                     _passwordText.setSelection(_passwordText.getText().toString().length());
-                    _showPassword.setImageResource(R.drawable.ic_visible_on);
+                    _showPassword.setImageResource(R.drawable.ic_visible_off);
                 }
             }
 
@@ -170,12 +183,12 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                     _cnf_passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     showCnfPassword = true;
                     _cnf_passwordText.setSelection(_cnf_passwordText.getText().toString().length());
-                    _showCnfPassword.setImageResource(R.drawable.ic_visible_off);
+                    _showCnfPassword.setImageResource(R.drawable.ic_visible_on);
                 } else {
                     _cnf_passwordText.setInputType(129); //input type = password
                     showCnfPassword = false;
                     _cnf_passwordText.setSelection(_passwordText.getText().length());
-                    _showCnfPassword.setImageResource(R.drawable.ic_visible_on);
+                    _showCnfPassword.setImageResource(R.drawable.ic_visible_off);
                 }
             }
 
@@ -235,7 +248,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
     public void signup(String hostel) {
 
         if (!validate()) {
-            onSignupFailed("Fill details properly");
+            onSignupFailed("Fill required details properly.");
             return;
         }
 
@@ -427,13 +440,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
     }
 
     public void onSignupFailed(String toast) {
-        String password = _passwordText.getText().toString();
-        if (password.length() < 6 || password.length() > 15) {
-            Toast.makeText(getBaseContext(), "Password length between 6 and 15 characters", Toast.LENGTH_LONG).show();
-        } else {
-            Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
-        }
-
+        Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
         _signupButton.setEnabled(true);
     }
 
@@ -445,72 +452,57 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
         String cnf_password = _cnf_passwordText.getText().toString();
-        String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();
-        String college = _collegeText.getText().toString();
-        String contact = _contactText.getText().toString();
 
         if (fname.isEmpty()) {
+            fnameInputLayout.setErrorEnabled(true);
+            fnameInputLayout.setError("Please fill first name");
             valid = false;
-            _FnameText.setError("Please fill First Name");
-
         } else {
-            _FnameText.setError(null);
+            fnameInputLayout.setErrorEnabled(false);
         }
         if (lname.isEmpty()) {
+            lnameInputLayout.setErrorEnabled(true);
+            lnameInputLayout.setError("Please fill last lame");
             valid = false;
-            _FnameText.setError("Please fill last Name");
-
         } else {
-            _LnameText.setError(null);
+            lnameInputLayout.setErrorEnabled(false);
         }
-        if (room_no.isEmpty()) {
-            valid = false;
-            _FnameText.setError("Please fill Room no");
-
-        } else {
-            _roomText.setError(null);
-
-        }
-        if (roll_no.isEmpty()) {
-            valid = false;
-            _FnameText.setError("Please fill Roll no");
-
-        } else {
-            _rollText.setError(null);
-        }
-        if (college.isEmpty()) {
-            valid = false;
-            _FnameText.setError("Please fill college Name");
-
-        } else {
-            _collegeText.setError(null);
-        }
-
         if (email.isEmpty()) {
-            _emailText.setError("enter a valid email address");
+            emailInputLayout.setErrorEnabled(true);
+            emailInputLayout.setError("Enter a valid email address");
             valid = false;
         } else {
-            _emailText.setError(null);
+            emailInputLayout.setErrorEnabled(false);
         }
-
         if (password.isEmpty() || password.length() < 6 || password.length() > 15) {
-            _passwordText.setError("between 6 and 15 alphanumeric characters");
+            passwordInputLayout.setErrorEnabled(true);
+            passwordInputLayout.setError("Password must be at least 6 characters in length");
             valid = false;
         } else {
-            _passwordText.setError(null);
+            passwordInputLayout.setErrorEnabled(false);
         }
         if (cnf_password.isEmpty() || !(cnf_password.equals(password))) {
-            if (cnf_password.isEmpty())
-                _cnf_passwordText.setError("Please enter password");
+            if (cnf_password.isEmpty()) {
+                confirmPasswordInputLayout.setErrorEnabled(true);
+                confirmPasswordInputLayout.setError("Please re-enter password");
+            }
             else {
-                _cnf_passwordText.setError("Please enter same password");
+                confirmPasswordInputLayout.setErrorEnabled(true);
+                confirmPasswordInputLayout.setError("The passwords do not match.");
             }
             valid = false;
         } else {
-            _cnf_passwordText.setError(null);
+            confirmPasswordInputLayout.setErrorEnabled(false);
         }
+        if (roll_no.isEmpty()) {
+            enrollInputLayout.setErrorEnabled(true);
+            enrollInputLayout.setError("Please fill enollment no");
+            valid = false;
 
+        } else {
+            enrollInputLayout.setErrorEnabled(false);
+        }
         return valid;
     }
 

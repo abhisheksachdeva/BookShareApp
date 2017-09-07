@@ -104,12 +104,12 @@ public class LoginActivity extends AppCompatActivity {
                     _passwordText.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
                     showPassword = true;
                     _passwordText.setSelection(_passwordText.getText().length());
-                    _showPassword.setImageResource(R.drawable.ic_visible_off);
+                    _showPassword.setImageResource(R.drawable.ic_visible_on);
                 } else {
                     _passwordText.setInputType(129); //input type = password
                     showPassword = false;
                     _passwordText.setSelection(_passwordText.getText().length());
-                    _showPassword.setImageResource(R.drawable.ic_visible_on);
+                    _showPassword.setImageResource(R.drawable.ic_visible_off);
                 }
             }
 
