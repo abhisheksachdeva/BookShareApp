@@ -302,34 +302,46 @@ public class MyProfile extends AppCompatActivity {
         }
     }
 
+    /* Checks if external storage is available for read and write */
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        if (Environment.MEDIA_MOUNTED.equals(state)) {
+            return true;
+        }
+        return false;
+    }
+
     private void onCaptureImageResult(Intent data) {
 
-        try {
-            Bitmap thumbnail = (Bitmap) data.getExtras().get("toReadName");
-            ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-            thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
-            File file = new File(Environment.getExternalStorageDirectory(),
-                    System.currentTimeMillis() + ".jpg");
-            FileOutputStream fo;
-            file.createNewFile();
-            fo = new FileOutputStream(file);
-            fo.write(bytes.toByteArray());
-            fo.close();
-            sendToServer(file);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
+        if (isExternalStorageWritable()) {
+            try {
+                Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                thumbnail.compress(Bitmap.CompressFormat.JPEG, 90, bytes);
+                File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                        System.currentTimeMillis() + ".jpg");
+                FileOutputStream fo;
+                fo = new FileOutputStream(file);
+                fo.write(bytes.toByteArray());
+                fo.close();
+                sendToServer(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
 
-        } catch (IOException e) {
-            Toast.makeText(this, "Unable to read the file", Toast.LENGTH_SHORT).show();
+            } catch (IOException e) {
+                Toast.makeText(this, "Unable to read the file", Toast.LENGTH_SHORT).show();
 
-            e.printStackTrace();
-        } catch (NullPointerException e) {
-            Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        } catch (Exception e) {
-            Toast.makeText(this, "Unable to read the file", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
+                e.printStackTrace();
+            } catch (NullPointerException e) {
+                Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            } catch (Exception e) {
+                Toast.makeText(this, "Unable to read the file", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+            }
+        }else{
+            Toast.makeText(this, "No extrenal storage available", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -363,13 +375,7 @@ public class MyProfile extends AppCompatActivity {
                 fo = new FileOutputStream(file);
                 fo.write(bytes.toByteArray());
                 fo.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-                file = null;
-            } catch (IOException e) {
-                e.printStackTrace();
-                file = null;
-            } catch (java.lang.NullPointerException e) {
+            } catch (IOException | NullPointerException e) {
                 e.printStackTrace();
                 file = null;
             }
