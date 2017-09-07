@@ -101,6 +101,7 @@
     <string name="try_now">Try Now</string>
     <string name="or">Or</string>
     <string name="login">Login</string>
+    <string name="email_helper_string">This field is optional.</string>
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"http://192.168.43.50\",\n  }\n}]</string>
     <string name="forgot_password_email_hint">Email</string>
     <string name="forgot_password_submit_button">Submit</string>
