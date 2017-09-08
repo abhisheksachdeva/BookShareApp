@@ -225,7 +225,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:baselineAligned="false"
+            android:baselineAligned="true"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -266,7 +266,6 @@
                         android:id="@+id/input_room_no"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawableStart="@drawable/star"
                         android:hint="@string/room"
                         android:inputType="textCapWords" />
                 </android.support.design.widget.TextInputLayout>
@@ -288,7 +287,6 @@
                 android:id="@+id/input_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableStart="@drawable/star"
                 android:hint="@string/contact"
                 android:inputType="number"
                 android:maxLength="10" />
