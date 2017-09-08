@@ -252,7 +252,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
             return;
         }
 
-        _signupButton.setEnabled(false);
+        //_signupButton.setEnabled(false);
 
         progressDialog = new CustomProgressDialog(SignupActivity.this);
         progressDialog.setCancelable(false);
