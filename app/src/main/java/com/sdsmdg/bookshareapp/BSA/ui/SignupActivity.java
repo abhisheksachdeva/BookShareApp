@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.gson.JsonObject;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
@@ -33,9 +32,6 @@ import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.CollegeAdapter;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.VerifyOtpFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,7 +111,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         colleges = new ArrayList<>();
         addColleges();
-        CollegeAdapter collegeAdapter = new CollegeAdapter(getApplicationContext(),colleges);
+        CollegeAdapter collegeAdapter = new CollegeAdapter(getApplicationContext(), colleges);
         _domainSpinner.setAdapter(collegeAdapter);
 
         _domainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -203,7 +199,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
     }
 
     private void getHostels(String collegeName) {
-        switch (collegeName){
+        switch (collegeName) {
             case "IIT Roorkee":
                 hostelResId = R.array.iitr_hostel_list;
                 break;
@@ -221,7 +217,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         }
     }
 
-    private void setHostelSpinner(){
+    private void setHostelSpinner() {
         hostelAdapter = ArrayAdapter.createFromResource(this, hostelResId, android.R.layout.simple_spinner_item);
         hostelAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         _hostelSpinner.setAdapter(hostelAdapter);
@@ -230,6 +226,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 hostel = parent.getItemAtPosition(position).toString();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 hostel = (String) parent.getItemAtPosition(0);
@@ -259,7 +256,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         String fname = _FnameText.getText().toString();
         String lname = _LnameText.getText().toString();
-        String email = _emailText.getText().toString() + domain;
+        String email = _emailText.getText().toString();//+ domain;
         String password = _passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();
@@ -268,11 +265,11 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         //If the contact no. is empty, sign up directly, else, open the otp dialog to verify the entered contact no.
 
-        if (!contact.equals("")) {
-            sendOTP(contact);
-        } else {
+//        if (!contact.equals("")) {
+//            sendOTP(contact);
+//        } else {
             requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
-        }
+        //}
     }
 
     private void requestSignUp(final String fname, final String lname, final String email, final String password,
@@ -285,47 +282,45 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         collegeListCall.enqueue(new Callback<List<College>>() {
             @Override
             public void onResponse(Call<List<College>> call, Response<List<College>> response) {
-                if(response.body() == null || response.body().size() == 0){
+                if (response.body() == null || response.body().size() == 0) {
                     Call<College> addCollegeCall = usersAPI.addCollege(college, domain);
                     addCollegeCall.enqueue(new Callback<College>() {
                         @Override
                         public void onResponse(Call<College> call, Response<College> response) {
-                            if(response.body() != null) {
+                            if (response.body() != null) {
                                 Log.i(TAG, "College Made" + response.toString());
                                 createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact,
                                         password);
-                            }
-                            else{
-                                Log.i(TAG, "College Not Made"+response.toString());
+                            } else {
+                                Log.i(TAG, "College Not Made" + response.toString());
                                 progressDialog.dismiss();
                             }
                         }
 
                         @Override
                         public void onFailure(Call<College> call, Throwable t) {
-                            Log.i(TAG, "College Not Made"+t.toString());
+                            Log.i(TAG, "College Not Made" + t.toString());
                             progressDialog.dismiss();
                         }
                     });
-                }
-                else{
+                } else {
                     createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact, password);
                 }
             }
 
             @Override
             public void onFailure(Call<List<College>> call, Throwable t) {
-                Log.i(TAG, "College Not Made"+t.toString());
+                Log.i(TAG, "College Not Made" + t.toString());
                 progressDialog.dismiss();
             }
         });
     }
 
     public void createAccount(UsersAPI usersAPI, String fname, String lname, String email, String college,
-                              String room_no, String roll_no, String contact, String password){
+                              String room_no, String roll_no, String contact, String password) {
 
         Call<Signup> userInfoCall = usersAPI.getUserInfo(email, hostel, room_no, roll_no, fname, lname, contact,
-                FirebaseInstanceId.getInstance().getToken(),password, college);
+                FirebaseInstanceId.getInstance().getToken(), password, college);
         userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
             @Override
             public void onFailure(Call<Signup> call, Throwable t) {
@@ -486,8 +481,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
             if (cnf_password.isEmpty()) {
                 confirmPasswordInputLayout.setErrorEnabled(true);
                 confirmPasswordInputLayout.setError("Please re-enter password");
-            }
-            else {
+            } else {
                 confirmPasswordInputLayout.setErrorEnabled(true);
                 confirmPasswordInputLayout.setError("The passwords do not match.");
             }

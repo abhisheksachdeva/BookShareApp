@@ -49,3 +49,5 @@ captures/
 
 # Keystore files
 *.jks
+
+sentry.properties

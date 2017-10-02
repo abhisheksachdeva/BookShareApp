@@ -10,10 +10,15 @@ import io.realm.RealmObject;
 
 public class Book extends RealmObject {
 
+    @SerializedName("id")
     String id;
+    @SerializedName("detail")
     String detail;
+    @SerializedName("title")
     String title;
+    @SerializedName("author")
     String author;
+    @SerializedName("rating")
     float rating;
     @SerializedName("ratings_count")
     Long ratingsCount;

@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 apply plugin: 'io.sentry.android.gradle'
 
-
 android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
@@ -12,10 +11,19 @@ android {
         applicationId "com.sdsmdg.bookshareapp.BSA"
         minSdkVersion 19
         targetSdkVersion 25
-        versionCode 2
-        versionName "0.8.0"
+        versionCode 6
+        versionName "0.8.2"
         multiDexEnabled true
 
+        def sentryFile = project.rootProject.file("sentry.properties")
+
+        if (sentryFile.exists()) {
+            def sentryProperites = new Properties()
+            sentryProperites.load(sentryFile.newInputStream())
+            buildConfigField "String", "SENTRY_DSN", formatStringField(sentryProperites["dsn"])
+        } else {
+            buildConfigField "String", "SENTRY_DSN", "\"\""
+        }
     }
     buildTypes {
         release {
@@ -31,6 +39,22 @@ android {
     }
 }
 
+def formatStringField(field) {
+    return "\"${field}\""
+}
+
+sentry {
+    // Disables or enables the automatic configuration of proguard
+    // for Sentry.  This injects a default config for proguard so
+    // you don't need to do it manually.
+    autoProguardConfig true
+
+    // Enables or disables the automatic upload of mapping files
+    // during a build.  If you disable this you'll need to manually
+    // upload the mapping files with sentry-cli when you do a release.
+    autoUpload true
+}
+
 configurations {
     compile.exclude group: "org.apache.httpcomponents", module: "httpclient"
 }
@@ -42,6 +66,8 @@ dependencies {
         exclude module: 'stax-api'
         exclude module: 'xpp3'
     }
+    debugCompile 'com.readystatesoftware.chuck:library:1.1.0'
+    releaseCompile 'com.readystatesoftware.chuck:library-no-op:1.1.0'
     compile 'com.journeyapps:zxing-android-embedded:3.3.0'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:customtabs:25.3.1'
@@ -52,17 +78,17 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.1'
     compile 'id.zelory:compressor:1.0.2'
     compile 'de.hdodenhof:circleimageview:2.1.0'
-    compile 'com.squareup.okhttp3:logging-interceptor:3.3.1'
-    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
+    compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.jakewharton:butterknife:6.1.0'
-    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'jp.wasabeef:blurry:2.0.2'
     compile 'com.google.api-client:google-api-client:1.20.0'
     compile 'com.google.firebase:firebase-messaging:10.0.1'
     compile 'com.airbnb.android:lottie:1.5.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-    compile 'io.sentry:sentry-android:1.5.2'
+    compile 'io.sentry:sentry-android:1.5.3'
     testCompile 'junit:junit:4.12'
 }
 
