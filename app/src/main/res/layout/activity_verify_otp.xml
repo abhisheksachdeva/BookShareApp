@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background">
+
+    <ImageView
+        android:id="@+id/logo"
+        android:src="@drawable/logo3"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintEnd_toEndOf="@+id/right_guideline"
+        app:layout_constraintTop_toTopOf="@+id/logo_top_guideline"
+        app:layout_constraintBottom_toTopOf="@+id/logo_bottom__guideline"
+        tools:layout_editor_absoluteX="38dp" />
+    <TextView
+        android:id="@+id/txt_verify_otp_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/verify_otp"
+        android:textColor="@color/White"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintEnd_toEndOf="@+id/right_guideline"
+        app:layout_constraintTop_toTopOf="@+id/forgot_top_guideline"
+        tools:layout_editor_absoluteX="76dp" />
+    <TextView
+        android:id="@+id/txt_verify_otp_message"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/verify_otp_message"
+        android:textColor="@color/White"
+        android:textSize="16sp"
+        android:minLines="2"
+        android:gravity="center"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintEnd_toEndOf="@+id/right_guideline"
+        app:layout_constraintTop_toTopOf="@+id/forgot_message_top_guideline"
+        tools:layout_editor_absoluteX="38dp" />
+    <LinearLayout
+        android:id="@+id/pin_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/email_top_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintEnd_toEndOf="@+id/right_guideline"
+        android:weightSum="6"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/pin_first_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColorHint="@color/White">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/txt_first_pin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.87"
+            style="@style/pin_edittext_style"
+            android:inputType="number"
+            android:textSize="20sp"
+            android:textColor="@color/White"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/pin_second_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColorHint="@color/White">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/txt_second_pin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.87"
+                style="@style/pin_edittext_style"
+                android:inputType="number"
+                android:textSize="20sp"
+                android:textColor="@color/White"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/pin_third_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColorHint="@color/White">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/txt_third_pin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.87"
+                style="@style/pin_edittext_style"
+                android:inputType="number"
+                android:textSize="20sp"
+                android:textColor="@color/White"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/pin_fourth_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColorHint="@color/White">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/txt_fourth_pin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.87"
+                style="@style/pin_edittext_style"
+                android:inputType="number"
+                android:textSize="20sp"
+                android:textColor="@color/White"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/pin_fifth_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColorHint="@color/White">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/txt_fifth_pin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.87"
+                style="@style/pin_edittext_style"
+                android:inputType="number"
+                android:textSize="20sp"
+                android:textColor="@color/White"/>
+        </android.support.design.widget.TextInputLayout>
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/pin_sixth_edit_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColorHint="@color/White">
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/txt_sixth_pin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:alpha="0.87"
+                style="@style/pin_edittext_style"
+                android:inputType="number"
+                android:textSize="20sp"
+                android:textColor="@color/White"/>
+        </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/pin_hidden_input_edit_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@+id/email_top_guideline"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintEnd_toEndOf="@+id/right_guideline"
+        android:textColorHint="@color/White">
+
+    <android.support.design.widget.TextInputEditText
+        android:id="@+id/pin_hidden_edittext"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:gravity="center_horizontal"
+        android:background="@null"
+        android:inputType="number"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:cursorVisible="false"
+        android:maxLength="6"
+        android:textColor="#00000000" />
+    </android.support.design.widget.TextInputLayout>
+    <Button
+        android:id="@+id/submit_otp_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/forgot_password_submit_button"
+        android:textColor="@color/White"
+        android:background="@drawable/button_shape"
+        app:layout_constraintStart_toStartOf="@+id/left_guideline"
+        app:layout_constraintEnd_toEndOf="@+id/right_guideline"
+        app:layout_constraintTop_toTopOf="@+id/submit_button_top_guideline"
+        tools:layout_editor_absoluteX="38dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/left_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.0973236"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="38dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/right_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9002433"
+        tools:layout_editor_absoluteY="0dp"
+        tools:layout_editor_absoluteX="346dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/submit_button_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.6748426"
+        tools:layout_editor_absoluteY="355dp"
+        tools:layout_editor_absoluteX="0dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/submit_button_bottom__guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.7305061"
+        tools:layout_editor_absoluteY="374dp"
+        tools:layout_editor_absoluteX="0dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/logo_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.1094391"
+        tools:layout_editor_absoluteY="56dp"
+        tools:layout_editor_absoluteX="0dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/logo_bottom__guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.2818057"
+        tools:layout_editor_absoluteY="144dp"
+        tools:layout_editor_absoluteX="0dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/forgot_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.3284131"
+        tools:layout_editor_absoluteY="183dp"
+        tools:layout_editor_absoluteX="0dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/forgot_message_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.4054445"
+        tools:layout_editor_absoluteY="218dp"
+        tools:layout_editor_absoluteX="0dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/email_top_guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.5200000"
+        tools:layout_editor_absoluteY="281dp"
+        tools:layout_editor_absoluteX="0dp" />
+</android.support.constraint.ConstraintLayout>
