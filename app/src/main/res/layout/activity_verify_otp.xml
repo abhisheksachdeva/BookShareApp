@@ -172,8 +172,6 @@
         android:gravity="center_horizontal"
         android:background="@null"
         android:inputType="number"
-        android:focusable="true"
-        android:focusableInTouchMode="true"
         android:cursorVisible="false"
         android:maxLength="6"
         android:textColor="#00000000" />
