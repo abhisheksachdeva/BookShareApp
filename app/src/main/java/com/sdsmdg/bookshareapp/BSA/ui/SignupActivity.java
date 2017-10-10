@@ -4,6 +4,7 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
@@ -268,8 +269,9 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 //        if (!contact.equals("")) {
 //            sendOTP(contact);
 //        } else {
-            requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
+//            requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
         //}
+        requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
     }
 
     private void requestSignUp(final String fname, final String lname, final String email, final String password,
@@ -334,10 +336,9 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
                     String detail = response.body().getDetail();
 
                     if (detail.equals("Successfully registered.")) {
-                        //If the user has not entered his phone no. complete the signup, else show enter otp dialog
                         onSignupSuccess();
                     } else {
-                        onSignupFailed("Email address already registered.");
+                        onSignupFailed(detail);
                         progressDialog.dismiss();
                     }
                 }
@@ -416,7 +417,13 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         _signupButton.setEnabled(true);
         progressDialog.dismiss();
         setResult(RESULT_OK, null);
-        showAlertDialog();
+        if (_contactText.getText().toString().equals("")) {
+            showAlertDialog();
+        } else{
+            Intent verifyOtpIntent = new Intent(this, VerifyOtpActivity.class);
+            verifyOtpIntent.putExtra("email", _emailText.getText().toString() + domain);
+            startActivity(verifyOtpIntent);
+        }
     }
 
     private void showAlertDialog() {

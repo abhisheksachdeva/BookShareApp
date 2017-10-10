@@ -6,6 +6,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
         android:name=".BSApplication"
@@ -18,7 +20,7 @@
         <activity
             android:name=".ui.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -26,9 +28,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="192.168.43.50"
+                    android:host="citadel-mdg.herokuapp.com"
                     android:pathPrefix="/activation"
-                    android:port="8000"
                     android:scheme="http" />
             </intent-filter>
         </activity>
@@ -135,17 +136,24 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="192.168.43.50"
+                    android:host="citadel-mdg.herokuapp.com"
                     android:pathPrefix="/reset"
-                    android:port="8000"
                     android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.WelcomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.SendEmailActivity"
+        <activity
+            android:name=".ui.SendEmailActivity"
             android:parentActivityName=".ui.LoginActivity" />
+        <activity android:name=".ui.VerifyOtpActivity">
+        </activity>
+        <receiver android:name=".Listeners.SmsReceiver">
+            <intent-filter android:priority="1000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
