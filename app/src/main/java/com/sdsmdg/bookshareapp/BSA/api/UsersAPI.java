@@ -242,4 +242,11 @@ public interface UsersAPI {
      Call<Detail> checkActivation(
              @Path("key") String key
      );
+
+     @FormUrlEncoded
+     @POST("/verify_otp/")
+     Call<Detail> verifyOtp(
+             @Field("email") String email,
+             @Field("otp") String otp
+     );
 }
