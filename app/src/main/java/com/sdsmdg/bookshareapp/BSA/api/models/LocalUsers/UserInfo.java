@@ -10,9 +10,13 @@ import io.realm.RealmObject;
 
 public class UserInfo extends RealmObject {
 
+    @SerializedName("id")
     String id;
+    @SerializedName("email")
     String email;
+    @SerializedName("college")
     String college;
+    @SerializedName("hostel")
     String hostel;
     @SerializedName("enr_no")
     String enrNo;

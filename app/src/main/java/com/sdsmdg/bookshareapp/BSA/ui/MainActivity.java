@@ -50,8 +50,6 @@ import java.util.List;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import io.sentry.Sentry;
-import io.sentry.android.AndroidSentryClientFactory;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -113,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Context ctx = this.getApplicationContext();
 
         // Use the Sentry DSN (client key) from the Project Settings page on Sentry
-        Sentry.init(CommonUtilities.SENTRY_DSN, new AndroidSentryClientFactory(ctx));
+        //Sentry.init(CommonUtilities.SENTRY_DSN, new AndroidSentryClientFactory(ctx));
 
 
         //customProgressDialog = new CustomProgressDialog(MainActivity.this);
