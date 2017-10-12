@@ -2,6 +2,7 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -22,14 +23,22 @@ public class SendEmailActivity extends AppCompatActivity implements SendEmailFra
     }
 
     private void getIntentType(String emailType) {
-        if (emailType.equals("forgot_password_email")) {
-            initFragment(getResources().getString(R.string.forgot_password),
-                    getResources().getString(R.string.forgot_password_message),
-                    emailType);
-        }else if(emailType.equals("new_activation_email")) {
-            initFragment(getResources().getString(R.string.new_activation),
-                    getResources().getString(R.string.new_activation_message),
-                    emailType);
+        switch (emailType) {
+            case "forgot_password_email":
+                initFragment(getResources().getString(R.string.forgot_password),
+                        getResources().getString(R.string.forgot_password_message),
+                        emailType);
+                break;
+            case "new_activation_email":
+                initFragment(getResources().getString(R.string.new_activation),
+                        getResources().getString(R.string.new_activation_message),
+                        emailType);
+                break;
+            case "new_otp":
+                initFragment(getResources().getString(R.string.new_otp),
+                        getResources().getString(R.string.new_otp_message),
+                        emailType);
+                break;
         }
     }
 
@@ -42,13 +51,20 @@ public class SendEmailActivity extends AppCompatActivity implements SendEmailFra
     }
 
     @Override
-    public void onFragmentInteraction(String status) {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                finish();
-            }
-        }, 1000);
+    public void onFragmentInteraction(String status, String email) {
+        if (email != null){
+            Intent verifyOtpIntent = new Intent(this, VerifyOtpActivity.class);
+            verifyOtpIntent.putExtra("email", email);
+            startActivity(verifyOtpIntent);
+            finish();
+        }else {
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 1000);
+        }
     }
 }

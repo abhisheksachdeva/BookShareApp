@@ -105,7 +105,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
                     });
                 } else{
                     Toast.makeText(VerifyOtpActivity.this,
-                            "The otp must be atleast 6 numbers in length", Toast.LENGTH_SHORT).show();
+                            "The otp must be at least 6 numbers in length", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -125,8 +125,8 @@ public class VerifyOtpActivity extends AppCompatActivity implements
         builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                finish();
                 startActivity(new Intent(VerifyOtpActivity.this, LoginActivity.class));
+                finish();
             }
         });
         AlertDialog dialog = builder.create();
