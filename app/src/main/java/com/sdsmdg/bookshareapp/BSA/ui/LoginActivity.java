@@ -27,6 +27,8 @@ import com.sdsmdg.bookshareapp.BSA.api.models.Login;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
+import org.w3c.dom.Text;
+
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import okhttp3.ResponseBody;
@@ -53,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
     TextView forgotPasswordLink;
     @InjectView(R.id.new_activation)
     TextView newActivation;
+    @InjectView(R.id.new_otp)
+    TextView newOtp;
     String token;
     Context context;
     boolean showPassword = false;
@@ -69,6 +73,7 @@ public class LoginActivity extends AppCompatActivity {
         // underline the forget password and new activation text view
         forgotPasswordLink.setPaintFlags(forgotPasswordLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         newActivation.setPaintFlags(newActivation.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        newOtp.setPaintFlags(newActivation.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(_emailText.getWindowToken(), 0);
@@ -149,6 +154,15 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SendEmailActivity.class);
                 intent.putExtra("email_type", "new_activation_email");
+                startActivity(intent);
+            }
+        });
+
+        newOtp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), SendEmailActivity.class);
+                intent.putExtra("email_type", "new_otp");
                 startActivity(intent);
             }
         });

@@ -144,16 +144,36 @@
             android:textStyle="bold" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/new_activation"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_gravity="center_horizontal|bottom"
-        android:gravity="bottom"
+        android:layout_gravity="bottom"
+        android:gravity="center"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="10dp"
-        android:text="@string/send_link"
-        android:textColor="@color/colorAccent"
-        android:textSize="16sp" />
+        android:weightSum="2.5">
+        <TextView
+            android:id="@+id/new_activation"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:layout_marginEnd="4dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:gravity="end"
+            android:text="@string/send_link"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp" />
+        <TextView
+            android:id="@+id/new_otp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="4dp"
+            android:layout_gravity="center_horizontal|bottom"
+            android:gravity="start"
+            android:text="@string/send_otp"
+            android:textColor="@color/colorAccent"
+            android:textSize="16sp" />
+    </LinearLayout>
 </LinearLayout>

@@ -110,13 +110,16 @@
     <string name="reset_password_submit_button">Reset Password</string>
     <string name="forgot_password">Forgot your password?</string>
     <string name="new_activation">Account not activated?</string>
+    <string name="new_otp">Phone not activated?</string>
     <string name="verify_otp">Enter verification code</string>
     <string name="forgot_password_message">Enter your email below to receive your password reset instructions</string>
     <string name="new_activation_message">Enter your email below to receive your account activation instructions</string>
+    <string name="new_otp_message">Enter your email below to receive your new verification code</string>
     <string name="verify_otp_message">Please wait for the verification code to be detected or enter manually</string>
     <string name="reset_password">Reset Your Password</string>
     <string name="reset_password_message">Password should be of atleast 8 characters</string>
-    <string name="send_link">Send a new activation link</string>
+    <string name="send_link">&#8226;Resend activation link</string>
+    <string name="send_otp">&#8226;Resend Otp</string>
     <string name="skip">SKIP</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="next">NEXT</string>
