@@ -22,6 +22,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
@@ -31,11 +32,14 @@ import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterRequest;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import jp.wasabeef.blurry.Blurry;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -43,12 +47,15 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
+import static android.view.View.GONE;
+
 
 public class UserProfile extends AppCompatActivity {
     TextView name, emailTextView, address, booksCount;
     UserInfo user;
     List<Book> booksList;
     BooksAdapterRequest adapter;
+    ImageView callIcon;
     ImageView profile_picture, background_image;
     String contactNo;
     String email;
@@ -71,6 +78,7 @@ public class UserProfile extends AppCompatActivity {
         name = (TextView) findViewById(R.id.user_name);
         emailTextView = (TextView) findViewById(R.id.user_email);
         address = (TextView) findViewById(R.id.address);
+        callIcon = (ImageView) findViewById(R.id.call_icon);
         profile_picture = (ImageView) findViewById(R.id.profile_picture);
         background_image = (ImageView) findViewById(R.id.background_image);
         booksCount = (TextView) findViewById(R.id.books_count);
@@ -134,11 +142,12 @@ public class UserProfile extends AppCompatActivity {
                     email = user.getEmail();
                     emailTextView.setText(email);
                     contactNo = user.getContactNo();
-                    String ad = user.getRoomNo() + ", " + user.getHostel();
-                    address.setText(ad);
-                    String url = CommonUtilities.local_books_api_url + "image/" + id + "/";
-                    Picasso.with(UserProfile.this).load(url).into(profile_picture);
-                    Picasso.with(UserProfile.this).load(url).into(background_image);
+                    hideDisplayCallIcon(contactNo);
+                    address.setText(getAddress(user.getRoomNo(), user.getHostel()));
+                    new Picasso.Builder(UserProfile.this).build()
+                    .load(CommonUtilities.getAnotherUserImageUrl(user.getId())).into(profile_picture);
+                    new Picasso.Builder(UserProfile.this).build()
+                            .load(CommonUtilities.getAnotherUserImageUrl(user.getId())).into(background_image);
                     Blurry.with(UserProfile.this)
                             .radius(40)
                             .sampling(1)
@@ -172,6 +181,22 @@ public class UserProfile extends AppCompatActivity {
 
             }
         });
+    }
+
+    private String getAddress(String roomNo, String hostel) {
+        String ad;
+        if (roomNo == null) {
+            ad = hostel;
+        }else{
+            ad = roomNo + ", " + hostel;
+        }
+        return ad;
+    }
+
+    private void hideDisplayCallIcon(String contactNo) {
+        if (contactNo == null){
+            callIcon.setVisibility(GONE);
+        }
     }
 
     public void callClicked(View view) {
