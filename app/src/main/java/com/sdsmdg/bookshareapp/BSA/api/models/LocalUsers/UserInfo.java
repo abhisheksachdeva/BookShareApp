@@ -28,6 +28,8 @@ public class UserInfo extends RealmObject {
     String lastName;
     @SerializedName("contact_no")
     String contactNo;
+    @SerializedName("image_url")
+    String imageUrl;
 
     public String getFcm_id() {
         return fcm_id;
@@ -125,5 +127,13 @@ public class UserInfo extends RealmObject {
 
     public void setUserBookList(RealmList<Book> userBookList) {
         this.userBookList = userBookList;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

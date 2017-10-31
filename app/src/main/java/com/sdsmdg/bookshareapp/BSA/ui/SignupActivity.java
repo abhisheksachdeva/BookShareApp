@@ -257,7 +257,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         String fname = _FnameText.getText().toString();
         String lname = _LnameText.getText().toString();
-        String email = _emailText.getText().toString()+ domain;
+        String email = _emailText.getText().toString() + domain;
         String password = _passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();

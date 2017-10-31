@@ -30,6 +30,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
@@ -37,6 +38,7 @@ import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserDetailWithCancel;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
+import com.sdsmdg.bookshareapp.BSA.api.models.UserImageResult;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BookAdapter;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.FileUtils;
@@ -44,6 +46,7 @@ import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.sdsmdg.bookshareapp.BSA.utils.PermissionUtils;
 import com.sdsmdg.bookshareapp.BSA.utils.SPDataLoader;
 import com.squareup.picasso.MemoryPolicy;
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -59,8 +62,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
 
 import jp.wasabeef.blurry.Blurry;
+import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -75,6 +81,7 @@ public class MyProfile extends AppCompatActivity {
     UserInfo user;
     String id;
     String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
+    String imageUrl;
     int REQUEST_CAMERA = 0, SELECT_FILE = 1;
     String userChoosenTask;
     CircleImageView profilePicture;
@@ -91,6 +98,7 @@ public class MyProfile extends AppCompatActivity {
     TextView noItemsTextView;
 
     private int noOfBooks = 0;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,6 +116,7 @@ public class MyProfile extends AppCompatActivity {
         titleBooksCount = (TextView) findViewById(R.id.title_books_count);
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
+        token = preferences.getString("token", null);
         String id = preferences.getString("id", "");
 
         setUpRecyclerView(id);
@@ -158,7 +167,6 @@ public class MyProfile extends AppCompatActivity {
                 if (response.body() != null) {
                     Resp = response.toString();
                     user = response.body().getUserInfo();
-
                     List<Book> booksTempInfoList = user.getUserBookList();
                     if (booksTempInfoList.size() == 0) {
                         noItemsTextView.setVisibility(View.VISIBLE);
@@ -169,10 +177,20 @@ public class MyProfile extends AppCompatActivity {
                     titleBooksCount.setText("Books" + "(" + noOfBooks + ")");
                     adapter.notifyDataSetChanged();
 
-
-                    Picasso.with(getApplicationContext()).load(url).into(profilePicture);
-
-                    Picasso.with(getApplicationContext()).load(url).into(backgroundImageView, new com.squareup.picasso.Callback() {
+                    Picasso.Builder builder = new Picasso.Builder(MyProfile.this).
+                            downloader(new OkHttp3Downloader(getOkHttpClient()));
+                    builder.listener(new Picasso.Listener()
+                    {
+                        @Override
+                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+                        {
+                            exception.printStackTrace();
+                        }
+                    });
+                    builder.build().
+                            load(CommonUtilities.currentUserImageUrl).into(profilePicture);
+                    builder.build().load(CommonUtilities.currentUserImageUrl).
+                            into(backgroundImageView, new com.squareup.picasso.Callback() {
                         @Override
                         public void onSuccess() {
                             Blurry.with(getApplicationContext())
@@ -186,7 +204,7 @@ public class MyProfile extends AppCompatActivity {
 
                         @Override
                         public void onError() {
-
+                            Toast.makeText(MyProfile.this, "Error", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -205,6 +223,21 @@ public class MyProfile extends AppCompatActivity {
                 customProgressDialog.dismiss();
             }
         });
+    }
+
+    private OkHttpClient getOkHttpClient() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request newRequest = chain.request().newBuilder()
+                                .addHeader("Authorization", "Token " + prefs
+                                        .getString("token", null))
+                                .build();
+                        return chain.proceed(newRequest);
+                    }
+                }).build();
+        return client;
     }
 
     private void setUpRecyclerView(String id) {
@@ -435,47 +468,52 @@ public class MyProfile extends AppCompatActivity {
 
             RequestBody requestBody = RequestBody.create(MediaType.parse("image/jpeg"), compressedFile);
             MultipartBody.Part body = MultipartBody.Part.createFormData("image", file.getName(), requestBody);
-            Call<Signup> call = api.uploadImage(body, Helper.getUserId());
+            Call<UserImageResult> call = api.uploadImage("Token " + token, body, Helper.getUserId());
             Toast.makeText(getApplicationContext(), "Updating picture. Please wait.", Toast.LENGTH_SHORT).show();
-            call.enqueue(new Callback<Signup>() {
+            call.enqueue(new Callback<UserImageResult>() {
                 @Override
-                public void onResponse(Call<Signup> call, Response<Signup> response) {
+                public void onResponse(Call<UserImageResult> call, Response<UserImageResult> response) {
                     if (response.body() != null) {
                         final String detail = response.body().getDetail();
-                        Helper.imageChanged = true;
-                        Picasso.with(getApplicationContext())
-                                .load(url)
-                                .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                .into(new Target() {
-                                    @Override
-                                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                        Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
-                                        profilePicture.setImageBitmap(bitmap);
-                                        backgroundImageView.setImageBitmap(bitmap);
-                                        Blurry.with(getApplicationContext())
-                                                .radius(40)
-                                                .sampling(1)
-                                                .color(Color.argb(66, 0, 0, 0))
-                                                .async()
-                                                .capture(findViewById(R.id.background_image))
-                                                .into((ImageView) findViewById(R.id.background_image));
-                                    }
+                        if (detail.equals("Profile picture changed")) {
+                            Helper.imageChanged = true;
+                            new Picasso.Builder(MyProfile.this).
+                                    downloader(new OkHttp3Downloader(getOkHttpClient())).build()
+                                    .load(CommonUtilities.currentUserImageUrl)
+                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
+                                    .into(new Target() {
+                                        @Override
+                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                                            Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
+                                            profilePicture.setImageBitmap(bitmap);
+                                            backgroundImageView.setImageBitmap(bitmap);
+                                            Blurry.with(getApplicationContext())
+                                                    .radius(40)
+                                                    .sampling(1)
+                                                    .color(Color.argb(66, 0, 0, 0))
+                                                    .async()
+                                                    .capture(findViewById(R.id.background_image))
+                                                    .into((ImageView) findViewById(R.id.background_image));
+                                        }
 
-                                    @Override
-                                    public void onBitmapFailed(Drawable errorDrawable) {
-                                        Toast.makeText(getApplicationContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
-                                    }
+                                        @Override
+                                        public void onBitmapFailed(Drawable errorDrawable) {
+                                            Toast.makeText(getApplicationContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
+                                        }
 
-                                    @Override
-                                    public void onPrepareLoad(Drawable placeHolderDrawable) {
-                                    }
-                                });
+                                        @Override
+                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
+                                        }
+                                    });
+                        }else{
+                            Toast.makeText(MyProfile.this, detail, Toast.LENGTH_SHORT).show();
+                        }
                     }
                 }
 
                 @Override
-                public void onFailure(Call<Signup> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(), "Faile to load image", Toast.LENGTH_SHORT).show();
+                public void onFailure(Call<UserImageResult> call, Throwable t) {
+                    Toast.makeText(getApplicationContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
 
                 }
             });

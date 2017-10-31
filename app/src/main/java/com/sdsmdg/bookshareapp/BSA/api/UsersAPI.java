@@ -10,6 +10,7 @@ import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notification_Model;
 import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.UserImageResult;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response;
 import com.sdsmdg.bookshareapp.BSA.ui.College;
@@ -214,8 +215,9 @@ public interface UsersAPI {
 
     @Multipart
     @POST("/image/{id}/")
-    Call<Signup> uploadImage(@Part MultipartBody.Part file,
-                             @Path("id") String id);
+    Call<UserImageResult> uploadImage(@Header("Authorization") String token,
+                                      @Part MultipartBody.Part file,
+                                      @Path("id") String id);
 
     @FormUrlEncoded
     @POST("/me/password/reset/")

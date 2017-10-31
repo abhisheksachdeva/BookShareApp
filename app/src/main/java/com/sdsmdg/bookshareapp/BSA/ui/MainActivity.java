@@ -29,6 +29,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
@@ -44,12 +45,16 @@ import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -224,6 +229,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
                     intent.putExtra("id", book.getId());
                     startActivity(intent);
+                }else{
+                    Toast.makeText(MainActivity.this, "Please check your internet connection!!", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -248,9 +255,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         TextView _email = (TextView) header.findViewById(R.id.nav_email);
         ImageView _profilePicture = (ImageView) header.findViewById(R.id.nav_profile_picture);
         this._profilePicture = _profilePicture;
-        String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
-        this.url = url;
-        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_profile_pic).into(_profilePicture);
+
+        new Picasso.Builder(MainActivity.this).
+                downloader(new OkHttp3Downloader(getOkHttpClient())).build()
+                .load(CommonUtilities.currentUserImageUrl).into(_profilePicture);
+        Helper.imageChanged = false;
         _profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -666,11 +675,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private OkHttpClient getOkHttpClient() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request newRequest = chain.request().newBuilder()
+                                .addHeader("Authorization", "Token " + prefs
+                                        .getString("token", null))
+                                .build();
+                        return chain.proceed(newRequest);
+                    }
+                }).build();
+        return client;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         if (Helper.imageChanged) {
-            Picasso.with(this).load(url).into(_profilePicture);
+            new Picasso.Builder(MainActivity.this).
+                    downloader(new OkHttp3Downloader(getOkHttpClient())).build()
+                    .load(CommonUtilities.currentUserImageUrl).into(_profilePicture);
             Helper.imageChanged = false;
         }
         navigationView.setCheckedItem(R.id.menu_none);//This will check a invisible item, effectively unselecting all items
