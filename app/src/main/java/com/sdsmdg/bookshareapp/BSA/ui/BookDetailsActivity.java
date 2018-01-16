@@ -1,5 +1,7 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -259,7 +261,7 @@ public class BookDetailsActivity extends AppCompatActivity {
         return (super.onOptionsItemSelected(item));
     }
 
-    public void addToMyLibraryClicked(View view) {
+    public void addToMyLibraryClicked(final View view) {
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(), title, author, gr_id, ratingsCount, rating, gr_img_url, description, "Token " + token);
         addBookCall.enqueue(new Callback<Book>() {
@@ -268,6 +270,16 @@ public class BookDetailsActivity extends AppCompatActivity {
                 //getDetail() returns whether the book has been added or not
                 if (response.body() != null) {
                     Toast.makeText(BookDetailsActivity.this, response.body().getDetail(), Toast.LENGTH_SHORT).show();
+                    view.animate()
+                            .translationY(-view.getHeight())
+                            .alpha(0.0f)
+                            .setListener(new AnimatorListenerAdapter() {
+                                @Override
+                                public void onAnimationEnd(Animator animation) {
+                                    super.onAnimationEnd(animation);
+                                    view.setVisibility(View.GONE);
+                                }
+                            });
                 } else {
                     Toast.makeText(BookDetailsActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                 }

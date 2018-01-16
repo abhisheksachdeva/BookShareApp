@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
+import android.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -160,7 +160,6 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                 });
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AppTheme_Dialog));
-                builder.setInverseBackgroundForced(true);
                 builder.setTitle("Do you want to add this Book?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override

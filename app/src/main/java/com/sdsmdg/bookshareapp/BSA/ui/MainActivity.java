@@ -294,13 +294,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                searchItem.setVisible(true);
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                searchItem.setVisible(false);
             }
         };
         drawerLayout.setDrawerListener(toggle);
@@ -566,6 +564,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         removeAnyVisibleSnackbars();
                     }
                     booksList.addAll(localBooksList);
+                    if (booksList.size() == 0){
+                        noBookstextview.setVisibility(View.VISIBLE);
+                    }else{
+                        noBookstextview.setVisibility(View.GONE);
+                    }
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
                 } else {

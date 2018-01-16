@@ -33,7 +33,7 @@
         <item name="colorControlNormal">@color/White</item>
     </style>
 
-    <style name="AppTheme.Dialog" parent="@android:style/Theme.Material.Light.Dialog">
+    <style name="AppTheme.Dialog" parent="AlertDialog.AppCompat">
         <item name="android:textColorPrimary">@android:color/black</item>
     </style>
 
