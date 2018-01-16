@@ -257,7 +257,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         String fname = _FnameText.getText().toString();
         String lname = _LnameText.getText().toString();
-        String email = _emailText.getText().toString() + domain;
+        String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();
@@ -421,7 +421,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
             showAlertDialog();
         } else{
             Intent verifyOtpIntent = new Intent(this, VerifyOtpActivity.class);
-            verifyOtpIntent.putExtra("email", _emailText.getText().toString() + domain);
+            verifyOtpIntent.putExtra("email", _emailText.getText().toString());
             startActivity(verifyOtpIntent);
             finish();
         }
@@ -513,7 +513,7 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
 
         String fname = _FnameText.getText().toString();
         String lname = _LnameText.getText().toString();
-        String email = _emailText.getText().toString() + domain;
+        String email = _emailText.getText().toString();
         String password = _passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();

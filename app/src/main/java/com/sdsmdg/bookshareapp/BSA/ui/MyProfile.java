@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
@@ -144,6 +145,7 @@ public class MyProfile extends AppCompatActivity {
 
     }
 
+
     //This function is called from BookAdapter, when a book is sucessfully removed
     public void onBookRemoved() {
         noOfBooks -= 1;
@@ -163,7 +165,7 @@ public class MyProfile extends AppCompatActivity {
                 .getString("token", null));
         call.enqueue(new Callback<UserDetailWithCancel>() {
             @Override
-            public void onResponse(Call<UserDetailWithCancel> call, Response<UserDetailWithCancel> response) {
+            public void onResponse(@NonNull Call<UserDetailWithCancel> call, @NonNull Response<UserDetailWithCancel> response) {
                 if (response.body() != null) {
                     Resp = response.toString();
                     user = response.body().getUserInfo();
@@ -176,37 +178,7 @@ public class MyProfile extends AppCompatActivity {
                     noOfBooks = booksList.size();
                     titleBooksCount.setText("Books" + "(" + noOfBooks + ")");
                     adapter.notifyDataSetChanged();
-
-                    Picasso.Builder builder = new Picasso.Builder(MyProfile.this).
-                            downloader(new OkHttp3Downloader(getOkHttpClient()));
-                    builder.listener(new Picasso.Listener()
-                    {
-                        @Override
-                        public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-                        {
-                            exception.printStackTrace();
-                        }
-                    });
-                    builder.build().
-                            load(CommonUtilities.currentUserImageUrl).into(profilePicture);
-                    builder.build().load(CommonUtilities.currentUserImageUrl).
-                            into(backgroundImageView, new com.squareup.picasso.Callback() {
-                        @Override
-                        public void onSuccess() {
-                            Blurry.with(getApplicationContext())
-                                    .radius(40)
-                                    .sampling(1)
-                                    .color(Color.argb(66, 0, 0, 0))
-                                    .async()
-                                    .capture(findViewById(R.id.background_image))
-                                    .into((ImageView) findViewById(R.id.background_image));
-                        }
-
-                        @Override
-                        public void onError() {
-                            Toast.makeText(MyProfile.this, "Error", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    getProfilePicture(null);
                 }
                 final Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -219,17 +191,50 @@ public class MyProfile extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<UserDetailWithCancel> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserDetailWithCancel> call, @NonNull Throwable t) {
                 customProgressDialog.dismiss();
             }
         });
+    }
+
+    private void getProfilePicture(final String detail) {
+        new Picasso.Builder(MyProfile.this).
+                downloader(new OkHttp3Downloader(getOkHttpClient())).build()
+                .load(CommonUtilities.currentUserImageUrl)
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        if (detail != null) {
+                            Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
+                        }
+                        profilePicture.setImageBitmap(bitmap);
+                        backgroundImageView.setImageBitmap(bitmap);
+                        Blurry.with(getApplicationContext())
+                                .radius(40)
+                                .sampling(1)
+                                .color(Color.argb(66, 0, 0, 0))
+                                .async()
+                                .capture(findViewById(R.id.background_image))
+                                .into((ImageView) findViewById(R.id.background_image));
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+                        Toast.makeText(getApplicationContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    }
+                });
     }
 
     private OkHttpClient getOkHttpClient() {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request newRequest = chain.request().newBuilder()
                                 .addHeader("Authorization", "Token " + prefs
                                         .getString("token", null))
@@ -273,6 +278,11 @@ public class MyProfile extends AppCompatActivity {
         startActivity(i);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     public void changeImageClicked(View view) {
         final CharSequence[] items = {"Take Photo", "Choose from Library",
                 "Cancel"};
@@ -310,7 +320,7 @@ public class MyProfile extends AppCompatActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
             case PermissionUtils.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -398,6 +408,8 @@ public class MyProfile extends AppCompatActivity {
             bitmap = BitmapFactory.decodeStream(getContentResolver().openInputStream(uri));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        } catch (OutOfMemoryError e){
+            Toast.makeText(this, "Image is too big to load!!", Toast.LENGTH_SHORT).show();
         }
         File file = getFile(uri, bitmap);
         if (file != null) {
@@ -472,39 +484,12 @@ public class MyProfile extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Updating picture. Please wait.", Toast.LENGTH_SHORT).show();
             call.enqueue(new Callback<UserImageResult>() {
                 @Override
-                public void onResponse(Call<UserImageResult> call, Response<UserImageResult> response) {
+                public void onResponse(@NonNull Call<UserImageResult> call, @NonNull Response<UserImageResult> response) {
                     if (response.body() != null) {
                         final String detail = response.body().getDetail();
                         if (detail.equals("Profile picture changed")) {
                             Helper.imageChanged = true;
-                            new Picasso.Builder(MyProfile.this).
-                                    downloader(new OkHttp3Downloader(getOkHttpClient())).build()
-                                    .load(CommonUtilities.currentUserImageUrl)
-                                    .memoryPolicy(MemoryPolicy.NO_CACHE)
-                                    .into(new Target() {
-                                        @Override
-                                        public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
-                                            Toast.makeText(getApplicationContext(), detail, Toast.LENGTH_SHORT).show();
-                                            profilePicture.setImageBitmap(bitmap);
-                                            backgroundImageView.setImageBitmap(bitmap);
-                                            Blurry.with(getApplicationContext())
-                                                    .radius(40)
-                                                    .sampling(1)
-                                                    .color(Color.argb(66, 0, 0, 0))
-                                                    .async()
-                                                    .capture(findViewById(R.id.background_image))
-                                                    .into((ImageView) findViewById(R.id.background_image));
-                                        }
-
-                                        @Override
-                                        public void onBitmapFailed(Drawable errorDrawable) {
-                                            Toast.makeText(getApplicationContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
-                                        }
-
-                                        @Override
-                                        public void onPrepareLoad(Drawable placeHolderDrawable) {
-                                        }
-                                    });
+                            getProfilePicture(detail);
                         }else{
                             Toast.makeText(MyProfile.this, detail, Toast.LENGTH_SHORT).show();
                         }
@@ -512,7 +497,7 @@ public class MyProfile extends AppCompatActivity {
                 }
 
                 @Override
-                public void onFailure(Call<UserImageResult> call, Throwable t) {
+                public void onFailure(@NonNull Call<UserImageResult> call, @NonNull Throwable t) {
                     Toast.makeText(getApplicationContext(), "Please check your internet connection", Toast.LENGTH_SHORT).show();
 
                 }
@@ -546,9 +531,12 @@ public class MyProfile extends AppCompatActivity {
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
     protected void onRestart() {
         super.onRestart();
     }
-
-
 }

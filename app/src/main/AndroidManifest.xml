@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="citadel-mdg.herokuapp.com"
+                    android:host="bookshare-env.ctnpygtfsy.us-east-2.elasticbeanstalk.com"
                     android:pathPrefix="/activation"
                     android:scheme="http" />
             </intent-filter>

@@ -6,10 +6,13 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -30,12 +33,16 @@ import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserDetailWithCancel;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterRequest;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
+import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
+import io.sentry.event.User;
 import jp.wasabeef.blurry.Blurry;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -135,7 +142,8 @@ public class UserProfile extends AppCompatActivity {
                 .getString("token", null));
         call.enqueue(new Callback<UserDetailWithCancel>() {
             @Override
-            public void onResponse(Call<UserDetailWithCancel> call, Response<UserDetailWithCancel> response) {
+            public void onResponse(@NonNull Call<UserDetailWithCancel> call,
+                                   @NonNull Response<UserDetailWithCancel> response) {
                 if (response.body() != null) {
                     user = response.body().getUserInfo();
                     name.setText(user.getName());
@@ -144,17 +152,7 @@ public class UserProfile extends AppCompatActivity {
                     contactNo = user.getContactNo();
                     hideDisplayCallIcon(contactNo);
                     address.setText(getAddress(user.getRoomNo(), user.getHostel()));
-                    new Picasso.Builder(UserProfile.this).build()
-                    .load(CommonUtilities.getAnotherUserImageUrl(user.getId())).into(profile_picture);
-                    new Picasso.Builder(UserProfile.this).build()
-                            .load(CommonUtilities.getAnotherUserImageUrl(user.getId())).into(background_image);
-                    Blurry.with(UserProfile.this)
-                            .radius(40)
-                            .sampling(1)
-                            .color(Color.argb(66, 0, 0, 0))
-                            .async()
-                            .capture(findViewById(R.id.background_image))
-                            .into((ImageView) findViewById(R.id.background_image));
+                    getProfilePicture(user.getId());
 
                     List<Book> booksTempInfoList = user.getUserBookList();
                     String bookCount = "Books(" + booksTempInfoList.size() + ")";
@@ -175,12 +173,50 @@ public class UserProfile extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<UserDetailWithCancel> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserDetailWithCancel> call, @NonNull Throwable t) {
                 Log.d("BookDetails fail", t.toString());
                 customProgressDialog.dismiss();
 
             }
         });
+    }
+
+    private void getProfilePicture(final String id) {
+        Picasso.Builder builder = new Picasso.Builder(UserProfile.this);
+        builder.listener(new Picasso.Listener()
+        {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+            {
+                exception.printStackTrace();
+            }
+        });
+        builder.build()
+                .load(CommonUtilities.getAnotherUserImageUrl(id))
+                .memoryPolicy(MemoryPolicy.NO_CACHE)
+                .into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                        profile_picture.setImageBitmap(bitmap);
+                        background_image.setImageBitmap(bitmap);
+                        Blurry.with(getApplicationContext())
+                                .radius(40)
+                                .sampling(1)
+                                .color(Color.argb(66, 0, 0, 0))
+                                .async()
+                                .capture(findViewById(R.id.background_image))
+                                .into((ImageView) findViewById(R.id.background_image));
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Drawable errorDrawable) {
+                        Toast.makeText(getApplicationContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+                    }
+                });
     }
 
     private String getAddress(String roomNo, String hostel) {
@@ -194,7 +230,7 @@ public class UserProfile extends AppCompatActivity {
     }
 
     private void hideDisplayCallIcon(String contactNo) {
-        if (contactNo == null){
+        if (contactNo == null || Objects.equals(contactNo, "")){
             callIcon.setVisibility(GONE);
         }
     }
@@ -240,5 +276,4 @@ public class UserProfile extends AppCompatActivity {
         super.onBackPressed();
         finish();
     }
-
 }

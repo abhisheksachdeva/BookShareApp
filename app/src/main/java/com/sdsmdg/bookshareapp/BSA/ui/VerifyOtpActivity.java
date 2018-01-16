@@ -14,8 +14,10 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -85,7 +87,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
                             verifyOtp(email, pinHiddenEditText.getText().toString());
                     verifyOtpCall.enqueue(new Callback<Detail>() {
                         @Override
-                        public void onResponse(Call<Detail> call, Response<Detail> response) {
+                        public void onResponse(@NonNull Call<Detail> call, @NonNull Response<Detail> response) {
                             if (response.body() != null){
                                 String detail = response.body().getDetail();
                                 if (detail.equals("Activation Link Sent")) {
@@ -98,7 +100,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
                         }
 
                         @Override
-                        public void onFailure(Call<Detail> call, Throwable t) {
+                        public void onFailure(@NonNull Call<Detail> call, @NonNull Throwable t) {
                             onSignupFailed("Check your network connection properly");
                             progressDialog.dismiss();
                         }
@@ -289,9 +291,13 @@ public class VerifyOtpActivity extends AppCompatActivity implements
      *
      * @param editText edit text to change
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setDefaultPinBackground(EditText editText) {
-        editText.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.colorAccent));
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP && editText instanceof AppCompatEditText) {
+            editText.setBackgroundTintList
+                    (ContextCompat.getColorStateList(this, R.color.colorAccent));
+        } else {
+            ViewCompat.setBackgroundTintList(editText, ContextCompat.getColorStateList(this, R.color.colorAccent));
+        }
     }
 
     /**
@@ -299,9 +305,13 @@ public class VerifyOtpActivity extends AppCompatActivity implements
      *
      * @param editText edit text to change
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setFocusedPinBackground(EditText editText) {
-        editText.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.Red));
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP && editText instanceof AppCompatEditText) {
+            editText.setBackgroundTintList
+                    (ContextCompat.getColorStateList(this, R.color.Red));
+        } else {
+            ViewCompat.setBackgroundTintList(editText, ContextCompat.getColorStateList(this, R.color.Red));
+        }
     }
 
     @Override
@@ -328,7 +338,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 1) {
             setFocusedPinBackground(pinSecondDigitEditText);
-            pinFirstDigitEditText.setText(s.charAt(0) + "");
+            pinFirstDigitEditText.setText(String.valueOf(s.charAt(0)));
             pinSecondDigitEditText.setText("");
             pinThirdDigitEditText.setText("");
             pinFourthDigitEditText.setText("");
@@ -336,28 +346,28 @@ public class VerifyOtpActivity extends AppCompatActivity implements
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 2) {
             setFocusedPinBackground(pinThirdDigitEditText);
-            pinSecondDigitEditText.setText(s.charAt(1) + "");
+            pinSecondDigitEditText.setText(String.valueOf(s.charAt(1)));
             pinThirdDigitEditText.setText("");
             pinFourthDigitEditText.setText("");
             pinFifthDigitEditText.setText("");
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 3) {
             setFocusedPinBackground(pinFourthDigitEditText);
-            pinThirdDigitEditText.setText(s.charAt(2) + "");
+            pinThirdDigitEditText.setText(String.valueOf(s.charAt(2)));
             pinFourthDigitEditText.setText("");
             pinFifthDigitEditText.setText("");
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 4) {
             setFocusedPinBackground(pinFifthDigitEditText);
-            pinFourthDigitEditText.setText(s.charAt(3) + "");
+            pinFourthDigitEditText.setText(String.valueOf(s.charAt(3)));
             pinFifthDigitEditText.setText("");
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 5) {
             setFocusedPinBackground(pinSixthDigitEditText);
-            pinFifthDigitEditText.setText(s.charAt(4) + "");
+            pinFifthDigitEditText.setText(String.valueOf(s.charAt(4)));
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 6) {
-            pinSixthDigitEditText.setText(s.charAt(5) + "");
+            pinSixthDigitEditText.setText(String.valueOf(s.charAt(5)));
             hideSoftKeyboard(pinSixthDigitEditText);
         }
     }
@@ -372,11 +382,11 @@ public class VerifyOtpActivity extends AppCompatActivity implements
         String otp = words[8];
         pinHiddenEditText.setText(otp);
         pinHiddenEditText.setSelection(pinHiddenEditText.getText().length());
-        pinFirstDigitEditText.setText(otp.charAt(0) + "");
-        pinSecondDigitEditText.setText(otp.charAt(1) + "");
-        pinThirdDigitEditText.setText(otp.charAt(2) + "");
-        pinFourthDigitEditText.setText(otp.charAt(3) + "");
-        pinFifthDigitEditText.setText(otp.charAt(4) + "");
-        pinSixthDigitEditText.setText(otp.charAt(5) + "");
+        pinFirstDigitEditText.setText(String.valueOf(otp.charAt(0)));
+        pinSecondDigitEditText.setText(String.valueOf(otp.charAt(1)));
+        pinThirdDigitEditText.setText(String.valueOf(otp.charAt(2)));
+        pinFourthDigitEditText.setText(String.valueOf(otp.charAt(3)));
+        pinFifthDigitEditText.setText(String.valueOf(otp.charAt(4)));
+        pinSixthDigitEditText.setText(String.valueOf(otp.charAt(5)));
     }
 }

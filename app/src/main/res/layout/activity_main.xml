@@ -63,7 +63,7 @@
                         android:layout_gravity="end|bottom"
                         android:layout_margin="16dp"
                         android:onClick="searchClicked"
-                        android:src="@drawable/plus3" />z
+                        android:src="@drawable/plus3" />
                 </android.support.design.widget.CoordinatorLayout>
             </FrameLayout>
 

@@ -112,7 +112,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         realm = Realm.getInstance(realmConfiguration);
 
 
-
         Context ctx = this.getApplicationContext();
 
         // Use the Sentry DSN (client key) from the Project Settings page on Sentry
@@ -143,74 +142,74 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (getIntent().getExtras() != null) {
 
-                toReadName = getIntent().getExtras().getString("toReadName");
-                if (toReadName != null) {
-                    if (toReadName.equals("open")) {
-                        notifFragment.getNotifications("1");
-                        MyFirebaseMessagingService.notifications.clear();
-                        drawerLayout.openDrawer(GravityCompat.END);
-                    }
-                }
-
-
-                toReadName = getIntent().getExtras().getString("data_splash");
-                if (toReadName != null && toReadName.equals("open_drawer")) {
+            toReadName = getIntent().getExtras().getString("toReadName");
+            if (toReadName != null) {
+                if (toReadName.equals("open")) {
                     notifFragment.getNotifications("1");
                     MyFirebaseMessagingService.notifications.clear();
                     drawerLayout.openDrawer(GravityCompat.END);
                 }
+            }
 
-                toReadName = getIntent().getExtras().getString("data_login");
-                if (toReadName != null && toReadName.equals("update")) {
 
-                    String token = "Token " + preferences.getString("token", null);
+            toReadName = getIntent().getExtras().getString("data_splash");
+            if (toReadName != null && toReadName.equals("open_drawer")) {
+                notifFragment.getNotifications("1");
+                MyFirebaseMessagingService.notifications.clear();
+                drawerLayout.openDrawer(GravityCompat.END);
+            }
 
-                    String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                    UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                    Call<Detail> call2 = usersAPI.update_fcm_id(
-                            token,
-                            refreshedToken
-                    );
-                    call2.enqueue(new Callback<Detail>() {
-                        @Override
-                        public void onResponse(Call<Detail> call2, Response<Detail> response) {
-                            if (response.body() != null) {
-                                if (response.body().getDetail().equals("FCM_ID changed")) {
-                                    //FCM Id was changed successfully
-                                } else {
-//                                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
-                                }
+            toReadName = getIntent().getExtras().getString("data_login");
+            if (toReadName != null && toReadName.equals("update")) {
+
+                String token = "Token " + preferences.getString("token", null);
+
+                String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                Call<Detail> call2 = usersAPI.update_fcm_id(
+                        token,
+                        refreshedToken
+                );
+                call2.enqueue(new Callback<Detail>() {
+                    @Override
+                    public void onResponse(Call<Detail> call2, Response<Detail> response) {
+                        if (response.body() != null) {
+                            if (response.body().getDetail().equals("FCM_ID changed")) {
+                                //FCM Id was changed successfully
                             } else {
-                                //The FCM ID didn't change
+//                                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
                             }
-                            removeAnyVisibleSnackbars();
+                        } else {
+                            //The FCM ID didn't change
                         }
+                        removeAnyVisibleSnackbars();
+                    }
 
-                        @Override
-                        public void onFailure(Call<Detail> call, Throwable t) {
-                            Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
-                                @Override
-                                public void onDismissed(Snackbar snackbar, int event) {
-                                    visibleSnackbars.remove(snackbar);
-                                    super.onDismissed(snackbar, event);
-                                }
+                    @Override
+                    public void onFailure(Call<Detail> call, Throwable t) {
+                        Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar snackbar, int event) {
+                                visibleSnackbars.remove(snackbar);
+                                super.onDismissed(snackbar, event);
+                            }
 
-                                @Override
-                                public void onShown(Snackbar snackbar) {
-                                    visibleSnackbars.add(snackbar);
-                                    super.onShown(snackbar);
-                                }
-                            }).setAction("RETRY", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    refresh();
-                                }
-                            }).show();
-                        }
-                    });
+                            @Override
+                            public void onShown(Snackbar snackbar) {
+                                visibleSnackbars.add(snackbar);
+                                super.onShown(snackbar);
+                            }
+                        }).setAction("RETRY", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                refresh();
+                            }
+                        }).show();
+                    }
+                });
 
 
-                }
+            }
 
         }
         localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
@@ -229,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
                     intent.putExtra("id", book.getId());
                     startActivity(intent);
-                }else{
+                } else {
                     Toast.makeText(MainActivity.this, "Please check your internet connection!!", Toast.LENGTH_SHORT).show();
                 }
 
@@ -256,9 +255,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ImageView _profilePicture = (ImageView) header.findViewById(R.id.nav_profile_picture);
         this._profilePicture = _profilePicture;
 
-        new Picasso.Builder(MainActivity.this).
-                downloader(new OkHttp3Downloader(getOkHttpClient())).build()
+        Picasso.Builder builder = new Picasso.Builder(MainActivity.this);
+        builder.listener(new Picasso.Listener()
+        {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+            {
+                exception.printStackTrace();
+            }
+        });
+        builder.downloader(new OkHttp3Downloader(getOkHttpClient())).build()
                 .load(CommonUtilities.currentUserImageUrl).into(_profilePicture);
+
+
         Helper.imageChanged = false;
         _profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -406,7 +415,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         searchView.setOnQueryTextListener(this);
 
         //If toReadName received from to-read is not null, search it first
-        if(toReadName != null) {
+        if (toReadName != null) {
             searchItem.expandActionView();
             searchView.requestFocus();
             searchView.setQuery(toReadName, true);
