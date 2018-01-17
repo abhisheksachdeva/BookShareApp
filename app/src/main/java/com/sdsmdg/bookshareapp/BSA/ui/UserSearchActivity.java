@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,10 +27,18 @@ import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.UsersAdapter;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
+import com.sdsmdg.bookshareapp.BSA.utils.RxSearchObservable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,7 +57,7 @@ public class UserSearchActivity extends ActionBarActivity {
     TextView noUsersTextView;
     CustomProgressDialog customProgressDialog;
     private Toolbar mToolbar;
-
+    private ProgressBar progressBar;
 
     private final String TAG = UserSearchActivity.class.getSimpleName();
 
@@ -68,6 +77,7 @@ public class UserSearchActivity extends ActionBarActivity {
         customProgressDialog.setCancelable(false);
 
         noUsersTextView = (TextView) findViewById(R.id.no_users_textView);
+        progressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         preferences = getSharedPreferences("Token", MODE_PRIVATE);
 
         search_open();
@@ -122,9 +132,11 @@ public class UserSearchActivity extends ActionBarActivity {
     }
 
     private void doSearch(String query) {
-        hideKeyboard();
+
+        userInfoList.clear();
+        progressBar.setVisibility(View.VISIBLE);
         noUsersTextView.setVisibility(View.GONE);
-        customProgressDialog.show();
+
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
 
@@ -132,7 +144,7 @@ public class UserSearchActivity extends ActionBarActivity {
         call.enqueue(new Callback<List<UserInfo>>() {
             @Override
             public void onResponse(Call<List<UserInfo>> call, Response<List<UserInfo>> response) {
-                userInfoList.clear();
+                progressBar.setVisibility(View.GONE);
                 if (response.body().size() != 0) {
                     userInfoList.addAll(response.body());
                 } else {
@@ -151,6 +163,7 @@ public class UserSearchActivity extends ActionBarActivity {
 
             @Override
             public void onFailure(Call<List<UserInfo>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
                 customProgressDialog.dismiss();
             }
@@ -234,17 +247,6 @@ public class UserSearchActivity extends ActionBarActivity {
         edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
         edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
 
-        //this is a listener to do a search when the user clicks on search button
-        edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    doSearch(edtSeach.getText().toString());
-                    return true;
-                }
-                return false;
-            }
-        });
         edtSeach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -261,7 +263,35 @@ public class UserSearchActivity extends ActionBarActivity {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
         //add the close icon
+
+        regRxObservable();
+    }
+
+    private void regRxObservable() {
+        InputMethodManager imm = (InputMethodManager) getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
+        RxSearchObservable.imm = imm;
+        RxSearchObservable.fromView(edtSeach)
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        doSearch(s);
+                    }
+                });
     }
 }
-
-

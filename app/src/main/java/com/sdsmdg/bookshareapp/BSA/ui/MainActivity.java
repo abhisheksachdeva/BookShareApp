@@ -25,6 +25,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,13 +43,22 @@ import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterSimple;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.NotificationFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
+import com.sdsmdg.bookshareapp.BSA.utils.RxSearchObservable;
+import com.sdsmdg.bookshareapp.BSA.utils.RxSearchViewObservable;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
@@ -60,7 +70,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, NotificationFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, NotificationFragment.OnFragmentInteractionListener {
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE = 1000;
@@ -90,7 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     //Search Menu item reference in the toolbar
     MenuItem searchItem;
     TextView noBookstextview;
-
+    ProgressBar progressBar;
     //toReadName for to-read search
     String toReadName = null;
 
@@ -133,6 +143,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         setContentView(R.layout.activity_main);
         noBookstextview = (TextView) findViewById(R.id.no_books_textView);
+        progressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         noBookstextview.setVisibility(View.GONE);
 
         progress_isVisible = false;
@@ -326,20 +337,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivityForResult(i, REQUEST_CODE);
     }
 
+    private void doSearch(String query) {
 
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
+        booksList.clear();
+        progressBar.setVisibility(View.VISIBLE);
+        noBookstextview.setVisibility(View.GONE);
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<List<Book>> call = api.search(query, "Token " + prefs.getString("token", null));
         call.enqueue(new Callback<List<Book>>() {
             @Override
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
-                booksList.clear();
+                progressBar.setVisibility(View.GONE);
                 if (response.body().size() != 0) {
                     resplocal = response.toString();
                     List<Book> localBooksList = response.body();
@@ -356,6 +365,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             @Override
             public void onFailure(Call<List<Book>> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
                 Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
                     @Override
                     public void onDismissed(Snackbar snackbar, int event) {
@@ -375,11 +385,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     }
                 }).show();
                 refreshLayout.setRefreshing(false);
-
             }
         });
-        searchView.clearFocus();
-        return true;
     }
 
     /**
@@ -411,7 +418,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.White));
         searchEditText.setHintTextColor(getResources().getColor(R.color.White));
-        searchView.setOnQueryTextListener(this);
+
+        regRxObservable();
 
         //If toReadName received from to-read is not null, search it first
         if (toReadName != null) {
@@ -602,6 +610,42 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
 
+    }
+
+    private void regRxObservable() {
+        RxSearchViewObservable.fromView(searchView)
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .filter(new Predicate<String>() {
+                    @Override
+                    public boolean test(String text) throws Exception {
+                        if (text.isEmpty()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                })
+                .distinctUntilChanged()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        doSearch(s);
+                    }
+                });
     }
 
     @Override
