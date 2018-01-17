@@ -183,15 +183,14 @@ public class UserProfile extends AppCompatActivity {
 
     private void getProfilePicture(final String id) {
         Picasso.Builder builder = new Picasso.Builder(UserProfile.this);
-        builder.listener(new Picasso.Listener()
-        {
+        builder.listener(new Picasso.Listener() {
             @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-            {
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
                 exception.printStackTrace();
             }
         });
-        builder.build()
+        builder.downloader(new OkHttp3Downloader(getOkHttpClient()))
+                .build()
                 .load(CommonUtilities.getAnotherUserImageUrl(id))
                 .memoryPolicy(MemoryPolicy.NO_CACHE)
                 .into(new Target() {
@@ -219,18 +218,33 @@ public class UserProfile extends AppCompatActivity {
                 });
     }
 
+    private OkHttpClient getOkHttpClient() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request newRequest = chain.request().newBuilder()
+                                .addHeader("Authorization", "Token " + prefs
+                                        .getString("token", null))
+                                .build();
+                        return chain.proceed(newRequest);
+                    }
+                }).build();
+        return client;
+    }
+
     private String getAddress(String roomNo, String hostel) {
         String ad;
         if (roomNo == null) {
             ad = hostel;
-        }else{
+        } else {
             ad = roomNo + ", " + hostel;
         }
         return ad;
     }
 
     private void hideDisplayCallIcon(String contactNo) {
-        if (contactNo == null || Objects.equals(contactNo, "")){
+        if (contactNo == null || Objects.equals(contactNo, "")) {
             callIcon.setVisibility(GONE);
         }
     }

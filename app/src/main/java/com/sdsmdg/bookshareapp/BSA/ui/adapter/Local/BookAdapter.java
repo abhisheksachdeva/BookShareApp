@@ -31,6 +31,7 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookAddDeleteResponse;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.RemoveBook;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.ui.MyProfile;
@@ -227,30 +228,31 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         removeBook.setUserId(userId);
 
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Detail> call = usersAPI.removeBook(removeBook, "Token " + prefs.getString("token", null));
-        call.enqueue(new Callback<Detail>() {
+        Call<BookAddDeleteResponse> call = usersAPI.removeBook(removeBook, "Token " + prefs.getString("token", null));
+        call.enqueue(new Callback<BookAddDeleteResponse>() {
             @Override
-            public void onResponse(Call<Detail> call, Response<Detail> response) {
+            public void onResponse(Call<BookAddDeleteResponse> call, Response<BookAddDeleteResponse> response) {
                 if (response.body() != null) {
-                    notifyDataSetChanged();
-                    //Make corresponding changes in MyProfile activity when a book is removed
-                    Log.i(TAG, "onResponse: 0");
-                    ((MyProfile)context).onBookRemoved();
-                    Log.i(TAG, "onResponse: 1");
-                    Toast.makeText(context, "Successfully removed", Toast.LENGTH_SHORT).show();
-                    Book rbook = bookList.get(position);
-                    if (itemsPendingRemoval.contains(rbook)) {
-                        itemsPendingRemoval.remove(rbook);
-                    }
-                    if (bookList.contains(rbook)) {
-                        bookList.remove(position);
-                        notifyItemRemoved(position);
+                    String detail = response.body().getDetail();
+                    Toast.makeText(context, detail, Toast.LENGTH_SHORT).show();
+                    if (detail.equals("Successfully Removed!!")) {
+                        notifyDataSetChanged();
+                        //Make corresponding changes in MyProfile activity when a book is removed
+                        ((MyProfile)context).onBookRemoved();
+                        Book rbook = bookList.get(position);
+                        if (itemsPendingRemoval.contains(rbook)) {
+                            itemsPendingRemoval.remove(rbook);
+                        }
+                        if (bookList.contains(rbook)) {
+                            bookList.remove(position);
+                            notifyItemRemoved(position);
+                        }
                     }
                 }
             }
 
             @Override
-            public void onFailure(Call<Detail> call, Throwable t) {
+            public void onFailure(Call<BookAddDeleteResponse> call, Throwable t) {
                 itemsPendingRemoval.remove(bookList.get(position));
                 //This line will remove the undo button and show the book row completely
                 notifyItemChanged(position);

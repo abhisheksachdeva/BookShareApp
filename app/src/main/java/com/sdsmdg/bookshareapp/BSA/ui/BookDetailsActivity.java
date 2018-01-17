@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.customtabs.CustomTabsIntent;
 import android.text.TextUtils;
 import android.transition.TransitionManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -29,8 +31,11 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookAddDeleteResponse;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookDetailWithCancel;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.RemoveBook;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.UsersAdapter;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
@@ -70,8 +75,8 @@ public class BookDetailsActivity extends AppCompatActivity {
     NestedScrollView scrollView;
     Boolean showMore = false;
     CustomProgressDialog customProgressDialog;
-    Button addToMyLibraryButton;
-    String token;
+    Button addToMyLibraryButton, removeFromMyLibraryButton;
+    String token, userId;
     SharedPreferences prefs;
 
     //for chrome custom tabs
@@ -93,7 +98,9 @@ public class BookDetailsActivity extends AppCompatActivity {
         customProgressDialog.setCancelable(false);
         customProgressDialog.show();
         token = prefs.getString("token", null);
+        userId = prefs.getString("id", "");
         addToMyLibraryButton = (Button) findViewById(R.id.add_to_my_library);
+        removeFromMyLibraryButton = (Button) findViewById(R.id.remove_from_my_library);
         authorBook = (TextView) findViewById(R.id.book_author);
         ratingBook = (RatingBar) findViewById(R.id.book_rating);
         ratingCount = (TextView) findViewById(R.id.ratings_count);
@@ -141,7 +148,7 @@ public class BookDetailsActivity extends AppCompatActivity {
                 .getString("token", null));
         call.enqueue(new Callback<BookDetailWithCancel>() {
             @Override
-            public void onResponse(Call<BookDetailWithCancel> call, Response<BookDetailWithCancel> response) {
+            public void onResponse(@NonNull Call<BookDetailWithCancel> call, @NonNull Response<BookDetailWithCancel> response) {
                 if (response.body() != null && response.body().getBook().getDetail() == null) {
                     book = response.body().getBook();
                     Response = response.toString();
@@ -203,7 +210,7 @@ public class BookDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<BookDetailWithCancel> call, Throwable t) {
+            public void onFailure(@NonNull Call<BookDetailWithCancel> call, @NonNull Throwable t) {
                 TransitionManager.beginDelayedTransition(rootView);
                 customProgressDialog.dismiss();
                 Toast.makeText(BookDetailsActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
@@ -246,6 +253,8 @@ public class BookDetailsActivity extends AppCompatActivity {
         for (UserInfo item : userInfoList) {
             if (item.getId().equals(Helper.getUserId())) {
                 addToMyLibraryButton.setVisibility(View.GONE);
+                removeFromMyLibraryButton.setVisibility(View.VISIBLE);
+
             }
         }
     }
@@ -262,31 +271,45 @@ public class BookDetailsActivity extends AppCompatActivity {
     }
 
     public void addToMyLibraryClicked(final View view) {
+        customProgressDialog.setCancelable(false);
+        customProgressDialog.show();
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Book> addBookCall = usersAPI.addBook(Helper.getUserEmail(), title, author, gr_id, ratingsCount, rating, gr_img_url, description, "Token " + token);
-        addBookCall.enqueue(new Callback<Book>() {
+        Call<BookAddDeleteResponse> addBookCall = usersAPI.addBook(Helper.getUserEmail(), title, author, gr_id, ratingsCount, rating, gr_img_url, description, "Token " + token);
+        addBookCall.enqueue(new Callback<BookAddDeleteResponse>() {
             @Override
-            public void onResponse(Call<Book> call, Response<Book> response) {
+            public void onResponse(@NonNull Call<BookAddDeleteResponse> call, @NonNull Response<BookAddDeleteResponse> response) {
                 //getDetail() returns whether the book has been added or not
+                customProgressDialog.dismiss();
                 if (response.body() != null) {
-                    Toast.makeText(BookDetailsActivity.this, response.body().getDetail(), Toast.LENGTH_SHORT).show();
-                    view.animate()
-                            .translationY(-view.getHeight())
-                            .alpha(0.0f)
-                            .setListener(new AnimatorListenerAdapter() {
-                                @Override
-                                public void onAnimationEnd(Animator animation) {
-                                    super.onAnimationEnd(animation);
-                                    view.setVisibility(View.GONE);
-                                }
-                            });
+                    String detail = response.body().getDetail();
+                    Toast.makeText(BookDetailsActivity.this, detail, Toast.LENGTH_SHORT).show();
+                    if (detail.equals("Book Added")) {
+                        view.animate()
+                                .translationY(-view.getHeight())
+                                .alpha(0.0f)
+                                .setListener(new AnimatorListenerAdapter() {
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        super.onAnimationEnd(animation);
+                                        view.setVisibility(View.GONE);
+                                        view.setAlpha(1.0f);
+                                        view.setTranslationY(0);
+                                        removeFromMyLibraryButton.setVisibility(View.VISIBLE);
+                                    }
+                                });
+                        userInfoList.clear();
+                        usersAdapter.setCancels(response.body().getCancelList());
+                        userInfoList.addAll(response.body().getUserList());
+                        usersAdapter.notifyDataSetChanged();
+                    }
                 } else {
                     Toast.makeText(BookDetailsActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<Book> call, Throwable t) {
+            public void onFailure(@NonNull Call<BookAddDeleteResponse> call, @NonNull Throwable t) {
+                customProgressDialog.dismiss();
                 Toast.makeText(BookDetailsActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
             }
         });
@@ -298,5 +321,65 @@ public class BookDetailsActivity extends AppCompatActivity {
         customTabsIntent.launchUrl(this, Uri.parse("http://www.goodreads.com/work/best_book/"+bookId));
     }
 
+    public void removeFromMyLibraryClicked(View view) {
+        removeBook(view, bookId);
+    }
+
+    private void removeBook(final View view, final String bookId) {
+
+        customProgressDialog.show();
+        customProgressDialog.setCancelable(false);
+        RemoveBook removeBook = new RemoveBook();
+        removeBook.setBookId(bookId);
+        removeBook.setUserId(userId);
+
+        UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+        Call<BookAddDeleteResponse> call = usersAPI.removeBook(removeBook, "Token " + prefs.getString("token", null));
+        call.enqueue(new Callback<BookAddDeleteResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<BookAddDeleteResponse> call, @NonNull Response<BookAddDeleteResponse> response) {
+                customProgressDialog.dismiss();
+                if (response.body() != null) {
+                    String detail = response.body().getDetail();
+                    Toast.makeText(BookDetailsActivity.this, detail, Toast.LENGTH_SHORT).show();
+                    if (detail.equals("Successfully Removed!!")){
+                        if (response.body().getUserList().size() == 0){
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    finish();
+                                }
+                            }, 500);
+                        }else {
+                            view.animate()
+                                    .translationY(-view.getHeight())
+                                    .alpha(0.0f)
+                                    .setListener(new AnimatorListenerAdapter() {
+                                        @Override
+                                        public void onAnimationEnd(Animator animation) {
+                                            super.onAnimationEnd(animation);
+                                            view.setVisibility(View.GONE);
+                                            view.setAlpha(1.0f);
+                                            view.setTranslationY(0);
+                                            addToMyLibraryButton.setVisibility(View.VISIBLE);
+                                        }
+                                    });
+                            userInfoList.clear();
+                            usersAdapter.setCancels(response.body().getCancelList());
+                            userInfoList.addAll(response.body().getUserList());
+                            usersAdapter.notifyDataSetChanged();
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<BookAddDeleteResponse> call, @NonNull Throwable t) {
+                customProgressDialog.dismiss();
+                Toast.makeText(BookDetailsActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 }
 

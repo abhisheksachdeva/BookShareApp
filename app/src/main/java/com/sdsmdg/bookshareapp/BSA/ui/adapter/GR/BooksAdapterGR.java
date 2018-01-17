@@ -24,6 +24,7 @@ import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.BookDescription;
 import com.sdsmdg.bookshareapp.BSA.api.models.GoodreadsResponse2;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookAddDeleteResponse;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.squareup.picasso.Picasso;
@@ -165,13 +166,12 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                        Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> addBook = usersAPI.addBook(email, title, author, gr_id, ratingsCount, rating, gr_img_url, description, "Token " + token);
-                        addBook.enqueue(new Callback<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book>() {
+                        Call<BookAddDeleteResponse> addBook = usersAPI.addBook(email, title, author, gr_id, ratingsCount, rating, gr_img_url, description, "Token " + token);
+                        addBook.enqueue(new Callback<BookAddDeleteResponse>() {
 
                             @Override
-                            public void onResponse(Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> call, Response<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> response) {
+                            public void onResponse(Call<BookAddDeleteResponse> call, Response<BookAddDeleteResponse> response) {
                                 try {
-
                                     if (response.body() != null) {
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                         holder.add.setEnabled(false);
@@ -185,7 +185,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                             }
 
                             @Override
-                            public void onFailure(Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> call, Throwable t) {
+                            public void onFailure(Call<BookAddDeleteResponse> call, Throwable t) {
                                 Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -198,10 +198,8 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                     }
                 });
                 builder.show();
-
             }
         });
-
     }
 
     @Override

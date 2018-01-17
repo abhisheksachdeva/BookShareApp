@@ -91,6 +91,22 @@
                 android:textSize="16sp"
                 android:textStyle="normal" />
 
+            <Button
+                android:id="@+id/remove_from_my_library"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_shape_other"
+                android:onClick="removeFromMyLibraryClicked"
+                android:padding="10dp"
+                android:text="Remove from My Library"
+                android:textAllCaps="false"
+                android:textColor="@color/app_theme_button_other"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:visibility="gone"/>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

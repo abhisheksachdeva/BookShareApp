@@ -1,6 +1,7 @@
 package com.sdsmdg.bookshareapp.BSA.api;
 
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookAddDeleteResponse;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookDetailWithCancel;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.RemoveBook;
@@ -87,7 +88,7 @@ public interface UsersAPI {
 
     @FormUrlEncoded
     @POST("books/?format=json")
-    Call<Book> addBook(
+    Call<BookAddDeleteResponse> addBook(
             @Field("email") String email,
             @Field("title") String title,
             @Field("author") String author,
@@ -191,7 +192,7 @@ public interface UsersAPI {
 
 
     @PUT("books/")
-    Call<Detail> removeBook(
+    Call<BookAddDeleteResponse> removeBook(
             @Body RemoveBook removeBook,
             @Header("Authorization") String token
     );

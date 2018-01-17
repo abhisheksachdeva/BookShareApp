@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE = 1000;
+    private static final int BOOK_DETAIL_REQUEST_CODE = 1001;
     List<Book> booksList;
     BooksAdapterSimple adapter;
     SharedPreferences prefs;
@@ -227,7 +228,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (isOnline()) {
                     Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
                     intent.putExtra("id", book.getId());
-                    startActivity(intent);
+                    startActivityForResult(intent, BOOK_DETAIL_REQUEST_CODE);
                 } else {
                     Toast.makeText(MainActivity.this, "Please check your internet connection!!", Toast.LENGTH_SHORT).show();
                 }
@@ -619,10 +620,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed() {
 
         if (this.drawerLayout.isDrawerVisible(GravityCompat.START)) {
-
             this.drawerLayout.closeDrawer(GravityCompat.START);
-
-        } else {
+        } if (this.drawerLayout.isDrawerVisible(GravityCompat.END)){
+            this.drawerLayout.closeDrawer(GravityCompat.END);
+        } else{
             if (!progress_isVisible) {
 
                 if (backCounter >= 1) {
@@ -633,7 +634,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 } else {
 
-                    Snackbar.make(findViewById(R.id.coordinatorlayout), "       Press Again To Exit", Snackbar.LENGTH_LONG).setCallback(new Snackbar.Callback() {
+                    Snackbar.make(findViewById(R.id.coordinatorlayout), "Press Again To Exit", Snackbar.LENGTH_LONG).setCallback(new Snackbar.Callback() {
                         @Override
                         public void onDismissed(Snackbar snackbar, int event) {
                             super.onDismissed(snackbar, event);
@@ -717,7 +718,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CODE || requestCode == BOOK_DETAIL_REQUEST_CODE) {
             getLocalBooks("1");
         }
     }

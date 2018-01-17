@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -75,7 +78,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
-    public void saveClicked(View view) {
+    private void saveClicked() {
 
         userInfo = new UserInfo();
         userInfo.setFirstName(firstName.getText().toString());
@@ -116,6 +119,21 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_edit_profile, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.save_details){
+            saveClicked();
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
