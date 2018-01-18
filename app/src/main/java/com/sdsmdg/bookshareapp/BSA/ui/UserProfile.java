@@ -209,7 +209,15 @@ public class UserProfile extends AppCompatActivity {
 
                     @Override
                     public void onBitmapFailed(Drawable errorDrawable) {
-                        Toast.makeText(getApplicationContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
+                        profile_picture.setImageResource(R.drawable.user_default_image);
+                        background_image.setImageResource(R.drawable.user_default_image);
+                        Blurry.with(getApplicationContext())
+                                .radius(40)
+                                .sampling(1)
+                                .color(Color.argb(66, 0, 0, 0))
+                                .async()
+                                .capture(findViewById(R.id.background_image))
+                                .into((ImageView) findViewById(R.id.background_image));
                     }
 
                     @Override

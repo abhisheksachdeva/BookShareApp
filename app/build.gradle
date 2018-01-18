@@ -45,7 +45,7 @@ def formatStringField(field) {
 
 sentry {
     // Disables or enables the automatic configuration of proguard
-    // for Sentry.  This injects a default config for proguard so
+    // for Sentry.  This injects a user_default_image config for proguard so
     // you don't need to do it manually.
     autoProguardConfig true
 

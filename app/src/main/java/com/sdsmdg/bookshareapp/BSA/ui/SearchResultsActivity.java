@@ -261,7 +261,7 @@ public class SearchResultsActivity extends ActionBarActivity {
             }
         });
 
-        spinner.setSelection(0);//Setting the default vaule of spinner to "All"
+        spinner.setSelection(0);//Setting the user_default_image vaule of spinner to "All"
 
         edtSeach.setOnClickListener(new View.OnClickListener() {
             @Override

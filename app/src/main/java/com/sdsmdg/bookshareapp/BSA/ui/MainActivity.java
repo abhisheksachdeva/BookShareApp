@@ -3,6 +3,7 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -264,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View header = navigationView.getHeaderView(0);
         TextView _name = (TextView) header.findViewById(R.id.nav_name);
         TextView _email = (TextView) header.findViewById(R.id.nav_email);
-        ImageView _profilePicture = (ImageView) header.findViewById(R.id.nav_profile_picture);
+        final ImageView _profilePicture = (ImageView) header.findViewById(R.id.nav_profile_picture);
         this._profilePicture = _profilePicture;
 
         Picasso.Builder builder = new Picasso.Builder(MainActivity.this);
@@ -274,6 +276,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
             {
                 exception.printStackTrace();
+                _profilePicture.setImageResource(R.drawable.user_default_image);
+
             }
         });
         builder.downloader(new OkHttp3Downloader(getOkHttpClient())).build()

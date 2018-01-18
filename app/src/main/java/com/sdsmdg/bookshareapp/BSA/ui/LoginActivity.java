@@ -269,7 +269,7 @@ public class LoginActivity extends AppCompatActivity {
         if (requestCode == REQUEST_SIGNUP) {
             if (resultCode == RESULT_OK) {
 
-                // By default we just finish the Activity and log them in automatically
+                // By user_default_image we just finish the Activity and log them in automatically
                 Toast.makeText(this, "Signup Successful!", Toast.LENGTH_SHORT).show();
             }
         }

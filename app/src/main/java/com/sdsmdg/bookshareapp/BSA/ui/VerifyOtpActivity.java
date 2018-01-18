@@ -287,7 +287,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
     }
 
     /**
-     * Sets default PIN background.
+     * Sets user_default_image PIN background.
      *
      * @param editText edit text to change
      */
