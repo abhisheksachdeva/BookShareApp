@@ -47,48 +47,47 @@ import retrofit2.Response;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
-    private static final String TAG = BookAdapter.class.getSimpleName();
-
     private static final int PENDING_REMOVAL_TIMEOUT = 1500;
-    Book tempValues = null;
-    List<Book> itemsPendingRemoval;
-    String userId;
-    Context context;
+    private Book tempValues = null;
+    private List<Book> itemsPendingRemoval;
+    private String userId;
+    private Context context;
     private List<Book> bookList;
-    ActionMode mActionMode;
-    SharedPreferences prefs;
-    boolean undoOn = true;
+    private List<Book> selectedBookList = new ArrayList<>();
+    private ActionMode mActionMode;
+    private SharedPreferences prefs;
+    private boolean undoOn = true;
+    private boolean isMultiSelect = false;
+
     /**
-     * // is undo on, you can turn it on from the toolbar menu
-     * //this array stores whether the current book is selected or not
+     * is undo on, you can turn it on from the toolbar menu
+     * this array stores whether the current book is selected or not
      */
-    SparseBooleanArray selected;
     //This activity reference is required to activate the contextual action bar
-    Activity activity;
+    private Activity activity;
 
     private Handler handler = new Handler(); // handler for running delayed runnables
-    HashMap<Book, Runnable> pendingRunnables = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
+    private HashMap<Book, Runnable> pendingRunnables = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
 
     public BookAdapter(Context context, String userId, List<Book> bookList, Activity activity) {
         itemsPendingRemoval = new ArrayList<>();
         this.bookList = bookList;
-        selected = new SparseBooleanArray();
         this.userId = userId;
         this.context = context;
         this.activity = activity;
         prefs = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView titleBook;
-        public TextView authorBook;
-        public ImageView imageBook;
-        public RatingBar ratingBook;
-        public TextView ratingCount;
+        TextView titleBook;
+        TextView authorBook;
+        ImageView imageBook;
+        RatingBar ratingBook;
+        TextView ratingCount;
         Button undoButton;
 
-        public ViewHolder(ViewGroup parent) {
+        ViewHolder(ViewGroup parent) {
             super(LayoutInflater.from(parent.getContext()).inflate(R.layout.row_mybooks, parent, false));
             titleBook = (TextView) itemView.findViewById(R.id.book_title);
             authorBook = (TextView) itemView.findViewById(R.id.author);
@@ -97,22 +96,19 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             ratingCount = (TextView) itemView.findViewById(R.id.ratings_count);
             undoButton = (Button) itemView.findViewById(R.id.undo_button);
         }
-
-
     }
 
     //This function is used to delete the selected items
-    public void deleteSelectedItem() {
-        for (int i = 0; i < bookList.size(); i++) {
-            if (selected.get(i)) {
-                remove(i);
-            }
+    private void deleteSelectedItem() {
+        for (Book book : selectedBookList) {
+            remove(bookList.indexOf(book));
         }
     }
 
     //This method is called after the contextual action bar is disabled
     public void reset() {
-        selected.clear();
+        isMultiSelect = false;
+        selectedBookList = new ArrayList<>();
         notifyDataSetChanged();
     }
 
@@ -122,18 +118,30 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         final ViewHolder viewHolder = holder;
         final Book rbook = bookList.get(position);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isMultiSelect){
+                    multiSelect(viewHolder.getAdapterPosition());
+                }
+            }
+        });
 
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                //This line activates the contextual action bar
-                mActionMode = activity.startActionMode(mActionModeCallback);
-                selected.put(position, true);
-                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.delete_gray));
-                return false;
+                if (!isMultiSelect) {
+                    isMultiSelect = true;
+                    if (mActionMode == null) {
+                        mActionMode = activity.startActionMode(mActionModeCallback);
+                    }
+                }
+                multiSelect(viewHolder.getAdapterPosition());
+                return true;
             }
         });
 
@@ -170,10 +178,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             }
             viewHolder.ratingBook.setRating(tempValues.getRating());
             viewHolder.ratingCount.setText("(" + tempValues.getRatingsCount() + ")");
-            viewHolder.itemView.setBackgroundColor(Color.WHITE);
             //if the book is selected, change it's color to holo blue light
-            if (selected.get(position)) {
-                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.delete_gray));
+            if (selectedBookList.contains(bookList.get(position))){
+                viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.delete_gray));
+            }else{
+                viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.White));
             }
             viewHolder.titleBook.setVisibility(View.VISIBLE);
             viewHolder.authorBook.setVisibility(View.VISIBLE);
@@ -185,6 +194,24 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         }
     }
 
+    private void multiSelect(int adapterPosition) {
+        if (mActionMode != null){
+            if (selectedBookList.contains(bookList.get(adapterPosition))){
+                selectedBookList.remove(bookList.get(adapterPosition));
+            } else {
+                selectedBookList.add(bookList.get(adapterPosition));
+            }
+            if (selectedBookList.size() > 1) {
+                mActionMode.setTitle(selectedBookList.size() + " items selected");
+            } else if (selectedBookList.size() > 0) {
+                mActionMode.setTitle(selectedBookList.size() + " item selected");
+            } else {
+                mActionMode.finish();
+            }
+            notifyDataSetChanged();
+        }
+    }
+
     @Override
     public int getItemCount() {
         if (bookList != null)
@@ -193,11 +220,11 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         return 0;
     }
 
-    public boolean isUndoOn() {
+    private boolean isUndoOn() {
         return undoOn;
     }
 
-    public void pendingRemoval(int position) {
+    private void pendingRemoval(int position) {
         final Book rbook = bookList.get(position);
 
         if (!itemsPendingRemoval.contains(rbook)) {
@@ -216,12 +243,12 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         }
     }
 
-    public void remove(int position) {
+    private void remove(int position) {
         Book rbook = bookList.get(position);
         removeBook(rbook.getId(), position);
     }
 
-    public void removeBook(final String bookId, final int position) {
+    private void removeBook(final String bookId, final int position) {
 
         RemoveBook removeBook = new RemoveBook();
         removeBook.setBookId(bookId);
@@ -261,13 +288,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         });
     }
 
-    public boolean isPendingRemoval(int position) {
+    private boolean isPendingRemoval(int position) {
         Book rbook = bookList.get(position);
         return itemsPendingRemoval.contains(rbook);
     }
 
 
-    public ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         // Called when the action mode is created; startActionMode() was called
         @Override
@@ -305,7 +332,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             mActionMode = null;
         }
     };
-
 
     public void setUpItemTouchHelper(RecyclerView mRecyclerView) {
 
@@ -459,8 +485,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
                 }
                 super.onDraw(c, parent, state);
             }
-
         });
     }
-
 }
