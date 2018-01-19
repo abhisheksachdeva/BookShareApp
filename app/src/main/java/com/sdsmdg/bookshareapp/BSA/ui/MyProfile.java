@@ -513,6 +513,8 @@ public class MyProfile extends AppCompatActivity {
         } catch (NullPointerException e) {
             Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
 //            Sentry.capture(e);
+        } catch (OutOfMemoryError e){
+            Toast.makeText(this, "Image is too big to upload!!", Toast.LENGTH_SHORT).show();
         }
     }
 

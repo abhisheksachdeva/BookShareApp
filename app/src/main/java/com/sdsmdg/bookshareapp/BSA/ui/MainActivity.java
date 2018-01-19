@@ -28,12 +28,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
+import com.sdsmdg.bookshareapp.BSA.Listeners.NotifCountListener;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
@@ -72,14 +74,18 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, NotificationFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener, NotificationFragment.OnFragmentInteractionListener{
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE = 1000;
     private static final int BOOK_DETAIL_REQUEST_CODE = 1001;
+    private boolean isNotifDrawerClosed = false;
+    private boolean isrightDrawerOpen = false;
+
     List<Book> booksList;
     BooksAdapterSimple adapter;
-    SharedPreferences prefs;
+    SharedPreferences prefs, notificationSharedPreferences;
     SwipeRefreshLayout refreshLayout;
     SearchView searchView;
     Integer count = 1;
@@ -105,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     ProgressBar progressBar;
     //toReadName for to-read search
     String toReadName = null;
-
+    TextView notifCountTextView;
     //Create a realm object to handle our local database
     Realm realm;
 
@@ -124,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         // Create a new empty instance of Realm
         realm = Realm.getInstance(realmConfiguration);
 
-
+        isNotifDrawerClosed = false;
         Context ctx = this.getApplicationContext();
 
         // Use the Sentry DSN (client key) from the Project Settings page on Sentry
@@ -142,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Helper.setToken(prefs.getString("token", null));
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
+        notificationSharedPreferences = getSharedPreferences("notif_count", MODE_PRIVATE);
 
         setContentView(R.layout.activity_main);
         noBookstextview = (TextView) findViewById(R.id.no_books_textView);
@@ -152,7 +159,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         notifFragment = (NotificationFragment) getSupportFragmentManager().findFragmentById(R.id.right_drawer);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-
 
         if (getIntent().getExtras() != null) {
 
@@ -310,11 +316,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
+                if (isrightDrawerOpen) {
+                    isrightDrawerOpen = false;
+                    isNotifDrawerClosed = true;
+                    notifCountTextView.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
+                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    isrightDrawerOpen = true;
+                    notifFragment.getNotifications("1");
+                }
             }
         };
         drawerLayout.setDrawerListener(toggle);
@@ -431,9 +446,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             searchView.requestFocus();
             searchView.setQuery(toReadName, true);
         }
+        return true;
+    }
 
-        notifItem.setIcon(R.drawable.ic_notif_small);
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
 
+        MenuItem item = menu.findItem(R.id.menu_notifs);
+        RelativeLayout notifRelativeLayout = (RelativeLayout) MenuItemCompat.getActionView(item);
+        notifCountTextView = (TextView) notifRelativeLayout.findViewById(R.id.notif_count);
+        notifRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Helper.setOld_total(Helper.getNew_total());
+                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    drawerLayout.closeDrawer(GravityCompat.END);
+
+                } else {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    drawerLayout.openDrawer(GravityCompat.END);
+                }
+            }
+        });
         return true;
     }
 
@@ -797,4 +831,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void refresh() {
         getLocalBooks("1");
     }
+
+    @Override
+    public void setNotifCount(int notifCount) {
+        displayNotifCount(notifCount);
+    }
+
+    private void displayNotifCount(final int notifCount) {
+        if (notifCountTextView == null){
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    displayNotifCount(notifCount);
+                }
+            }, 1000);
+        }else{
+            int initialNotifCount = notificationSharedPreferences.getInt("notif_count", 0);
+            if (!isNotifDrawerClosed) {
+                if (notifCount - initialNotifCount == 0) {
+                    notifCountTextView.setVisibility(View.GONE);
+                } else {
+                    notifCountTextView.setText(Integer.toString(notifCount - initialNotifCount));
+                    notifCountTextView.setVisibility(View.VISIBLE);
+                }
+            }
+            SharedPreferences.Editor editor = notificationSharedPreferences.edit();
+            editor.putInt("notif_count", notifCount);
+            editor.apply();
+        }
+    }
 }
+
