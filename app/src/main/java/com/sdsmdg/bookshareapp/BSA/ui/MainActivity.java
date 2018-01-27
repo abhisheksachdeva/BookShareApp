@@ -69,6 +69,7 @@ import io.realm.RealmResults;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -274,6 +275,7 @@ public class MainActivity extends AppCompatActivity implements
         TextView _email = (TextView) header.findViewById(R.id.nav_email);
         final ImageView _profilePicture = (ImageView) header.findViewById(R.id.nav_profile_picture);
         this._profilePicture = _profilePicture;
+        _profilePicture.setImageResource(R.drawable.ic_profile_pic);
 
         Picasso.Builder builder = new Picasso.Builder(MainActivity.this);
         builder.listener(new Picasso.Listener()
@@ -513,37 +515,26 @@ public class MainActivity extends AppCompatActivity implements
             String token = "Token " + prefs.getString("token", null);
 
             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-            Call<Detail> call2 = usersAPI.update_fcm_id(
+            Call<ResponseBody> call2 = usersAPI.logout(
                     token,
                     "none"
             );
-            call2.enqueue(new Callback<Detail>() {
+            call2.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<Detail> call2, Response<Detail> response) {
-                    if (response.body() != null) {
-                        if (response.body().getDetail().equals("FCM_ID changed")) {
-                            //The FCM ID was changed successfully
-                        } else {
-//                            Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
-                        }
-                        removeAnyVisibleSnackbars();
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.clear();
-                        editor.apply();
-                        Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(i);
-                        finish();
-                    } else {
-                        Toast.makeText(MainActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(i);
-                        finish();
-
-                    }
+                public void onResponse(@android.support.annotation.NonNull Call<ResponseBody> call2,
+                                       Response<ResponseBody> response) {
+                    removeAnyVisibleSnackbars();
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.clear();
+                    editor.apply();
+                    Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
+                    finish();
                 }
 
                 @Override
-                public void onFailure(Call<Detail> call, Throwable t) {
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Snackbar.make(findViewById(R.id.coordinatorlayout), R.string.you_are_offline, Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
                         @Override
                         public void onDismissed(Snackbar snackbar, int event) {
@@ -564,7 +555,6 @@ public class MainActivity extends AppCompatActivity implements
                     }).show();
                 }
             });
-
 
         } else if (id == R.id.nav_share) {
 
