@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputEditText;
@@ -90,7 +91,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
                         public void onResponse(@NonNull Call<Detail> call, @NonNull Response<Detail> response) {
                             if (response.body() != null){
                                 String detail = response.body().getDetail();
-                                if (detail.equals("Activation Link Sent")) {
+                                if (detail.equals("Congratulations, the mobile has been verified!!")) {
                                     onSignupSuccess();
                                 } else {
                                     onSignupFailed("The otp entered is incorrect.");
@@ -116,29 +117,34 @@ public class VerifyOtpActivity extends AppCompatActivity implements
     public void onSignupSuccess() {
         submitOtpButton.setEnabled(true);
         progressDialog.dismiss();
-        setResult(RESULT_OK, null);
-        showAlertDialog();
+        showSuccessUI();
     }
 
-    private void showAlertDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Success!!");
-        builder.setMessage("An activation link has been sent to your email. Click it to activate your citadel account.");
-        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+    private void showSuccessUI() {
+        Toast.makeText(this, "Congratulations!! the mobile is verified", Toast.LENGTH_SHORT).show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                startActivity(new Intent(VerifyOtpActivity.this, LoginActivity.class));
+            public void run() {
+                Intent loginIntent = new Intent(VerifyOtpActivity.this, LoginActivity.class);
+                loginIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                startActivity(loginIntent);
                 finish();
             }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.setCancelable(false);
-        dialog.show();
+        }, 1000);
     }
 
     public void onSignupFailed(String toast) {
         Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
         submitOtpButton.setEnabled(true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent loginIntent = new Intent(this, LoginActivity.class);
+        loginIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        startActivity(loginIntent);
     }
 
     /**

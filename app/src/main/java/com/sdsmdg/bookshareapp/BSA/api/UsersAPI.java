@@ -169,11 +169,18 @@ public interface UsersAPI {
     );
 
     @PUT("user/{id}/")
-    Call<UserInfo> editUserDetails(
+    Call<Detail> editUserDetails(
+            @Header("Authorization") String token,
             @Path("id") String id,
             @Body UserInfo userInfo
     );
 
+    @FormUrlEncoded
+    @POST("logout/")
+    Call<ResponseBody> logout(
+            @Header("Authorization") String token,
+            @Field("fcm_id") String fcm_id
+    );
 
     @FormUrlEncoded
     @POST("password/change/")

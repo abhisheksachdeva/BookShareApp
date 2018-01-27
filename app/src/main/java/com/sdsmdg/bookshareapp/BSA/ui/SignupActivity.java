@@ -280,43 +280,41 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         Helper.setUserEmail(email);
         final UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
 
-        Call<List<College>> collegeListCall = usersAPI.searchCollege(college);
-        collegeListCall.enqueue(new Callback<List<College>>() {
-            @Override
-            public void onResponse(Call<List<College>> call, Response<List<College>> response) {
-                if (response.body() == null || response.body().size() == 0) {
-                    Call<College> addCollegeCall = usersAPI.addCollege(college, domain);
-                    addCollegeCall.enqueue(new Callback<College>() {
-                        @Override
-                        public void onResponse(Call<College> call, Response<College> response) {
-                            if (response.body() != null) {
-                                Log.i(TAG, "College Made" + response.toString());
-                                createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact,
-                                        password);
-                            } else {
-                                Log.i(TAG, "College Not Made" + response.toString());
-                                progressDialog.dismiss();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<College> call, Throwable t) {
-                            Log.i(TAG, "College Not Made" + t.toString());
-                            progressDialog.dismiss();
-                        }
-                    });
-                } else {
-                    createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact, password);
-                }
+//        Call<List<College>> collegeListCall = usersAPI.searchCollege(college);
+//        collegeListCall.enqueue(new Callback<List<College>>() {
+//            @Override
+//            public void onResponse(Call<List<College>> call, Response<List<College>> response) {
+//                if (response.body() == null || response.body().size() == 0) {
+//                    Call<College> addCollegeCall = usersAPI.addCollege(college, domain);
+//                    addCollegeCall.enqueue(new Callback<College>() {
+//                        @Override
+//                        public void onResponse(Call<College> call, Response<College> response) {
+//                            if (response.body() != null) {
+//                                Log.i(TAG, "College Made" + response.toString());
+//                                createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact,
+//                                        password);
+//                            } else {
+//                                Log.i(TAG, "College Not Made" + response.toString());
+//                                progressDialog.dismiss();
+//                            }
+//                        }
+//
+//                        @Override
+//                        public void onFailure(Call<College> call, Throwable t) {
+//                            Log.i(TAG, "College Not Made" + t.toString());
+//                            progressDialog.dismiss();
+//                        }
+//                    });
+//                } else {
+        createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact, password);
             }
 
-            @Override
-            public void onFailure(Call<List<College>> call, Throwable t) {
-                Log.i(TAG, "College Not Made" + t.toString());
-                progressDialog.dismiss();
-            }
-        });
-    }
+//            @Override
+//            public void onFailure(Call<List<College>> call, Throwable t) {
+//                Log.i(TAG, "College Not Made" + t.toString());
+//                progressDialog.dismiss();
+//            }
+//        });
 
     public void createAccount(UsersAPI usersAPI, String fname, String lname, String email, String college,
                               String room_no, String roll_no, String contact, String password) {
@@ -416,24 +414,25 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         progressDialog.dismiss();
-        setResult(RESULT_OK, null);
         if (_contactText.getText().toString().equals("")) {
-            showAlertDialog();
+            showAlertDialog(false);
         } else{
-            Intent verifyOtpIntent = new Intent(this, VerifyOtpActivity.class);
-            verifyOtpIntent.putExtra("email", _emailText.getText().toString());
-            startActivity(verifyOtpIntent);
-            finish();
+            showAlertDialog(true);
         }
     }
 
-    private void showAlertDialog() {
+    private void showAlertDialog(final boolean isOtpVerification) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Success!!");
         builder.setMessage("An activation link has been sent to your email. Click it to activate your citadel account.");
         builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                if (isOtpVerification){
+                    Intent verifyOtpIntent = new Intent(SignupActivity.this, VerifyOtpActivity.class);
+                    verifyOtpIntent.putExtra("email", _emailText.getText().toString());
+                    startActivity(verifyOtpIntent);
+                }
                 finish();
             }
         });

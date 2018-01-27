@@ -3,6 +3,7 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,6 +19,7 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import retrofit2.Call;
@@ -28,10 +30,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
     EditText firstName, lastName, contactNo, roomNo;
     Spinner hostelSpinner;
-    String id;
+    String id, email;
     SharedPreferences preferences, hostelPref;
     String hostel;
     UserInfo userInfo;
+    CustomProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +53,7 @@ public class EditProfileActivity extends AppCompatActivity {
         int hostelResId = hostelPref.getInt("hostel_id", R.array.iitr_hostel_list);
 
         id = preferences.getString("id", null);
+        email = preferences.getString("email", null);
         firstName.setText(preferences.getString("first_name", null));
         lastName.setText(preferences.getString("last_name", null));
         contactNo.setText(preferences.getString("contact_no", null));
@@ -80,6 +84,10 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void saveClicked() {
 
+        progressDialog = new CustomProgressDialog(EditProfileActivity.this);
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
         userInfo = new UserInfo();
         userInfo.setFirstName(firstName.getText().toString());
         userInfo.setLastName(lastName.getText().toString());
@@ -88,16 +96,16 @@ public class EditProfileActivity extends AppCompatActivity {
         userInfo.setHostel(hostel);
 
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<UserInfo> call = usersAPI.editUserDetails(
+        Call<Detail> call = usersAPI.editUserDetails(
+                "Token " + preferences.getString("token", null),
                 preferences.getString("id", null),
                 userInfo
         );
-        call.enqueue(new Callback<UserInfo>() {
+        call.enqueue(new Callback<Detail>() {
             @Override
-
-            public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+            public void onResponse(Call<Detail> call, Response<Detail> response) {
+                progressDialog.dismiss();
                 if (response.body() != null) {
-                    Toast.makeText(getApplicationContext(), "Saved", Toast.LENGTH_SHORT).show();
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("first_name", firstName.getText().toString());
                     editor.putString("last_name", lastName.getText().toString());
@@ -106,15 +114,34 @@ public class EditProfileActivity extends AppCompatActivity {
                     editor.putString("hostel", hostel);
                     editor.apply();
                     Helper.setUserName(firstName.getText().toString() + " " + lastName.getText().toString());
-
+                    if (response.body().getDetail().equals("A verification code has been sent")){
+                        editor.clear();
+                        editor.apply();
+                        Intent verifyOtpIntent = new Intent
+                                (EditProfileActivity.this, VerifyOtpActivity.class);
+                        verifyOtpIntent.setFlags
+                                (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        verifyOtpIntent.putExtra("email", email);
+                        startActivity(verifyOtpIntent);
+                        finish();
+                    }else if (response.body().getDetail().equals("The profile has been updated")){
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                finish();
+                            }
+                        }, 1000);
+                    }
                 } else {
                     Toast.makeText(EditProfileActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<UserInfo> call, Throwable t) {
+            public void onFailure(Call<Detail> call, Throwable t) {
                 t.printStackTrace();
+                progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
             }
         });

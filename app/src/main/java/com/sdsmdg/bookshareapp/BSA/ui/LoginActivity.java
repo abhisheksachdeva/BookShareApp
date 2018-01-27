@@ -136,7 +136,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start the Signup activity
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
+                startActivity(intent);
             }
         });
 
@@ -262,17 +262,6 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("email1", email1);
         editor.putString("email2", email2);
         editor.apply();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
-
-                // By user_default_image we just finish the Activity and log them in automatically
-                Toast.makeText(this, "Signup Successful!", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     @Override
