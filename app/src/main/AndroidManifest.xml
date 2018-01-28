@@ -84,6 +84,7 @@
         <activity
             android:name=".ui.ChangePasswordActivity"
             android:label="Change Password"
+            android:parentActivityName=".ui.MyProfile"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.GuestActivity"

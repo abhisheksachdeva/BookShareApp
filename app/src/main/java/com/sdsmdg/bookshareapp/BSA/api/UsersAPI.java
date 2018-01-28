@@ -185,9 +185,9 @@ public interface UsersAPI {
     @FormUrlEncoded
     @POST("password/change/")
     Call<Detail> changePassword(
-            @Field("user_id") String id,
-            @Field("token") String token,
-            @Field("password") String password
+            @Header("Authorization") String token,
+            @Field("old_password") String oldPassword,
+            @Field("new_password") String newPassword
     );
 
     @FormUrlEncoded

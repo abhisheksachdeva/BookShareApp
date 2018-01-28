@@ -105,6 +105,7 @@
     <string name="asset_statements" translatable="false">[{\n  \"relation\": [\"delegate_permission/common.handle_all_urls\"],\n  \"target\": {\n    \"namespace\": \"web\",\n    \"site\": \"http://192.168.43.50\",\n  }\n}]</string>
     <string name="forgot_password_email_hint">Email</string>
     <string name="forgot_password_submit_button">Submit</string>
+    <string name="old_pwd">Old Password</string>
     <string name="new_pwd">New Password</string>
     <string name="cnf_pwd">Confirm Password</string>
     <string name="reset_password_submit_button">Reset Password</string>

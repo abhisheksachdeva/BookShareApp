@@ -155,7 +155,7 @@ public class MyProfile extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_book, menu);
+        getMenuInflater().inflate(R.menu.my_profile_menu, menu);
         return true;
     }
 
@@ -272,9 +272,12 @@ public class MyProfile extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.change_password:
+                changePassword();
+                return true;
             case android.R.id.home:
                 onBackPressed();
-                return (true);
+                return true;
         }
         return (super.onOptionsItemSelected(item));
     }
@@ -523,10 +526,9 @@ public class MyProfile extends AppCompatActivity {
         startActivity(i);
     }
 
-    public void changePassword(View view) {
+    public void changePassword() {
         Intent i = new Intent(this, ChangePasswordActivity.class);
         startActivity(i);
-        finish();
     }
 
     @Override
