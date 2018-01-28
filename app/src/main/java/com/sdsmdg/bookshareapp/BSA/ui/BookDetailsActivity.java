@@ -271,15 +271,16 @@ public class BookDetailsActivity extends AppCompatActivity {
     }
 
     public void addToMyLibraryClicked(final View view) {
-        customProgressDialog.setCancelable(false);
-        customProgressDialog.show();
+        ((Button)view).setText("Adding...");
+        view.setEnabled(false);
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<BookAddDeleteResponse> addBookCall = usersAPI.addBook(Helper.getUserEmail(), title, author, gr_id, ratingsCount, rating, gr_img_url, description, "Token " + token);
         addBookCall.enqueue(new Callback<BookAddDeleteResponse>() {
             @Override
             public void onResponse(@NonNull Call<BookAddDeleteResponse> call, @NonNull Response<BookAddDeleteResponse> response) {
                 //getDetail() returns whether the book has been added or not
-                customProgressDialog.dismiss();
+                ((Button)view).setText("Add to My Library");
+                view.setEnabled(true);
                 if (response.body() != null) {
                     String detail = response.body().getDetail();
                     Toast.makeText(BookDetailsActivity.this, detail, Toast.LENGTH_SHORT).show();
@@ -309,7 +310,8 @@ public class BookDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<BookAddDeleteResponse> call, @NonNull Throwable t) {
-                customProgressDialog.dismiss();
+                ((Button)view).setText("Add to My Library");
+                view.setEnabled(true);
                 Toast.makeText(BookDetailsActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
             }
         });
@@ -327,8 +329,8 @@ public class BookDetailsActivity extends AppCompatActivity {
 
     private void removeBook(final View view, final String bookId) {
 
-        customProgressDialog.show();
-        customProgressDialog.setCancelable(false);
+        ((Button)view).setText("Removing...");
+        view.setEnabled(false);
         RemoveBook removeBook = new RemoveBook();
         removeBook.setBookId(bookId);
         removeBook.setUserId(userId);
@@ -338,7 +340,8 @@ public class BookDetailsActivity extends AppCompatActivity {
         call.enqueue(new Callback<BookAddDeleteResponse>() {
             @Override
             public void onResponse(@NonNull Call<BookAddDeleteResponse> call, @NonNull Response<BookAddDeleteResponse> response) {
-                customProgressDialog.dismiss();
+                ((Button)view).setText("Remove from My Library");
+                view.setEnabled(true);
                 if (response.body() != null) {
                     String detail = response.body().getDetail();
                     Toast.makeText(BookDetailsActivity.this, detail, Toast.LENGTH_SHORT).show();
@@ -376,7 +379,8 @@ public class BookDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(@NonNull Call<BookAddDeleteResponse> call, @NonNull Throwable t) {
-                customProgressDialog.dismiss();
+                ((Button)view).setText("Remove from My Library");
+                view.setEnabled(true);
                 Toast.makeText(BookDetailsActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
             }
         });

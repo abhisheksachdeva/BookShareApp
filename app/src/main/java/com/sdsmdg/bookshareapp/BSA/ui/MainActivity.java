@@ -499,7 +499,7 @@ public class MainActivity extends AppCompatActivity implements
 
         if (id == R.id.nav_myprofile) {
             Intent i = new Intent(this, MyProfile.class);
-            startActivity(i);
+            startActivityForResult(i, BOOK_DETAIL_REQUEST_CODE);
 
         } else if (id == R.id.nav_grlogin) {
             SharedPreferences preff = getSharedPreferences("UserId", MODE_PRIVATE);
@@ -560,8 +560,8 @@ public class MainActivity extends AppCompatActivity implements
 
             Intent waIntent = new Intent(Intent.ACTION_SEND);
             waIntent.setType("text/plain");
-            String text = "BookShare App !! .You can download the app from here...!";
-
+            waIntent.putExtra(Intent.EXTRA_SUBJECT, "Citadel");
+            String text = "Citadel App !! .You can download the app from here...!";
             waIntent.putExtra(Intent.EXTRA_TEXT, text);
             startActivity(Intent.createChooser(waIntent, "Share with"));
 

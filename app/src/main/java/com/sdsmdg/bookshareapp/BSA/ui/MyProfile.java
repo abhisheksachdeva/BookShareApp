@@ -28,6 +28,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -77,6 +78,7 @@ import retrofit2.Response;
 public class MyProfile extends AppCompatActivity {
 
     final String TAG = MyProfile.class.getSimpleName();
+    private static final int SEARCH_RESULTS_REQUEST_CODE = 1001;
 
     TextView userName, userEmail, address, titleBooksCount;
     UserInfo user;
@@ -94,9 +96,9 @@ public class MyProfile extends AppCompatActivity {
     BookAdapter adapter;
     RecyclerView mRecyclerView;
     String Resp;
-    CustomProgressDialog customProgressDialog;
     FloatingActionButton button;
     TextView noItemsTextView;
+    ProgressBar bookProgressBar;
 
     private int noOfBooks = 0;
     private String token;
@@ -107,22 +109,21 @@ public class MyProfile extends AppCompatActivity {
         setTitle("My Profile");
         setContentView(R.layout.activity_my_profile);
 
-        customProgressDialog = new CustomProgressDialog(MyProfile.this);
-        customProgressDialog.setCancelable(false);
-        customProgressDialog.show();
         prefs = getApplicationContext().getSharedPreferences("Token", Context.MODE_PRIVATE);
 
+        bookProgressBar = (ProgressBar) findViewById(R.id.book_progress_bar);
         noItemsTextView = (TextView) findViewById(R.id.no_items_text);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         titleBooksCount = (TextView) findViewById(R.id.title_books_count);
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
         token = preferences.getString("token", null);
-        String id = preferences.getString("id", "");
+        id = preferences.getString("id", "");
 
         setUpRecyclerView(id);
 
         getUserInfoDetails(id);
+        getProfilePicture(null);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         profilePicture = (CircleImageView) findViewById(R.id.profile_picture);
@@ -139,10 +140,9 @@ public class MyProfile extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(MyProfile.this, SearchResultsActivity.class);
-                startActivity(i);
+                startActivityForResult(i, SEARCH_RESULTS_REQUEST_CODE);
             }
         });
-
     }
 
 
@@ -160,12 +160,14 @@ public class MyProfile extends AppCompatActivity {
     }
 
     public void getUserInfoDetails(String id) {
+        bookProgressBar.setVisibility(View.VISIBLE);
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<UserDetailWithCancel> call = api.getUserDetails(id, id, "Token " + prefs
                 .getString("token", null));
         call.enqueue(new Callback<UserDetailWithCancel>() {
             @Override
             public void onResponse(@NonNull Call<UserDetailWithCancel> call, @NonNull Response<UserDetailWithCancel> response) {
+                bookProgressBar.setVisibility(View.GONE);
                 if (response.body() != null) {
                     Resp = response.toString();
                     user = response.body().getUserInfo();
@@ -178,21 +180,12 @@ public class MyProfile extends AppCompatActivity {
                     noOfBooks = booksList.size();
                     titleBooksCount.setText("Books" + "(" + noOfBooks + ")");
                     adapter.notifyDataSetChanged();
-                    getProfilePicture(null);
                 }
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        customProgressDialog.dismiss();
-                    }
-                }, 1000);
-
             }
 
             @Override
             public void onFailure(@NonNull Call<UserDetailWithCancel> call, @NonNull Throwable t) {
-                customProgressDialog.dismiss();
+                bookProgressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -269,6 +262,11 @@ public class MyProfile extends AppCompatActivity {
         userName.setText(loader.getUserName(this));
         userEmail.setText(loader.getUserEmail(this));
         address.setText(loader.getRoomNo(this) + ", " + loader.getHostel(this));
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     @Override
@@ -351,6 +349,8 @@ public class MyProfile extends AppCompatActivity {
             } else if (reqCode == REQUEST_CAMERA) {
                 onCaptureImageResult(data);
             }
+        } else if (reqCode == SEARCH_RESULTS_REQUEST_CODE){
+            getUserInfoDetails(id);
         }
     }
 
