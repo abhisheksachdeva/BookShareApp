@@ -6,6 +6,7 @@ import android.app.Service;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
@@ -56,6 +57,8 @@ public class VerifyOtpActivity extends AppCompatActivity implements
     private Button submitOtpButton;
     private CustomProgressDialog progressDialog;
     private String email = null;
+    private String contact = null;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +71,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
         regListeners();
         if (getIntent().getExtras() != null){
             email = (String) getIntent().getExtras().get("email");
+            contact = (String) getIntent().getExtras().get("contact");
         }
     }
 
@@ -84,8 +88,15 @@ public class VerifyOtpActivity extends AppCompatActivity implements
                     progressDialog.setCancelable(false);
                     progressDialog.show();
                     final UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                    Call<Detail> verifyOtpCall = usersAPI.
-                            verifyOtp(email, pinHiddenEditText.getText().toString());
+                    Call<Detail> verifyOtpCall;
+                    if (contact == null) {
+                         verifyOtpCall = usersAPI.
+                                verifyOtp(email, pinHiddenEditText.getText().toString());
+                    }else{
+                        verifyOtpCall = usersAPI.
+                                changeMobile("Token " + preferences.getString("token", null),
+                                        email, contact, pinHiddenEditText.getText().toString());
+                    }
                     verifyOtpCall.enqueue(new Callback<Detail>() {
                         @Override
                         public void onResponse(@NonNull Call<Detail> call, @NonNull Response<Detail> response) {
@@ -121,17 +132,37 @@ public class VerifyOtpActivity extends AppCompatActivity implements
     }
 
     private void showSuccessUI() {
-        Toast.makeText(this, "Congratulations!! the mobile is verified", Toast.LENGTH_SHORT).show();
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
+        if (contact == null) {
+            showAlertDialog();
+        }else {
+            Toast.makeText(this, "Congratulations!! the mobile is verified", Toast.LENGTH_SHORT).show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("contact_no", contact);
+                    editor.apply();
+                    finish();
+
+                }
+            }, 1000);
+        }
+    }
+
+    private void showAlertDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Success!!");
+        builder.setMessage("An activation link has been sent to your email. Click it to activate your citadel account.");
+        builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
             @Override
-            public void run() {
-                Intent loginIntent = new Intent(VerifyOtpActivity.this, LoginActivity.class);
-                loginIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                startActivity(loginIntent);
+            public void onClick(DialogInterface dialogInterface, int i) {
                 finish();
             }
-        }, 1000);
+        });
+        AlertDialog dialog = builder.create();
+        dialog.setCancelable(false);
+        dialog.show();
     }
 
     public void onSignupFailed(String toast) {
@@ -142,9 +173,21 @@ public class VerifyOtpActivity extends AppCompatActivity implements
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Intent loginIntent = new Intent(this, LoginActivity.class);
-        loginIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-        startActivity(loginIntent);
+        Toast.makeText(this, "The mobile number is not verified", Toast.LENGTH_SHORT).show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (contact == null) {
+                    Intent loginIntent = new Intent(VerifyOtpActivity.this, LoginActivity.class);
+                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(loginIntent);
+                    finish();
+                }else{
+                    finish();
+                }
+            }
+        }, 1000);
     }
 
     /**
@@ -224,6 +267,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
         pinSixthDigitEditText = (TextInputEditText) findViewById(R.id.txt_sixth_pin);
         pinHiddenEditText = (TextInputEditText) findViewById(R.id.pin_hidden_edittext);
         submitOtpButton = (Button) findViewById(R.id.submit_otp_button);
+        preferences = getSharedPreferences("Token", MODE_PRIVATE);
     }
 
     /**

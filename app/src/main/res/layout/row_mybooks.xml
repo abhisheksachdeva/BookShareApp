@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     cardUseCompatPadding="true"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,80 +9,108 @@
     card_view:cardCornerRadius="0dp"
     card_view:cardElevation="1dp">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="16dp">
-
-        <ImageView
-            android:id="@+id/book_cover"
-            android:layout_width="72dp"
-            android:layout_height="96dp"
-            android:layout_marginRight="16dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/default_book_image" />
+        android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/delete_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:elevation="8dp"
+            android:padding="16dp"
+            android:visibility="visible"
+            tools:ignore="UnusedAttribute">
+
+            <ProgressBar
+                android:id="@+id/indeterminateBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="8dp"
+                android:text="Deleting Book..."
+                android:textStyle="bold"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/book_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="16dp">
 
-            <TextView
-                android:id="@+id/book_title"
-                android:layout_width="wrap_content"
+            <ImageView
+                android:id="@+id/book_cover"
+                android:layout_width="72dp"
+                android:layout_height="96dp"
+                android:layout_marginEnd="16dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/default_book_image" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:maxLines="2"
-                android:text="Title"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/author"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Author"
-                android:textSize="14sp" />
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:orientation="horizontal">
-
-
-                <RatingBar
-                    android:id="@+id/book_rating"
-                    style="?attr/ratingBarStyleSmall"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                     />
+                android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/ratings_count"
-                    android:layout_width="match_parent"
+                    android:id="@+id/book_title"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignBaseline="@+id/book_rating"
-                    android:layout_toRightOf="@+id/book_rating"
-                    android:layout_marginLeft="20dp"
+                    android:layout_marginBottom="6dp"
+                    android:maxLines="2"
+                    android:text="Title"
+                    android:textSize="20sp" />
+
+                <TextView
+                    android:id="@+id/author"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Author"
                     android:textSize="14sp" />
 
-            </RelativeLayout>
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal">
 
+                    <RatingBar
+                        android:id="@+id/book_rating"
+                        style="?attr/ratingBarStyleSmall"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
-
+                    <TextView
+                        android:id="@+id/ratings_count"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/book_rating"
+                        android:layout_marginStart="20dp"
+                        android:layout_toEndOf="@+id/book_rating"
+                        android:textSize="14sp" />
+                </RelativeLayout>
+            </LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <Button
-        android:id="@+id/undo_button"
-        style="@style/Base.Widget.AppCompat.Button.Borderless"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right|center"
-        android:text="Undo"
-        android:textAllCaps="true"
-        android:textColor="@android:color/white" />
-
+        <Button
+            android:id="@+id/undo_button"
+            style="@style/Base.Widget.AppCompat.Button.Borderless"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|center"
+            android:layout_marginTop="4dp"
+            android:text="Undo"
+            android:textAllCaps="true"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </FrameLayout>
 </android.support.v7.widget.CardView>
