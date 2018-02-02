@@ -25,16 +25,19 @@ public class SendEmailActivity extends AppCompatActivity implements SendEmailFra
     private void getIntentType(String emailType) {
         switch (emailType) {
             case "forgot_password_email":
+                getSupportActionBar().setTitle("Forgot Password");
                 initFragment(getResources().getString(R.string.forgot_password),
                         getResources().getString(R.string.forgot_password_message),
                         emailType);
                 break;
             case "new_activation_email":
+                getSupportActionBar().setTitle("Activate Account");
                 initFragment(getResources().getString(R.string.new_activation),
                         getResources().getString(R.string.new_activation_message),
                         emailType);
                 break;
             case "new_otp":
+                getSupportActionBar().setTitle("Send Otp");
                 initFragment(getResources().getString(R.string.new_otp),
                         getResources().getString(R.string.new_otp_message),
                         emailType);

@@ -415,24 +415,22 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         _signupButton.setEnabled(true);
         progressDialog.dismiss();
         if (_contactText.getText().toString().equals("")) {
-            showAlertDialog(false);
+            showAlertDialog();
         } else{
-            showAlertDialog(true);
+            Intent verifyOtpIntent = new Intent(SignupActivity.this, VerifyOtpActivity.class);
+            verifyOtpIntent.putExtra("email", _emailText.getText().toString());
+            startActivity(verifyOtpIntent);
+            finish();
         }
     }
 
-    private void showAlertDialog(final boolean isOtpVerification) {
+    private void showAlertDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Success!!");
         builder.setMessage("An activation link has been sent to your email. Click it to activate your citadel account.");
         builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                if (isOtpVerification){
-                    Intent verifyOtpIntent = new Intent(SignupActivity.this, VerifyOtpActivity.class);
-                    verifyOtpIntent.putExtra("email", _emailText.getText().toString());
-                    startActivity(verifyOtpIntent);
-                }
                 finish();
             }
         });

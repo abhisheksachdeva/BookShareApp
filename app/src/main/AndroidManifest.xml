@@ -129,7 +129,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ui.PasswordConfirmActivity">
+        <activity
+            android:name=".ui.PasswordConfirmActivity"
+            android:label="Reset Password">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -147,8 +149,11 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ui.SendEmailActivity"
+            android:label=""
             android:parentActivityName=".ui.LoginActivity" />
-        <activity android:name=".ui.VerifyOtpActivity">
+        <activity
+            android:name=".ui.VerifyOtpActivity"
+            android:label="Verify Otp">
         </activity>
         <receiver android:name=".Listeners.SmsReceiver">
             <intent-filter android:priority="1000">

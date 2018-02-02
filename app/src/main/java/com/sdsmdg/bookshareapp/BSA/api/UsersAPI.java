@@ -265,4 +265,13 @@ public interface UsersAPI {
              @Field("email") String email,
              @Field("otp") String otp
      );
+
+    @FormUrlEncoded
+    @POST("/change-mobile/")
+    Call<Detail> changeMobile(
+            @Header("Authorization") String token,
+            @Field("email") String email,
+            @Field("contact_no") String contactNo,
+            @Field("otp") String otp
+    );
 }

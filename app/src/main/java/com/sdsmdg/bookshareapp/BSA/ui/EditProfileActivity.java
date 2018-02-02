@@ -1,14 +1,17 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -40,6 +43,8 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         firstName = (EditText) findViewById(R.id.first_name);
         lastName = (EditText) findViewById(R.id.last_name);
@@ -110,21 +115,19 @@ public class EditProfileActivity extends AppCompatActivity {
                     editor.putString("first_name", firstName.getText().toString());
                     editor.putString("last_name", lastName.getText().toString());
                     editor.putString("room_no", roomNo.getText().toString());
-                    editor.putString("contact_no", contactNo.getText().toString());
                     editor.putString("hostel", hostel);
                     editor.apply();
                     Helper.setUserName(firstName.getText().toString() + " " + lastName.getText().toString());
                     if (response.body().getDetail().equals("A verification code has been sent")){
-                        editor.clear();
-                        editor.apply();
                         Intent verifyOtpIntent = new Intent
                                 (EditProfileActivity.this, VerifyOtpActivity.class);
-                        verifyOtpIntent.setFlags
-                                (Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        verifyOtpIntent.putExtra("contact", contactNo.getText().toString());
                         verifyOtpIntent.putExtra("email", email);
                         startActivity(verifyOtpIntent);
                         finish();
                     }else if (response.body().getDetail().equals("The profile has been updated")){
+                        editor.putString("contact_no", contactNo.getText().toString());
+                        editor.apply();
                         Handler handler = new Handler();
                         handler.postDelayed(new Runnable() {
                             @Override
@@ -158,17 +161,17 @@ public class EditProfileActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.save_details){
+            View focused = getCurrentFocus();
+            if (focused != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(focused.getWindowToken(), 0);
+            }
             saveClicked();
         }
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent i = new Intent(this, MyProfile.class);
-        i.putExtra("id", preferences.getString("id", preferences.getString("id", "")));
-        startActivity(i);
-
     }
 }
