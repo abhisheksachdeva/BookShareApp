@@ -160,7 +160,10 @@ public class MyProfile extends AppCompatActivity {
     }
 
     public void getUserInfoDetails(String id) {
+
         bookProgressBar.setVisibility(View.VISIBLE);
+        noItemsTextView.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.GONE);
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         Call<UserDetailWithCancel> call = api.getUserDetails(id, id, "Token " + prefs
                 .getString("token", null));
@@ -174,6 +177,10 @@ public class MyProfile extends AppCompatActivity {
                     List<Book> booksTempInfoList = user.getUserBookList();
                     if (booksTempInfoList.size() == 0) {
                         noItemsTextView.setVisibility(View.VISIBLE);
+                        mRecyclerView.setVisibility(View.GONE);
+                    }else{
+                        noItemsTextView.setVisibility(View.GONE);
+                        mRecyclerView.setVisibility(View.VISIBLE);
                     }
                     booksList.clear();
                     booksList.addAll(booksTempInfoList);

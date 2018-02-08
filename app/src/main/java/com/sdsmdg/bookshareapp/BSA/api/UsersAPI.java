@@ -13,7 +13,6 @@ import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserImageResult;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
-import com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response;
 import com.sdsmdg.bookshareapp.BSA.ui.College;
 
 import java.util.List;

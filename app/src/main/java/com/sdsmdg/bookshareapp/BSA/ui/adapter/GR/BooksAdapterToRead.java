@@ -24,23 +24,23 @@ public class BooksAdapterToRead extends RecyclerView.Adapter<BooksAdapterToRead.
 
     private Context context;
     private List<BookDetailsToRead> bookDetailsToReads;
-    BookDetailsToRead tempValues = null;
+    private BookDetailsToRead tempValues = null;
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        public void onItemClick(BookDetailsToRead book);
+        void onItemClick(BookDetailsToRead book);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView titleBook;
-        public TextView authorBook;
-        public ImageView imageBook;
-        public RatingBar ratingBook;
-        public TextView ratingCount;
-        public TextView link;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView titleBook;
+        TextView authorBook;
+        ImageView imageBook;
+        RatingBar ratingBook;
+        TextView ratingCount;
+        TextView link;
         Context context;
 
-        public ViewHolder(View v, Context context) {
+        ViewHolder(View v, Context context) {
             super(v);
             titleBook = (TextView) v.findViewById(R.id.row_books_title);
             authorBook = (TextView) v.findViewById(R.id.row_books_author);

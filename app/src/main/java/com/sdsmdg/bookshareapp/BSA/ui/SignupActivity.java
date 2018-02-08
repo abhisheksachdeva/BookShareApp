@@ -8,10 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.TextInputLayout;
-import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -28,27 +26,18 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
-import com.sdsmdg.bookshareapp.BSA.api.otp.MSGApi;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.CollegeAdapter;
-import com.sdsmdg.bookshareapp.BSA.ui.fragments.VerifyOtpFragment;
-import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class SignupActivity extends AppCompatActivity implements VerifyOtpFragment.OnOTPVerifyListener {
+public class SignupActivity extends AppCompatActivity {
     private static final String TAG = "SignupActivity";
 
     @InjectView(R.id.input_Fname)
@@ -344,73 +333,6 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
         });
     }
 
-    public void sendOTP(String contact) {
-
-        String generatedOTP = generateOTP();
-        sendMessage("Your OTP for citadel is " + generatedOTP, contact);
-
-        Bundle bundle = new Bundle();
-        bundle.putString("generated_otp", generatedOTP);
-
-        DialogFragment dialog = new VerifyOtpFragment();
-        dialog.setCancelable(false);
-        dialog.setArguments(bundle);
-
-        dialog.show(getSupportFragmentManager(), "tagOTP");
-    }
-
-    public void sendMessage(String message, String contactNo) {
-
-        //Change the contact no. according to the need of otp api
-        contactNo = "91" + contactNo;
-
-        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-        OkHttpClient.Builder client = new OkHttpClient.Builder();
-
-        client.interceptors().add(interceptor);
-
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("https://control.msg91.com/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .client(client.build())
-                .build();
-
-        MSGApi api = retrofit.create(MSGApi.class);
-        Call<com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response> call = api.sendOTP(
-                CommonUtilities.MSG_AUTH_KEY,
-                contactNo,
-                message,
-                "CITADL",
-                4,
-                91,
-                "json"
-        );
-
-        call.enqueue(new Callback<com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response>() {
-            @Override
-            public void onResponse(Call<com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response> call, Response<com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response> response) {
-                if (response.body().getType().equals("success")) {
-                    Toast.makeText(getApplicationContext(), "OTP sent", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getApplicationContext(), "OTP not sent", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "OTP failed to send", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-    }
-
-    public String generateOTP() {
-        generatedOTP = String.valueOf((int) (1000 + Math.random() * 8999));
-        return generatedOTP;
-    }
-
     public void onSignupSuccess() {
         _signupButton.setEnabled(true);
         progressDialog.dismiss();
@@ -503,22 +425,6 @@ public class SignupActivity extends AppCompatActivity implements VerifyOtpFragme
             enrollInputLayout.setErrorEnabled(false);
         }
         return valid;
-    }
-
-    @Override
-    public void onOTPVerified() {
-
-        String fname = _FnameText.getText().toString();
-        String lname = _LnameText.getText().toString();
-        String email = _emailText.getText().toString();
-        String password = _passwordText.getText().toString();
-        String room_no = _roomText.getText().toString();
-        String roll_no = _rollText.getText().toString();
-        String college = _collegeText.getText().toString();
-        String contact = _contactText.getText().toString();
-
-        //As the otp is verified now, the user signs up with his correct no. in the database
-        requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
     }
 
     private void addColleges() {

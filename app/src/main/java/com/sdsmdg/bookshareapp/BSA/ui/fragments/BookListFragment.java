@@ -72,6 +72,7 @@ public class BookListFragment extends Fragment {
         bookList.clear();
         progressBar.setVisibility(View.VISIBLE);
         no_books.setVisibility(View.GONE);
+        resultsList.setVisibility(View.GONE);
 
         BooksAPI api = NetworkingFactory.getGRInstance().getBooksApi();
         Call<GoodreadsResponse> call = api.getBooks(query, field, key);
@@ -85,6 +86,8 @@ public class BookListFragment extends Fragment {
                     adapter.notifyDataSetChanged();
                     if (bookList.size() == 0) {
                         no_books.setVisibility(View.VISIBLE);
+                    }else{
+                        resultsList.setVisibility(View.VISIBLE);
                     }
                     resp = response.toString();
                 }
@@ -93,6 +96,11 @@ public class BookListFragment extends Fragment {
             @Override
             public void onFailure(Call<GoodreadsResponse> call, Throwable t) {
                 progressBar.setVisibility(View.GONE);
+                if (bookList.size() == 0){
+                    no_books.setVisibility(View.VISIBLE);
+                }else{
+                    resultsList.setVisibility(View.VISIBLE);
+                }
                 resp = "failed";
             }
         });
