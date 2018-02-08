@@ -3,18 +3,15 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -33,10 +30,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
+import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
@@ -131,45 +133,13 @@ public class UserSearchActivity extends ActionBarActivity {
         }
     }
 
-    private void doSearch(String query) {
-
-        userInfoList.clear();
-        progressBar.setVisibility(View.VISIBLE);
-        noUsersTextView.setVisibility(View.GONE);
-
+    private Observable<List<UserInfo>> dataFromNetwork(final String query) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
-
-        Call<List<UserInfo>> call = api.searchUser(query, "Token " + preferences.getString("token", null));
-        call.enqueue(new Callback<List<UserInfo>>() {
-            @Override
-            public void onResponse(Call<List<UserInfo>> call, Response<List<UserInfo>> response) {
-                progressBar.setVisibility(View.GONE);
-                if (response.body().size() != 0) {
-                    userInfoList.addAll(response.body());
-                } else {
-                    noUsersTextView.setVisibility(View.VISIBLE);
-                }
-                adapter.notifyDataSetChanged();
-
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        customProgressDialog.dismiss();
-                    }
-                }, 1000);
-            }
-
-            @Override
-            public void onFailure(Call<List<UserInfo>> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
-                customProgressDialog.dismiss();
-            }
-        });
+        return api.searchUser
+                (query, "Token " + preferences.getString("token", null))
+                .subscribeOn(Schedulers.io());
     }
-
 
     @Override
     public void onBackPressed() {
@@ -205,23 +175,12 @@ public class UserSearchActivity extends ActionBarActivity {
             edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
             edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
             //this is a listener to do a search when the user clicks on search button
-            edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-                @Override
-                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                        doSearch(edtSeach.getText().toString());
-                        return true;
-                    }
-                    return false;
-                }
-            });
             edtSeach.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     edtSeach.requestFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
-
                 }
             });
 
@@ -273,25 +232,55 @@ public class UserSearchActivity extends ActionBarActivity {
         RxSearchObservable.fromView(edtSeach)
                 .debounce(300, TimeUnit.MILLISECONDS)
                 .distinctUntilChanged()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
+                .doOnNext(new Consumer<String>() {
                     @Override
-                    public void onError(Throwable e) {
+                    public void accept(String s) throws Exception {
+                        showProgressBar();
                     }
-
+                })
+                .switchMap(new Function<String, ObservableSource<List<UserInfo>>>() {
                     @Override
-                    public void onComplete() {
+                    public ObservableSource<List<UserInfo>> apply(String query) throws Exception {
+                        return dataFromNetwork(query);
                     }
-
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<UserInfo>>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable disposable) {
+                    public void accept(List<UserInfo> userInfos) throws Exception {
+                        hideProgressBar();
+                        showResults(userInfos);
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onNext(String s) {
-                        doSearch(s);
+                    public void accept(Throwable throwable) throws Exception {
+                        hideProgressBar();
+                        Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    private void showResults(List<UserInfo> userInfos) {
+        userInfoList.clear();
+        userInfoList.addAll(userInfos);
+        if (userInfoList.size() == 0){
+            noUsersTextView.setVisibility(View.VISIBLE);
+            usersRecyclerView.setVisibility(View.GONE);
+        }else{
+            noUsersTextView.setVisibility(View.GONE);
+            usersRecyclerView.setVisibility(View.VISIBLE);
+        }
+        adapter.notifyDataSetChanged();
+    }
+
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+        noUsersTextView.setVisibility(View.GONE);
+        usersRecyclerView.setVisibility(View.GONE);
     }
 }

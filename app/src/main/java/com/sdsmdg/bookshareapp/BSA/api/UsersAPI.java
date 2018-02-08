@@ -17,6 +17,7 @@ import com.sdsmdg.bookshareapp.BSA.ui.College;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -210,7 +211,7 @@ public interface UsersAPI {
     );
 
     @GET("search-user/")
-    Call<List<UserInfo>> searchUser(
+    Observable<List<UserInfo>> searchUser(
             @Query("search") String searchQuery,
             @Header("Authorization") String token
     );
