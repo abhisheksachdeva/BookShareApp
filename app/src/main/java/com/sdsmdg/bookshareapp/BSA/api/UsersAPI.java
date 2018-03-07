@@ -205,7 +205,7 @@ public interface UsersAPI {
     );
 
     @GET("search/")
-    Call<List<Book>> search(
+    Observable<List<Book>> search(
             @Query("search") String searchQuery,
             @Header("Authorization") String token
     );

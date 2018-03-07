@@ -3,7 +3,6 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -25,6 +23,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -35,12 +34,12 @@ import android.widget.Toast;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.jakewharton.picasso.OkHttp3Downloader;
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
-import com.sdsmdg.bookshareapp.BSA.Listeners.NotifCountListener;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.firebase_classes.MyFirebaseMessagingService;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterSimple;
@@ -49,7 +48,6 @@ import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.sdsmdg.bookshareapp.BSA.utils.RxSearchObservable;
 import com.sdsmdg.bookshareapp.BSA.utils.RxSearchViewObservable;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
 
 import java.io.IOException;
@@ -57,10 +55,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
 import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
@@ -89,21 +91,16 @@ public class MainActivity extends AppCompatActivity implements
     SharedPreferences prefs, notificationSharedPreferences;
     SwipeRefreshLayout refreshLayout;
     SearchView searchView;
-    Integer count = 1;
     String Resp;
-
-    CustomProgressDialog customProgressDialog;
 
     //Creates a list of visible snackbars
     List<Snackbar> visibleSnackbars = new ArrayList<>();
-    String resplocal;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     RecyclerView localBooksList;
     Toolbar toolbar;
     int backCounter = 0;
     ImageView _profilePicture;
-    String url;
     NotificationFragment notifFragment;
     Boolean progress_isVisible = false;
     //Search Menu item reference in the toolbar
@@ -115,10 +112,6 @@ public class MainActivity extends AppCompatActivity implements
     TextView notifCountTextView;
     //Create a realm object to handle our local database
     Realm realm;
-
-    public String getResp() {
-        return Resp;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +125,6 @@ public class MainActivity extends AppCompatActivity implements
         realm = Realm.getInstance(realmConfiguration);
 
         isNotifDrawerClosed = false;
-        Context ctx = this.getApplicationContext();
 
         // Use the Sentry DSN (client key) from the Project Settings page on Sentry
         //Sentry.init(CommonUtilities.SENTRY_DSN, new AndroidSentryClientFactory(ctx));
@@ -275,22 +267,12 @@ public class MainActivity extends AppCompatActivity implements
         TextView _email = (TextView) header.findViewById(R.id.nav_email);
         final ImageView _profilePicture = (ImageView) header.findViewById(R.id.nav_profile_picture);
         this._profilePicture = _profilePicture;
-        _profilePicture.setImageResource(R.drawable.ic_profile_pic);
 
         Picasso.Builder builder = new Picasso.Builder(MainActivity.this);
-        builder.listener(new Picasso.Listener()
-        {
-            @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-            {
-                exception.printStackTrace();
-                _profilePicture.setImageResource(R.drawable.user_default_image);
-
-            }
-        });
         builder.downloader(new OkHttp3Downloader(getOkHttpClient())).build()
-                .load(CommonUtilities.currentUserImageUrl).into(_profilePicture);
-
+                .load(CommonUtilities.currentUserImageUrl)
+                .placeholder(R.drawable.ic_profile_pic)
+                .into(_profilePicture);
 
         Helper.imageChanged = false;
         _profilePicture.setOnClickListener(new View.OnClickListener() {
@@ -358,56 +340,35 @@ public class MainActivity extends AppCompatActivity implements
         startActivityForResult(i, REQUEST_CODE);
     }
 
-    private void doSearch(String query) {
-
-        booksList.clear();
+    private void showProgressBar() {
         progressBar.setVisibility(View.VISIBLE);
         noBookstextview.setVisibility(View.GONE);
+        localBooksList.setVisibility(View.GONE);
+    }
 
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private Observable<List<Book>> dataFromNetwork(final String query) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<List<Book>> call = api.search(query, "Token " + prefs.getString("token", null));
-        call.enqueue(new Callback<List<Book>>() {
-            @Override
-            public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
-                progressBar.setVisibility(View.GONE);
-                if (response.body().size() != 0) {
-                    resplocal = response.toString();
-                    List<Book> localBooksList = response.body();
-                    noBookstextview.setVisibility(View.GONE);
-                    booksList.addAll(localBooksList);
-                    refreshLayout.setRefreshing(false);
-                } else {
-                    resplocal = "null";
-                    noBookstextview.setVisibility(View.VISIBLE);
-                }
-                adapter.notifyDataSetChanged();
-                removeAnyVisibleSnackbars();
-            }
+        return api.search
+                (query, "Token " + prefs.getString("token", null))
+                .subscribeOn(Schedulers.io());
+    }
 
-            @Override
-            public void onFailure(Call<List<Book>> call, Throwable t) {
-                progressBar.setVisibility(View.GONE);
-                Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
-                    @Override
-                    public void onDismissed(Snackbar snackbar, int event) {
-                        visibleSnackbars.remove(snackbar);
-                        super.onDismissed(snackbar, event);
-                    }
-
-                    @Override
-                    public void onShown(Snackbar snackbar) {
-                        visibleSnackbars.add(snackbar);
-                        super.onShown(snackbar);
-                    }
-                }).setAction("RETRY", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        refresh();
-                    }
-                }).show();
-                refreshLayout.setRefreshing(false);
-            }
-        });
+    private void showResults(List<Book> bookList) {
+        booksList.clear();
+        booksList.addAll(bookList);
+        refreshLayout.setRefreshing(false);
+        if (bookList.size() == 0){
+            noBookstextview.setVisibility(View.VISIBLE);
+            localBooksList.setVisibility(View.GONE);
+        }else{
+            noBookstextview.setVisibility(View.GONE);
+            localBooksList.setVisibility(View.VISIBLE);
+        }
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -422,6 +383,7 @@ public class MainActivity extends AppCompatActivity implements
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                refreshLayout.setEnabled(false);
                 notifItem.setVisible(false);
                 return true;
             }
@@ -430,8 +392,10 @@ public class MainActivity extends AppCompatActivity implements
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 notifItem.setVisible(true);
                 getLocalBooks("1");
+                localBooksList.setVisibility(View.VISIBLE);
                 noBookstextview.setVisibility(View.GONE);
-
+                refreshLayout.setEnabled(true);
+                refreshLayout.setRefreshing(true);
                 return true;
             }
         });
@@ -583,7 +547,7 @@ public class MainActivity extends AppCompatActivity implements
             public void onResponse(Call<BookList> call, Response<BookList> response) {
                 if (response.body() != null) {
                     Resp = response.toString();
-                    List<Book> localBooksList = response.body().getResults();
+                    List<Book> localBookList = response.body().getResults();
                     if (page.equals("1")) {
 
                         adapter.setTotalCount(response.body().getCount());
@@ -592,7 +556,7 @@ public class MainActivity extends AppCompatActivity implements
                         realm.beginTransaction();
                         //Remove all previously stored books
                         realm.deleteAll();
-                        realm.copyToRealmOrUpdate(localBooksList);
+                        realm.copyToRealmOrUpdate(localBookList);
                         realm.commitTransaction();
 
                         booksList.clear();
@@ -600,10 +564,12 @@ public class MainActivity extends AppCompatActivity implements
 
                         removeAnyVisibleSnackbars();
                     }
-                    booksList.addAll(localBooksList);
+                    booksList.addAll(localBookList);
                     if (booksList.size() == 0){
+                        localBooksList.setVisibility(View.GONE);
                         noBookstextview.setVisibility(View.VISIBLE);
                     }else{
+                        localBooksList.setVisibility(View.VISIBLE);
                         noBookstextview.setVisibility(View.GONE);
                     }
                     adapter.notifyDataSetChanged();
@@ -654,31 +620,55 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 })
                 .distinctUntilChanged()
-                .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Observer<String>() {
+                .doOnNext(new Consumer<String>() {
                     @Override
-                    public void onError(Throwable e) {
+                    public void accept(String s) throws Exception {
+                        showProgressBar();
                     }
-
+                })
+                .switchMap(new Function<String, ObservableSource<List<Book>>>() {
                     @Override
-                    public void onComplete() {
+                    public ObservableSource<List<Book>> apply(String query) throws Exception {
+                        return dataFromNetwork(query);
                     }
-
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Book>>() {
                     @Override
-                    public void onSubscribe(@NonNull Disposable disposable) {
+                    public void accept(List<Book> userInfos) throws Exception {
+                        hideProgressBar();
+                        showResults(userInfos);
                     }
-
+                }, new Consumer<Throwable>() {
                     @Override
-                    public void onNext(String s) {
-                        doSearch(s);
+                    public void accept(Throwable throwable) throws Exception {
+                        hideProgressBar();
+                        Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar snackbar, int event) {
+                                visibleSnackbars.remove(snackbar);
+                                super.onDismissed(snackbar, event);
+                            }
+
+                            @Override
+                            public void onShown(Snackbar snackbar) {
+                                visibleSnackbars.add(snackbar);
+                                super.onShown(snackbar);
+                            }
+                        }).setAction("RETRY", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                refresh();
+                            }
+                        }).show();
+                        refreshLayout.setRefreshing(false);
                     }
                 });
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
-
     }
 
     public boolean isOnline() {
