@@ -1,17 +1,17 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -30,15 +30,17 @@ import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.CollegeAdapter;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class SignupActivity extends AppCompatActivity {
-    private static final String TAG = "SignupActivity";
+
+    private static final String TAG = AppCompatActivity.class.getSimpleName();
 
     @InjectView(R.id.input_Fname)
     EditText _FnameText;
@@ -56,8 +58,6 @@ public class SignupActivity extends AppCompatActivity {
     EditText _rollText;
     @InjectView(R.id.hostel_spinner)
     Spinner _hostelSpinner;
-    @InjectView(R.id.input_college)
-    EditText _collegeText;
     @InjectView(R.id.input_contact)
     EditText _contactText;
     @InjectView(R.id.btn_signup)
@@ -90,8 +90,8 @@ public class SignupActivity extends AppCompatActivity {
     ArrayList<College> colleges;
     int hostelResId = R.array.iitr_hostel_list;
     boolean showPassword = false, showCnfPassword = false;
-    String generatedOTP;
     CustomProgressDialog progressDialog;
+    College college;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -107,21 +107,18 @@ public class SignupActivity extends AppCompatActivity {
         _domainSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                College college = (College) parent.getItemAtPosition(position);
+                college = (College) parent.getItemAtPosition(position);
                 domain = college.getCollegeDomain();
-                _collegeText.setText(college.getCollegeName());
                 domainTextView.setText(college.getCollegeDomain());
                 getHostels(college.getCollegeName());
                 setHostelSpinner();
                 writeSharedPreferences();
                 hostelAdapter.notifyDataSetChanged();
-                _collegeText.setEnabled(false);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 domain = "@iitr.ac.in";
-                _collegeText.setText(getResources().getString(R.string.iitr));
                 hostelResId = R.array.iitr_hostel_list;
             }
         });
@@ -224,14 +221,6 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    public void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
-    }
-
     public void signup(String hostel) {
 
         if (!validate()) {
@@ -239,28 +228,18 @@ public class SignupActivity extends AppCompatActivity {
             return;
         }
 
-        //_signupButton.setEnabled(false);
-
         progressDialog = new CustomProgressDialog(SignupActivity.this);
         progressDialog.setCancelable(false);
 
         String fname = _FnameText.getText().toString();
         String lname = _LnameText.getText().toString();
-        String email = _emailText.getText().toString();
+        String email = _emailText.getText().toString() + domain;
         String password = _passwordText.getText().toString();
         String room_no = _roomText.getText().toString();
         String roll_no = _rollText.getText().toString();
-        String college = _collegeText.getText().toString();
         String contact = _contactText.getText().toString();
 
-        //If the contact no. is empty, sign up directly, else, open the otp dialog to verify the entered contact no.
-
-//        if (!contact.equals("")) {
-//            sendOTP(contact);
-//        } else {
-//            requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
-        //}
-        requestSignUp(fname, lname, email, password, room_no, roll_no, college, contact);
+        requestSignUp(fname, lname, email, password, room_no, roll_no, college.getCollegeName(), contact);
     }
 
     private void requestSignUp(final String fname, final String lname, final String email, final String password,
@@ -269,41 +248,43 @@ public class SignupActivity extends AppCompatActivity {
         Helper.setUserEmail(email);
         final UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
 
-//        Call<List<College>> collegeListCall = usersAPI.searchCollege(college);
-//        collegeListCall.enqueue(new Callback<List<College>>() {
-//            @Override
-//            public void onResponse(Call<List<College>> call, Response<List<College>> response) {
-//                if (response.body() == null || response.body().size() == 0) {
-//                    Call<College> addCollegeCall = usersAPI.addCollege(college, domain);
-//                    addCollegeCall.enqueue(new Callback<College>() {
-//                        @Override
-//                        public void onResponse(Call<College> call, Response<College> response) {
-//                            if (response.body() != null) {
-//                                Log.i(TAG, "College Made" + response.toString());
-//                                createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact,
-//                                        password);
-//                            } else {
-//                                Log.i(TAG, "College Not Made" + response.toString());
-//                                progressDialog.dismiss();
-//                            }
-//                        }
-//
-//                        @Override
-//                        public void onFailure(Call<College> call, Throwable t) {
-//                            Log.i(TAG, "College Not Made" + t.toString());
-//                            progressDialog.dismiss();
-//                        }
-//                    });
-//                } else {
-        createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact, password);
+        Call<List<College>> collegeListCall = usersAPI.searchCollege(college);
+        collegeListCall.enqueue(new Callback<List<College>>() {
+            @Override
+            public void onResponse(@NonNull Call<List<College>> call, @NonNull Response<List<College>> response) {
+                if (response.body() == null || response.body().size() == 0) {
+                    Call<College> addCollegeCall = usersAPI.addCollege(college, domain);
+                    addCollegeCall.enqueue(new Callback<College>() {
+                        @Override
+                        public void onResponse(@NonNull Call<College> call, @NonNull Response<College> response) {
+                            if (response.body() != null) {
+                                Log.i(TAG, "College Made" + response.toString());
+                                createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact,
+                                        password);
+                            } else {
+                                Log.i(TAG, "College Not Made" + response.toString());
+                                progressDialog.dismiss();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<College> call, @NonNull Throwable t) {
+                            Log.i(TAG, "College Not Made" + t.toString());
+                            progressDialog.dismiss();
+                        }
+                    });
+                } else {
+                    createAccount(usersAPI, fname, lname, email, college, room_no, roll_no, contact, password);
+                }
             }
 
-//            @Override
-//            public void onFailure(Call<List<College>> call, Throwable t) {
-//                Log.i(TAG, "College Not Made" + t.toString());
-//                progressDialog.dismiss();
-//            }
-//        });
+            @Override
+            public void onFailure(@NonNull Call<List<College>> call, @NonNull Throwable t) {
+                Log.i(TAG, "College Not Made" + t.toString());
+                progressDialog.dismiss();
+            }
+        });
+    }
 
     public void createAccount(UsersAPI usersAPI, String fname, String lname, String email, String college,
                               String room_no, String roll_no, String contact, String password) {
@@ -312,13 +293,13 @@ public class SignupActivity extends AppCompatActivity {
                 FirebaseInstanceId.getInstance().getToken(), password, college);
         userInfoCall.enqueue(new retrofit2.Callback<Signup>() {
             @Override
-            public void onFailure(Call<Signup> call, Throwable t) {
+            public void onFailure(@NonNull Call<Signup> call, @NonNull Throwable t) {
                 onSignupFailed("Check your network connection properly");
                 progressDialog.dismiss();
             }
 
             @Override
-            public void onResponse(Call<Signup> call, Response<Signup> response) {
+            public void onResponse(@NonNull Call<Signup> call, @NonNull Response<Signup> response) {
                 if (response.body() != null) {
                     String detail = response.body().getDetail();
 
@@ -340,7 +321,7 @@ public class SignupActivity extends AppCompatActivity {
             showAlertDialog();
         } else{
             Intent verifyOtpIntent = new Intent(SignupActivity.this, VerifyOtpActivity.class);
-            verifyOtpIntent.putExtra("email", _emailText.getText().toString());
+            verifyOtpIntent.putExtra("email", _emailText.getText().toString() + domain);
             startActivity(verifyOtpIntent);
             finish();
         }

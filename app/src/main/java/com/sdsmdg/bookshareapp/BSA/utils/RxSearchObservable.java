@@ -1,6 +1,5 @@
 package com.sdsmdg.bookshareapp.BSA.utils;
 
-import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
@@ -8,16 +7,9 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.sdsmdg.bookshareapp.BSA.ui.SearchResultsActivity;
 
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
-
-/**
- * Created by harshit on 17/1/18.
- */
 
 public class RxSearchObservable {
 

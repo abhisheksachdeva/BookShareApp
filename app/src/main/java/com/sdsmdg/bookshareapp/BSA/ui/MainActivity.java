@@ -23,7 +23,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -39,14 +38,12 @@ import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
-import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.firebase_classes.MyFirebaseMessagingService;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterSimple;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.NotificationFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
-import com.sdsmdg.bookshareapp.BSA.utils.RxSearchObservable;
 import com.sdsmdg.bookshareapp.BSA.utils.RxSearchViewObservable;
 import com.squareup.picasso.Picasso;
 
@@ -57,10 +54,7 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
 import io.reactivex.functions.Predicate;
@@ -117,12 +111,8 @@ public class MainActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Realm.init(this);
-
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
-
         // Create a new empty instance of Realm
-        realm = Realm.getInstance(realmConfiguration);
+        realm = Realm.getDefaultInstance();
 
         isNotifDrawerClosed = false;
 
@@ -832,7 +822,7 @@ public class MainActivity extends AppCompatActivity implements
                 if (notifCount - initialNotifCount == 0) {
                     notifCountTextView.setVisibility(View.GONE);
                 } else {
-                    notifCountTextView.setText(Integer.toString(notifCount - initialNotifCount));
+                    notifCountTextView.setText(String.valueOf(notifCount - initialNotifCount));
                     notifCountTextView.setVisibility(View.VISIBLE);
                 }
             }

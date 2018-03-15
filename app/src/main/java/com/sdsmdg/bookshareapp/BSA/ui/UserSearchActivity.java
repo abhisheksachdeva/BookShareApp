@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -32,20 +32,12 @@ import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
-import io.reactivex.Observer;
-import io.reactivex.Scheduler;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.functions.Function;
-import io.reactivex.functions.Predicate;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class UserSearchActivity extends ActionBarActivity {
+public class UserSearchActivity extends AppCompatActivity {
 
     private MenuItem mSearchAction;
     private boolean isSearchOpened = false;
@@ -54,20 +46,16 @@ public class UserSearchActivity extends ActionBarActivity {
     RecyclerView usersRecyclerView;
     List<UserInfo> userInfoList = new ArrayList<>();
     SharedPreferences preferences;
-    EditText queryEditText;
     UsersAdapter adapter;
     TextView noUsersTextView;
     CustomProgressDialog customProgressDialog;
     private Toolbar mToolbar;
     private ProgressBar progressBar;
 
-    private final String TAG = UserSearchActivity.class.getSimpleName();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_search);
-
 
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(mToolbar);
@@ -97,7 +85,6 @@ public class UserSearchActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_user_search, menu);
         return true;
     }
 
@@ -112,25 +99,13 @@ public class UserSearchActivity extends ActionBarActivity {
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
-                return (true);
-
+                return true;
             case R.id.action_settings:
                 return true;
             case R.id.action_search:
-//                handleMenuSearch();
                 return true;
-
-
         }
         return (super.onOptionsItemSelected(item));
-    }
-
-    public void hideKeyboard() {
-        View view = this.getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-        }
     }
 
     private Observable<List<UserInfo>> dataFromNetwork(final String query) {
@@ -153,7 +128,8 @@ public class UserSearchActivity extends ActionBarActivity {
     protected void handleMenuSearch() {
         ActionBar action = getSupportActionBar(); //get the actionbar
 
-        if (isSearchOpened) { //test if the search is open
+        if (isSearchOpened) {
+            //test if the search is open
             action.setDisplayShowCustomEnabled(false); //disable a custom view inside the actionbar
             action.setDisplayShowTitleEnabled(true); //show the title in the action bar
 
@@ -162,14 +138,13 @@ public class UserSearchActivity extends ActionBarActivity {
             imm.hideSoftInputFromWindow(edtSeach.getWindowToken(), 0);
 
             //add the search icon in the action bar
-//            mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_search));
-
+            //mSearchAction.setIcon(getResources().getDrawable(R.drawable.ic_search));
             isSearchOpened = false;
-        } else { //open the search entry
-
+        } else {
+            //open the search entry
             action.setDisplayShowCustomEnabled(true); //enable it to display a
             // custom view in the action bar.
-            action.setCustomView(R.layout.user_search_bar);//add the custom view
+            action.setCustomView(R.layout.user_search_bar); //add the custom view
             action.setDisplayShowTitleEnabled(false); //hide the title
 
             edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
@@ -201,7 +176,7 @@ public class UserSearchActivity extends ActionBarActivity {
 
         action.setDisplayShowCustomEnabled(true); //enable it to display a
         // custom view in the action bar.
-        action.setCustomView(R.layout.user_search_bar);//add the custom view
+        action.setCustomView(R.layout.user_search_bar); //add the custom view
         action.setDisplayShowTitleEnabled(false); //hide the title
         edtSeach = (EditText) action.getCustomView().findViewById(R.id.edtSearch); //the text editor
         edtSeach.setInputType(InputType.TYPE_TEXT_FLAG_NO_SUGGESTIONS);
@@ -221,7 +196,6 @@ public class UserSearchActivity extends ActionBarActivity {
         //open the keyboard focused in the edtSearch
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
-        //add the close icon
 
         regRxObservable();
     }

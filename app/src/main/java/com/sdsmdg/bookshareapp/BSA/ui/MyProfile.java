@@ -14,7 +14,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -39,7 +38,6 @@ import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserDetailWithCancel;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
-import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
 import com.sdsmdg.bookshareapp.BSA.api.models.UserImageResult;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BookAdapter;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
@@ -48,7 +46,6 @@ import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.sdsmdg.bookshareapp.BSA.utils.PermissionUtils;
 import com.sdsmdg.bookshareapp.BSA.utils.SPDataLoader;
 import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -62,7 +59,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import id.zelory.compressor.Compressor;
-
 import jp.wasabeef.blurry.Blurry;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;

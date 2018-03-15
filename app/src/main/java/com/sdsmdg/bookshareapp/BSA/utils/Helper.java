@@ -2,9 +2,9 @@ package com.sdsmdg.bookshareapp.BSA.utils;
 
 public class Helper {
 
-    public static String accessToken = "";
-    public static String accessSecret = "";
-    public static String userGRid = null;
+    private static String accessToken = "";
+    private static String accessSecret = "";
+    private static String userGRid = null;
 
     public static String token, id;
 
@@ -48,12 +48,12 @@ public class Helper {
         Helper.accessSecret = accessSecret;
     }
 
-    public static String userEmail = "";
-    public static String userName = "";
-    public static String userId = "";
-    public static String bookId = "";
-    public static Integer new_total = 0;
-    public static Integer old_total = 1;
+    private static String userEmail = "";
+    private static String userName = "";
+    private static String userId = "";
+    private static String bookId = "";
+    private static Integer new_total = 0;
+    private static Integer old_total = 1;
     public static boolean imageChanged = false;
 
     public static Integer getNew_total() {
@@ -88,7 +88,7 @@ public class Helper {
         Helper.bookId = bookId;
     }
 
-    public static String bookTitle = "";
+    private static String bookTitle = "";
 
     public static String getUserId() {
         return userId;

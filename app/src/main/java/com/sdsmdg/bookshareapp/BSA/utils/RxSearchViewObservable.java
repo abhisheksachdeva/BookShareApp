@@ -5,10 +5,6 @@ import android.support.v7.widget.SearchView;
 import io.reactivex.Observable;
 import io.reactivex.subjects.PublishSubject;
 
-/**
- * Created by harshit on 18/1/18.
- */
-
 public class RxSearchViewObservable {
 
     public static Observable<String> fromView(final SearchView searchView) {

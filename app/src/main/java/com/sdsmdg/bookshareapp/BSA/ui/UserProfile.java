@@ -42,7 +42,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import io.sentry.event.User;
 import jp.wasabeef.blurry.Blurry;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -70,7 +69,6 @@ public class UserProfile extends AppCompatActivity {
     CustomProgressDialog customProgressDialog;
     SharedPreferences prefs;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,7 +88,6 @@ public class UserProfile extends AppCompatActivity {
         background_image = (ImageView) findViewById(R.id.background_image);
         booksCount = (TextView) findViewById(R.id.books_count);
         scrollView = (NestedScrollView) findViewById(R.id.scroll);
-
 
         String id = getIntent().getExtras().getString("id");
 
@@ -135,7 +132,6 @@ public class UserProfile extends AppCompatActivity {
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(httpclient.build())
                 .build();
-
 
         UsersAPI api = retrofit.create(UsersAPI.class);
         Call<UserDetailWithCancel> call = api.getUserDetails(id, id, "Token " + prefs
@@ -230,7 +226,7 @@ public class UserProfile extends AppCompatActivity {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new Interceptor() {
                     @Override
-                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                    public okhttp3.Response intercept(@NonNull Chain chain) throws IOException {
                         Request newRequest = chain.request().newBuilder()
                                 .addHeader("Authorization", "Token " + prefs
                                         .getString("token", null))
