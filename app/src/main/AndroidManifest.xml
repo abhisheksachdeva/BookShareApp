@@ -6,8 +6,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
+        android:name=".BSApplication"
         android:allowBackup="true"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/logo1"
@@ -17,7 +20,7 @@
         <activity
             android:name=".ui.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -25,9 +28,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="192.168.43.50"
+                    android:host="bookshare-env.ctnpygtfsy.us-east-2.elasticbeanstalk.com"
                     android:pathPrefix="/activation"
-                    android:port="8000"
                     android:scheme="http" />
             </intent-filter>
         </activity>
@@ -82,6 +84,7 @@
         <activity
             android:name=".ui.ChangePasswordActivity"
             android:label="Change Password"
+            android:parentActivityName=".ui.MyProfile"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.GuestActivity"
@@ -126,7 +129,9 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".ui.PasswordConfirmActivity">
+        <activity
+            android:name=".ui.PasswordConfirmActivity"
+            android:label="Reset Password">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -134,17 +139,27 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="192.168.43.50"
+                    android:host="bookshare-env.ctnpygtfsy.us-east-2.elasticbeanstalk.com"
                     android:pathPrefix="/reset"
-                    android:port="8000"
                     android:scheme="http" />
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.WelcomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ui.SendEmailActivity"
+        <activity
+            android:name=".ui.SendEmailActivity"
+            android:label=""
             android:parentActivityName=".ui.LoginActivity" />
+        <activity
+            android:name=".ui.VerifyOtpActivity"
+            android:label="Verify Otp">
+        </activity>
+        <receiver android:name=".Listeners.SmsReceiver">
+            <intent-filter android:priority="1000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

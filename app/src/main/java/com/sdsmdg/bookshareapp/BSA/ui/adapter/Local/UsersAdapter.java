@@ -131,7 +131,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.ViewHolder> 
         //check if it is simple userlist or userlist with request..if yes the display request button..
         if (cancels.size() != 0) {
 
-            if (cancels.get(position)) {
+                if (cancels.get(position)) {
                 holder.request.setText("Cancel");
             } else {
                 holder.request.setText("Request");

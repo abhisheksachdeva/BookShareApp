@@ -10,9 +10,13 @@ import io.realm.RealmObject;
 
 public class UserInfo extends RealmObject {
 
+    @SerializedName("id")
     String id;
+    @SerializedName("email")
     String email;
+    @SerializedName("college")
     String college;
+    @SerializedName("hostel")
     String hostel;
     @SerializedName("enr_no")
     String enrNo;
@@ -24,6 +28,8 @@ public class UserInfo extends RealmObject {
     String lastName;
     @SerializedName("contact_no")
     String contactNo;
+    @SerializedName("image_url")
+    String imageUrl;
 
     public String getFcm_id() {
         return fcm_id;
@@ -121,5 +127,13 @@ public class UserInfo extends RealmObject {
 
     public void setUserBookList(RealmList<Book> userBookList) {
         this.userBookList = userBookList;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

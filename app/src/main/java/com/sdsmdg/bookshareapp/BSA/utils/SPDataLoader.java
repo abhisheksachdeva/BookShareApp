@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class SPDataLoader {
 
-    SharedPreferences preferences;
+    private SharedPreferences preferences;
 
     public String getUserName(Context context) {
         preferences = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
@@ -26,5 +26,4 @@ public class SPDataLoader {
         preferences = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
         return preferences.getString("room_no", null);
     }
-
 }

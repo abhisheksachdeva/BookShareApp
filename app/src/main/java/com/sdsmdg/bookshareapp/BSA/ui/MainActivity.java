@@ -25,10 +25,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
@@ -41,80 +44,77 @@ import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.BooksAdapterSimple;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.NotificationFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
-import com.squareup.picasso.MemoryPolicy;
+import com.sdsmdg.bookshareapp.BSA.utils.RxSearchViewObservable;
 import com.squareup.picasso.Picasso;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
-import io.sentry.Sentry;
-import io.sentry.android.AndroidSentryClientFactory;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchView.OnQueryTextListener, NotificationFragment.OnFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener, NotificationFragment.OnFragmentInteractionListener{
 
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE = 1000;
+    private static final int BOOK_DETAIL_REQUEST_CODE = 1001;
+    private boolean isrightDrawerOpen = false;
+
     List<Book> booksList;
     BooksAdapterSimple adapter;
-    SharedPreferences prefs;
+    SharedPreferences prefs, notificationSharedPreferences;
     SwipeRefreshLayout refreshLayout;
     SearchView searchView;
-    Integer count = 1;
     String Resp;
-
-    CustomProgressDialog customProgressDialog;
 
     //Creates a list of visible snackbars
     List<Snackbar> visibleSnackbars = new ArrayList<>();
-    String resplocal;
     DrawerLayout drawerLayout;
     NavigationView navigationView;
     RecyclerView localBooksList;
     Toolbar toolbar;
     int backCounter = 0;
     ImageView _profilePicture;
-    String url;
     NotificationFragment notifFragment;
     Boolean progress_isVisible = false;
     //Search Menu item reference in the toolbar
     MenuItem searchItem;
     TextView noBookstextview;
-
+    ProgressBar progressBar;
     //toReadName for to-read search
     String toReadName = null;
-
+    TextView notifCountTextView;
     //Create a realm object to handle our local database
     Realm realm;
-
-    public String getResp() {
-        return Resp;
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Realm.init(this);
-
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder().build();
-
         // Create a new empty instance of Realm
-        realm = Realm.getInstance(realmConfiguration);
-
-
-
-        Context ctx = this.getApplicationContext();
+        realm = Realm.getDefaultInstance();
 
         // Use the Sentry DSN (client key) from the Project Settings page on Sentry
-        Sentry.init(CommonUtilities.SENTRY_DSN, new AndroidSentryClientFactory(ctx));
-
+        //Sentry.init(CommonUtilities.SENTRY_DSN, new AndroidSentryClientFactory(ctx));
 
         //customProgressDialog = new CustomProgressDialog(MainActivity.this);
         //customProgressDialog.setCancelable(false);
@@ -127,9 +127,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Helper.setToken(prefs.getString("token", null));
 
         SharedPreferences preferences = getSharedPreferences("Token", MODE_PRIVATE);
+        notificationSharedPreferences = getSharedPreferences("notif_count", MODE_PRIVATE);
 
         setContentView(R.layout.activity_main);
         noBookstextview = (TextView) findViewById(R.id.no_books_textView);
+        progressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         noBookstextview.setVisibility(View.GONE);
 
         progress_isVisible = false;
@@ -137,77 +139,76 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         notifFragment = (NotificationFragment) getSupportFragmentManager().findFragmentById(R.id.right_drawer);
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
-
         if (getIntent().getExtras() != null) {
 
-                toReadName = getIntent().getExtras().getString("toReadName");
-                if (toReadName != null) {
-                    if (toReadName.equals("open")) {
-                        notifFragment.getNotifications("1");
-                        MyFirebaseMessagingService.notifications.clear();
-                        drawerLayout.openDrawer(GravityCompat.END);
-                    }
-                }
-
-
-                toReadName = getIntent().getExtras().getString("data_splash");
-                if (toReadName != null && toReadName.equals("open_drawer")) {
+            toReadName = getIntent().getExtras().getString("toReadName");
+            if (toReadName != null) {
+                if (toReadName.equals("open")) {
                     notifFragment.getNotifications("1");
                     MyFirebaseMessagingService.notifications.clear();
                     drawerLayout.openDrawer(GravityCompat.END);
                 }
+            }
 
-                toReadName = getIntent().getExtras().getString("data_login");
-                if (toReadName != null && toReadName.equals("update")) {
 
-                    String token = "Token " + preferences.getString("token", null);
+            toReadName = getIntent().getExtras().getString("data_splash");
+            if (toReadName != null && toReadName.equals("open_drawer")) {
+                notifFragment.getNotifications("1");
+                MyFirebaseMessagingService.notifications.clear();
+                drawerLayout.openDrawer(GravityCompat.END);
+            }
 
-                    String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-                    UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                    Call<Detail> call2 = usersAPI.update_fcm_id(
-                            token,
-                            refreshedToken
-                    );
-                    call2.enqueue(new Callback<Detail>() {
-                        @Override
-                        public void onResponse(Call<Detail> call2, Response<Detail> response) {
-                            if (response.body() != null) {
-                                if (response.body().getDetail().equals("FCM_ID changed")) {
-                                    //FCM Id was changed successfully
-                                } else {
-//                                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
-                                }
+            toReadName = getIntent().getExtras().getString("data_login");
+            if (toReadName != null && toReadName.equals("update")) {
+
+                String token = "Token " + preferences.getString("token", null);
+
+                String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+                UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
+                Call<Detail> call2 = usersAPI.update_fcm_id(
+                        token,
+                        refreshedToken
+                );
+                call2.enqueue(new Callback<Detail>() {
+                    @Override
+                    public void onResponse(Call<Detail> call2, Response<Detail> response) {
+                        if (response.body() != null) {
+                            if (response.body().getDetail().equals("FCM_ID changed")) {
+                                //FCM Id was changed successfully
                             } else {
-                                //The FCM ID didn't change
+//                                Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
                             }
-                            removeAnyVisibleSnackbars();
+                        } else {
+                            //The FCM ID didn't change
                         }
+                        removeAnyVisibleSnackbars();
+                    }
 
-                        @Override
-                        public void onFailure(Call<Detail> call, Throwable t) {
-                            Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
-                                @Override
-                                public void onDismissed(Snackbar snackbar, int event) {
-                                    visibleSnackbars.remove(snackbar);
-                                    super.onDismissed(snackbar, event);
-                                }
+                    @Override
+                    public void onFailure(Call<Detail> call, Throwable t) {
+                        Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar snackbar, int event) {
+                                visibleSnackbars.remove(snackbar);
+                                super.onDismissed(snackbar, event);
+                            }
 
-                                @Override
-                                public void onShown(Snackbar snackbar) {
-                                    visibleSnackbars.add(snackbar);
-                                    super.onShown(snackbar);
-                                }
-                            }).setAction("RETRY", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-                                    refresh();
-                                }
-                            }).show();
-                        }
-                    });
+                            @Override
+                            public void onShown(Snackbar snackbar) {
+                                visibleSnackbars.add(snackbar);
+                                super.onShown(snackbar);
+                            }
+                        }).setAction("RETRY", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                refresh();
+                            }
+                        }).show();
+                    }
+                });
 
 
-                }
+            }
 
         }
         localBooksList = (RecyclerView) findViewById(R.id.localBooksList);
@@ -225,7 +226,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (isOnline()) {
                     Intent intent = new Intent(MainActivity.this, BookDetailsActivity.class);
                     intent.putExtra("id", book.getId());
-                    startActivity(intent);
+                    startActivityForResult(intent, BOOK_DETAIL_REQUEST_CODE);
+                } else {
+                    Toast.makeText(MainActivity.this, "Please check your internet connection!!", Toast.LENGTH_SHORT).show();
                 }
 
             }
@@ -248,11 +251,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         View header = navigationView.getHeaderView(0);
         TextView _name = (TextView) header.findViewById(R.id.nav_name);
         TextView _email = (TextView) header.findViewById(R.id.nav_email);
-        ImageView _profilePicture = (ImageView) header.findViewById(R.id.nav_profile_picture);
+        final ImageView _profilePicture = (ImageView) header.findViewById(R.id.nav_profile_picture);
         this._profilePicture = _profilePicture;
-        String url = CommonUtilities.local_books_api_url + "image/" + Helper.getUserId() + "/";
-        this.url = url;
-        Picasso.with(this).load(url).memoryPolicy(MemoryPolicy.NO_CACHE).placeholder(R.drawable.ic_profile_pic).into(_profilePicture);
+
+        Picasso.Builder builder = new Picasso.Builder(MainActivity.this);
+        builder.downloader(new OkHttp3Downloader(getOkHttpClient())).build()
+                .load(CommonUtilities.currentUserImageUrl)
+                .placeholder(R.drawable.ic_profile_pic)
+                .into(_profilePicture);
+
+        Helper.imageChanged = false;
         _profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -278,13 +286,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
-                searchItem.setVisible(true);
+                if (isrightDrawerOpen) {
+                    isrightDrawerOpen = false;
+                    notifCountTextView.setVisibility(View.GONE);
+                }
             }
 
             @Override
             public void onDrawerOpened(View drawerView) {
                 super.onDrawerOpened(drawerView);
-                searchItem.setVisible(false);
+                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    isrightDrawerOpen = true;
+                    notifFragment.getNotifications("1");
+                }
             }
         };
         drawerLayout.setDrawerListener(toggle);
@@ -311,60 +325,35 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         startActivityForResult(i, REQUEST_CODE);
     }
 
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
+    private void showProgressBar() {
+        progressBar.setVisibility(View.VISIBLE);
+        noBookstextview.setVisibility(View.GONE);
+        localBooksList.setVisibility(View.GONE);
     }
 
-    @Override
-    public boolean onQueryTextSubmit(String query) {
+    private void hideProgressBar() {
+        progressBar.setVisibility(View.GONE);
+    }
+
+    private Observable<List<Book>> dataFromNetwork(final String query) {
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<List<Book>> call = api.search(query, "Token " + prefs.getString("token", null));
-        call.enqueue(new Callback<List<Book>>() {
-            @Override
-            public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
-                booksList.clear();
-                if (response.body().size() != 0) {
-                    resplocal = response.toString();
-                    List<Book> localBooksList = response.body();
-                    noBookstextview.setVisibility(View.GONE);
-                    booksList.addAll(localBooksList);
-                    refreshLayout.setRefreshing(false);
-                } else {
-                    resplocal = "null";
-                    noBookstextview.setVisibility(View.VISIBLE);
-                }
-                adapter.notifyDataSetChanged();
-                removeAnyVisibleSnackbars();
-            }
+        return api.search
+                (query, "Token " + prefs.getString("token", null))
+                .subscribeOn(Schedulers.io());
+    }
 
-            @Override
-            public void onFailure(Call<List<Book>> call, Throwable t) {
-                Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
-                    @Override
-                    public void onDismissed(Snackbar snackbar, int event) {
-                        visibleSnackbars.remove(snackbar);
-                        super.onDismissed(snackbar, event);
-                    }
-
-                    @Override
-                    public void onShown(Snackbar snackbar) {
-                        visibleSnackbars.add(snackbar);
-                        super.onShown(snackbar);
-                    }
-                }).setAction("RETRY", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        refresh();
-                    }
-                }).show();
-                refreshLayout.setRefreshing(false);
-
-            }
-        });
-        searchView.clearFocus();
-        return true;
+    private void showResults(List<Book> bookList) {
+        booksList.clear();
+        booksList.addAll(bookList);
+        refreshLayout.setRefreshing(false);
+        if (bookList.size() == 0){
+            noBookstextview.setVisibility(View.VISIBLE);
+            localBooksList.setVisibility(View.GONE);
+        }else{
+            noBookstextview.setVisibility(View.GONE);
+            localBooksList.setVisibility(View.VISIBLE);
+        }
+        adapter.notifyDataSetChanged();
     }
 
     /**
@@ -379,6 +368,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
             @Override
             public boolean onMenuItemActionExpand(MenuItem item) {
+                refreshLayout.setEnabled(false);
                 notifItem.setVisible(false);
                 return true;
             }
@@ -387,8 +377,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public boolean onMenuItemActionCollapse(MenuItem item) {
                 notifItem.setVisible(true);
                 getLocalBooks("1");
+                localBooksList.setVisibility(View.VISIBLE);
                 noBookstextview.setVisibility(View.GONE);
-
+                refreshLayout.setEnabled(true);
+                refreshLayout.setRefreshing(true);
                 return true;
             }
         });
@@ -396,17 +388,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchEditText.setTextColor(getResources().getColor(R.color.White));
         searchEditText.setHintTextColor(getResources().getColor(R.color.White));
-        searchView.setOnQueryTextListener(this);
+
+        regRxObservable();
 
         //If toReadName received from to-read is not null, search it first
-        if(toReadName != null) {
+        if (toReadName != null) {
             searchItem.expandActionView();
             searchView.requestFocus();
             searchView.setQuery(toReadName, true);
         }
+        return true;
+    }
 
-        notifItem.setIcon(R.drawable.ic_notif_small);
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
 
+        MenuItem item = menu.findItem(R.id.menu_notifs);
+        RelativeLayout notifRelativeLayout = (RelativeLayout) MenuItemCompat.getActionView(item);
+        notifCountTextView = (TextView) notifRelativeLayout.findViewById(R.id.notif_count);
+        notifRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Helper.setOld_total(Helper.getNew_total());
+                if (drawerLayout.isDrawerOpen(GravityCompat.END)) {
+                    drawerLayout.closeDrawer(GravityCompat.END);
+
+                } else {
+                    drawerLayout.closeDrawer(GravityCompat.START);
+                    drawerLayout.openDrawer(GravityCompat.END);
+                }
+            }
+        });
         return true;
     }
 
@@ -436,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         if (id == R.id.nav_myprofile) {
             Intent i = new Intent(this, MyProfile.class);
-            startActivity(i);
+            startActivityForResult(i, BOOK_DETAIL_REQUEST_CODE);
 
         } else if (id == R.id.nav_grlogin) {
             SharedPreferences preff = getSharedPreferences("UserId", MODE_PRIVATE);
@@ -452,37 +464,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             String token = "Token " + prefs.getString("token", null);
 
             UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-            Call<Detail> call2 = usersAPI.update_fcm_id(
+            Call<ResponseBody> call2 = usersAPI.logout(
                     token,
                     "none"
             );
-            call2.enqueue(new Callback<Detail>() {
+            call2.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<Detail> call2, Response<Detail> response) {
-                    if (response.body() != null) {
-                        if (response.body().getDetail().equals("FCM_ID changed")) {
-                            //The FCM ID was changed successfully
-                        } else {
-//                            Toast.makeText(getApplicationContext(), R.string.connection_failed, Toast.LENGTH_SHORT).show();
-                        }
-                        removeAnyVisibleSnackbars();
-                        SharedPreferences.Editor editor = prefs.edit();
-                        editor.clear();
-                        editor.apply();
-                        Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(i);
-                        finish();
-                    } else {
-                        Toast.makeText(MainActivity.this, R.string.connection_failed, Toast.LENGTH_SHORT).show();
-                        Intent i = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(i);
-                        finish();
-
-                    }
+                public void onResponse(@android.support.annotation.NonNull Call<ResponseBody> call2,
+                                       Response<ResponseBody> response) {
+                    removeAnyVisibleSnackbars();
+                    SharedPreferences.Editor editor = prefs.edit();
+                    editor.clear();
+                    editor.apply();
+                    Intent i = new Intent(MainActivity.this, LoginActivity.class);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
+                    finish();
                 }
 
                 @Override
-                public void onFailure(Call<Detail> call, Throwable t) {
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
                     Snackbar.make(findViewById(R.id.coordinatorlayout), R.string.you_are_offline, Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
                         @Override
                         public void onDismissed(Snackbar snackbar, int event) {
@@ -504,13 +505,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             });
 
-
         } else if (id == R.id.nav_share) {
 
             Intent waIntent = new Intent(Intent.ACTION_SEND);
             waIntent.setType("text/plain");
-            String text = "BookShare App !! .You can download the app from here...!";
-
+            waIntent.putExtra(Intent.EXTRA_SUBJECT, "Citadel");
+            String text = "Citadel App !! .You can download the app from here...!";
             waIntent.putExtra(Intent.EXTRA_TEXT, text);
             startActivity(Intent.createChooser(waIntent, "Share with"));
 
@@ -532,7 +532,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onResponse(Call<BookList> call, Response<BookList> response) {
                 if (response.body() != null) {
                     Resp = response.toString();
-                    List<Book> localBooksList = response.body().getResults();
+                    List<Book> localBookList = response.body().getResults();
                     if (page.equals("1")) {
 
                         adapter.setTotalCount(response.body().getCount());
@@ -541,7 +541,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                         realm.beginTransaction();
                         //Remove all previously stored books
                         realm.deleteAll();
-                        realm.copyToRealmOrUpdate(localBooksList);
+                        realm.copyToRealmOrUpdate(localBookList);
                         realm.commitTransaction();
 
                         booksList.clear();
@@ -549,7 +549,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                         removeAnyVisibleSnackbars();
                     }
-                    booksList.addAll(localBooksList);
+                    booksList.addAll(localBookList);
+                    if (booksList.size() == 0){
+                        localBooksList.setVisibility(View.GONE);
+                        noBookstextview.setVisibility(View.VISIBLE);
+                    }else{
+                        localBooksList.setVisibility(View.VISIBLE);
+                        noBookstextview.setVisibility(View.GONE);
+                    }
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
                 } else {
@@ -584,9 +591,69 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private void regRxObservable() {
+        RxSearchViewObservable.fromView(searchView)
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .filter(new Predicate<String>() {
+                    @Override
+                    public boolean test(String text) throws Exception {
+                        if (text.isEmpty()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                })
+                .distinctUntilChanged()
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnNext(new Consumer<String>() {
+                    @Override
+                    public void accept(String s) throws Exception {
+                        showProgressBar();
+                    }
+                })
+                .switchMap(new Function<String, ObservableSource<List<Book>>>() {
+                    @Override
+                    public ObservableSource<List<Book>> apply(String query) throws Exception {
+                        return dataFromNetwork(query);
+                    }
+                })
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<Book>>() {
+                    @Override
+                    public void accept(List<Book> userInfos) throws Exception {
+                        hideProgressBar();
+                        showResults(userInfos);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideProgressBar();
+                        Snackbar.make(findViewById(R.id.coordinatorlayout), "You are offline", Snackbar.LENGTH_INDEFINITE).setCallback(new Snackbar.Callback() {
+                            @Override
+                            public void onDismissed(Snackbar snackbar, int event) {
+                                visibleSnackbars.remove(snackbar);
+                                super.onDismissed(snackbar, event);
+                            }
+
+                            @Override
+                            public void onShown(Snackbar snackbar) {
+                                visibleSnackbars.add(snackbar);
+                                super.onShown(snackbar);
+                            }
+                        }).setAction("RETRY", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                refresh();
+                            }
+                        }).show();
+                        refreshLayout.setRefreshing(false);
+                    }
+                });
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
-
     }
 
     public boolean isOnline() {
@@ -600,10 +667,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed() {
 
         if (this.drawerLayout.isDrawerVisible(GravityCompat.START)) {
-
             this.drawerLayout.closeDrawer(GravityCompat.START);
-
-        } else {
+        } if (this.drawerLayout.isDrawerVisible(GravityCompat.END)){
+            this.drawerLayout.closeDrawer(GravityCompat.END);
+        } else{
             if (!progress_isVisible) {
 
                 if (backCounter >= 1) {
@@ -614,7 +681,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                 } else {
 
-                    Snackbar.make(findViewById(R.id.coordinatorlayout), "       Press Again To Exit", Snackbar.LENGTH_LONG).setCallback(new Snackbar.Callback() {
+                    Snackbar.make(findViewById(R.id.coordinatorlayout), "Press Again To Exit", Snackbar.LENGTH_LONG).setCallback(new Snackbar.Callback() {
                         @Override
                         public void onDismissed(Snackbar snackbar, int event) {
                             super.onDismissed(snackbar, event);
@@ -668,11 +735,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    private OkHttpClient getOkHttpClient() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+                        Request newRequest = chain.request().newBuilder()
+                                .addHeader("Authorization", "Token " + prefs
+                                        .getString("token", null))
+                                .build();
+                        return chain.proceed(newRequest);
+                    }
+                }).build();
+        return client;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
         if (Helper.imageChanged) {
-            Picasso.with(this).load(url).into(_profilePicture);
+            new Picasso.Builder(MainActivity.this).
+                    downloader(new OkHttp3Downloader(getOkHttpClient())).build()
+                    .load(CommonUtilities.currentUserImageUrl).into(_profilePicture);
             Helper.imageChanged = false;
         }
         navigationView.setCheckedItem(R.id.menu_none);//This will check a invisible item, effectively unselecting all items
@@ -681,7 +765,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
+        if (requestCode == REQUEST_CODE || requestCode == BOOK_DETAIL_REQUEST_CODE) {
             getLocalBooks("1");
         }
     }
@@ -713,3 +797,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getLocalBooks("1");
     }
 }
+

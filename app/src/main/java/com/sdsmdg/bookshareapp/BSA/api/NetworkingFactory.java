@@ -1,5 +1,9 @@
 package com.sdsmdg.bookshareapp.BSA.api;
 
+import android.content.Context;
+
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import com.readystatesoftware.chuck.ChuckInterceptor;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 
 import okhttp3.OkHttpClient;
@@ -9,12 +13,17 @@ import retrofit2.converter.simplexml.SimpleXmlConverterFactory;
 
 public class NetworkingFactory {
 
-    BooksAPI booksAPI;
-    UsersAPI usersAPI;
-    Retrofit retrofit;
+    private BooksAPI booksAPI;
+    private UsersAPI usersAPI;
+    private Retrofit retrofit;
 
-    private static NetworkingFactory grInstance = new NetworkingFactory(CommonUtilities.goodreads_api_url, false);
-    private static NetworkingFactory localInstance = new NetworkingFactory(CommonUtilities.local_books_api_url, true);
+    private static NetworkingFactory grInstance;
+    private static NetworkingFactory localInstance;
+
+    public static void init(Context context) {
+        grInstance = new NetworkingFactory(context, CommonUtilities.goodreads_api_url, false);
+        localInstance = new NetworkingFactory(context, CommonUtilities.local_books_api_url, true);
+    }
 
     public static NetworkingFactory getGRInstance() {
         return grInstance;
@@ -24,19 +33,20 @@ public class NetworkingFactory {
         return localInstance;
     }
 
-    private NetworkingFactory(String url, boolean json) {
-        OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
-
+    private NetworkingFactory(Context context, String url, boolean json) {
+        OkHttpClient.Builder httpclient = new OkHttpClient.Builder().addInterceptor(new ChuckInterceptor(context));
         if (json) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(httpclient.build())
                     .build();
         } else {
             retrofit = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(SimpleXmlConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(httpclient.build())
                     .build();
         }

@@ -12,7 +12,7 @@
 
     <item
         android:id="@+id/menu_notifs"
-        android:icon="@drawable/ic_notif_small"
+        app:actionLayout="@layout/notif_bell_layout"
         android:title="Notifications"
         app:showAsAction="always" />
 

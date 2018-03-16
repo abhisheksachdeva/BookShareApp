@@ -1,6 +1,7 @@
 package com.sdsmdg.bookshareapp.BSA.api;
 
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookAddDeleteResponse;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookDetailWithCancel;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookList;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.RemoveBook;
@@ -10,12 +11,13 @@ import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notification_Model;
 import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
 import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalUsers.UserInfo;
+import com.sdsmdg.bookshareapp.BSA.api.models.UserImageResult;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
-import com.sdsmdg.bookshareapp.BSA.api.otp.Models.Response;
 import com.sdsmdg.bookshareapp.BSA.ui.College;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import okhttp3.MultipartBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -86,7 +88,7 @@ public interface UsersAPI {
 
     @FormUrlEncoded
     @POST("books/?format=json")
-    Call<Book> addBook(
+    Call<BookAddDeleteResponse> addBook(
             @Field("email") String email,
             @Field("title") String title,
             @Field("author") String author,
@@ -167,18 +169,25 @@ public interface UsersAPI {
     );
 
     @PUT("user/{id}/")
-    Call<UserInfo> editUserDetails(
+    Call<Detail> editUserDetails(
+            @Header("Authorization") String token,
             @Path("id") String id,
             @Body UserInfo userInfo
     );
 
+    @FormUrlEncoded
+    @POST("logout/")
+    Call<ResponseBody> logout(
+            @Header("Authorization") String token,
+            @Field("fcm_id") String fcm_id
+    );
 
     @FormUrlEncoded
     @POST("password/change/")
     Call<Detail> changePassword(
-            @Field("user_id") String id,
-            @Field("token") String token,
-            @Field("password") String password
+            @Header("Authorization") String token,
+            @Field("old_password") String oldPassword,
+            @Field("new_password") String newPassword
     );
 
     @FormUrlEncoded
@@ -190,19 +199,19 @@ public interface UsersAPI {
 
 
     @PUT("books/")
-    Call<Detail> removeBook(
+    Call<BookAddDeleteResponse> removeBook(
             @Body RemoveBook removeBook,
             @Header("Authorization") String token
     );
 
     @GET("search/")
-    Call<List<Book>> search(
+    Observable<List<Book>> search(
             @Query("search") String searchQuery,
             @Header("Authorization") String token
     );
 
     @GET("search-user/")
-    Call<List<UserInfo>> searchUser(
+    Observable<List<UserInfo>> searchUser(
             @Query("search") String searchQuery,
             @Header("Authorization") String token
     );
@@ -214,19 +223,26 @@ public interface UsersAPI {
 
     @Multipart
     @POST("/image/{id}/")
-    Call<Signup> uploadImage(@Part MultipartBody.Part file,
-                             @Path("id") String id);
+    Call<UserImageResult> uploadImage(@Header("Authorization") String token,
+                                      @Part MultipartBody.Part file,
+                                      @Path("id") String id);
 
     @FormUrlEncoded
     @POST("/me/password/reset/")
-    Call<ResponseBody> sendForgotPasswordMail(
+    Call<Detail> sendForgotPasswordMail(
             @Field("email") String email
     );
 
     @FormUrlEncoded
     @POST("/new_activation/")
-    Call<ResponseBody> sendNewActivationMail(
+    Call<Detail> sendNewActivationMail(
              @Field("email") String email
+    );
+
+    @FormUrlEncoded
+    @POST("/resend_otp/")
+    Call<Detail> sendNewOtp(
+            @Field("email") String email
     );
 
     @FormUrlEncoded
@@ -242,4 +258,20 @@ public interface UsersAPI {
      Call<Detail> checkActivation(
              @Path("key") String key
      );
+
+     @FormUrlEncoded
+     @POST("/verify_otp/")
+     Call<Detail> verifyOtp(
+             @Field("email") String email,
+             @Field("otp") String otp
+     );
+
+    @FormUrlEncoded
+    @POST("/change-mobile/")
+    Call<Detail> changeMobile(
+            @Header("Authorization") String token,
+            @Field("email") String email,
+            @Field("contact_no") String contactNo,
+            @Field("otp") String otp
+    );
 }

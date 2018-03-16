@@ -41,7 +41,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="10dp"
                         android:gravity="center_horizontal"
-                        android:text="title"
+                        tools:text="title"
                         android:textColor="@color/White"
                         android:textSize="20sp" />
 
@@ -79,7 +79,7 @@
             <Button
                 android:id="@+id/add_to_my_library"
                 android:layout_width="wrap_content"
-                android:layout_height="40sp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="10dp"
                 android:background="@drawable/button_shape_other"
@@ -90,6 +90,22 @@
                 android:textColor="@color/app_theme_button_other"
                 android:textSize="16sp"
                 android:textStyle="normal" />
+
+            <Button
+                android:id="@+id/remove_from_my_library"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_shape_other"
+                android:onClick="removeFromMyLibraryClicked"
+                android:padding="10dp"
+                android:text="Remove from My Library"
+                android:textAllCaps="false"
+                android:textColor="@color/app_theme_button_other"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:visibility="gone"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -152,7 +168,7 @@
 
             <Button
                 android:layout_width="wrap_content"
-                android:layout_height="40sp"
+                android:layout_height="wrap_content"
                 android:text="Open goodreads.com"
                 android:textAllCaps="false"
                 android:textColor="@color/app_theme_button_other"

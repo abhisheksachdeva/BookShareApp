@@ -7,7 +7,10 @@ import com.google.gson.annotations.SerializedName;
  */
 public class Notifications {
 
+    @SerializedName("id")
     String id;
+
+    @SerializedName("detail")
     String detail;
 
     @SerializedName("sender_id")
@@ -22,6 +25,7 @@ public class Notifications {
     @SerializedName("book_title")
     String bookTitle;
 
+    @SerializedName("message")
     String message;
 
     @SerializedName("is_confirmed")

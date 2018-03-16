@@ -8,6 +8,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.R;
@@ -72,7 +73,6 @@ public class SplashScreen extends Activity {
                 finish();
             }
         }
-
     }
 
     /**
@@ -105,7 +105,7 @@ public class SplashScreen extends Activity {
             Call<Detail> call = usersAPI.getUserEmail("Token " + token);
             call.enqueue(new Callback<Detail>() {
                 @Override
-                public void onResponse(Call<Detail> call, Response<Detail> response) {
+                public void onResponse(@NonNull Call<Detail> call, @NonNull Response<Detail> response) {
                     if (response.body() != null) {
                         if (response.body().getDetail() != null) {
                             if (!response.body().getDetail().equals("")) {
@@ -147,7 +147,7 @@ public class SplashScreen extends Activity {
                 }
 
                 @Override
-                public void onFailure(Call<Detail> call, Throwable t) {
+                public void onFailure(@NonNull Call<Detail> call, @NonNull Throwable t) {
                     try {
                         Thread.sleep(1000);
                     } catch (InterruptedException e) {
@@ -191,7 +191,6 @@ public class SplashScreen extends Activity {
                 h.postDelayed(r, 1500);
             }
         }
-
     }
 
     public static void dumpIntent(Intent i) {
@@ -200,11 +199,6 @@ public class SplashScreen extends Activity {
         if (bundle != null) {
             Set<String> keys = bundle.keySet();
             Iterator<String> it = keys.iterator();
-            while (it.hasNext()) {
-                String key = it.next();
-               // Log.e("DUMP INTENT", "[" + key + "=" + bundle.get(key) + "]");
-            }
-
         }
     }
 

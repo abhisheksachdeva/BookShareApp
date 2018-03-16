@@ -2,13 +2,11 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.KeyEvent;
@@ -21,25 +19,32 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.BookListFragment;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
+import com.sdsmdg.bookshareapp.BSA.utils.RxSearchObservable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class SearchResultsActivity extends ActionBarActivity {
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.functions.Predicate;
+import io.reactivex.schedulers.Schedulers;
+
+public class SearchResultsActivity extends AppCompatActivity {
 
     private MenuItem mSearchAction;
     private boolean isSearchOpened = false;
     private EditText edtSeach;
     private Toolbar mToolbar;
     final List<String> searchModeList = new ArrayList<>();
-
 
     String query;
     String API_KEY = CommonUtilities.API_KEY;
@@ -69,7 +74,6 @@ public class SearchResultsActivity extends ActionBarActivity {
         scrollingView = (NestedScrollView) findViewById(R.id.scrollView);
         button = (FloatingActionButton) findViewById(R.id.scroll);
 
-
         scrollingView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -91,20 +95,12 @@ public class SearchResultsActivity extends ActionBarActivity {
 
         bookListFragment = new BookListFragment();
 
-
-//        if (getIntent().getExtras() != null) {
-//            isbn = getIntent().getExtras().getString("isbn");
-//            bookListFragment.getBooks(isbn, "all", API_KEY);
-//
-//        }
-
         search_open();
 
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, bookListFragment)
                 .commit();
-
     }
 
     public void barcodeScan(View view) {
@@ -125,57 +121,6 @@ public class SearchResultsActivity extends ActionBarActivity {
         }
     }
 
-    class ProgressLoader extends AsyncTask<Integer, Integer, String> {
-
-        @Override
-        protected String doInBackground(Integer... params) {
-
-            do {
-                try {
-                    Thread.sleep(1000);
-                    if (bookListFragment.getResp() != null) {
-                        break;
-                    }
-                    publishProgress(count);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                if (bookListFragment.getResp() != null) {
-                    break;
-                }
-                count++;
-            } while (bookListFragment.getResp() == null);
-
-
-            return "Task Completed.";
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (bookListFragment.getResp() == null) {
-                Toast.makeText(SearchResultsActivity.this, "Please Try Again.", Toast.LENGTH_SHORT).show();
-                customProgressDialog.dismiss();
-
-
-            } else {
-                final Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        customProgressDialog.dismiss();
-                    }
-                }, 1000);
-
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            customProgressDialog.show();
-
-        }
-    }
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -188,12 +133,8 @@ public class SearchResultsActivity extends ActionBarActivity {
     }
 
     private void doSearch(String query, String mode) {
-        hideKeyboard();
         bookListFragment.getBooks(query, mode, API_KEY);
-        new ProgressLoader().execute();
-
     }
-
 
     public void hideKeyboard() {
         View view = this.getCurrentFocus();
@@ -255,7 +196,6 @@ public class SearchResultsActivity extends ActionBarActivity {
                     edtSeach.requestFocus();
                     InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
-
                 }
             });
 
@@ -295,7 +235,6 @@ public class SearchResultsActivity extends ActionBarActivity {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         // attaching toReadName adapter to spinner
-
         spinner.setAdapter(dataAdapter);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -306,41 +245,65 @@ public class SearchResultsActivity extends ActionBarActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-            //Nothing is selected
+                //Nothing is selected
             }
         });
 
-        spinner.setSelection(0);//Setting the default vaule of spinner to "All"
-        //this is a listener to do a search when the user clicks on search button
-        edtSeach.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-                    if(edtSeach.getText().toString().length() != 0) {
-                        doSearch(edtSeach.getText().toString(), "all");
-                    } else {
-                        Toast.makeText(SearchResultsActivity.this, "Please enter a search query", Toast.LENGTH_SHORT).show();
-                    }
-                    return true;
-                }
-                return false;
-            }
-        });
+        spinner.setSelection(0);//Setting the user_default_image vaule of spinner to "All"
+
         edtSeach.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 edtSeach.requestFocus();
                 InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
-
             }
         });
 
         edtSeach.requestFocus();
-
         //open the keyboard focused in the edtSearch
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.showSoftInput(edtSeach, InputMethodManager.SHOW_IMPLICIT);
         //add the close icon
+
+        regRxObservable();
+    }
+
+    private void regRxObservable() {
+        InputMethodManager imm = (InputMethodManager) getApplication().getSystemService(Context.INPUT_METHOD_SERVICE);
+        RxSearchObservable.imm = imm;
+        RxSearchObservable.fromView(edtSeach)
+                .debounce(300, TimeUnit.MILLISECONDS)
+                .filter(new Predicate<String>() {
+                    @Override
+                    public boolean test(String text) throws Exception {
+                        if (text.isEmpty()) {
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                })
+                .distinctUntilChanged()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<String>() {
+                    @Override
+                    public void onError(Throwable e) {
+                    }
+
+                    @Override
+                    public void onComplete() {
+                    }
+
+                    @Override
+                    public void onSubscribe(@NonNull Disposable disposable) {
+                    }
+
+                    @Override
+                    public void onNext(String s) {
+                        doSearch(s, selected.toLowerCase());
+                    }
+                });
     }
 }

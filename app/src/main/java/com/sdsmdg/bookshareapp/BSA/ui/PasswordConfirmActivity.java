@@ -2,12 +2,12 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -32,6 +32,7 @@ public class PasswordConfirmActivity extends AppCompatActivity {
     private TextInputEditText newPasswordEditText, confirmPasswordEditText;
     private Button submitButton;
     private Uri data;
+    private CustomProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class PasswordConfirmActivity extends AppCompatActivity {
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (newPasswordEditText.getText().length() < 8){
+                if (newPasswordEditText.getText().length() < 6){
                     newPasswordInputLayout.setErrorEnabled(true);
                     confirmPasswordInputLayout.setErrorEnabled(false);
                     newPasswordInputLayout.setError("The password must be of atleast 8 characters");
@@ -75,6 +76,7 @@ public class PasswordConfirmActivity extends AppCompatActivity {
                 } else {
                     newPasswordInputLayout.setEnabled(false);
                     confirmPasswordInputLayout.setEnabled(false);
+                    progressDialog.show();
                     resetPassword();
                 }
             }
@@ -91,6 +93,7 @@ public class PasswordConfirmActivity extends AppCompatActivity {
         confirmPasswordCall.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                progressDialog.dismiss();
                 if (response.isSuccessful()){
                     Toast.makeText(PasswordConfirmActivity.this, "Password Updated Successfully", Toast.LENGTH_SHORT).show();
                     Handler handler = new Handler();
@@ -101,13 +104,19 @@ public class PasswordConfirmActivity extends AppCompatActivity {
                         }
                     }, 500);
                 } else{
+                    newPasswordInputLayout.setEnabled(true);
+                    confirmPasswordInputLayout.setEnabled(true);
                     Toast.makeText(PasswordConfirmActivity.this, "Please Try Again!", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                progressDialog.dismiss();
+                newPasswordInputLayout.setEnabled(true);
+                confirmPasswordInputLayout.setEnabled(true);
                 t.printStackTrace();
+                Toast.makeText(PasswordConfirmActivity.this, "Please Try Again!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -119,5 +128,6 @@ public class PasswordConfirmActivity extends AppCompatActivity {
         newPasswordEditText =  (TextInputEditText) findViewById(R.id.new_pwd_edit_text);
         confirmPasswordEditText = (TextInputEditText) findViewById(R.id.cnf_pwd_edit_text);
         submitButton = (Button) findViewById(R.id.reset_pwd_button);
+        progressDialog = new CustomProgressDialog(this);
     }
 }

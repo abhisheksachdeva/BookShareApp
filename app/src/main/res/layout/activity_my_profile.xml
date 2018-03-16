@@ -113,7 +113,6 @@
                                 android:onClick="editProfileClicked"
                                 android:src="@drawable/ic_edit_white_48dp" />
                         </LinearLayout>
-
                     </FrameLayout>
                 </LinearLayout>
 
@@ -147,8 +146,14 @@
                             android:text="No books in your collection"
                             android:textSize="18sp"
                             android:visibility="gone" />
-
                     </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/book_progress_bar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:visibility="gone" />
 
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/recycler_view"
@@ -161,12 +166,9 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="60dp" />
-
                 </LinearLayout>
-
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
-
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/button"
@@ -177,7 +179,5 @@
             android:layout_marginRight="16dp"
             android:background="@color/Red"
             android:src="@drawable/plus3" />
-
     </FrameLayout>
-
 </android.support.design.widget.CoordinatorLayout>

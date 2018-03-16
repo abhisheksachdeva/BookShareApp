@@ -71,6 +71,7 @@ public class GRLoginActivity extends AppCompatActivity {
     OAuthCredentialsResponse temporaryTokenResponse;
     OAuthAuthorizeTemporaryTokenUrl accessTempToken;
     SharedPreferences pref;
+    CustomProgressDialog progressDialog;
     WebView webView;
     boolean success = true;
     Thread thread;
@@ -80,6 +81,8 @@ public class GRLoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grlogin);
+
+        progressDialog = new CustomProgressDialog(this);
         login = (Button) findViewById(R.id.gr_login);
         textView = (TextView) findViewById(R.id.info_text);
         pref = getApplicationContext().getSharedPreferences("UserId", MODE_PRIVATE);
@@ -138,12 +141,12 @@ public class GRLoginActivity extends AppCompatActivity {
                     System.out.println("Goodreads oAuth sample: Please visit the following URL to authorize:");
 
                     /**this is the authentication url*/
-
                     System.out.println(authUrl);
                     GRLoginActivity.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             //opening it on webview, if its already authenticated..will open homepage..else sign in page of GR
+                            progressDialog.dismiss();
                             webView.loadUrl(authUrl);
                         }
                     });
@@ -160,7 +163,6 @@ public class GRLoginActivity extends AppCompatActivity {
                     getAccessToken.consumerKey = GOODREADS_KEY;
                     if (Thread.interrupted()) {
                         throw new InterruptedException();
-
                     }
 
                     OAuthCredentialsResponse accessTokenResponse = null;
@@ -169,30 +171,24 @@ public class GRLoginActivity extends AppCompatActivity {
                     while (true) {
                         if (Thread.interrupted()) {
                             throw new InterruptedException();
-
                         }
 
                         s = System.currentTimeMillis() - start;
                         /**if at all timer is required
                          // we've put up a timeout of s seconds..
                          */
-
                         try {
-
                             accessTokenResponse = getAccessToken.execute();
                             if (!accessTokenResponse.toString().contains("Invalid OAuth Request")) {
                                 break;
                             }
                         } catch (IOException e) {
                         }
-
                     }
-
 
                     if (accessTokenResponse == null) {
                         success = false;
                         throw new IOException("nill");
-
                     }
 
                     OAuthParameters oauthParameters = new OAuthParameters();
@@ -265,26 +261,21 @@ public class GRLoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(GRLoginActivity.this, MainActivity.class);
                         startActivity(intent);
                         finish();
-
                     }
                 }
-
-
             }
-
-
         };
+
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 login.setVisibility(View.GONE);
                 textView.setVisibility(View.GONE);
+                progressDialog.setCancelable(false);
+                progressDialog.show();
                 thread.start();
-
             }
         });
-
-
     }
 
     @Override

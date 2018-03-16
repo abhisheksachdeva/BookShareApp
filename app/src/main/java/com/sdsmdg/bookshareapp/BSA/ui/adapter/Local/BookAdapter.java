@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookAddDeleteResponse;
 import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.RemoveBook;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.ui.MyProfile;
@@ -46,49 +48,52 @@ import retrofit2.Response;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
 
-    private static final String TAG = BookAdapter.class.getSimpleName();
-
     private static final int PENDING_REMOVAL_TIMEOUT = 1500;
-    Book tempValues = null;
-    List<Book> itemsPendingRemoval;
-    String userId;
-    Context context;
+    private Book tempValues = null;
+    private List<Book> itemsPendingRemoval;
+    private String userId;
+    private Context context;
     private List<Book> bookList;
-    ActionMode mActionMode;
-    SharedPreferences prefs;
-    boolean undoOn = true;
+    private List<Book> selectedBookList = new ArrayList<>();
+    private ActionMode mActionMode;
+    private SharedPreferences prefs;
+    private boolean undoOn = true;
+    private boolean isMultiSelect = false;
+    private List<Book> booksToDelete = new ArrayList<>();
+
     /**
-     * // is undo on, you can turn it on from the toolbar menu
-     * //this array stores whether the current book is selected or not
+     * is undo on, you can turn it on from the toolbar menu
+     * this array stores whether the current book is selected or not
      */
-    SparseBooleanArray selected;
     //This activity reference is required to activate the contextual action bar
-    Activity activity;
+    private Activity activity;
 
     private Handler handler = new Handler(); // handler for running delayed runnables
-    HashMap<Book, Runnable> pendingRunnables = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
+    private HashMap<Book, Runnable> pendingRunnables = new HashMap<>(); // map of items to pending runnables, so we can cancel a removal if need be
 
     public BookAdapter(Context context, String userId, List<Book> bookList, Activity activity) {
         itemsPendingRemoval = new ArrayList<>();
         this.bookList = bookList;
-        selected = new SparseBooleanArray();
         this.userId = userId;
         this.context = context;
         this.activity = activity;
         prefs = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView titleBook;
-        public TextView authorBook;
-        public ImageView imageBook;
-        public RatingBar ratingBook;
-        public TextView ratingCount;
+        LinearLayout bookLayout, deleteLayout;
+        TextView titleBook;
+        TextView authorBook;
+        ImageView imageBook;
+        RatingBar ratingBook;
+        TextView ratingCount;
         Button undoButton;
 
-        public ViewHolder(ViewGroup parent) {
-            super(LayoutInflater.from(parent.getContext()).inflate(R.layout.row_mybooks, parent, false));
+        ViewHolder(View itemView) {
+            super(itemView);
+            bookLayout = (LinearLayout) itemView.findViewById(R.id.book_layout);
+            deleteLayout = (LinearLayout) itemView.findViewById(R.id.delete_layout);
             titleBook = (TextView) itemView.findViewById(R.id.book_title);
             authorBook = (TextView) itemView.findViewById(R.id.author);
             imageBook = (ImageView) itemView.findViewById(R.id.book_cover);
@@ -96,51 +101,84 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             ratingCount = (TextView) itemView.findViewById(R.id.ratings_count);
             undoButton = (Button) itemView.findViewById(R.id.undo_button);
         }
-
-
     }
 
     //This function is used to delete the selected items
-    public void deleteSelectedItem() {
-        for (int i = 0; i < bookList.size(); i++) {
-            if (selected.get(i)) {
-                remove(i);
-            }
+    private void deleteSelectedItem() {
+        booksToDelete.addAll(selectedBookList);
+        notifyDataSetChanged();
+        for (Book book : selectedBookList) {
+            remove(book);
         }
     }
 
     //This method is called after the contextual action bar is disabled
     public void reset() {
-        selected.clear();
+        isMultiSelect = false;
+        selectedBookList = new ArrayList<>();
         notifyDataSetChanged();
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new ViewHolder(parent);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.row_mybooks, parent, false);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, final int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         final ViewHolder viewHolder = holder;
         final Book rbook = bookList.get(position);
+
+        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isMultiSelect){
+                    multiSelect(viewHolder.getAdapterPosition());
+                }
+            }
+        });
 
         viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                //This line activates the contextual action bar
-                mActionMode = activity.startActionMode(mActionModeCallback);
-                selected.put(position, true);
-                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.delete_gray));
-                return false;
+                if (!isMultiSelect) {
+                    isMultiSelect = true;
+                    if (mActionMode == null) {
+                        mActionMode = activity.startActionMode(mActionModeCallback);
+                    }
+                }
+                multiSelect(viewHolder.getAdapterPosition());
+                return true;
             }
         });
-
+        if (booksToDelete.contains(rbook)){
+            viewHolder.bookLayout.setAlpha(0.25f);
+            viewHolder.deleteLayout.setVisibility(View.VISIBLE);
+            viewHolder.itemView.setOnLongClickListener(null);
+        }else{
+            viewHolder.bookLayout.setAlpha(1f);
+            viewHolder.deleteLayout.setVisibility(View.GONE);
+            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    if (!isMultiSelect) {
+                        isMultiSelect = true;
+                        if (mActionMode == null) {
+                            mActionMode = activity.startActionMode(mActionModeCallback);
+                        }
+                    }
+                    multiSelect(viewHolder.getAdapterPosition());
+                    return true;
+                }
+            });
+        }
         if (itemsPendingRemoval.contains(rbook)) {
             // we need to show the "undo" state of the row
             viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.delete2));
             viewHolder.titleBook.setVisibility(View.INVISIBLE);
             viewHolder.authorBook.setText("Delete Book ?");
+            viewHolder.authorBook.setTextSize(20);
             viewHolder.ratingCount.setVisibility(View.INVISIBLE);
             viewHolder.ratingBook.setVisibility(View.INVISIBLE);
             viewHolder.imageBook.setVisibility(View.INVISIBLE);
@@ -163,16 +201,18 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             // we need to show the "normal" state
             tempValues = bookList.get(position);
             viewHolder.titleBook.setText(tempValues.getTitle());
+            viewHolder.authorBook.setTextSize(14);
             viewHolder.authorBook.setText(tempValues.getAuthor());
             if (!tempValues.getGrImgUrl().isEmpty()) {
                 Picasso.with(context).load(tempValues.getGrImgUrl()).placeholder(R.drawable.default_book_image).into(viewHolder.imageBook);
             }
             viewHolder.ratingBook.setRating(tempValues.getRating());
             viewHolder.ratingCount.setText("(" + tempValues.getRatingsCount() + ")");
-            viewHolder.itemView.setBackgroundColor(Color.WHITE);
             //if the book is selected, change it's color to holo blue light
-            if (selected.get(position)) {
-                viewHolder.itemView.setBackgroundColor(context.getResources().getColor(R.color.delete_gray));
+            if (selectedBookList.contains(bookList.get(position))){
+                viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.delete_gray));
+            }else{
+                viewHolder.itemView.setBackgroundColor(ContextCompat.getColor(context, R.color.White));
             }
             viewHolder.titleBook.setVisibility(View.VISIBLE);
             viewHolder.authorBook.setVisibility(View.VISIBLE);
@@ -184,6 +224,24 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         }
     }
 
+    private void multiSelect(int adapterPosition) {
+        if (mActionMode != null){
+            if (selectedBookList.contains(bookList.get(adapterPosition))){
+                selectedBookList.remove(bookList.get(adapterPosition));
+            } else {
+                selectedBookList.add(bookList.get(adapterPosition));
+            }
+            if (selectedBookList.size() > 1) {
+                mActionMode.setTitle(selectedBookList.size() + " items selected");
+            } else if (selectedBookList.size() > 0) {
+                mActionMode.setTitle(selectedBookList.size() + " item selected");
+            } else {
+                mActionMode.finish();
+            }
+            notifyDataSetChanged();
+        }
+    }
+
     @Override
     public int getItemCount() {
         if (bookList != null)
@@ -192,22 +250,24 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         return 0;
     }
 
-    public boolean isUndoOn() {
+    private boolean isUndoOn() {
         return undoOn;
     }
 
-    public void pendingRemoval(int position) {
+    private void pendingRemoval(int position) {
         final Book rbook = bookList.get(position);
 
         if (!itemsPendingRemoval.contains(rbook)) {
             itemsPendingRemoval.add(rbook);
             // this will redraw row in "undo" state
-            notifyItemChanged(position);
+            notifyDataSetChanged();
             // let's create, store and post a runnable to remove the item
             Runnable pendingRemovalRunnable = new Runnable() {
                 @Override
                 public void run() {
-                    remove(bookList.indexOf(rbook));
+                    booksToDelete.add(rbook);
+                    notifyDataSetChanged();
+                    remove(rbook);
                 }
             };
             handler.postDelayed(pendingRemovalRunnable, PENDING_REMOVAL_TIMEOUT);
@@ -215,57 +275,57 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         }
     }
 
-    public void remove(int position) {
-        Book rbook = bookList.get(position);
-        removeBook(rbook.getId(), position);
+    private void remove(Book rbook) {
+        removeBook(rbook.getId(), rbook);
     }
 
-    public void removeBook(final String bookId, final int position) {
+    private void removeBook(final String bookId, final Book rbook) {
 
         RemoveBook removeBook = new RemoveBook();
         removeBook.setBookId(bookId);
         removeBook.setUserId(userId);
-
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<Detail> call = usersAPI.removeBook(removeBook, "Token " + prefs.getString("token", null));
-        call.enqueue(new Callback<Detail>() {
+        Call<BookAddDeleteResponse> call = usersAPI.removeBook(removeBook, "Token " + prefs.getString("token", null));
+        call.enqueue(new Callback<BookAddDeleteResponse>() {
             @Override
-            public void onResponse(Call<Detail> call, Response<Detail> response) {
+            public void onResponse(Call<BookAddDeleteResponse> call, Response<BookAddDeleteResponse> response) {
                 if (response.body() != null) {
-                    notifyDataSetChanged();
-                    //Make corresponding changes in MyProfile activity when a book is removed
-                    Log.i(TAG, "onResponse: 0");
-                    ((MyProfile)context).onBookRemoved();
-                    Log.i(TAG, "onResponse: 1");
-                    Toast.makeText(context, "Successfully removed", Toast.LENGTH_SHORT).show();
-                    Book rbook = bookList.get(position);
-                    if (itemsPendingRemoval.contains(rbook)) {
-                        itemsPendingRemoval.remove(rbook);
-                    }
-                    if (bookList.contains(rbook)) {
-                        bookList.remove(position);
-                        notifyItemRemoved(position);
+                    String detail = response.body().getDetail();
+                    Toast.makeText(context, detail, Toast.LENGTH_SHORT).show();
+                    if (detail.equals("Successfully Removed!!")) {
+                        //Make corresponding changes in MyProfile activity when a book is removed
+                        ((MyProfile)context).onBookRemoved();
+                        booksToDelete.remove(rbook);
+                        if (itemsPendingRemoval.contains(rbook)) {
+                            itemsPendingRemoval.remove(rbook);
+                        }
+                        if (bookList.contains(rbook)) {
+                            bookList.remove(rbook);
+                        }
                     }
                 }
+                notifyDataSetChanged();
             }
 
             @Override
-            public void onFailure(Call<Detail> call, Throwable t) {
-                itemsPendingRemoval.remove(bookList.get(position));
+            public void onFailure(Call<BookAddDeleteResponse> call, Throwable t) {
+                itemsPendingRemoval.remove(rbook);
+                booksToDelete.remove(rbook);
                 //This line will remove the undo button and show the book row completely
-                notifyItemChanged(position);
+                notifyDataSetChanged();
+                Log.i("book_size", Integer.toString(bookList.size()));
                 Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
             }
         });
     }
 
-    public boolean isPendingRemoval(int position) {
+    private boolean isPendingRemoval(int position) {
         Book rbook = bookList.get(position);
         return itemsPendingRemoval.contains(rbook);
     }
 
 
-    public ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
+    private ActionMode.Callback mActionModeCallback = new ActionMode.Callback() {
 
         // Called when the action mode is created; startActionMode() was called
         @Override
@@ -304,7 +364,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
         }
     };
 
-
     public void setUpItemTouchHelper(RecyclerView mRecyclerView) {
 
         ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -332,7 +391,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             @Override
             public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
                 int position = viewHolder.getAdapterPosition();
-//                BookAdapter bookAdapter = (BookAdapter) recyclerView.getAdapter();
+                // BookAdapter bookAdapter = (BookAdapter) recyclerView.getAdapter();
                 if (isUndoOn() && isPendingRemoval(position)) {
                     return 0;
                 }
@@ -342,12 +401,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 int swipedPosition = viewHolder.getAdapterPosition();
-//                BookAdapter adapter = (BookAdapter) mRecyclerView.getAdapter();
+                // BookAdapter adapter = (BookAdapter) mRecyclerView.getAdapter();
                 boolean undoOn = isUndoOn();
                 if (undoOn) {
                     pendingRemoval(swipedPosition);
-                } else {
-                    remove(swipedPosition);
                 }
             }
 
@@ -457,8 +514,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ViewHolder> {
                 }
                 super.onDraw(c, parent, state);
             }
-
         });
     }
-
 }

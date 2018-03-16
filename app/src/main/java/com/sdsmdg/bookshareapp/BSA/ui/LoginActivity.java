@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
 import android.view.View;
@@ -29,7 +28,6 @@ import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,6 +51,8 @@ public class LoginActivity extends AppCompatActivity {
     TextView forgotPasswordLink;
     @InjectView(R.id.new_activation)
     TextView newActivation;
+    @InjectView(R.id.new_otp)
+    TextView newOtp;
     String token;
     Context context;
     boolean showPassword = false;
@@ -69,6 +69,7 @@ public class LoginActivity extends AppCompatActivity {
         // underline the forget password and new activation text view
         forgotPasswordLink.setPaintFlags(forgotPasswordLink.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         newActivation.setPaintFlags(newActivation.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        newOtp.setPaintFlags(newActivation.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
 
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(_emailText.getWindowToken(), 0);
@@ -131,7 +132,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Start the Signup activity
                 Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivityForResult(intent, REQUEST_SIGNUP);
+                startActivity(intent);
             }
         });
 
@@ -149,6 +150,15 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(), SendEmailActivity.class);
                 intent.putExtra("email_type", "new_activation_email");
+                startActivity(intent);
+            }
+        });
+
+        newOtp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(), SendEmailActivity.class);
+                intent.putExtra("email_type", "new_otp");
                 startActivity(intent);
             }
         });
@@ -248,17 +258,6 @@ public class LoginActivity extends AppCompatActivity {
         editor.putString("email1", email1);
         editor.putString("email2", email2);
         editor.apply();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_SIGNUP) {
-            if (resultCode == RESULT_OK) {
-
-                // By default we just finish the Activity and log them in automatically
-                Toast.makeText(this, "Signup Successful!", Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     @Override

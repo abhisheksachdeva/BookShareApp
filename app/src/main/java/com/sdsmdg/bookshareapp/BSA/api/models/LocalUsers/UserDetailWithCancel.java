@@ -9,6 +9,7 @@ public class UserDetailWithCancel {
     @SerializedName("user_info")
     UserInfo userInfo;
 
+    @SerializedName("cancels")
     List<Boolean> cancels;
 
     public List<Boolean> getCancels() {

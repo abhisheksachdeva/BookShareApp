@@ -2,6 +2,7 @@ package com.sdsmdg.bookshareapp.BSA.ui.fragments;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -17,7 +18,9 @@ import android.widget.Toast;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
+import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 import com.sdsmdg.bookshareapp.BSA.ui.CustomProgressDialog;
+import com.sdsmdg.bookshareapp.BSA.ui.VerifyOtpActivity;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -115,23 +118,35 @@ public class SendEmailFragment extends Fragment {
         descriptionTextView.setText(description);
     }
 
-    private void sendEmail(String email) {
+    private void sendEmail(final String email) {
         customProgressDialog.show();
         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-        Call<ResponseBody> sendEmailResponse;
-        if (isTypeForgotPassword) {
-             sendEmailResponse = usersAPI.sendForgotPasswordMail(email);
-        }else {
-             sendEmailResponse = usersAPI.sendNewActivationMail(email);
+        Call<Detail> sendEmailResponse = null;
+        switch (type) {
+            case "forgot_password_email":
+                sendEmailResponse = usersAPI.sendForgotPasswordMail(email);
+                break;
+            case "new_activation_email":
+                sendEmailResponse = usersAPI.sendNewActivationMail(email);
+                break;
+            case "new_otp":
+                sendEmailResponse = usersAPI.sendNewOtp(email);
+                break;
         }
-        sendEmailResponse.enqueue(new Callback<ResponseBody>() {
+
+        sendEmailResponse.enqueue(new Callback<Detail>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Detail> call, Response<Detail> response) {
                 customProgressDialog.dismiss();
                 if (response.isSuccessful()){
                     emailInputLayout.setEnabled(false);
-                    Toast.makeText(getActivity(), "An E-mail has been sent to you", Toast.LENGTH_SHORT).show();
-                    mListener.onFragmentInteraction("success");
+                    String detail = response.body().getDetail();
+                    if (detail.equals("A verification code has been sent")){
+                        mListener.onFragmentInteraction("success", email);
+                    }else {
+                        Toast.makeText(getActivity(), detail, Toast.LENGTH_SHORT).show();
+                        mListener.onFragmentInteraction("success", null);
+                    }
                 } else{
                     emailInputLayout.setEnabled(true);
                     Toast.makeText(getActivity(), "Invalid email address!", Toast.LENGTH_LONG).show();
@@ -139,7 +154,7 @@ public class SendEmailFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Detail> call, Throwable t) {
                 customProgressDialog.dismiss();
                 emailInputLayout.setEnabled(true);
                 Toast.makeText(getActivity(), "Please check your internet connection!", Toast.LENGTH_LONG).show();
@@ -186,6 +201,6 @@ public class SendEmailFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnFragmentInteractionListener {
-        void onFragmentInteraction(String status);
+        void onFragmentInteraction(String status, String email);
     }
 }

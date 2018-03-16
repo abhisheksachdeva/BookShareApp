@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.sdsmdg.bookshareapp.BSA.R;
@@ -35,6 +36,7 @@ public class BookListFragment extends Fragment {
     }
 
     private RecyclerView resultsList;
+    private ProgressBar progressBar;
     List<Book> bookList = new ArrayList<>();
     BooksAdapterGR adapter;
     private RecyclerView.LayoutManager mLayoutManager;
@@ -47,6 +49,7 @@ public class BookListFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, final ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.book_list_fragment, container, false);
         no_books = (TextView) view.findViewById(R.id.no_books);
+        progressBar = (ProgressBar) view.findViewById(R.id.indeterminateBar);
         no_books.setVisibility(View.GONE);
         resultsList = (RecyclerView) view.findViewById(R.id.results_list);
         resultsList.setNestedScrollingEnabled(false);
@@ -66,21 +69,25 @@ public class BookListFragment extends Fragment {
 
     public void getBooks(String query, String field, String key) {
 
+        bookList.clear();
+        progressBar.setVisibility(View.VISIBLE);
+        no_books.setVisibility(View.GONE);
+        resultsList.setVisibility(View.GONE);
+
         BooksAPI api = NetworkingFactory.getGRInstance().getBooksApi();
         Call<GoodreadsResponse> call = api.getBooks(query, field, key);
         call.enqueue(new Callback<GoodreadsResponse>() {
             @Override
             public void onResponse(Call<GoodreadsResponse> call, Response<GoodreadsResponse> response) {
+                progressBar.setVisibility(View.GONE);
                 if (response.body() != null) {
                     sr = response.body().getSearch();
-                    bookList.clear();
                     bookList.addAll(sr.getBooks());
                     adapter.notifyDataSetChanged();
                     if (bookList.size() == 0) {
                         no_books.setVisibility(View.VISIBLE);
-                    } else {
-                        no_books.setVisibility(View.GONE);
-
+                    }else{
+                        resultsList.setVisibility(View.VISIBLE);
                     }
                     resp = response.toString();
                 }
@@ -88,10 +95,14 @@ public class BookListFragment extends Fragment {
 
             @Override
             public void onFailure(Call<GoodreadsResponse> call, Throwable t) {
+                progressBar.setVisibility(View.GONE);
+                if (bookList.size() == 0){
+                    no_books.setVisibility(View.VISIBLE);
+                }else{
+                    resultsList.setVisibility(View.VISIBLE);
+                }
                 resp = "failed";
             }
         });
-
     }
-
 }

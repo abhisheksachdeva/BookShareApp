@@ -8,7 +8,7 @@
 .DS_Store
 /build
 /captures
-
+/.idea
 # Added by abhishek sachdeva
 # Built application files
 *.apk
@@ -49,3 +49,5 @@ captures/
 
 # Keystore files
 *.jks
+
+sentry.properties
