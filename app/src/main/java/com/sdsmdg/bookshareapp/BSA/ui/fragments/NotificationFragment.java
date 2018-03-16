@@ -119,7 +119,6 @@ public class NotificationFragment extends Fragment {
                 if (response.body() != null) {
 
                     count[0] = Integer.parseInt(response.body().getCount());
-                    mListener.setNotifCount(count[0]);
                     List<Notifications> notifList = response.body().getNotificationsList();
                     if (notifList.size() == 0) {
                         noNotificationTextView.setText("No new notifications");
@@ -187,6 +186,5 @@ public class NotificationFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
-        void setNotifCount(int notifCount);
     }
 }

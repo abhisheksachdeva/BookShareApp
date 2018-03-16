@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements
     public static final String TAG = MainActivity.class.getSimpleName();
     private static final int REQUEST_CODE = 1000;
     private static final int BOOK_DETAIL_REQUEST_CODE = 1001;
-    private boolean isNotifDrawerClosed = false;
     private boolean isrightDrawerOpen = false;
 
     List<Book> booksList;
@@ -114,11 +113,8 @@ public class MainActivity extends AppCompatActivity implements
         // Create a new empty instance of Realm
         realm = Realm.getDefaultInstance();
 
-        isNotifDrawerClosed = false;
-
         // Use the Sentry DSN (client key) from the Project Settings page on Sentry
         //Sentry.init(CommonUtilities.SENTRY_DSN, new AndroidSentryClientFactory(ctx));
-
 
         //customProgressDialog = new CustomProgressDialog(MainActivity.this);
         //customProgressDialog.setCancelable(false);
@@ -292,7 +288,6 @@ public class MainActivity extends AppCompatActivity implements
                 super.onDrawerClosed(drawerView);
                 if (isrightDrawerOpen) {
                     isrightDrawerOpen = false;
-                    isNotifDrawerClosed = true;
                     notifCountTextView.setVisibility(View.GONE);
                 }
             }
@@ -800,36 +795,6 @@ public class MainActivity extends AppCompatActivity implements
 
     private void refresh() {
         getLocalBooks("1");
-    }
-
-    @Override
-    public void setNotifCount(int notifCount) {
-        displayNotifCount(notifCount);
-    }
-
-    private void displayNotifCount(final int notifCount) {
-        if (notifCountTextView == null){
-            Handler handler = new Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    displayNotifCount(notifCount);
-                }
-            }, 1000);
-        }else{
-            int initialNotifCount = notificationSharedPreferences.getInt("notif_count", 0);
-            if (!isNotifDrawerClosed) {
-                if (notifCount - initialNotifCount == 0) {
-                    notifCountTextView.setVisibility(View.GONE);
-                } else {
-                    notifCountTextView.setText(String.valueOf(notifCount - initialNotifCount));
-                    notifCountTextView.setVisibility(View.VISIBLE);
-                }
-            }
-            SharedPreferences.Editor editor = notificationSharedPreferences.edit();
-            editor.putInt("notif_count", notifCount);
-            editor.apply();
-        }
     }
 }
 
