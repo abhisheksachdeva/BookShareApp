@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements
         noBookstextview = (TextView) findViewById(R.id.no_books_textView);
         progressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         noBookstextview.setVisibility(View.GONE);
-
         progress_isVisible = false;
 
         notifFragment = (NotificationFragment) getSupportFragmentManager().findFragmentById(R.id.right_drawer);
@@ -317,7 +316,6 @@ public class MainActivity extends AppCompatActivity implements
 
         //When a to read book is to be checked if it exists in campus
         toReadName = getIntent().getStringExtra("pass_it_on");
-
     }
 
     public void searchClicked(View view) {
