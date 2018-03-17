@@ -383,10 +383,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        searchEditText.setTextColor(getResources().getColor(R.color.White));
-        searchEditText.setHintTextColor(getResources().getColor(R.color.White));
-
         regRxObservable();
 
         //If toReadName received from to-read is not null, search it first
