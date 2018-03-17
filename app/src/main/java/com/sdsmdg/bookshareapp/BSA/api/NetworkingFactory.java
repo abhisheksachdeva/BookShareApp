@@ -34,7 +34,7 @@ public class NetworkingFactory {
     }
 
     private NetworkingFactory(Context context, String url, boolean json) {
-        OkHttpClient.Builder httpclient = new OkHttpClient.Builder();
+        OkHttpClient.Builder httpclient = new OkHttpClient.Builder().addInterceptor(new ChuckInterceptor(context));
         if (json) {
             retrofit = new Retrofit.Builder()
                     .baseUrl(url)
