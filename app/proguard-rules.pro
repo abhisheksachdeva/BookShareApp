@@ -77,3 +77,9 @@
 -keepattributes LineNumberTable,SourceFile
 -dontwarn org.slf4j.**
 -dontwarn javax.**
+
+-keep public class org.simpleframework.**{ *; }
+-keep class org.simpleframework.xml.**{ *; }
+-keep class org.simpleframework.xml.core.**{ *; }
+-keep class org.simpleframework.xml.util.**{ *; }
+-keep class com.sdsmdg.bookshareapp.BSA.api.models.*
