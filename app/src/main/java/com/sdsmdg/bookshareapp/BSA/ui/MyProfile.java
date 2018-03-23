@@ -370,17 +370,7 @@ public class MyProfile extends AppCompatActivity {
     }
 
     private void onCaptureImageResult(Intent data) {
-//        Sentry.getContext().recordBreadcrumb(
-//                new BreadcrumbBuilder().setMessage("Inside onCaptureImageResult").build()
-//        );
-//
-//        // Set the user in the current context.
-//        Sentry.getContext().setUser(
-//                new UserBuilder().setEmail(Helper.getUserEmail()).build()
-//        );
-
-
-        if (isExternalStorageWritable()) {
+       if (isExternalStorageWritable()) {
             try {
                 Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
@@ -395,19 +385,15 @@ public class MyProfile extends AppCompatActivity {
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
                 Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
-//                Sentry.capture(e);
 
             } catch (IOException e) {
                 Toast.makeText(this, "Unable to read the file", Toast.LENGTH_SHORT).show();
-//                Sentry.capture(e);
                 e.printStackTrace();
             } catch (NullPointerException e) {
                 Toast.makeText(this, R.string.file_not_found, Toast.LENGTH_SHORT).show();
-//                Sentry.capture(e);
                 e.printStackTrace();
             } catch (Exception e) {
                 Toast.makeText(this, "Unable to read the file", Toast.LENGTH_SHORT).show();
-                //Sentry.capture(e);
                 e.printStackTrace();
             }
         }else{
@@ -434,14 +420,6 @@ public class MyProfile extends AppCompatActivity {
     }
 
     public File getFile(Uri uri, Bitmap bitmap) {
-//        Sentry.getContext().recordBreadcrumb(
-//                new BreadcrumbBuilder().setMessage("Inside getFile").build()
-//        );
-//
-//        // Set the user in the current context.
-//        Sentry.getContext().setUser(
-//                new UserBuilder().setEmail(Helper.getUserEmail()).build()
-//        );
 
         File file = null;
         String path = FileUtils.getPath(this, uri);
@@ -465,22 +443,12 @@ public class MyProfile extends AppCompatActivity {
                 file = new File(path);
             } catch (Exception e) {
                 e.printStackTrace();
-//                Sentry.capture(e);
             }
         }
         return file;
     }
 
     public void sendToServer(File file) {
-//        Sentry.getContext().recordBreadcrumb(
-//                new BreadcrumbBuilder().setMessage("Inside MyProfile/sendToServer").build()
-//        );
-//
-//        // Set the user in the current context.
-//        Sentry.getContext().setUser(
-//                new UserBuilder().setEmail(Helper.getUserEmail()).build()
-//        );
-
 
         UsersAPI api = NetworkingFactory.getLocalInstance().getUsersAPI();
         try {
@@ -518,7 +486,6 @@ public class MyProfile extends AppCompatActivity {
             });
         } catch (NullPointerException e) {
             Toast.makeText(this, "Failed to load image", Toast.LENGTH_SHORT).show();
-//            Sentry.capture(e);
         } catch (OutOfMemoryError e){
             Toast.makeText(this, "Image is too big to upload!!", Toast.LENGTH_SHORT).show();
         }

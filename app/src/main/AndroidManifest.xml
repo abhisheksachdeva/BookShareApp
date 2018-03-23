@@ -28,9 +28,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="bookshare-env.ctnpygtfsy.us-east-2.elasticbeanstalk.com"
+                    android:host="bookshare-prod.us-east-2.elasticbeanstalk.com"
                     android:pathPrefix="/activation"
-                    android:scheme="http" />
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
@@ -139,9 +139,9 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="bookshare-env.ctnpygtfsy.us-east-2.elasticbeanstalk.com"
+                    android:host="bookshare-prod.us-east-2.elasticbeanstalk.com"
                     android:pathPrefix="/reset"
-                    android:scheme="http" />
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity

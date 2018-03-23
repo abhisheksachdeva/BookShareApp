@@ -133,7 +133,6 @@ public class MainActivity extends AppCompatActivity implements
         noBookstextview = (TextView) findViewById(R.id.no_books_textView);
         progressBar = (ProgressBar) findViewById(R.id.indeterminateBar);
         noBookstextview.setVisibility(View.GONE);
-
         progress_isVisible = false;
 
         notifFragment = (NotificationFragment) getSupportFragmentManager().findFragmentById(R.id.right_drawer);
@@ -317,7 +316,6 @@ public class MainActivity extends AppCompatActivity implements
 
         //When a to read book is to be checked if it exists in campus
         toReadName = getIntent().getStringExtra("pass_it_on");
-
     }
 
     public void searchClicked(View view) {
@@ -385,10 +383,6 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        EditText searchEditText = (EditText) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
-        searchEditText.setTextColor(getResources().getColor(R.color.White));
-        searchEditText.setHintTextColor(getResources().getColor(R.color.White));
-
         regRxObservable();
 
         //If toReadName received from to-read is not null, search it first
