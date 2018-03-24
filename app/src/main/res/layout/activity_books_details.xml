@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.sdsmdg.bookshareapp.BSA.ui.BookDetailsActivity">
+
+    <android.support.v4.widget.NestedScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <FrameLayout
+                android:id="@+id/frameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="250dp">
+
+                <ImageView
+                    android:id="@+id/book_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/book_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:gravity="center_horizontal"
+                        tools:text="title"
+                        android:textColor="@color/White"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/book_author"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:textColor="@color/White"
+                        android:textSize="16sp"
+                        android:textStyle="italic" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+
+                        <RatingBar
+                            android:id="@+id/book_rating"
+                            style="?attr/ratingBarStyleSmall"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:rating="4" />
+
+                        <TextView
+                            android:id="@+id/ratings_count"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/White" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </FrameLayout>
+
+            <Button
+                android:id="@+id/add_to_my_library"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_shape_other"
+                android:onClick="addToMyLibraryClicked"
+                android:padding="10dp"
+                android:text="Add to My Library"
+                android:textAllCaps="false"
+                android:textColor="@color/app_theme_button_other"
+                android:textSize="16sp"
+                android:textStyle="normal" />
+
+            <Button
+                android:id="@+id/remove_from_my_library"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_shape_other"
+                android:onClick="removeFromMyLibraryClicked"
+                android:padding="10dp"
+                android:text="Remove from My Library"
+                android:textAllCaps="false"
+                android:textColor="@color/app_theme_button_other"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:visibility="gone"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Summary"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:alpha="0.6"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:text="Book Description"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="#444444"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_margin="12dp"
+                android:background="@color/textColorSecondary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Book Owners"
+                android:textColor="#333333"
+                android:textSize="18sp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/reader_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_margin="12dp"
+                android:background="@color/textColorSecondary" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:textColor="#333333"
+                android:textSize="18sp"
+                android:text="Know more at GoodReads " />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Open goodreads.com"
+                android:textAllCaps="false"
+                android:textColor="@color/app_theme_button_other"
+                android:textSize="16sp"
+                android:textStyle="normal"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/button_shape_other"
+                android:padding="10dp"
+                android:onClick="goodreads"
+                android:id="@+id/chrome_good" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="60dp" />
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+</FrameLayout>

@@ -1,19 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.abhishek.bookshareapp" >
+    package="com.sdsmdg.bookshareapp.BSA">
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS" />
+    <uses-permission android:name="android.permission.READ_SMS" />
 
     <application
+        android:name=".BSApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/logo1"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
-        android:hardwareAccelerated="false">
+        android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:name=".ui.LoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="bookshare-prod.us-east-2.elasticbeanstalk.com"
+                    android:pathPrefix="/activation"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.SearchResultsActivity"
+            android:label="Search"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.UserSearch">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCHRESULTS" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.MainActivity"
+            android:label="Campus Books"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="adjustPan|adjustResize" />
+        <activity
+            android:name=".ui.SignupActivity"
+            android:label="Sign Up"
+            android:parentActivityName=".ui.MyProfile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.MyProfile"
+            android:label="My Profile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.BookDetailsActivity"
+            android:label="Book Details"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserProfile"
+            android:label="User Details"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.SplashScreen"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,16 +77,89 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SearchResults"
-            android:label="search"
-            >
+            android:name=".ui.EditProfileActivity"
+            android:label="Edit your details"
+            android:parentActivityName=".ui.MyProfile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.ChangePasswordActivity"
+            android:label="Change Password"
+            android:parentActivityName=".ui.MyProfile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.GuestActivity"
+            android:label="Campus Books"
+            android:parentActivityName=".ui.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.UserSearchActivity"
+            android:label="Search User"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.UserSearch" />
+        <activity
+            android:name=".ui.GRLoginActivity"
+            android:label="To-Read"
+            android:parentActivityName=".ui.MainActivity">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCHRESULTS" />
+                <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
+                <data
+                    android:host="www.goodreads.com"
+                    android:scheme="your" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.ToReadActivity"
+            android:label="To-Read"
+            android:parentActivityName=".ui.MainActivity" />
+
+        <service android:name=".firebase_classes.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".firebase_classes.FirebaseInstanceIDService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".ui.PasswordConfirmActivity"
+            android:label="Reset Password">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="bookshare-prod.us-east-2.elasticbeanstalk.com"
+                    android:pathPrefix="/reset"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.WelcomeActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ui.SendEmailActivity"
+            android:label=""
+            android:parentActivityName=".ui.LoginActivity" />
+        <activity
+            android:name=".ui.VerifyOtpActivity"
+            android:label="Verify Otp">
+        </activity>
+        <receiver android:name=".Listeners.SmsReceiver">
+            <intent-filter android:priority="1000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
