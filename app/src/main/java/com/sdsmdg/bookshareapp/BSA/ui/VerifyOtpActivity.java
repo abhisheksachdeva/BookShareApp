@@ -1,24 +1,24 @@
 package com.sdsmdg.bookshareapp.BSA.ui;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.app.Service;
 import android.content.ComponentName;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
-import android.support.annotation.RequiresApi;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatEditText;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -27,14 +27,11 @@ import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.Listeners.SmsListener;
 import com.sdsmdg.bookshareapp.BSA.Listeners.SmsReceiver;
-import com.sdsmdg.bookshareapp.BSA.Manifest;
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.NetworkingFactory;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
-import com.sdsmdg.bookshareapp.BSA.api.models.Signup;
 import com.sdsmdg.bookshareapp.BSA.api.models.VerifyToken.Detail;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -53,6 +50,8 @@ public class VerifyOtpActivity extends AppCompatActivity implements
     private Button submitOtpButton;
     private CustomProgressDialog progressDialog;
     private String email = null;
+    private String contact = null;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +64,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
         regListeners();
         if (getIntent().getExtras() != null){
             email = (String) getIntent().getExtras().get("email");
+            contact = (String) getIntent().getExtras().get("contact");
         }
     }
 
@@ -81,14 +81,21 @@ public class VerifyOtpActivity extends AppCompatActivity implements
                     progressDialog.setCancelable(false);
                     progressDialog.show();
                     final UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                    Call<Detail> verifyOtpCall = usersAPI.
-                            verifyOtp(email, pinHiddenEditText.getText().toString());
+                    Call<Detail> verifyOtpCall;
+                    if (contact == null) {
+                         verifyOtpCall = usersAPI.
+                                verifyOtp(email, pinHiddenEditText.getText().toString());
+                    }else{
+                        verifyOtpCall = usersAPI.
+                                changeMobile("Token " + preferences.getString("token", null),
+                                        email, contact, pinHiddenEditText.getText().toString());
+                    }
                     verifyOtpCall.enqueue(new Callback<Detail>() {
                         @Override
-                        public void onResponse(Call<Detail> call, Response<Detail> response) {
+                        public void onResponse(@NonNull Call<Detail> call, @NonNull Response<Detail> response) {
                             if (response.body() != null){
                                 String detail = response.body().getDetail();
-                                if (detail.equals("Activation Link Sent")) {
+                                if (detail.equals("Congratulations, the mobile has been verified!!")) {
                                     onSignupSuccess();
                                 } else {
                                     onSignupFailed("The otp entered is incorrect.");
@@ -98,7 +105,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
                         }
 
                         @Override
-                        public void onFailure(Call<Detail> call, Throwable t) {
+                        public void onFailure(@NonNull Call<Detail> call, @NonNull Throwable t) {
                             onSignupFailed("Check your network connection properly");
                             progressDialog.dismiss();
                         }
@@ -114,8 +121,26 @@ public class VerifyOtpActivity extends AppCompatActivity implements
     public void onSignupSuccess() {
         submitOtpButton.setEnabled(true);
         progressDialog.dismiss();
-        setResult(RESULT_OK, null);
-        showAlertDialog();
+        showSuccessUI();
+    }
+
+    private void showSuccessUI() {
+        if (contact == null) {
+            showAlertDialog();
+        }else {
+            Toast.makeText(this, "Congratulations!! the mobile is verified", Toast.LENGTH_SHORT).show();
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString("contact_no", contact);
+                    editor.apply();
+                    finish();
+
+                }
+            }, 1000);
+        }
     }
 
     private void showAlertDialog() {
@@ -125,7 +150,6 @@ public class VerifyOtpActivity extends AppCompatActivity implements
         builder.setNeutralButton("OK", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
-                startActivity(new Intent(VerifyOtpActivity.this, LoginActivity.class));
                 finish();
             }
         });
@@ -137,6 +161,26 @@ public class VerifyOtpActivity extends AppCompatActivity implements
     public void onSignupFailed(String toast) {
         Toast.makeText(getBaseContext(), toast, Toast.LENGTH_LONG).show();
         submitOtpButton.setEnabled(true);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Toast.makeText(this, "The mobile number is not verified", Toast.LENGTH_SHORT).show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (contact == null) {
+                    Intent loginIntent = new Intent(VerifyOtpActivity.this, LoginActivity.class);
+                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                    startActivity(loginIntent);
+                    finish();
+                }else{
+                    finish();
+                }
+            }
+        }, 1000);
     }
 
     /**
@@ -216,6 +260,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
         pinSixthDigitEditText = (TextInputEditText) findViewById(R.id.txt_sixth_pin);
         pinHiddenEditText = (TextInputEditText) findViewById(R.id.pin_hidden_edittext);
         submitOtpButton = (Button) findViewById(R.id.submit_otp_button);
+        preferences = getSharedPreferences("Token", MODE_PRIVATE);
     }
 
     /**
@@ -285,13 +330,17 @@ public class VerifyOtpActivity extends AppCompatActivity implements
     }
 
     /**
-     * Sets default PIN background.
+     * Sets user_default_image PIN background.
      *
      * @param editText edit text to change
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setDefaultPinBackground(EditText editText) {
-        editText.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.colorAccent));
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP && editText instanceof AppCompatEditText) {
+            editText.setBackgroundTintList
+                    (ContextCompat.getColorStateList(this, R.color.colorAccent));
+        } else {
+            ViewCompat.setBackgroundTintList(editText, ContextCompat.getColorStateList(this, R.color.colorAccent));
+        }
     }
 
     /**
@@ -299,9 +348,13 @@ public class VerifyOtpActivity extends AppCompatActivity implements
      *
      * @param editText edit text to change
      */
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private void setFocusedPinBackground(EditText editText) {
-        editText.setBackgroundTintList(ContextCompat.getColorStateList(this, R.color.Red));
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP && editText instanceof AppCompatEditText) {
+            editText.setBackgroundTintList
+                    (ContextCompat.getColorStateList(this, R.color.Red));
+        } else {
+            ViewCompat.setBackgroundTintList(editText, ContextCompat.getColorStateList(this, R.color.Red));
+        }
     }
 
     @Override
@@ -328,7 +381,7 @@ public class VerifyOtpActivity extends AppCompatActivity implements
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 1) {
             setFocusedPinBackground(pinSecondDigitEditText);
-            pinFirstDigitEditText.setText(s.charAt(0) + "");
+            pinFirstDigitEditText.setText(String.valueOf(s.charAt(0)));
             pinSecondDigitEditText.setText("");
             pinThirdDigitEditText.setText("");
             pinFourthDigitEditText.setText("");
@@ -336,28 +389,28 @@ public class VerifyOtpActivity extends AppCompatActivity implements
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 2) {
             setFocusedPinBackground(pinThirdDigitEditText);
-            pinSecondDigitEditText.setText(s.charAt(1) + "");
+            pinSecondDigitEditText.setText(String.valueOf(s.charAt(1)));
             pinThirdDigitEditText.setText("");
             pinFourthDigitEditText.setText("");
             pinFifthDigitEditText.setText("");
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 3) {
             setFocusedPinBackground(pinFourthDigitEditText);
-            pinThirdDigitEditText.setText(s.charAt(2) + "");
+            pinThirdDigitEditText.setText(String.valueOf(s.charAt(2)));
             pinFourthDigitEditText.setText("");
             pinFifthDigitEditText.setText("");
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 4) {
             setFocusedPinBackground(pinFifthDigitEditText);
-            pinFourthDigitEditText.setText(s.charAt(3) + "");
+            pinFourthDigitEditText.setText(String.valueOf(s.charAt(3)));
             pinFifthDigitEditText.setText("");
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 5) {
             setFocusedPinBackground(pinSixthDigitEditText);
-            pinFifthDigitEditText.setText(s.charAt(4) + "");
+            pinFifthDigitEditText.setText(String.valueOf(s.charAt(4)));
             pinSixthDigitEditText.setText("");
         } else if (s.length() == 6) {
-            pinSixthDigitEditText.setText(s.charAt(5) + "");
+            pinSixthDigitEditText.setText(String.valueOf(s.charAt(5)));
             hideSoftKeyboard(pinSixthDigitEditText);
         }
     }
@@ -372,11 +425,11 @@ public class VerifyOtpActivity extends AppCompatActivity implements
         String otp = words[8];
         pinHiddenEditText.setText(otp);
         pinHiddenEditText.setSelection(pinHiddenEditText.getText().length());
-        pinFirstDigitEditText.setText(otp.charAt(0) + "");
-        pinSecondDigitEditText.setText(otp.charAt(1) + "");
-        pinThirdDigitEditText.setText(otp.charAt(2) + "");
-        pinFourthDigitEditText.setText(otp.charAt(3) + "");
-        pinFifthDigitEditText.setText(otp.charAt(4) + "");
-        pinSixthDigitEditText.setText(otp.charAt(5) + "");
+        pinFirstDigitEditText.setText(String.valueOf(otp.charAt(0)));
+        pinSecondDigitEditText.setText(String.valueOf(otp.charAt(1)));
+        pinThirdDigitEditText.setText(String.valueOf(otp.charAt(2)));
+        pinFourthDigitEditText.setText(String.valueOf(otp.charAt(3)));
+        pinFifthDigitEditText.setText(String.valueOf(otp.charAt(4)));
+        pinSixthDigitEditText.setText(String.valueOf(otp.charAt(5)));
     }
 }

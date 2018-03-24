@@ -4,6 +4,7 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -11,7 +12,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.sdsmdg.bookshareapp.BSA.Listeners.EndlessScrollListener;
@@ -34,7 +34,7 @@ import retrofit2.Response;
 
 
 public class ToReadActivity extends AppCompatActivity {
-    FrameLayout rootView;
+
     RecyclerView localBookList;
     List<BookDetailsToRead> bookDetailsToReads = new ArrayList<>();
     BooksAdapterToRead adapter;
@@ -43,7 +43,6 @@ public class ToReadActivity extends AppCompatActivity {
     SharedPreferences pref;
     String userGrId;
     CustomProgressDialog customProgressDialog;
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,7 +95,6 @@ public class ToReadActivity extends AppCompatActivity {
         });
 
         getToReadBooks();
-
     }
 
     public void getToReadBooks() {
@@ -108,14 +106,13 @@ public class ToReadActivity extends AppCompatActivity {
         Call<GoodreadsResponse3> call = api.getToRead(params);
         call.enqueue(new Callback<GoodreadsResponse3>() {
             @Override
-            public void onResponse(Call<GoodreadsResponse3> call, Response<GoodreadsResponse3> response) {
+            public void onResponse(@NonNull Call<GoodreadsResponse3> call, @NonNull Response<GoodreadsResponse3> response) {
                 if (response.body() != null) {
                     bookDetailsToReads.clear();
                     adapter.notifyDataSetChanged();
                     bookDetailsToReads.addAll(response.body().getBookDetailsToReads());
                     adapter.notifyDataSetChanged();
                     refreshLayout.setRefreshing(false);
-                } else {
                 }
 
                 final android.os.Handler handler = new android.os.Handler();
@@ -130,15 +127,13 @@ public class ToReadActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<GoodreadsResponse3> call, Throwable t) {
+            public void onFailure(@NonNull Call<GoodreadsResponse3> call, @NonNull Throwable t) {
                 refreshLayout.setRefreshing(false);
                 customProgressDialog.dismiss();
 
             }
         });
-
     }
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -153,7 +148,6 @@ public class ToReadActivity extends AppCompatActivity {
                 editor.apply();
                 Helper.setUserGRid(null);
 
-
                 Intent i = new Intent(this, MainActivity.class);
                 startActivity(i);
                 finish();
@@ -161,9 +155,6 @@ public class ToReadActivity extends AppCompatActivity {
 
             default:
                 return super.onOptionsItemSelected(item);
-
         }
     }
-
-
 }

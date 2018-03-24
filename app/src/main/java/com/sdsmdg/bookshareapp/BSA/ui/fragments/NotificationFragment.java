@@ -18,6 +18,7 @@ import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notification_Model;
 import com.sdsmdg.bookshareapp.BSA.api.models.Notification.Notifications;
+import com.sdsmdg.bookshareapp.BSA.ui.MainActivity;
 import com.sdsmdg.bookshareapp.BSA.ui.adapter.Local.NotificationAdapter;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
@@ -98,7 +99,10 @@ public class NotificationFragment extends Fragment {
         return v;
     }
 
-    public void getNotifications(final String page) {
+    public int getNotifications(final String page) {
+
+        final int[] count = {0};
+
         Helper.setOld_total(Helper.getNew_total());
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -114,6 +118,7 @@ public class NotificationFragment extends Fragment {
             public void onResponse(Call<Notification_Model> call, Response<Notification_Model> response) {
                 if (response.body() != null) {
 
+                    count[0] = Integer.parseInt(response.body().getCount());
                     List<Notifications> notifList = response.body().getNotificationsList();
                     if (notifList.size() == 0) {
                         noNotificationTextView.setText("No new notifications");
@@ -141,6 +146,7 @@ public class NotificationFragment extends Fragment {
                 refreshLayout.setRefreshing(false);
             }
         });
+        return count[0];
     }
 
     // TODO: Rename method, update argument and hook method into UI event

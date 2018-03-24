@@ -2,6 +2,7 @@ package com.sdsmdg.bookshareapp.BSA.api;
 
 import android.content.Context;
 
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import com.readystatesoftware.chuck.ChuckInterceptor;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 
@@ -38,12 +39,14 @@ public class NetworkingFactory {
             retrofit = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(GsonConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(httpclient.build())
                     .build();
         } else {
             retrofit = new Retrofit.Builder()
                     .baseUrl(url)
                     .addConverterFactory(SimpleXmlConverterFactory.create())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(httpclient.build())
                     .build();
         }

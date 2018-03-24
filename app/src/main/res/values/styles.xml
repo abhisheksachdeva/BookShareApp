@@ -12,6 +12,8 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="android:editTextColor">@android:color/white</item>
+        <item name="android:textColorHint">@android:color/white</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
@@ -33,7 +35,7 @@
         <item name="colorControlNormal">@color/White</item>
     </style>
 
-    <style name="AppTheme.Dialog" parent="@android:style/Theme.Material.Light.Dialog">
+    <style name="AppTheme.Dialog" parent="AlertDialog.AppCompat">
         <item name="android:textColorPrimary">@android:color/black</item>
     </style>
 

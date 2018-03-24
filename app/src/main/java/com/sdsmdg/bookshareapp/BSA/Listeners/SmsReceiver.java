@@ -24,14 +24,15 @@ public class SmsReceiver extends BroadcastReceiver {
         // objects used in sending mails.
         Object[] pdus = (Object[]) data.get("pdus");
 
-        for(int i=0;i<pdus.length;i++){
-            SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
-            String sender = smsMessage.getDisplayOriginatingAddress();
-            //You must check here if the sender is your provider and not another one with same text.
-            if (sender.equals(CommonUtilities.OTP_SENDER_ONE)) {
+        if (pdus != null) {
+            for (int i = 0; i < pdus.length; i++) {
+                SmsMessage smsMessage = SmsMessage.createFromPdu((byte[]) pdus[i]);
+                //You must check here if the sender is your provider and not another one with same text.
                 String messageBody = smsMessage.getMessageBody();
-                //Pass on the text to our listener.
-                mListener.messageReceived(messageBody);
+                if (messageBody.startsWith(CommonUtilities.MESSAGE_BODY_PREFIX)) {
+                    //Pass on the text to our listener.
+                    mListener.messageReceived(messageBody);
+                }
             }
         }
     }

@@ -3,11 +3,9 @@ package com.sdsmdg.bookshareapp.BSA.ui;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Intent;
-import android.net.Uri;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v7.app.AppCompatActivity;
 
 import com.sdsmdg.bookshareapp.BSA.R;
 import com.sdsmdg.bookshareapp.BSA.ui.fragments.SendEmailFragment;
@@ -25,16 +23,19 @@ public class SendEmailActivity extends AppCompatActivity implements SendEmailFra
     private void getIntentType(String emailType) {
         switch (emailType) {
             case "forgot_password_email":
+                getSupportActionBar().setTitle("Forgot Password");
                 initFragment(getResources().getString(R.string.forgot_password),
                         getResources().getString(R.string.forgot_password_message),
                         emailType);
                 break;
             case "new_activation_email":
+                getSupportActionBar().setTitle("Activate Account");
                 initFragment(getResources().getString(R.string.new_activation),
                         getResources().getString(R.string.new_activation_message),
                         emailType);
                 break;
             case "new_otp":
+                getSupportActionBar().setTitle("Send Otp");
                 initFragment(getResources().getString(R.string.new_otp),
                         getResources().getString(R.string.new_otp_message),
                         emailType);

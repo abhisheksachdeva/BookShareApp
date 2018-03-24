@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.view.ContextThemeWrapper;
+import android.view.ContextThemeWrapper;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.sdsmdg.bookshareapp.BSA.api.UsersAPI;
 import com.sdsmdg.bookshareapp.BSA.api.models.Book;
 import com.sdsmdg.bookshareapp.BSA.api.models.BookDescription;
 import com.sdsmdg.bookshareapp.BSA.api.models.GoodreadsResponse2;
+import com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.BookAddDeleteResponse;
 import com.sdsmdg.bookshareapp.BSA.utils.CommonUtilities;
 import com.sdsmdg.bookshareapp.BSA.utils.Helper;
 import com.squareup.picasso.Picasso;
@@ -39,30 +41,29 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
 
     private Context context;
     private List<Book> bookList;
-    Book tempValues = null;
-    BookDescription tempDescp;
-    String description;
-    String token;
-    SharedPreferences prefs;
+    private Book tempValues = null;
+    private BookDescription tempDescp;
+    private String description;
+    private String token;
+    private SharedPreferences prefs;
 
     private final OnItemClickListener listener;
 
     public interface OnItemClickListener {
-        public void onItemClick(com.sdsmdg.bookshareapp.BSA.api.models.Book book);
+        void onItemClick(com.sdsmdg.bookshareapp.BSA.api.models.Book book);
     }
 
-
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView titleBook;
-        public TextView authorBook;
-        public ImageView imageBook;
-        public RatingBar ratingBook;
-        public TextView ratingCount;
+    public class ViewHolder extends RecyclerView.ViewHolder {
+        TextView titleBook;
+        TextView authorBook;
+        ImageView imageBook;
+        RatingBar ratingBook;
+        TextView ratingCount;
         public Button add;
 
         Context context;
 
-        public ViewHolder(View v, Context context) {
+        ViewHolder(View v, Context context) {
             super(v);
             titleBook = (TextView) v.findViewById(R.id.row_books_title);
             authorBook = (TextView) v.findViewById(R.id.row_books_author);
@@ -81,8 +82,6 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
         this.context = context;
         this.listener = listener;
         prefs = context.getSharedPreferences("Token", Context.MODE_PRIVATE);
-
-
     }
 
     @Override
@@ -90,10 +89,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.row_books_add, parent, false);
 
-        ViewHolder vh = new ViewHolder(v, context);
-
-        return vh;
-
+        return new ViewHolder(v, context);
     }
 
     @Override
@@ -139,8 +135,8 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                 Call<GoodreadsResponse2> call = api.getBookDescription(search_id, CommonUtilities.API_KEY);
                 call.enqueue(new Callback<GoodreadsResponse2>() {
                     @Override
-                    public void onResponse(Call<GoodreadsResponse2> call, Response<GoodreadsResponse2> response) {
-                        if (response != null) {
+                    public void onResponse(@NonNull Call<GoodreadsResponse2> call, @NonNull Response<GoodreadsResponse2> response) {
+                        if (response.body() != null) {
                             tempDescp = response.body().getbDesc();
                             description = tempDescp.getBDescription();
 
@@ -154,25 +150,23 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                     }
 
                     @Override
-                    public void onFailure(Call<GoodreadsResponse2> call, Throwable t) {
+                    public void onFailure(@NonNull Call<GoodreadsResponse2> call, @NonNull Throwable t) {
                         description = "No Description Available";
                     }
                 });
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.AppTheme_Dialog));
-                builder.setInverseBackgroundForced(true);
                 builder.setTitle("Do you want to add this Book?");
                 builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         UsersAPI usersAPI = NetworkingFactory.getLocalInstance().getUsersAPI();
-                        Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> addBook = usersAPI.addBook(email, title, author, gr_id, ratingsCount, rating, gr_img_url, description, "Token " + token);
-                        addBook.enqueue(new Callback<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book>() {
+                        Call<BookAddDeleteResponse> addBook = usersAPI.addBook(email, title, author, gr_id, ratingsCount, rating, gr_img_url, description, "Token " + token);
+                        addBook.enqueue(new Callback<BookAddDeleteResponse>() {
 
                             @Override
-                            public void onResponse(Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> call, Response<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> response) {
+                            public void onResponse(@NonNull Call<BookAddDeleteResponse> call, @NonNull Response<BookAddDeleteResponse> response) {
                                 try {
-
                                     if (response.body() != null) {
                                         Toast.makeText(context, response.body().getDetail(), Toast.LENGTH_SHORT).show();
                                         holder.add.setEnabled(false);
@@ -186,7 +180,7 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                             }
 
                             @Override
-                            public void onFailure(Call<com.sdsmdg.bookshareapp.BSA.api.models.LocalBooks.Book> call, Throwable t) {
+                            public void onFailure(@NonNull Call<BookAddDeleteResponse> call, @NonNull Throwable t) {
                                 Toast.makeText(context, R.string.connection_failed, Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -199,10 +193,8 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
                     }
                 });
                 builder.show();
-
             }
         });
-
     }
 
     @Override
@@ -217,5 +209,4 @@ public class BooksAdapterGR extends RecyclerView.Adapter<BooksAdapterGR.ViewHold
     public long getItemId(int position) {
         return 0;
     }
-
 }

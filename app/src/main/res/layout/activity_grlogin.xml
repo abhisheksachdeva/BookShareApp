@@ -36,7 +36,7 @@
             android:paddingBottom="2dp"
             android:paddingTop="2dp"
             android:text="Login "
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:textAllCaps="false"
             android:textColor="@color/White"
             android:textSize="20sp" />
